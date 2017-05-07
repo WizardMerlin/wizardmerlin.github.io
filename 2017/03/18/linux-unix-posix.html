@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>linux-unix-posix | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="介绍一下类nix下的内战">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="linux-unix-posix"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> linux-unix-posix</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 介绍一下类nix下的内战
+		 </div> <!-- alert -->
+	  		
+
+	  <p>Unix, BSD, SUS, LSB以及POSIX各种理论东西，其实很烦的好伐，统一干掉</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>关于Linux/Unix一些开发中可能要了解的理论内容:</p>
+<p>我曾经在学习系统编程的时候， 发现各种不同的调用时，总是要涉及标准(man page)，当时其实是不在意的，因为不知道有啥区别, 打个比方：man wait<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">NAME</div><div class="line">       wait, waitpid, waitid - wait for process to change state</div><div class="line"></div><div class="line">SYNOPSIS</div><div class="line">       #include &lt;sys/types.h&gt;</div><div class="line">       #include &lt;sys/wait.h&gt;</div><div class="line"></div><div class="line">       pid_t wait(int *wstatus);</div><div class="line"></div><div class="line">       pid_t waitpid(pid_t pid, int *wstatus, int options);</div><div class="line"></div><div class="line">       int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);</div><div class="line">                       /* This is the glibc and POSIX interface; see</div><div class="line">                          NOTES for information on the raw system call. */</div><div class="line"></div><div class="line">   Feature Test Macro Requirements for glibc (see feature_test_macros(7)):</div><div class="line"></div><div class="line">       waitid():</div><div class="line">           _XOPEN_SOURCE</div><div class="line">               || /* Since glibc 2.12: */ _POSIX_C_SOURCE &gt;= 200809L</div><div class="line">               || /* Glibc versions &lt;= 2.19: */ _BSD_SOURCE</div></pre></td></tr></table></figure></p>
+<p><code>200809L</code>就是指的一个标准。</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="Posix"><a href="#Posix" class="headerlink" title="Posix"></a>Posix</h2><p>POSIX，即Portable Operating System Interface，可移植操作系统接口。IEEE最初开发POSIX标准，是为了提高UNIX环境下应用程序的可移植性。然而POSIX并不局限于UNIX。许多其它操作系统，例如DEC OpenVMS和Microsoft Windows NT都支持POSIX标准。</p>
+<p>POSIX现在已经发展成为一个非常庞大的标准族，某些部分正处于开发过程中。POSIX定义了一个接口，而非一种实现，所以并不区分系统调用和库函数。标准中所有的例程都是宏和函数。POSIX接口连接了OS和应用程序。符合POSIX接口的OS和应用程序可以无缝交流。</p>
+<p>Linux基本逐步上实现了POSIX兼容，但并没有参加正式的POSIX认证。如Linux的线程实现版本和POSIX标准之间还是存在着细微的差别，最明显的是关于信号处理部分。微软的Windows NT至少部分实现了POSIX兼容。<br>(下面只谈论<code>Posix1.</code> 而不谈论<code>Posix2.</code>，因为用的少)</p>
+<h2 id="SUSv3-Berkerly-BSD"><a href="#SUSv3-Berkerly-BSD" class="headerlink" title="SUSv3,Berkerly,BSD"></a>SUSv3,Berkerly,BSD</h2><p>200809L就是指的一个标准，一般是指SUSv4或者POSIX.1-2008  (可以理解成同一标准的两种称谓)。<br>一般系统编程(或者在Linux下进行开发)，为了兼容不同的Linux或者Unix系统，就要看看这些标准；个人把SUSv3或者POSIX.1-2001视为逐流标准(遵循这个标准的函数/系统调用封装函数，一般可以随便用而不用担心兼容性问题， 因为类nix系统一般遵循POSIX标准)</p>
+<p>不管类nix中有都多少名称，例如BSD啊，Berkerly啊，抓住POSIX标准就可以了。因为平台太多，没精力逐个对付啊；看下boost是怎么在定义的平台：<br><img src="http://omotkhw3y.bkt.clouddn.com/boost_platform.png" alt="boost_platform"><br>补充，你看看CPP这些宏是怎么定义的，来看一下Boost怎么定义的<br><img src="http://omotkhw3y.bkt.clouddn.com/libstdcpp.png" alt="__cplus"></p>
+<h2 id="LSB"><a href="#LSB" class="headerlink" title="LSB"></a>LSB</h2><p>Linux Standard Base，为什么会有一个Linux标准？<br>因为Linux本质上和Unix相同，但是发展到后面也是存在差别的，特别是Linux会有自己的许多方便的定义。<br>(包括像系统调用，不同系统提供的系统调用服务例程或者实现方式不一样)</p>
+<p>但是，你可以把LSB看做是POSIX和SUS的超集(父集)，就像Linux的IPC通信，既借鉴了<code>System V</code>的“Shared Memory”, “Semaphore”, “Message Queues”, 又借鉴了<code>Berkerly</code>的“Signals, Pipes”。</p>
+<p>需要了解更多么？<br>谁知道呢？</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="">《Unix/Linux系统编程手册(上册)》</a> chapter 1</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这是我在Linux系统编程时曾经遇到的问题， 个人因为觉得烦不过，就草草的翻看了一下理论； 总的来说，你不用去看wiki了，核心的遵循一下<code>POSIX1.2001</code>或者比较新的<code>POSIX1.2008</code>即可</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)</p>
+<p>Saturday, 18. March 2017 10:08AM </p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a href="/2017/03/19/linux-pthread.html" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/03/17/meet-tinyfool-again.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-03-18 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>6</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/BSD/">BSD<span>1</span></a></li> <li><a href="/tags/SUS/">SUS<span>1</span></a></li> <li><a href="/tags/LSB/">LSB<span>1</span></a></li> <li><a href="/tags/POSIX/">POSIX<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Posix"><span class="toc-article-text">Posix</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SUSv3-Berkerly-BSD"><span class="toc-article-text">SUSv3,Berkerly,BSD</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#LSB"><span class="toc-article-text">LSB</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考"><span class="toc-article-text">参考</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#总结"><span class="toc-article-text">总结</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>

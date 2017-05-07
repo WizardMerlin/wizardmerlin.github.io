@@ -1,0 +1,265 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>c-plus-plus | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="本篇不是教程，而是我在需要面试C++时需要做的准备(干货)">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="c-plus-plus"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> c-plus-plus</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 本篇不是教程，而是我在需要面试C++时需要做的准备(干货)
+		 </div> <!-- alert -->
+	  		
+
+	  <p>我的老师说，你能在编程领域走多远，很大程度上依赖你对底层语言的理解程度(不过至今我体会更多的是，你对于操作系统/软件设计的理解程度)</p>
+<p>C++是一门好用但不好学的语言，相比起Java，Ｃ，Ｇroovy等，我投入时间＆精力最多的就是这一门语言。</p>
+<p>起初我是不喜欢这门语言的，因为作者故意提高了门槛，在学习语法的过程你就要话费大量的时间，并且为了兼容Ｃ，本来设计良好的语言，活生生被搞的很尴尬。然而C++11又进行了一次换血。</p>
+<a id="more"></a>
+<hr>
+<p>其实等你真正学完之后，回过头来仔细看看，不难发现，其实Ｃ++核心没有多少(从用的角度来看)：</p>
+<ol>
+<li>兼容/扩展Ｃ的部分</li>
+<li>面向对象的部分(封装，继承，多态，友元，抽象(虚函数，抽象类)) </li>
+<li>类型转换</li>
+<li>异常处理</li>
+<li>基本ＩＯ(也是对于Ｃ基本ＩＯ的封装)</li>
+<li>模板(元编程)</li>
+<li>STL(容器，算法，迭代器，适配器，函数对象，特殊需求的话：allocator)</li>
+<li>Boost(bind, 智能指针)</li>
+<li>C++11</li>
+</ol>
+<p>但是，如果你从<code>造轮子</code>的角度，需要理解原理是再去看，这个内容就非常多，典型的：</p>
+<ol>
+<li>vptr虚表的实现原理</li>
+<li>智能指针的实现原理(引用计数知道么?)</li>
+<li>set容器的实现原理<br>…</li>
+</ol>
+<pre><code>我个人的观点是，一个高级Ｃ++开发人员不仅仅能玩熟C++，并且还能独立造轮子(只是不屑).
+</code></pre><p>(所以c++的开发人员，一个合格的c++开发人员，薪水确实要高一截)　</p>
+<pre><code>另外评价一个Ｃ++高级开发人员还要看他会不会｀性能优化｀---需要编译，链接，汇编知识.
+</code></pre><p>由于本篇不是教程，所以我是基于N＋１去写的，我非常熟悉的，我只是把item列出来(或者说出核心)，不大熟悉的会辅助仔细说明一下：</p>
+<h1 id="非常熟悉的"><a href="#非常熟悉的" class="headerlink" title="非常熟悉的"></a>非常熟悉的</h1><p>## </p>
+<h1 id="不太熟悉的"><a href="#不太熟悉的" class="headerlink" title="不太熟悉的"></a>不太熟悉的</h1><p>这篇文章我大概花了一个礼拜，写完本篇的时候，我浏览器里面关于C++的所有收藏全部可以清空了。</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/04/06/what-if-i-die-tomorrow.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-04-06 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>6</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/c/">c++<span>3</span></a></li> <li><a href="/tags/stl/">stl<span>1</span></a></li> <li><a href="/tags/boost/">boost<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#非常熟悉的"><span class="toc-article-text">非常熟悉的</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#不太熟悉的"><span class="toc-article-text">不太熟悉的</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>

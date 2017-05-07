@@ -1,0 +1,293 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>keep-it-simple-and-stupid | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="最早是在《Unix编程艺术》这本书里接触到kiss原则，后来学习网络模型时产生了共鸣">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="keep-it-simple-and-stupid"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> keep-it-simple-and-stupid</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 最早是在《Unix编程艺术》这本书里接触到kiss原则，后来学习网络模型时产生了共鸣
+		 </div> <!-- alert -->
+	  		
+
+	  <p>以前复旦的哲学老师说<code>融入人民的智慧才是大智慧</code>，我一直不太理解，后来学习的东西多了，C &amp; UNix编程，网络模型，突然有一天，发现好像理解了。</p>
+<pre><code>普通人，相比一个非常牛的人而言其力量是非常小的，但普通人(就是大家所说的`吃瓜群众`，`乌合之众`)，由于其数量众多，只要你善加引导，善于利用，有效管理，其力量不容轻视。所谓融入人民的智慧，可能就是说要充分利用团队中每一个人的力量吧。
+</code></pre><a id="more"></a>
+<hr>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>下面要弹的不是管理或者哲学，而是<code>设计</code>和<code>思想</code>—来自于我对<code>网络模型</code>的思考。</p>
+<p>无图无真相，本文可以看做<a href="">《图解TCP/IP》</a>的思考。<br><img src="http://omotkhw3y.bkt.clouddn.com/tcp.jpg" alt="《图解TCP/IP》"></p>
+<p>我并不是一个非常懂设计的人，但我知道并坚信一点，<code>简单即美</code>&amp;<code>唯简唯美</code>。</p>
+<pre><code>有些东西并不简单真的简单，但是它在设计的一开始就考虑了不同的受众，为不同层次的人做好了分层：展现给你的是非常简单的模型，而其后那些复杂的设计为高层用户屏蔽了，因为那是只有专业人员才需要了解的东西。
+</code></pre><p>就像网络模型， 最典型的就是OSI七层网络模型。</p>
+<blockquote>
+<p>每个分层的作用与功能越清晰， 规范协议协议的具体内容就越简单，实现这些具体协议的工作也将会更加轻松。</p>
+</blockquote>
+<p>但是可能有的人就说了，OSI七层模型并没有TPC/IP的四层模型适用。这个下面谈“分层模型”的时候再谈。<br>仅仅是这样的一种设计方式就是一个很好的开始，就好像你有一群非常给力的队友，还需要担心他们做不好自己的工作拖后腿么？</p>
+<hr>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="KISS"><a href="#KISS" class="headerlink" title="KISS"></a>KISS</h2><p>这应该是一个设计原则吧？但是更多的是一种哲学，简约。 keep it simple, and stupid.</p>
+<p>在代价允许的范围内，保持简单是一个努力的方向，因为人们普遍更倾向于理解和接触简单的事情。</p>
+<p>现实生活中，把复杂的事情做简单并不是一件容易的事情。就好像人民邮电出版社出版的<a href="">《游戏编程全接触》</a>中那个貌似记忆超群的咖啡店女服务员一样，她在给客人续杯的时候从来不询问客人原来点的是那种咖啡，貌似她记忆力超群。其实呢？不过是咖啡杯的设计，蓝色的杯子装一种咖啡，红色的被子装另一种咖啡….</p>
+<p>化繁为简，有时候仅仅是一个<code>技巧</code>。</p>
+<p>学习完网络编程或者网络理论，不难发现，现实中也存在这种<code>技巧</code>，到底是什么呢？</p>
+<blockquote>
+<p>约定 &amp; 契约 &amp; 协议</p>
+</blockquote>
+<p>软件开发中，大量的用到了配置文件，并且在团队开发的时候，我们往往又会被不止一遍的强调：</p>
+<blockquote>
+<p>约定优于配置</p>
+</blockquote>
+<p>合作的队友，如果大家都遵循一个标准，一个设计理念，一种哲学，那么开发效率势必非常高，做出来的产品也至少不会烂尾(产品不太懂)。</p>
+<h2 id="分层"><a href="#分层" class="headerlink" title="分层"></a>分层</h2><p>本来我们要做的事情只有一件，实现网络通信， 但是做这件事儿非常困难，或者说非常复杂，所以进行了分层。同一层需要遵循的约定是<code>协议</code>，上下层之间遵循的约定是接口，下层总是为上层提供服务。</p>
+<p>分层的优点：</p>
+<pre><code>1. 每一层独立使用&amp;实现，即使系统中某些分层发生了变化，也不会波及到整个系统。
+2. 分层模型使得每一层只完成这项任务的某一个流程，更易于单独实现分层模型，并且界定了分层的具体责任和义务。
+3. 扩展性，灵活性都比较强。
+</code></pre><p>但是既然分层有这么多好处， 也满足KISS原则，为什么除了OSI模型后来又出现了TCP/IP四层模型呢？</p>
+<p>因为OSI分层的缺点：</p>
+<pre><code>1. 过分独立，使处理变得更加沉重(层越多，处理的越多)
+2. 每层不得不实现相似的处理逻辑
+</code></pre><p>理论的东西，到了商业&amp;工业实现这里，总是要根据实际情况做删减或者完善。但是它还是满足kiss原则的。</p>
+<h2 id="分模块"><a href="#分模块" class="headerlink" title="分模块"></a>分模块</h2><p>学习Unix的设计思想， 以及学习面向过程&amp;自顶向下的设计方法时，总是在强调，<code>分模块开发</code>，<code>一个函数只做一件事儿</code>。<br>(这也是我博客的宣传标语<code>do one thing, do it well</code> 翻译起来就是， 一次只做一件事儿，做到最好)</p>
+<p>我在读<a href="">《clean code》</a>发现它们会要求把函数写短，并且强调，只做一件事儿。 原话如下：</p>
+<blockquote>
+<p>The first rule of functions is that they should be small. The second rule of functions is that they should be smaller than that.</p>
+</blockquote>
+<p>关键是你如何写短呢？</p>
+<pre><code>只做一件事儿
+</code></pre><p>一个函数就好像一个模块，如果他们一次性完成所有的工作那最好，但是工作复杂起来之后，完成起来就不是一件轻松的事儿，这个时候拆分任务，交给一个模块儿去完成，一方面减少集中处理的压力，另一个方面，如果出了问题，那么也方便排查。</p>
+<p>补充：个人对于<a href="">《clean code》</a>上面的有些观点是不赞同的，或者异议的，但是这一点除外。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>KISS这种解释性的原则，告诉了我们哪些事情？</p>
+<ol>
+<li>保持模块的独立(可能也是为了避免耦合)</li>
+<li>每个模块只集中解决一个问题</li>
+<li>各模块之间遵循一定的契约&amp;约定</li>
+</ol>
+<p>btw: <a href="">《图解TCP/IP》</a>这本书对于网络理论的基础阐述还是不错的，图多，原理解释到位，看得出是一本用心写的书。</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)</p>
+<p>Monday, 27. March 2017 10:17PM </p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a href="/2017/04/06/what-if-i-die-tomorrow.html" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/03/26/linux-network.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-03-27 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/books/">books<span>2</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/linux/">linux<span>4</span></a></li> <li><a href="/tags/network/">network<span>2</span></a></li> <li><a href="/tags/thinking/">thinking<span>2</span></a></li> <li><a href="/tags/kiss/">kiss<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#KISS"><span class="toc-article-text">KISS</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#分层"><span class="toc-article-text">分层</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#分模块"><span class="toc-article-text">分模块</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#小结"><span class="toc-article-text">小结</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>

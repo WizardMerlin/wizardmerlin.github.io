@@ -1,0 +1,507 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>linux-process | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="when i start writing posix thread in linux, i find i should mention process first. let&#39;s do it.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="linux-process"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> linux-process</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> when i start writing posix thread in linux, i find i should mention process first. let's do it.
+		 </div> <!-- alert -->
+	  		
+
+	  <p>linux process?  fork, vfork, wait, waitpid?<br>far more than that. (i’ve spent a week of my free time to write this article, Sunday, 19. March 2017 01:35PM) </p>
+<p>我看到网上有人写的<a href="https://segmentfault.com/a/1190000004436805" target="_blank" rel="external">《单刷APUE系列》</a>中对于进程环境&amp;进程控制总结的还不错，但是探究进程却不说虚拟地址空间，不说进程控制块儿，是不是缺点儿什么？</p>
+<a id="more"></a>
+<blockquote>
+<p>为什么直接说Linux进程？</p>
+<ol>
+<li>我们写的代码，除了操作系统内核&amp;驱动，其他都是跑在用户态的程序。</li>
+<li>进程是除了文件(系统)之外，最大的抽象。</li>
+<li>其实我是想上来就说符合posix标准的线程的，但是Linux下的线程模型其实是LWP。</li>
+</ol>
+</blockquote>
+<p>注意： 文章写给懂的人看; 这里不是教程。</p>
+<pre><code>(进程间通信，进程调度算法还没有来得及总结)
+</code></pre><hr>
+<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在开发中，多线程(pthread, Boost线程)用的比较多(可能是由于服务器端处理并发问题的演变)，更偏向实战一些，往往<code>进程</code>谈的就比较少了。但是进程本身也是设计优良的(linux线程在内核看来就是轻量级进程–但是用户通过pthread_create()创建的用户级线程和内核直接调度的线程或者说轻量级进程还是有一点儿区别的，下面再说)，个人觉得还是蛮有意思的，那么就从pcb开始一点儿点儿絮叨一下。</p>
+<h1 id="Linux进程模型"><a href="#Linux进程模型" class="headerlink" title="Linux进程模型"></a>Linux进程模型</h1><h2 id="进程控制块-pcb"><a href="#进程控制块-pcb" class="headerlink" title="进程控制块(pcb)"></a>进程控制块(pcb)</h2><p><code>Process Control Block</code><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grep -rn <span class="string">"struct task_struct &#123;"</span> /usr/src</div></pre></td></tr></table></figure></p>
+<p>显示结果：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">merlin@thinkpad-u16:~$ grep -rn <span class="string">"struct task_struct &#123;"</span> /usr/src</div><div class="line">/usr/src/linux-headers-4.8.0-41/include/linux/sched.h:1460:struct task_struct &#123;</div><div class="line">/usr/src/linux-headers-4.8.0-22/include/linux/sched.h:1460:struct task_struct &#123;</div></pre></td></tr></table></figure></p>
+<p>之后就能看到一个非常长的结构体：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">struct task_struct &#123;</div><div class="line">        volatile long state;    /* -1 unrunnable, 0 runnable, &gt;0 stopped */</div><div class="line">        void *stack;</div><div class="line">        atomic_t usage;</div><div class="line">        unsigned int flags;     /* per process flags, defined below */</div><div class="line">        unsigned int ptrace;</div><div class="line"></div><div class="line"><span class="comment">#ifdef CONFIG_SMP</span></div><div class="line">        struct llist_node wake_entry;</div><div class="line">        int on_cpu;</div><div class="line">        unsigned int wakee_flips;</div><div class="line">        unsigned long wakee_flip_decay_ts;</div><div class="line">        struct task_struct *last_wakee;</div><div class="line"></div><div class="line">n        int wake_cpu;</div><div class="line"><span class="comment">#endif</span></div><div class="line">        int on_rq;</div><div class="line"></div><div class="line">        int prio, static_prio, normal_prio;</div><div class="line"></div><div class="line">	//...</div></pre></td></tr></table></figure></p>
+<p>为什么需要维护这样一个结构体？<br>系统通过对PCB进行维护，从而管理和调度进程，最终达到<code>对进程访问的资源的控制</code>.</p>
+<p>PCB中都维护了哪些数据成员？<em>(不用记忆，理解如何控制进程及其访问的资源就能记住)</em></p>
+<ul>
+<li>进程id (pcb对应的进程id，libc或者glibc中的pid_t, 非负整数)</li>
+<li>进程的状态(ps aux | more查看STAT) <img src="http://omotkhw3y.bkt.clouddn.com/%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81.png" alt="ps aux | more"></li>
+<li>寄存器的值(进程切换&amp;恢复)</li>
+<li>虚拟地址空间的信息(可能是一张实际物理地址的映射二维表, 内核进程没有)</li>
+<li>终端的信息(pts或者tty, 执行的进程有的是需要控制终端的)</li>
+<li>当前工作目录(shell也是根据你当前的目录信息来解析你输入的命令)</li>
+<li>umask掩码(控制文件修改/创建的默认权限)</li>
+<li>文件描述符表 (进程维护一张二维表，其中表项目(item)指向系统的打开的目录文件表，之后该表中的文件指针才去指向i-node;整形，其实是hash值)</li>
+<li>信号相关的信息</li>
+<li>进行凭证(gid, uid, suid, euid …)</li>
+<li>会话session相关信息</li>
+<li>进程组相关的信息</li>
+<li>进程可以使用的资源上限(resource limit)<br>(例如最大线程的数量(根据实际硬件情况)，栈的大小(8K,8192)，最多能打开的文件数量(1024))<br><img src="http://omotkhw3y.bkt.clouddn.com/ulimit.png" alt="ulimit -a"></li>
+<li><p>时钟(定时器)</p>
+</li>
+<li><p>…(等等)</p>
+</li>
+</ul>
+<h2 id="程序-amp-进程内存模型"><a href="#程序-amp-进程内存模型" class="headerlink" title="程序&amp;进程内存模型"></a>程序&amp;进程内存模型</h2><p>程序和进程： </p>
+<ul>
+<li>二进制代码(指令集合)是程序(就像剧本)，<code>加载进入内存，使用系统资源</code>的一个运行实例就是进程(上演的话剧)。实际上扣住本质，<code>加载进入内存，使用系统资源(比如文件资源，保存临时数据的堆栈，挂起的信号等)</code>即可， 更专业的术语：<code>an executing address space and the required system resources including cpu and file descriptors</code></li>
+<li>程序转换为进程：内核将程序读入内存，内核为该进程分配进程pid&amp;其他资源，内核保存pid&amp;进程状态，放入就绪队列等待执行(等待被调度)</li>
+<li>程序和进程是一对多的关系</li>
+</ul>
+<p>进程和线程：</p>
+<ul>
+<li>内核并不区分线程和进程，也就是说没有特殊的数据结构或者字段去表示线程，线程就当做<code>轻量级进程(LWP)</code>，同样用PCB来描述</li>
+<li>Linux中内核调度的实体是LWP，而用户用posix pthread创建的是用户级线程，两者通过posix线程实现库件关联起来</li>
+<li>posix pthread只是定义了线程库的标准，具体实现交给了<code>NPTL</code>(Native Posix Thread Library)，其中另外两种实现LinuxThreads没有内核支持被废弃，NGPT效率不高也被废弃</li>
+<li>一般情况下getpid()系统调用返回的是当前进程控制块(pcb)的<code>tgid</code>(线程组id), 而不是current-&gt;pid (线程组的概念由NPTL提出); 就是说，如果一个进程是有多个线程，那么第一个主线程的tgid就是它的pid；但是其他的线程，即轻量级进程的pid并不等于tgid.(getpid拿到的其实是首线程的pid，而不是其他线程的pid;但是一定拿到的是所有线程的tgid)</li>
+<li>内核中不谈线程(线程多用于用户级或者linux系统编程)，只谈进程管理，调度…</li>
+</ul>
+<p>进程状态：</p>
+<ul>
+<li>TASK_RUNNING 可运行或者正在运行状态</li>
+<li>TASK_STOPPED 暂停(停止)状态(SIGSTOP 19, SIGSTSTP 20, SIGTTIN 21, SIGTTOU 22)</li>
+<li>TASK_TRACED 跟踪状态</li>
+<li>TASK_INTERRUPTIBLE  可中断&amp;可唤醒状态(中断，或者信号都可以让正在挂起(睡眠)的它进入就绪)</li>
+<li>TASK_UNINTERRUPTIBLE 不可中断状态(比如进程读取设备的时候)</li>
+<li>TASK_NONINTERACTIVE 和上面两个一起用，不提供任何信息(防止使用管道的进程或者更多交互)—用于管道</li>
+</ul>
+<p>进程模型(32位x86):<br>了解内存布局，并不是真的闲的无聊，而是了解进程虚拟地址空间对于以后分析和解决诸如<code>可重入函数(reentrancy)</code>，<code>返回静态指向静态分配内存的指针</code>等问题有帮助。</p>
+<p>先看一下<code>size</code>命令(Displays the sizes of sections inside binary files)</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/size_file_elf.png" alt="size [elf_file]"></p>
+<p>大概如下：（<code>暂时没有考虑共享内存的分配以及共享库的加载位置</code>）<br><img src="http://omotkhw3y.bkt.clouddn.com/process_mem_structure.png" alt="简单内存结构图"><br>(特别注意heap和stack中间是有保存的)<br>(临时返回值到底是保存在<code>函数调用前就开辟的栈空间</code>中，还是<code>寄存器</code>中，具体平台具体分析)</p>
+<p>补充：</p>
+<ol>
+<li><code>section</code>可以在编译的时候用GNU扩展的<code>__attribute__</code>指定一下</li>
+<li>.data段只读，可共享；.bss段运行时才初始化为0；但两个区域都是存储的<code>全局变量</code>或<code>静态变量</code>。</li>
+<li>该进程3G-4G是内核进程部分，主要维护pcb相关信息。</li>
+</ol>
+<p>还没说完：</p>
+<ol>
+<li><code>共享内存在进程中如何映射</code></li>
+<li><code>共享库呢？</code><br>在堆区的某一位置，设置了一个标志，从此标志以上的某一段区间就是给<code>共享内存</code>或者<code>共享库</code>使用的。</li>
+</ol>
+<h2 id="进程凭证"><a href="#进程凭证" class="headerlink" title="进程凭证"></a>进程凭证</h2><p>其实就是进程标识符：<br>比如：</p>
+<pre><code>pid, tgid; uid, gid; euid, egid; suid, sgid; fsuid, fsgid;
+</code></pre><ul>
+<li><p>其中， 虽然pid是32位unsigned int, 但是为了兼容16位Unix硬件平台，当前的最大pid数量依旧是2^15-1即32767; 超过了就要从头开始使用闲置的(300以内系统保留给daemon)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cat /proc/sys/kernel/pid_max #结果是32768，其实就是内核常量PID_MAX+1</div><div class="line">#注意64位的的及其可能是 2^22</div></pre></td></tr></table></figure>
+</li>
+<li><p>euid, egid是程序要访问特权代码/数据时需要检查的运行时权限， 由setuid程序(通常是些服务程序，如网络访问程序)运行时产生的euid, egid。注意只能用于可执行文件。<br>(owner, group: <code>x + s = S</code>)也就是说运行时提升到了owner的权限</p>
+</li>
+<li>sticky bit，用于目录，显示在other用户的可执行位置(如果owner创建的目录，除了owner子集和root其他人即使有权限，也不能删除。<br>chmod o+t dir; (<code>x + t =T</code>)</li>
+<li>suid, sgid是当进程的euid, egid被改变的时候， 来保存原来的euid,egid</li>
+<li>fsuid, fsgid访问特定文件系统时需要检查的运行时权限(可以看做是euid和egid的补充)</li>
+</ul>
+<h2 id="proc文件系统"><a href="#proc文件系统" class="headerlink" title="/proc文件系统"></a>/proc文件系统</h2><p>本质是查看当前系统有哪些进程，状态如何，关系如何以及使用了哪些文件/网络/锁这种，并且/proc的方式避免了直接窥视内核维护的数据结构可能带来的问题。（<code>更简单的方式访问内核信息</code>）<br>其中比较重要的是<code>/proc/[pid]/status</code>, <code>/proc/[pid]/task</code>，<code>/proc/sys/kernel/pid_max</code></p>
+<p>/proc虚拟文件(pseudo-filesystem)系统<em>**</em><br>虚拟的意思是，其所包含的文件/子目录并不真实存储在磁盘上，而是由内核在进程访问此类信息的时候动态生成。例如： <img src="http://omotkhw3y.bkt.clouddn.com/cat_proc_1_status.png" alt="cat /proc/1/status"></p>
+<ol>
+<li><p>/proc/pid/<br> 下其他文件节点：  (基本都是只读的)—并且<code>变化不定</code></p>
+<ul>
+<li>status (各种信息：pid,tgid,内存使用量，信号)</li>
+<li>mem 进程虚拟内存</li>
+<li>maps 内存映射</li>
+<li>fd 进程所打开文件的符号链接（目录）</li>
+<li>cwd 当前进程的工作目录的符号链接</li>
+<li>cmdline 以\0分隔的命令行参数</li>
+<li>Environ 以\0分隔的环境列表</li>
+<li>task目录下以每个线程的tid命名的文件夹可以查看线程的status节点，例如<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat /proc/1/task/1/status</div></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>/proc/*<br>主要有： （可能需要特权权限）</p>
+<ul>
+<li>/proc/net  <code>网络和套接字相关信息</code> <img src="http://omotkhw3y.bkt.clouddn.com/ls_proc_net.png" alt="ls /proc/net"></li>
+<li>/proc/sys/* 系统配置相关信息 （例如上面，查看最大的进程数字 cat /proc/sys/kernel/pid_max）<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">echo</span> 1000 &gt; /proc/sys/kernel/pid_max</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>/proc/[pid]/ns<br>进程可以规划到命名空间， 每次新创建fork/exec*新进程的时候，也会设置namespace.<br>(具体可以等到了解容器相关技术的时候在说—–我当前不太了解，不再多说)<img src="http://omotkhw3y.bkt.clouddn.com/proc_pid_ns.png" alt="proc_pid_ns"></p>
+</li>
+</ol>
+<p>uname()系统调用<br>写一个小程序就知道了：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> _GNU_SOURCE</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/utsname.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt; //printf</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt; //exit</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">struct</span> utsname uts;</div><div class="line">    <span class="keyword">if</span>(uname(&amp;uts) == <span class="number">-1</span>)&#123;</div><div class="line">        perror(<span class="string">"shit"</span>);</div><div class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Node name: (DNS prefix Name) %s\n"</span>,  uts.nodename);</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"System name: %s\n"</span>, uts.sysname);</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Release: %s\n"</span>, uts.sysname);</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Version: %s\n"</span>, uts.version);</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Machine: %s\n"</span>, uts.machine);</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _GNU_SOURCE</span></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Domain name: %s\n"</span>, uts.domainname);</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面的uts结构体<code>struct utsname</code>来源于”UNIX Time-Sharing System”。</p>
+<hr>
+<h1 id="Linux进程管理-控制"><a href="#Linux进程管理-控制" class="headerlink" title="Linux进程管理(控制)"></a>Linux进程管理(控制)</h1><h2 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h2><p>系统进程(操作系统创建)<br>(管理和分配系统资源的进程，一般是由系统创建)</p>
+<ol>
+<li>产生shell进程的过程如下：(注意这里并不去具体的谈论<code>内核初始化</code>或者<code>内核的引导过程</code>)<ul>
+<li>根据系统的静态配置(init_task.h)产生0号进程(idle进程，只是执行cpu_idle()函数)<br>(系统的空闲时间就是idle线程运行的时间；当没有其他进程运行时就运行它)</li>
+<li>–&gt; 通过高kernel_thread创建一个和0号进程共享地址空间的1号内核线程pid=1</li>
+<li>–&gt; init内核线程exec产生1号用户进程(此过程并没有调用do_fork只是根据inittab加载可执行程序init, 所以进程号是不变的)</li>
+<li>–&gt; fork出getty()进程</li>
+<li>–&gt; exec*() login进程</li>
+<li>–&gt; 登录成功的话产生shell进程</li>
+</ul>
+</li>
+<li>shell进程如何产生别的进程？<br>大致步骤如下：</li>
+</ol>
+<ul>
+<li>用户在shell中输入执行命令</li>
+<li>shell进程搜索命令的可执行文件</li>
+<li>利用fork/clone创建子进程</li>
+<li>shell创建的子进程载入可执行文件，并开始执行</li>
+<li>shell等待子进程的结束(或者子进程自己退出)</li>
+</ul>
+<p>非系统进程(用户或者用户的程序创建)<br>这个就是普通的创建问题，谈论一下:</p>
+<pre><code>1. fork, clone, exec, vfork(可以不使用)
+2. do_fork, clone, copy_process问题
+3. fork之后和父进程共享哪些，不共享哪些
+</code></pre><p>其实从上面，shell创建子进程的过程，明显的可以发现，创建过程是可以细分为两个阶段的：</p>
+<ol>
+<li>fork/clone/vfork阶段—–复制父进程的资源(到底是否复制页表或者真正进行写入，要由具体的系统决定，比如不复制页表的vfork，比如有的用copy-on-write技术)</li>
+<li>exec*阶段—-儿子一般是要和爸爸有些区别的，或者虽然共享了代码段，但不一定执行，所以用exec相关系统调用去读取/载入命令的可执行文件</li>
+</ol>
+<p>fork,clone,vfork: 这三个一般，fork用的最多，最近的fork一般都采用了cow技术，虽然也复制了页表，但是仅仅是在修改数据的时候才真正进行写入，也正是由于这种原因导致vfork基本可以到了废弃的地步。但是vfork出生的初衷是好的，既然子进程出来就是要执行另外的一段代码，那还不如在它执行之前，让父子进程共享地址空间(页表), 先让父进程阻塞住，等到子进程加载完自己的可执行文件(需要执行自己的代码)，再让父进程恢复。—-也就是说，vfork和fork的区别就是<code>在复制父进程资源的是时候是否复制页表--是否共享地址空间</code>(因为此而导致的父进程挂起(且子进程只能运行exec或者exit)只能说是副作用，或者说是一种解决由此产生的问题的一种手段，方法)</p>
+<p>(fork的代码太简单了，我就不写示例程序了，但是注意cow特性以及多进程fork的时候，子进程break出去—不能让子进程复制子进程(容易乱)，只能让最原始的父进程统一fork)</p>
+<p>而clone就是个定制化的fork。你可以指定在复制父进程资源的时候，哪些要复制&amp;哪些不用复制—-以此来精确提升复制效率。<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/* Prototype for the glibc wrapper function */</div><div class="line"></div><div class="line">#define _GNU_SOURCE</div><div class="line">       #include &lt;sched.h&gt;</div><div class="line"></div><div class="line">int clone(int (*fn)(void *), void *child_stack,</div><div class="line">                 int flags, void *arg, ...</div><div class="line">             /* pid_t *ptid, struct user_desc *tls, pid_t *ctid */ );</div><div class="line"></div><div class="line">/* Prototype for the raw system call */</div><div class="line"></div><div class="line">long clone(unsigned long flags, void *child_stack,</div><div class="line">                 void *ptid, void *ctid,</div><div class="line">             struct pt_regs *regs);</div></pre></td></tr></table></figure></p>
+<p>其中的<code>flags</code>用于标志需要从父进程复制的资源，举个例子(可以简单的认为)： <code>vfork = clone + CLONE_VM + CLONE_VFORK + SIGCHLD</code>(具体可以参考一下<code>kernel/process.c的源码</code>)，其中的CLONE_VM表示就表示共享地址空间，就好像是在fork轻量级进程(LWP)一样，实际上pthread_create()也是通过调用clone实现的。</p>
+<p><code>fn</code>是新进程需要执行的代码函数； <code>child_stack</code>指定为新进程分配的栈地址(有时候为了父子共享，你需要传递指针在的指针)，<code>arg</code>可变参数就是传递给新进程的参数.</p>
+<p>这个函数的调用不是很容易，有很多注意的地方，这个要给一个示例：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> _GNU_SOURCE</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sched.h&gt; //clone</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">int</span> data = <span class="number">10</span>;</div><div class="line"><span class="keyword">void</span> **<span class="built_in">stack</span> = <span class="number">0</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">child_process</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Child Process %d, %d data %d\n"</span>, getpid(), getppid(), data);</div><div class="line"></div><div class="line">    data = <span class="number">20</span>;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Child Process %d, data %d\n"</span>, getpid(), data);</div><div class="line">    <span class="built_in">exit</span>(<span class="number">2</span>);</div><div class="line">    <span class="comment">//while(1);</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">stack</span> = (<span class="keyword">void</span>**) <span class="built_in">malloc</span>(<span class="number">8192</span>);</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(<span class="built_in">stack</span> == <span class="literal">NULL</span>)&#123;</div><div class="line">        perror(<span class="string">"error:"</span>);</div><div class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//share the address, file systems, signal action, fd</span></div><div class="line">    <span class="keyword">int</span> clone_flag = CLONE_VM | CLONE_SIGHAND | CLONE_FS | CLONE_FILES;</div><div class="line">    clone(child_process, <span class="built_in">stack</span>, clone_flag, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">    sleep(<span class="number">1</span>);</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Parent process %d, data %d\n"</span>, getppid(), data);</div><div class="line"></div><div class="line">    <span class="keyword">while</span>(<span class="number">1</span>);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行结果可能是由于<code>核心转储</code>机制的原因(给出当前页表的情况)，所以应该用gdb去看(否则直接<code>setmentation fault</code>了)<br><img src="http://omotkhw3y.bkt.clouddn.com/clone_process_vm.png" alt="clone_process"></p>
+<p>注意： <code>CLONE_VM</code>这个参数并不好用，去关注一下pthread_create()是怎么用的。</p>
+<p>clone虽然详细给出了复制时可以<code>选择性</code>复制的便利，但是并没有解决<code>如何复制</code>(具体过程是怎么样的呢？pcb, 栈，资源等的处理)，以及复制具体对应到页表(虚拟地址)的哪一段，故而又生出来了<code>do_fork</code>系统调用，在内核中是以do_fork()函数封装的系统调用(kernel/fork.c里面)，就不去贴代码了，总之，大概是这样的关系：</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/fork_relationship.png" alt="fork_relationship"><br>其中<code>CLONE_KERNEL</code>是一个宏，大概是这样定义的：</p>
+<pre><code>#define CLONE_KERNEL (CLONE_FS | CLONE_FILES | CLONE_SIGHAND)
+</code></pre><p>相关代码，请参考具体的内核实现。</p>
+<p>fork什么时候失败？</p>
+<pre><code>CHILD_MAX限制 或者没有足够内存创建页表(虚拟内存不足)
+(fork失败时 error会被设置为EAGAIN)
+</code></pre><p>system(const char *str)</p>
+<pre><code>启动新进程： 库函数system(const char *str);  等同于 sh -c str;  无法启动shell返回127， 其他错误返回-1， 正常返回退出码；调用成功返回0；
+但是system往往是fork, exec*()出来的shell先返回， 而原来的进程后返回， 打印效果不是很理想， 需要更细力度的控制-----用系统调用fork,exec等，而不是库函数
+如果fcntl没有设置 close on exec flag, 那么父进程中打开的文件资源， 在子进程中依旧保持打开状态
+</code></pre><p>进程表</p>
+<pre><code>维护进程pid信息， 同时运行的最大pid数量只与用来建立进程表项的内存容量有关，不在存在限制（早期的Unix限制为256）32657
+</code></pre><p>其他补充：</p>
+<pre><code>内核中获取进程标识是用的current宏，而平时系统编程用的是getpid,getppid
+内核的进程调用，并不仅仅是根据nice值来进行进程调度的，它也会参考进程的起始时间等
+用户进程--&gt;内核进程： 中断 &amp; 系统调用
+</code></pre><h2 id="销毁"><a href="#销毁" class="headerlink" title="销毁"></a>销毁</h2><p>正常死亡，被信号杀死， SIGCHILD</p>
+<p>这里大致涉及3个问题：</p>
+<pre><code>1. exit(), _exit()问题
+2. do_exit()和父子关系更新问题
+3. 退出和信号问题(abort异常终止问题，return返回问题)
+</code></pre><p>关于第一点：<br>exit()和_exit()差别还是挺大的，主要的有定义的头文件，<stdlib.h>和<unistd.h>，以及调用系统调用的封装函数前是否调用相关的资源处理函数，以及是否会自动刷新一下缓冲区(如果是采用缓冲室IO读写文件资源的话)</unistd.h></stdlib.h></p>
+<p>关于第二点：<br>其实子进程，如果退出了，一定会通知父进程/或者同组的其他进程，大致关系如下：<br><img src="http://omotkhw3y.bkt.clouddn.com/do_exit.png" alt=""></p>
+<p>其中<code>sys_exit_group()</code>会把进程组内的所有进程全部终止掉。而<code>do_exit()</code>则是删除所有对当前进程的引用。<br>你去看do_exit()就能发现进程推出前会发送<code>exit_signal</code>设置退出状态；如果已经成了孤儿，那么退出时状态为’EXIT_DEAD’，否则(并且父进程没有wait())设置为<code>EXIT_ZOMBIE</code></p>
+<p>关于第三点：<br>异常退出的情况一般是两种：</p>
+<ol>
+<li>收到内核发送过来的信号(kill或者raise)</li>
+<li>abort()<br>之后执行内核中的一段代码，清理相关的资源。(这一点可以看一下信号中内核是如何实现信号的处理的；凡是进入内核态，总是要找点儿理由的，你说呢？)</li>
+</ol>
+<p>return语句是把当前的流程控制权返还给调用函数/调用者；<br>exit执行完毕是把控制权交给系统。</p>
+<h2 id="等待-回收子进程"><a href="#等待-回收子进程" class="headerlink" title="等待(回收子进程)"></a>等待(回收子进程)</h2><p>wait, waitpid；我觉得这个里面稍稍有意思的地方有两个：</p>
+<ol>
+<li>同步阻塞还是异步(询问之后，直接返回)</li>
+<li>waitpid可以通过传递不同的option参数来指定不同的行为(pid&gt;0, =0，pid&lt;-1,=-1相当于wait(NULL))</li>
+</ol>
+<p>可能还要注意一下返回值，或者那个传出参数status相关状态的判断(系统定义了一些列的宏)但是不管哪一种，都是用来避免僵尸进程的(先阻塞自己，然后看看有没有已经结束的子进程)。</p>
+<p>下面直接写俩demo：</p>
+<p>第一个代码wait, <code>WEXITSTATUS</code><br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt; //Need exit()</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt; //Need wait()</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;  //Need wait()</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;  //Need sleep()</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">pid_t</span> pid = fork();</div><div class="line">    <span class="keyword">if</span>(pid &lt; <span class="number">0</span>)&#123;</div><div class="line">        perror(<span class="string">"fork error"</span>);</div><div class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</div><div class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pid==<span class="number">0</span>)&#123;</div><div class="line">        sleep(<span class="number">2</span>);</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pid&gt;<span class="number">0</span>)&#123;</div><div class="line"></div><div class="line">        <span class="keyword">int</span> status;</div><div class="line">        waitpid(pid, &amp;status,<span class="number">0</span>); <span class="comment">//status = (result_of_child % 256)*256;</span></div><div class="line">        <span class="keyword">if</span>(WIFEXITED(status))&#123;</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"the status of child : %d  %d\n"</span>, status, WEXITSTATUS(status));</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>第二个代码waitpid以及获取相关的状态：<br>参数：</p>
+<pre><code>WNOHANG     异步，没有子进程结束，就立即返回
+WUNTRACED   子线程暂停立即返回，但是结束不予理会
+</code></pre><p>(可以连在一起使用 <code>WNOHANG | WUNTRACED</code> , 还是想像wait一样阻塞使用， 请直接传0)</p>
+<p>返回值：</p>
+<ol>
+<li>正常如果回收到了，就返回收集到的子进程的id</li>
+<li>如果返回0，多半是因为设置了<code>WNOHANG</code>，然后你需要轮寻</li>
+<li>出错返回-1设置errno (特别的当子进程不存在，或者不是该进程的子进程，errno一般设置为ECHLD)</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</div><div class="line">    <span class="keyword">pid_t</span> pid, wait_result;</div><div class="line">    pid = fork();</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(pid&lt;<span class="number">0</span>)&#123;</div><div class="line">        perror(<span class="string">"fork error"</span>);</div><div class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</div><div class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pid ==<span class="number">0</span>)&#123;</div><div class="line">        sleep(<span class="number">10</span>);</div><div class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pid &gt;<span class="number">0</span> )&#123;</div><div class="line">        <span class="keyword">do</span>&#123;</div><div class="line">            wait_result = waitpid(pid, <span class="literal">NULL</span>, WNOHANG);</div><div class="line">            <span class="keyword">if</span>(wait_result == <span class="number">0</span> )&#123;</div><div class="line">                <span class="built_in">printf</span>(<span class="string">"No Child exited\n"</span>);</div><div class="line">                sleep(<span class="number">1</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;<span class="keyword">while</span>(wait_result==<span class="number">0</span>);</div><div class="line">        <span class="keyword">if</span>(pid == wait_result)&#123;</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"finally, u are done %d\n"</span>, wait_result);</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"must sth wrong..\n"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="Linux特殊进程"><a href="#Linux特殊进程" class="headerlink" title="Linux特殊进程"></a>Linux特殊进程</h1><h2 id="孤儿"><a href="#孤儿" class="headerlink" title="孤儿"></a>孤儿</h2><p>父进程如果先死亡了，子进程自然成了孤儿，这个时候一般系统会寻找其兄弟进程或者1号进程作为其父进程。<br>(当然后爹会为这些孤儿收尸的；其实成为孤儿不一定都是坏的，为什么？这相当于收尸的<code>代价转移</code>)</p>
+<h2 id="僵尸进程"><a href="#僵尸进程" class="headerlink" title="僵尸进程"></a>僵尸进程</h2><p>理论上，只要子进程死亡了，那么他就是僵尸；如果有人为他收尸(不管他亲爹还是后爹)，那么他就<code>不再</code>是僵尸；如果没有，那么内核就会保存其pcb维护的相关数据结构，但是不进行清理也不进行调度，就在内存中放着(如此一来系统资源就被长期耗着)；你可以简单理解称，<code>子进程已经退出，而父进程没有退出</code>。僵尸进程是杀不死的，<code>kill -9</code>也是杀不死的，一般处理方式是，让父进程处理SIGCHILD信号；父进程显示回收，比如使用wait()相关的函数;或者比较野蛮的，直接杀死它的parent进程，让init进程去收拾它(但是init进程收拾它的时间可能不确定)</p>
+<p> 一般处理僵尸进程的方法和技巧：</p>
+<ol>
+<li>杀死父进程</li>
+<li>处理SIGCHILD函数使用wait</li>
+<li>设置忽略该信号SIGCHLD, SIGIGN</li>
+<li>fork两次，子进程的回收自己来处理(设置忽略即可)， 把孙进程的回收代价交给init进程</li>
+</ol>
+<p>但是如果你能避免，最好要避免。</p>
+<h2 id="守护进程"><a href="#守护进程" class="headerlink" title="守护进程"></a>守护进程</h2><p>守护进程的特殊的地方在于它脱离了控制终端， 有了这一点，它就能在后台长期存在，周期性地执行某些任务。</p>
+<p>关键的是守护进程的创建的一般步骤：</p>
+<ol>
+<li>创建子进程作为守护进程，然后父进程退出(目的是让1号进程领养守护进程)</li>
+<li>在子进程中创建新会话（从而脱离父进程的进程组，会话，以及终端）—这一步是脱离控制的关键,setsid() - run a program in a new session</li>
+<li>改变当前目录为其他目录(比如根目录)—避免后期要进入有些目录有麻烦–chdir();</li>
+<li>重新设置文件权限掩码(mask(0))</li>
+<li>关闭文件描述符(至少和终端关联的0,1,2文件描述符是没有存在的必要了)</li>
+</ol>
+<p>其中setsid的作用：</p>
+<ol>
+<li>让进程摆脱原来会话的控制</li>
+<li>让进程摆脱原进程组的控制</li>
+<li>让进城摆脱原控制终端的控制</li>
+</ol>
+<p>补充概念：</p>
+<p>终端<br>与用户交互的界面。<br>终端的概念, pst, tty问题, 终端的实现原理</p>
+<p>进程组<br>进程组是进程和集合。组长的ID就是进程组组ID，并且组长的退出并不会影响进程组ID。</p>
+<p>多个进程组是一个或者多个进程组的集合。<br>(简单说，从用户登录到用户退出，期间所有的进程都属于该会话时期)</p>
+<hr>
+<h1 id="Linux进程通信"><a href="#Linux进程通信" class="headerlink" title="Linux进程通信"></a>Linux进程通信</h1><p>Unix IPC: Signals, Pipes<br>Sytem V IPC:  Shared Memory, Semaphore, Message Queues.</p>
+<p>管道（Pipe）及有名管道（named pipe）：管道可用于具有亲缘关系进程间的通信，有名管道克服了管道没有名字的限制，因此，除具有管道所具有的功能外，它还允许无亲缘关系进程间的通信；<br>信号（Signal）：信号是比较复杂的通信方式，用于通知接受进程有某种事件发生，除了用于进程间通信外，进程还可以发送信号给进程本身；linux除了支持Unix早期信号语义函数sigal外，还支持语义符合Posix.1标准的信号函数sigaction（实际上，该函数是基于BSD的，BSD为了实现可靠信号机制，又能够统一对外接口，用sigaction函数重新实现了signal函数）；<br>消息队列（Message）：消息队列是消息的链接表，包括Posix消息队列system V消息队列。有足够权限的进程可以向队列中添加消息，被赋予读权限的进程则可以读走队列中的消息。消息队列克服了信号承载信息量少，管道只能承载无格式字节流以及缓冲区大小受限等缺点。<br>共享内存：使得多个进程可以访问同一块内存空间，是最快的可用IPC形式。是针对其他通信机制运行效率较低而设计的。往往与其它通信机制，如信号量结合使用，来达到进程间的同步及互斥。<br>信号量（semaphore）：主要作为进程间以及同一进程不同线程之间的同步手段。<br>套接口（Socket）：更为一般的进程间通信机制，可用于不同机器之间的进程间通信。起初是由Unix系统的BSD分支开发出来的，但现在一般可以移植到其它类Unix系统上：Linux和System V的变种都支持套接字。</p>
+<p>由于IPC本身是一个复杂的内容，以至于<a href=""><unp volume2=""></unp></a>就专门为此写了一本书详细探索，我下面只是精华过一遍，加上一些核心代码。</p>
+<blockquote>
+<p>进程件通信也是很重要的内容， 但是由于我的计划安排的时间已经到了，所以还是下次有时间在来补上。估计是一个月后。</p>
+</blockquote>
+<p>IPC的优缺点：</p>
+<p>管道：速度慢，容量有限，只有父子进程能通讯<br>有名管道（named pipe）：任何进程间都能通讯，但速度慢<br>消息队列：容量受到系统限制，且要注意第一次读的时候，要考虑上一次没有读完数据的问题<br>信号量：不能传递复杂消息，只能用来同步<br>共享内存：能够很容易控制容量，速度快，但要保持同步，比如一个进程在写的时候，另一个进程要注意读写的问题，相当于线程中的线程安全，当然，共享内存区同样可以用作线程间通讯，不过没这个必要，线程间本来就已经共享了同一进程内的一块内存</p>
+<h2 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h2><h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><h2 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h2><h2 id="文件-mmap相关"><a href="#文件-mmap相关" class="headerlink" title="文件(mmap相关)"></a>文件(mmap相关)</h2><h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><h2 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h2><p>semaphore对象的计数值大于0，为signaled状态；<br>计数值等于0，为nonsignaled状态. semaphore对象适用于控制一个仅支持有限个用户的共享资源。(同时控制多个事物的竞争和掠夺； 俗称PV原语) </p>
+<hr>
+<h1 id="Linux进程调度"><a href="#Linux进程调度" class="headerlink" title="Linux进程调度"></a>Linux进程调度</h1><h2 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h2><h2 id="实时性"><a href="#实时性" class="headerlink" title="实时性"></a>实时性</h2><h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>理论+实践，估计能说一本书。</p>
+<p>从使用的角度来看， 貌似内容也不是太多， 创建/销毁，以及IPC。大概就是这三部分内容。</p>
+<h2 id="创建销毁相关"><a href="#创建销毁相关" class="headerlink" title="创建销毁相关"></a>创建销毁相关</h2><ol>
+<li>fork, exec, exit，vfork(可以不使用)</li>
+<li>fork之后和父进程共享哪些，不共享哪些</li>
+<li>wait回收问题，僵尸进程问题</li>
+<li>多进程如何fork问题</li>
+<li>do_fork, clone, copy_process问题</li>
+<li>僵尸进程如何避免，如何处理(包括技巧)</li>
+</ol>
+<h2 id="IPC相关"><a href="#IPC相关" class="headerlink" title="IPC相关"></a>IPC相关</h2><ol>
+<li>信号，管道，共享内存，消息队列，信号量，或者文件的方式(包括mmap手动处理)， socket。各自的优缺点，适用范围。</li>
+</ol>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="">《后台开发核心技术与应用实践》</a> chapter 10, 11</li>
+<li><a href="">《Linux/Unix系统编程手册(上，下)》</a> chapter 6, 9, 12, 24, 25, 26, 27, 28, 35</li>
+<li><a href="">《Unix环境高级编程(第3版)》</a> chapter 7， 8， 9, 13， 15， 17</li>
+<li><a href="">《Linux系统编程》</a> chapter 5, 6  (author:  <code>ROBERT LOVE</code>)</li>
+<li><a href="">《Unix networking programming volume 2, 2e》</a> chapter  (author: <code>W.R.Stevens</code>)</li>
+<li><a href="">《Linux高级程序设计(第3版)》</a> chapter 3, 8, 9 ,10, 11</li>
+<li><a href="">《Linux内核修炼之道》</a> chapter 7,8 </li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)</p>
+<p>Sunday, 19. March 2017 11:24PM </p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a href="/2017/03/17/meet-tinyfool-again.html" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/03/11/start.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-03-12 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>6</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/c/">c++<span>3</span></a></li> <li><a href="/tags/linux/">linux<span>4</span></a></li> <li><a href="/tags/process/">process<span>1</span></a></li> <li><a href="/tags/ipc/">ipc<span>1</span></a></li> <li><a href="/tags/daemon/">daemon<span>1</span></a></li> <li><a href="/tags/c/">c<span>1</span></a></li> <li><a href="/tags/system-programming/">system programming<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引言"><span class="toc-article-text">引言</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#Linux进程模型"><span class="toc-article-text">Linux进程模型</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#进程控制块-pcb"><span class="toc-article-text">进程控制块(pcb)</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#程序-amp-进程内存模型"><span class="toc-article-text">程序&进程内存模型</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#进程凭证"><span class="toc-article-text">进程凭证</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#proc文件系统"><span class="toc-article-text">/proc文件系统</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#Linux进程管理-控制"><span class="toc-article-text">Linux进程管理(控制)</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#创建"><span class="toc-article-text">创建</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#销毁"><span class="toc-article-text">销毁</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#等待-回收子进程"><span class="toc-article-text">等待(回收子进程)</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#Linux特殊进程"><span class="toc-article-text">Linux特殊进程</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#孤儿"><span class="toc-article-text">孤儿</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#僵尸进程"><span class="toc-article-text">僵尸进程</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#守护进程"><span class="toc-article-text">守护进程</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#Linux进程通信"><span class="toc-article-text">Linux进程通信</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#信号"><span class="toc-article-text">信号</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#管道"><span class="toc-article-text">管道</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#共享内存"><span class="toc-article-text">共享内存</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#文件-mmap相关"><span class="toc-article-text">文件(mmap相关)</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#消息队列"><span class="toc-article-text">消息队列</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#信号量"><span class="toc-article-text">信号量</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#Linux进程调度"><span class="toc-article-text">Linux进程调度</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#优先级"><span class="toc-article-text">优先级</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#实时性"><span class="toc-article-text">实时性</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#小结"><span class="toc-article-text">小结</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#创建销毁相关"><span class="toc-article-text">创建销毁相关</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#IPC相关"><span class="toc-article-text">IPC相关</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>
