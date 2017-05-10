@@ -1,0 +1,313 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>using-regex-in-c | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="tell the rules of using posix regex express in c programming language">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="using-regex-in-c"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> using-regex-in-c</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> tell the rules of using posix regex express in c programming language
+		 </div> <!-- alert -->
+	  		
+
+	  <p>简单说一下posix环境下C语言对于regex表达式的支持, 并给出了相关的案例.<br><a id="more"></a></p>
+<hr>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>C语言中使用正则表达式可以很方便强大的来验证ip, url, email, phone等等的正确性.</p>
+<p>gnu提供了一系列(posix compatibile)函数来支持正则表达式, 具体可以查看一下<code>man 3 regex</code>.<br>(本文在man手册的基础上, 做了相关的验证和实验, Ubuntu16 x64)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;regex.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">regcomp</span><span class="params">(<span class="keyword">regex_t</span> *preg, <span class="keyword">const</span> <span class="keyword">char</span> *regex, <span class="keyword">int</span> cflags)</span></span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">regexec</span><span class="params">(<span class="keyword">const</span> <span class="keyword">regex_t</span> *preg, <span class="keyword">const</span> <span class="keyword">char</span> *<span class="built_in">string</span>, </span></span></div><div class="line">                 <span class="keyword">size_t</span> nmatch, <span class="keyword">regmatch_t</span> pmatch[], <span class="keyword">int</span> eflags);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">regfree</span><span class="params">(<span class="keyword">regex_t</span> *preg)</span></span></div><div class="line"></div><div class="line">size_t <span class="title">regerror</span><span class="params">(<span class="keyword">int</span> errcode, <span class="keyword">const</span> <span class="keyword">regex_t</span> *preg, <span class="keyword">char</span> *errbuf, </span></div><div class="line">                 <span class="keyword">size_t</span> errbuf_size);</div></pre></td></tr></table></figure>
+<p>上述函数, 也可以用于C++代码中, 具体可以参考源码<code>/usr/include/regex.h</code>的<code>extern C {</code>部分</p>
+<hr>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="详细介绍"><a href="#详细介绍" class="headerlink" title="详细介绍"></a>详细介绍</h2><p>上面已经看到了, posix c提供了三个函数处理函数和一个错误处理函数:(reg作为其前缀)</p>
+<pre><code>1. regcomp()   把你写的原始pattern编译成c语言内部可以识别的格式
+2. regexec()   进行正则匹配 
+3. regfree()   释放存储编译后正则表达式的结构体regex_t
+4. regerror()  出错处理
+</code></pre><p>使用的时候, 必须先编译, 之后在进行匹配, 中间穿插着错误处理的检查, 相关工作做完之后, 进行释放.</p>
+<p>函数的详细解释如下:</p>
+<h3 id="编译函数regcomp"><a href="#编译函数regcomp" class="headerlink" title="编译函数regcomp"></a>编译函数regcomp</h3><pre><code>int regcomp (regex_t *compiled, const char *pattern, int cflags)
+</code></pre><p>(执行成功返回0)</p>
+<p>regex_t 是一个结构体数据类型(从使用的角度来说, 你不必太关心它的成员), 用来存放编译后的正则表达式;</p>
+<p>之所以要把你写的patten字符串<code>const char *pattern</code>编译成结构体格式<code>regex_t *compiled</code>的变量, 一方面是为了进行格式调整, 就像所有的入参都要进行检查一样, 把用户传入的数据, 进行格式化调整, 使匹配更加方便, 另一方面可能是受限于所用的regex引擎, 让它可以识别和解析.</p>
+<p>其中还提供了<code>int cflags</code>标志进行功能的限定和增强, 其作用在编译正则表达式期间, 其取值有:</p>
+<pre><code>1. REG_EXTENDED  以功能更加强大的扩展正则表达式的方式进行匹配
+2. REG_ICASE   匹配字母时忽略大小写
+3. REG_NOSUB  不用存储匹配后的结果,只返回是否成功匹配
+4. REG_NEWLINE
+</code></pre><p>(可以混合使用)<br>(看它的源码发现, 不设置参数直接传参数0就可以了; REG_EXTENDED是1, 后面依次左移1位)</p>
+<p>说明:</p>
+<pre><code>1. 第3个参数,如果设置该标志位, 那么在 regexec 将忽略nmatch(表示数组大小)和pmatch(数组本身)两个参数
+   (简单说不需要记录匹配结果了)
+2. 第4个参数,REG_NEWLINE 识别换行符, 这样&apos;$&apos;就可以从行尾开始匹配,&apos;^&apos;就可以从行的开头开始匹配
+   (如果没有指定, 那么讲忽略目标串中的换行, 真个当一个字符串处理).
+</code></pre><h3 id="匹配函数regexec"><a href="#匹配函数regexec" class="headerlink" title="匹配函数regexec"></a>匹配函数regexec</h3><pre><code>int regexec (regex_t *compiled, char *string, size_t nmatch, regmatch_t matchptr[], int eflags)
+</code></pre><ul>
+<li>regexec函数用来匹配我们的目标文本串<code>const char *string</code>. 函数执行成功返回0.</li>
+<li>compiled 是已经用regcomp()编译好的正则表达式, </li>
+<li>string 是目标文本串</li>
+<li>size_t nmatch表示匹配结果数组的元素个数,即数组的大小</li>
+<li>regmatch_t pmatch[]用来存储匹配结果的数组</li>
+</ul>
+<p><code>regmatch_t</code>结构体数据类型, 在 regex.h 中定义如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> &#123;</div><div class="line">    <span class="keyword">regoff_t</span> rm_so; <span class="comment">//存放匹配文本串在目标串中的开始位置</span></div><div class="line">    <span class="keyword">regoff_t</span> rm_eo; <span class="comment">//存放结束位置</span></div><div class="line">&#125; <span class="keyword">regmatch_t</span>;</div></pre></td></tr></table></figure>
+<p>一般是pmatch[0]存放主正则表达式, 后面的位置存放子正则表达式.</p>
+<p>eflags 有两个值:</p>
+<ul>
+<li>REG_NOTBOL 让特殊字符^无作用</li>
+<li>REG_NOTEOL 让特殊字符$无作用</li>
+</ul>
+<h3 id="释放函数regfree"><a href="#释放函数regfree" class="headerlink" title="释放函数regfree"></a>释放函数regfree</h3><pre><code>void regfree (regex_t *compiled)
+</code></pre><p>当我们使用完编译好的正则表达式后或者要重新编译其他正则表达式的时候, 我们可以用这个函数清空regex_t结构体的内容.<br>(即必须释放在进行下一次compile)</p>
+<h3 id="错误处理函数regerror"><a href="#错误处理函数regerror" class="headerlink" title="错误处理函数regerror"></a>错误处理函数regerror</h3><pre><code>size_t regerror (int errcode, regex_t *compiled, char *buffer, size_t length)
+</code></pre><p>把regecomp()或者regexec()产生的错误code, 转换成包含错误信息的字符串.</p>
+<p>当执行regcomp或者regexec产生错误的时候, 调用这个函数可以返回一个包含错误信息的字符串:</p>
+<ol>
+<li>errcode //regcomp或者regexec的返回值</li>
+<li>compiled //regcomp函数编译好的正则表达式, 这个值可以为NULL</li>
+<li>buffer 指向用来存放错误信息的字符串的内存空间</li>
+<li>length 指明buffer的长度 (buffer可能存不下)</li>
+</ol>
+<p>size_t 返回完整的错误信息字符串的长度, 第3个参数,如果错误信息的长度大于这个length,则regerror函数会自动截断超出的字符串, 但它仍然会全部长度.所以必须比较buffer的大小和实际返回的大小.</p>
+<p>例如:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//获取实际返回的长度</span></div><div class="line"><span class="keyword">size_t</span> real_len = regerror(errcode, compiled, buffer, <span class="keyword">sizeof</span>(buffer));</div><div class="line"></div><div class="line"><span class="comment">//比较一下实际返回长度和实际设置的buffer长度, 在buffer有限长度内进行截断</span></div><div class="line">buffer_len = real_len &lt; <span class="keyword">sizeof</span>(buffer) ? real_len : <span class="keyword">sizeof</span>(buffer) - <span class="number">1</span>;    </div><div class="line">buffer[buffer_len] = <span class="string">'\0'</span>;</div></pre></td></tr></table></figure></p>
+<p>当然, 你或许还有更好的做法, 总之一定要注意这个可能被截断的buffer的长度问题.</p>
+<h2 id="代码说明"><a href="#代码说明" class="headerlink" title="代码说明"></a>代码说明</h2><p>话不多说, 直接上代码.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;regex.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/*本程序是输出匹配或者没有匹配, 并不关心匹配结果*/</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></div><div class="line">&#123;</div><div class="line">  <span class="comment">/*没有编译的原来的正则表达式*/</span></div><div class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *regex_ptr = <span class="literal">NULL</span>;</div><div class="line">  <span class="comment">/*需要被检查的字符串*/</span></div><div class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *text_ptr = <span class="literal">NULL</span>; </div><div class="line"></div><div class="line">  <span class="comment">/*编译过后的正则表达式*/</span></div><div class="line">  <span class="keyword">regex_t</span> compiled_regex;</div><div class="line">  <span class="comment">/*错误码*/</span></div><div class="line">  <span class="keyword">int</span> error_code = <span class="number">0</span>;</div><div class="line">  <span class="comment">/*存储错误信息的buffer*/</span></div><div class="line">  <span class="keyword">char</span> error_msg[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line">  <span class="comment">/*出错信息的字符串, 先初始化为0*/</span></div><div class="line">  <span class="keyword">size_t</span> len_error_msg = <span class="number">0</span>; <span class="comment">//watch out init with zero</span></div><div class="line"></div><div class="line">  <span class="comment">/*运行的时候, 需要用户从命令行传入参数*/</span></div><div class="line">  <span class="keyword">if</span> (argc != <span class="number">3</span>) &#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Usage: &lt;%s&gt; &lt;RegexString&gt; &lt;Text&gt;\n"</span>, argv[<span class="number">0</span>]);</div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line"></div><div class="line">  regex_ptr = argv[<span class="number">1</span>];</div><div class="line">  text_ptr = argv[<span class="number">2</span>];</div><div class="line"></div><div class="line">  <span class="comment">//do not print the result, we just care match or not.</span></div><div class="line">  error_code = regcomp(&amp;compiled_regex, regex_ptr, REG_EXTENDED|REG_NOSUB);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (error_code == <span class="number">0</span>) &#123;</div><div class="line">      error_code = regexec(&amp;compiled_regex, text_ptr, <span class="number">0</span>, <span class="literal">NULL</span>, <span class="number">0</span>);</div><div class="line">      <span class="keyword">if</span> (error_code == <span class="number">0</span>) &#123;</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"%s matches %s\n"</span>, text_ptr, regex_ptr);</div><div class="line">	regfree(&amp;compiled_regex);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  len_error_msg </div><div class="line">  	= regerror(error_code, &amp;compiled_regex, error_msg, <span class="keyword">sizeof</span>(error_msg));</div><div class="line"></div><div class="line">  <span class="comment">/*取短进行截断*/</span>	</div><div class="line">  len_error_msg </div><div class="line">  	= len_error_msg &lt; <span class="keyword">sizeof</span>(error_msg) ? len_error_msg : <span class="keyword">sizeof</span>(error_msg) - <span class="number">1</span>;</div><div class="line">  error_msg[len_error_msg] = <span class="string">'\0'</span>; <span class="comment">//watch out here, we using len_error_msg</span></div><div class="line">  </div><div class="line">  <span class="built_in">printf</span>(<span class="string">"code %d, err msg: %s\n"</span>, error_code, error_msg);</div><div class="line"></div><div class="line">  <span class="comment">/*释放结构体*/</span></div><div class="line">  regfree(&amp;compiled_regex);</div><div class="line">  </div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>编译 <code>gcc -g -Wall main.c -o main</code><br>运行一下:</p>
+<ol>
+<li><p>匹配网址(url)：<br><code>./main &quot;http:\/\/www\.\w+\.com\/?&quot; &quot;http://www.baidu.com/&quot;</code></p>
+</li>
+<li><p>匹配邮箱(email)：<br>注意这种类型: <code>hermione+regexone@hogwarts.com</code><br><code>merlin.yu</code> —&gt; <code>\w+([+.-]\w+)*</code><br><code>merlin.yu@</code> —&gt; <code>\w+([+.-]\w+)*@</code><br><code>merlin.yu@xxx.xxx</code> —&gt; <code>\w+([+.-]\w+)*@\w+([+.-]\w+)*\.\w+([+.-]\w+)*</code></p>
+<p>如果’@’后面部分不允许’+’的话,可以改成:<br><code>\w+([+.-]\w)*@\w+([.-]\w)*\.\w+([.-]\w)*</code></p>
+<p>运行<br><code>./main &quot;\w+([+.-]\w)*@\w+([.-]\w)*\.\w+([.-]\w)*&quot; &quot;wizardmerlin945@gmail.com&quot;</code></p>
+</li>
+</ol>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>3个步骤, regcmp(), regexec(), regfree.<br>中途在regexec()运行之后,一般就要开始检查是否出错.</p>
+<p>之后有时间请把相关函数的源码读一下, 大致位置是:<br>`/usr/include/regex.h            </p>
+<p>如果是c++, 个人主推<code>boost库</code>提供的regex, 请看我的另外一篇<a href="http:" target="_blank" rel="external">《using-regex-in-cpp》</a></p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a href="/2017/05/10/using-regex-in-cpp.html" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/04/06/c-plus-plus.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-05-10 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>8</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/c/">c<span>3</span></a></li> <li><a href="/tags/regex/">regex<span>2</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#详细介绍"><span class="toc-article-text">详细介绍</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译函数regcomp"><span class="toc-article-text">编译函数regcomp</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#匹配函数regexec"><span class="toc-article-text">匹配函数regexec</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#释放函数regfree"><span class="toc-article-text">释放函数regfree</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#错误处理函数regerror"><span class="toc-article-text">错误处理函数regerror</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#代码说明"><span class="toc-article-text">代码说明</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>
