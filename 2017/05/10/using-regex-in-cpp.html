@@ -120,9 +120,9 @@
 <pre><code>1. boost::regex   //用于定义一个正则表达式对象
 2. boost::smatch  //用于保存匹配的结果(全串或者子串的结果)
 </code></pre><p>具体可以参考一下文档下列的书籍:</p>
-<pre><code>1. [&lt;Beyond the C++ Standard Library: An Introduction to Boost&gt;]()   
-2. [&lt;Boost C++ Application Development Cookbook&gt;]()
-3. [&lt;boost_1_56_pdf&gt;regex部分]()
+<pre><code>1. [&lt;Beyond the C++ Standard Library: An Introduction to Boost&gt;](http://)
+2. [&lt;Boost C++ Application Development Cookbook&gt;](http://)
+3. [&lt;boost_1_56_pdf&gt;regex部分](http://)
 </code></pre><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="详细讲解"><a href="#详细讲解" class="headerlink" title="详细讲解"></a>详细讲解</h2><h3 id="boost-regex"><a href="#boost-regex" class="headerlink" title="boost::regex"></a>boost::regex</h3><p>这就是代表正则表达式对象的类, 用来存储你写的正则表达式(如果你写的正则表达式不符合规范的话,可能会报错).<br>(但是又不会像posix c中对于正则表达式的支持, 需要先编译regcomp(), 之后才能进行匹配regexec())</p>
 <p>创建了一个存储正则表达式的对象:(一般要加上const修饰)</p>
 <pre><code>1. boost::regex e(string_pattern, flag);
