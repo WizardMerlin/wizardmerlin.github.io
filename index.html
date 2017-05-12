@@ -107,6 +107,61 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
+			<a href="/2017/05/12/using-regex-in-python.html" title="regular expression operations in python 2.7">using-regex-in-python</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2017-05-12  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<p>python支持正则表达式是借助外部的re库, 该库在安装python的时候就已经绑定了.<br>但是注意, 这个库是PERE的阉割版, 仅仅支持核心部分正则语法(就常用而言,足够了).<br>
+	
+	</div>
+  <a type="button" href="/2017/05/12/using-regex-in-python.html#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
+			<a href="/2017/05/12/using-regex-in-java.html" title="Java中已经有相当成熟的包提供了正则表达式支持, 直接引用就可以了.">using-regex-in-java</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2017-05-12  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<p>oracle官方的java tutorials里面有相关章节专门讲这个主题,也很详细, 如下:<br><a href="https://docs.oracle.com/javase/tutorial/essential/regex/">https://docs.oracle.com/javase/tutorial/essential/regex/</a></p>
+<p>个人觉得太啰嗦了, 本文只写<code>java.util.regex</code>的主要(核心)内容.<br>
+	
+	</div>
+  <a type="button" href="/2017/05/12/using-regex-in-java.html#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
 			<a href="/2017/05/10/using-regex-in-cpp.html" title="主要书写Boost.Regex和C++11对于正则表达式的支持">using-regex-in-cpp</a>
 		</h3>
 		</div>
@@ -327,68 +382,6 @@
 </div>
 
 		
-			
-	
-	<!-- display as entry -->
-<div class="row">
-	<div class="col-md-8">
-		<h3 class="title">
-			<a href="/2017/03/19/linux-pthread.html" title="summary about thread and posix pthread">linux-pthread</a>
-		</h3>
-		</div>
-	<div class="col-md-4">
-		<div class="date">post @ 2017-03-19  </div>
-		</div>
-	</div>
-	
-
-
-			<div class="entry">
-  <div class="row">
-	
-	
-		<p>个人觉得对于线程的把控，难度要小于进程，进程的通信方式多到能写一本书，并且每种方式还有其各自的适用范围以及注意事项，真正玩起来还是有点儿多。甚至对于内核而言，它都不区分进程和线程。<br>但是线程就不一样，只是Linux下面的话，线程当前的模型就一种：<code>内核支持的NPTL</code>(Native POSIX Thread Library), 但是如果你读过<a href="">《7周7并发模型》</a>的话就会知道并发问题远不止这么点儿<br>东西。所以，此处强调一下，本文从实战的角度展开(尽可能不去涉及一些非IO的东西，比如说unix套接字，比如说各种IO模型，同步异步模型，甚至是其中涉及到的权限问题)</p>
-<p>实战的东西，API偏多，注意一下常用的使用场景以及一些注意事项即可，但是，请注意这个“但是”：我<code>强烈推荐</code><a href="">《Programming With POSIX Threads》</a>这本书(本文也对核心的东西进行了总结)</p>
-<p>本文大致上会把<code>pthread</code>的全部内容概括，但是核心的东西如下：</p>
-<ol>
-<li>线程的控制(创建，销毁/分离)</li>
-<li>线程的同步(信号量(PV)，互斥量，竞争/冒险条件，文件锁，屏障)</li>
-<li>线程的属性</li>
-<li>线程的调试(多线程其实是不好调试的)</li>
-</ol>
-	
-	</div>
-  <a type="button" href="/2017/03/19/linux-pthread.html#more" class="btn btn-default more">Read More</a>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->
-<div class="row">
-	<div class="col-md-8">
-		<h3 class="title">
-			<a href="/2017/03/18/linux-unix-posix.html" title="介绍一下类nix下的内战">linux-unix-posix</a>
-		</h3>
-		</div>
-	<div class="col-md-4">
-		<div class="date">post @ 2017-03-18  </div>
-		</div>
-	</div>
-	
-
-
-			<div class="entry">
-  <div class="row">
-	
-	
-		<p>Unix, BSD, SUS, LSB以及POSIX各种理论东西，其实很烦的好伐，统一干掉</p>
-	
-	</div>
-  <a type="button" href="/2017/03/18/linux-unix-posix.html#more" class="btn btn-default more">Read More</a>
-</div>
-
-		
 
 		</div>
 
@@ -438,7 +431,7 @@
 		
 			<li><a href="/categories/books/">books<span>2</span></a></li>
 		
-			<li><a href="/categories/codings/">codings<span>8</span></a></li>
+			<li><a href="/categories/codings/">codings<span>10</span></a></li>
 		
 			<li><a href="/categories/musings/">musings<span>3</span></a></li>
 		
@@ -451,48 +444,48 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/thread/">thread<span>1</span></a></li>
+			<li><a href="/tags/LSB/">LSB<span>1</span></a></li>
 		
-			<li><a href="/tags/tcp/">tcp<span>1</span></a></li>
+			<li><a href="/tags/linux/">linux<span>4</span></a></li>
 		
-			<li><a href="/tags/思考/">思考<span>1</span></a></li>
+			<li><a href="/tags/process/">process<span>1</span></a></li>
 		
-			<li><a href="/tags/thinking/">thinking<span>2</span></a></li>
-		
-			<li><a href="/tags/posix/">posix<span>1</span></a></li>
-		
-			<li><a href="/tags/network/">network<span>2</span></a></li>
-		
-			<li><a href="/tags/observation/">observation<span>1</span></a></li>
-		
-			<li><a href="/tags/pthread/">pthread<span>1</span></a></li>
+			<li><a href="/tags/ipc/">ipc<span>1</span></a></li>
 		
 			<li><a href="/tags/SUS/">SUS<span>1</span></a></li>
 		
-			<li><a href="/tags/BSD/">BSD<span>1</span></a></li>
+			<li><a href="/tags/c/">c++<span>4</span></a></li>
 		
-			<li><a href="/tags/ip/">ip<span>1</span></a></li>
-		
-			<li><a href="/tags/POSIX/">POSIX<span>1</span></a></li>
-		
-			<li><a href="/tags/system-programming/">system programming<span>1</span></a></li>
+			<li><a href="/tags/编程语言/">编程语言<span>1</span></a></li>
 		
 			<li><a href="/tags/舒适区/">舒适区<span>1</span></a></li>
 		
-			<li><a href="/tags/daemon/">daemon<span>1</span></a></li>
-		
-			<li><a href="/tags/c/">c++<span>4</span></a></li>
-		
-			<li><a href="/tags/c/">c<span>2</span></a></li>
-		
-			<li><a href="/tags/LSB/">LSB<span>1</span></a></li>
-		
-			<li><a href="/tags/boost/">boost<span>1</span></a></li>
+			<li><a href="/tags/ip/">ip<span>1</span></a></li>
 		
 			<li><a href="/tags/成长/">成长<span>1</span></a></li>
 		
+			<li><a href="/tags/思考/">思考<span>1</span></a></li>
 		
-		   <li><a href="/tags">...<span>30</span></a></li>
+			<li><a href="/tags/thread/">thread<span>1</span></a></li>
+		
+			<li><a href="/tags/c/">c<span>2</span></a></li>
+		
+			<li><a href="/tags/java/">java<span>1</span></a></li>
+		
+			<li><a href="/tags/勇敢做自己/">勇敢做自己<span>1</span></a></li>
+		
+			<li><a href="/tags/http/">http<span>1</span></a></li>
+		
+			<li><a href="/tags/BSD/">BSD<span>1</span></a></li>
+		
+			<li><a href="/tags/observation/">observation<span>1</span></a></li>
+		
+			<li><a href="/tags/kiss/">kiss<span>1</span></a></li>
+		
+			<li><a href="/tags/POSIX/">POSIX<span>1</span></a></li>
+		
+		
+		   <li><a href="/tags">...<span>32</span></a></li>
 		 
 		</ul>
 	</div>
@@ -505,6 +498,14 @@
   <ul class="entry list-unstyled">
     
       <li>
+        <a href="/2017/05/12/using-regex-in-python.html"  title="regular expression operations in python 2.7" ><i class="fa fa-file-o"></i>using-regex-in-python</a>
+      </li>
+    
+      <li>
+        <a href="/2017/05/12/using-regex-in-java.html"  title="Java中已经有相当成熟的包提供了正则表达式支持, 直接引用就可以了." ><i class="fa fa-file-o"></i>using-regex-in-java</a>
+      </li>
+    
+      <li>
         <a href="/2017/05/10/using-regex-in-cpp.html"  title="主要书写Boost.Regex和C++11对于正则表达式的支持" ><i class="fa fa-file-o"></i>using-regex-in-cpp</a>
       </li>
     
@@ -514,14 +515,6 @@
     
       <li>
         <a href="/2017/04/06/c-plus-plus.html"  title="本篇不是教程，而是我在需要面试C++时需要做的准备(干货)" ><i class="fa fa-file-o"></i>c-plus-plus</a>
-      </li>
-    
-      <li>
-        <a href="/2017/04/06/what-if-i-die-tomorrow.html"  title="勇敢做自己" ><i class="fa fa-file-o"></i>what-if-i-die-tomorrow</a>
-      </li>
-    
-      <li>
-        <a href="/2017/03/27/keep-it-simple-and-stupid.html"  title="最早是在《Unix编程艺术》这本书里接触到kiss原则，后来学习网络模型时产生了共鸣" ><i class="fa fa-file-o"></i>keep-it-simple-and-stupid</a>
       </li>
     
   </ul>
