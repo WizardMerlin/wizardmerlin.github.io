@@ -1,0 +1,405 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>shell-coding-style | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="common rules of coding shell script">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="shell-coding-style"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> shell-coding-style</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> common rules of coding shell script
+		 </div> <!-- alert -->
+	  		
+
+	  <p>简单一句话, shell代码规范.<br><a id="more"></a></p>
+<p>主要参考了: <google shell="" 风格指南=""> (对部分内容做了补充)<br><a href="https://google.github.io/styleguide/shell.xml" target="_blank" rel="external">https://google.github.io/styleguide/shell.xml</a></google></p>
+<p>下面分条目罗列:</p>
+<h1 id="用shell的时机"><a href="#用shell的时机" class="headerlink" title="用shell的时机"></a>用shell的时机</h1><ol>
+<li>有性能要求的不选shell脚本(几乎所有的脚本都不可能完成性能要求的任务)</li>
+<li>写shell请指明”#!/bin/bash”, 而且为了保证兼容性, 最好选择bash.</li>
+<li>如果你的shell脚本超过了100行, 请用python而不是shell.  (这是Google的建议)</li>
+<li>只用于调用其他工具, 并且处理的数据量非常少.(大量的使用数据, 而不是一些简单的变量的时候, 也改用python)</li>
+</ol>
+<h1 id="文件扩展名"><a href="#文件扩展名" class="headerlink" title="文件扩展名"></a>文件扩展名</h1><ol>
+<li>可执行文件不能有扩展名</li>
+<li>库(或者需要source的环境文件)以.sh作为扩展名, 而且不加可执行权限</li>
+<li>不要添加SUID,SGID权限</li>
+</ol>
+<h1 id="STDOUT-vs-STDERR"><a href="#STDOUT-vs-STDERR" class="headerlink" title="STDOUT vs STDERR"></a>STDOUT vs STDERR</h1><p>推荐使用类似如下函数, 将错误信息和其他状态信息一起打印出来:<br>(把错误信息全部打印到标准错误输出)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">err</span></span>() &#123;</div><div class="line">    <span class="built_in">echo</span> <span class="string">"[<span class="variable">$(date +'%Y-%m-%dT%H:%M:%S%z')</span>]: <span class="variable">$@</span>"</span> &gt;&amp;2</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> ! do_something; <span class="keyword">then</span></div><div class="line">    err <span class="string">"Unable to do_something"</span></div><div class="line">    <span class="built_in">exit</span> <span class="string">"<span class="variable">$&#123;E_DID_NOTHING&#125;</span>"</span></div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure>
+<h1 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h1><h2 id="文件头"><a href="#文件头" class="headerlink" title="文件头"></a>文件头</h2><p>每个文件必须包含一个顶层注释(每个文件的开头是其文件内容的描述), 对其内容进行简要概述(版权声明和作者信息是可选的)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># Perform hot backups of Oracle databases.</span></div></pre></td></tr></table></figure>
+<p>完整一点儿的, 可以这样:</p>
+<pre><code>1. 第一行一般为调用使用的语言
+2. 下面要有这个程序名，避免更改文件名为无法找到正确的文件
+3. 版本号
+4. 更改后的时间
+5. 作者相关信息
+6. 该程序的作用，及注意事项
+7. 版权与是否开放共享GNU说明
+8. 最后是各版本的更新简要说明
+</code></pre><p>一个生动的例子如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="comment"># -------------------------------------------------------------------------------</span></div><div class="line"><span class="comment"># Filename:    check_memory.sh</span></div><div class="line"><span class="comment"># Revision:    2.0</span></div><div class="line"><span class="comment"># Date:        2017/05/10</span></div><div class="line"><span class="comment"># Author:      Merlin</span></div><div class="line"><span class="comment"># Email:       wizardmerlin945@gmail.com</span></div><div class="line"><span class="comment"># Website:     http://www.wizardmerlin.github.io</span></div><div class="line"><span class="comment"># Description: module of memory check</span></div><div class="line"><span class="comment"># Notes:       this module xxxxx</span></div><div class="line"><span class="comment"># -------------------------------------------------------------------------------</span></div><div class="line"><span class="comment"># Copyright:   2017 (c) Merlin</span></div><div class="line"><span class="comment"># License:     GPL</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># This program is free software; you can redistribute it and/or</span></div><div class="line"><span class="comment"># modify it under the terms of the GNU General Public License</span></div><div class="line"><span class="comment"># as published by the Free Software Foundation; either version 2</span></div><div class="line"><span class="comment"># of the License, or (at your option) any later version.</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># This program is distributed in the hope that it will be useful,</span></div><div class="line"><span class="comment"># but WITHOUT ANY WARRANTY; without even the implied warranty</span></div><div class="line"><span class="comment"># of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div><div class="line"><span class="comment"># GNU General Public License for more details.</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># you should have received a copy of the GNU General Public License</span></div><div class="line"><span class="comment"># along with this program (or with Nagios);</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># Credits go to Ethan Galstad for coding Nagios</span></div><div class="line"><span class="comment"># If any changes are made to this script, please mail me a copy of the changes</span></div><div class="line"><span class="comment"># -------------------------------------------------------------------------------</span></div><div class="line"><span class="comment">#Version 1.0</span></div><div class="line"><span class="comment">#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span></div><div class="line"><span class="comment">#Version 2.0</span></div><div class="line"><span class="comment">#yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy</span></div></pre></td></tr></table></figure>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>任何不是既明显又短的函数都必须被注释, 任何库函数无论其长短和复杂性都必须被注释</p>
+<p>所有的函数注释应该包含:(特别注意使用全局变量)</p>
+<ul>
+<li>函数的描述</li>
+<li>全局变量的使用和修改</li>
+<li>使用的参数说明</li>
+<li>返回值，而不是上一条命令运行后默认的退出状态</li>
+</ul>
+<p>下面是一个案例:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># Perform hot backups of Oracle databases.</span></div><div class="line"></div><div class="line"><span class="built_in">export</span> PATH=<span class="string">'/usr/xpg4/bin:/usr/bin:/opt/csw/bin:/opt/goog/bin'</span></div><div class="line"></div><div class="line"><span class="comment">#######################################</span></div><div class="line"><span class="comment"># Cleanup files from the backup dir</span></div><div class="line"><span class="comment"># Globals:</span></div><div class="line"><span class="comment">#   BACKUP_DIR</span></div><div class="line"><span class="comment">#   ORACLE_SID</span></div><div class="line"><span class="comment"># Arguments:</span></div><div class="line"><span class="comment">#   None</span></div><div class="line"><span class="comment"># Returns:</span></div><div class="line"><span class="comment">#   None</span></div><div class="line"><span class="comment">#######################################</span></div><div class="line"><span class="function"><span class="title">cleanup</span></span>() &#123;</div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="技巧注释"><a href="#技巧注释" class="headerlink" title="技巧注释"></a>技巧注释</h2><p>这部分遵循谷歌代码注释的通用做法.<br>不要注释所有代码, 如果有一个复杂的算法或者你正在做一些与众不同的, 放一个简单的注释.</p>
+<h2 id="TODO注释"><a href="#TODO注释" class="headerlink" title="TODO注释"></a>TODO注释</h2><p>使用TODO注释临时的、短期解决方案的、或者足够好但不够完美的代码。</p>
+<p>TODOs应该包含全部大写的字符串TODO, 接着是括号中<code>user_name</code>, 冒号是可选的.最好在TODO条目之后加上 bug或者ticket 的序号.<br>例如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># TODO(merlin): Handle the unlikely edge cases (bug ####)</span></div></pre></td></tr></table></figure>
+<h1 id="命名约定"><a href="#命名约定" class="headerlink" title="命名约定"></a>命名约定</h1><h2 id="函数名"><a href="#函数名" class="headerlink" title="函数名"></a>函数名</h2><p>如果你正在写单个函数, 请用小写字母来命名, 并用下划线分隔单词.如果你正在写一个包, 使用双冒号<code>::</code>来分隔包名.</p>
+<p>大括号必须和函数名位于同一行(就像在Google的其他语言一样), 并且函数名和圆括号之间没有空格.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Single function</span></div><div class="line"><span class="function"><span class="title">my_func</span></span>() &#123;</div><div class="line">  ...</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment"># Part of a package</span></div><div class="line">mypackage::<span class="function"><span class="title">my_func</span></span>() &#123;</div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当函数名后存在<code>()</code>时, 关键词<code>function</code>是多余的, 但是其促进了函数的快速辨识.</p>
+<h2 id="变量名"><a href="#变量名" class="headerlink" title="变量名"></a>变量名</h2><p>命名规则和函数名一样.</p>
+<p>循环的变量名应该和循环的任何变量同样命名:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> zone <span class="keyword">in</span> <span class="variable">$&#123;zones&#125;</span>; <span class="keyword">do</span></div><div class="line">  something_with <span class="string">"<span class="variable">$&#123;zone&#125;</span>"</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<h2 id="常量和环境变量名"><a href="#常量和环境变量名" class="headerlink" title="常量和环境变量名"></a>常量和环境变量名</h2><p>常量和任何导出到环境中的都应该大写, 并且放在文件的顶部.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Constant</span></div><div class="line"><span class="built_in">readonly</span> PATH_TO_FILES=<span class="string">'/some/path'</span></div><div class="line"></div><div class="line"><span class="comment"># Both constant and environment</span></div><div class="line"><span class="built_in">declare</span> -xr ORACLE_SID=<span class="string">'PROD'</span></div></pre></td></tr></table></figure></p>
+<p>第一次设置时有一些就变成了常量(例如通过getopts).<br>因此, 可以在getopts中或基于条件来设定常量, 但之后应该立即设置其为只读.<br>值得注意的是, 在函数中<code>declare</code>不会对全局变量进行操作, 所以推荐使用 <code>readonly</code> 和 <code>export</code> 来代替。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">VERBOSE=<span class="string">'false'</span></div><div class="line"><span class="keyword">while</span> <span class="built_in">getopts</span> <span class="string">'v'</span> flag; <span class="keyword">do</span></div><div class="line">  <span class="keyword">case</span> <span class="string">"<span class="variable">$&#123;flag&#125;</span>"</span> <span class="keyword">in</span></div><div class="line">    v) VERBOSE=<span class="string">'true'</span> ;;</div><div class="line">  <span class="keyword">esac</span></div><div class="line"><span class="keyword">done</span></div><div class="line"><span class="built_in">readonly</span> VERBOSE</div></pre></td></tr></table></figure>
+<h2 id="源文件名"><a href="#源文件名" class="headerlink" title="源文件名"></a>源文件名</h2><p>小写, 如果需要的话使用下划线分隔单词<br>这是为了和在Google中的其他代码风格保持一致:<br>maketemplate 或者 make_template, 而不是 make-template</p>
+<h2 id="只读变量"><a href="#只读变量" class="headerlink" title="只读变量"></a>只读变量</h2><p>使用 <code>readonly</code> 或者 <code>declare -r</code> 来确保变量只读.<br>因为全局变量在shell中广泛使用, 所以在使用它们的过程中捕获错误是很重要的.当你声明了一个变量, 希望其只读, 那么请明确指出.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">zip_version=<span class="string">"<span class="variable">$(dpkg --status zip | grep Version: | cut -d ' ' -f 2)</span>"</span></div><div class="line"><span class="keyword">if</span> [[ -z <span class="string">"<span class="variable">$&#123;zip_version&#125;</span>"</span> ]]; <span class="keyword">then</span></div><div class="line">  error_message</div><div class="line"><span class="keyword">else</span></div><div class="line">  <span class="built_in">readonly</span> zip_version</div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure>
+<h2 id="使用本地变量"><a href="#使用本地变量" class="headerlink" title="使用本地变量"></a>使用本地变量</h2><p>一般用在函数中, 使用<code>local</code>关键字<br>声明和赋值应该在不同行, 当赋值的值由命令替换提供时, 声明和赋值必须分开. 因为内建的 <code>local</code> 不会从命令替换中传递退出码.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">my_func2</span></span>() &#123;</div><div class="line">  <span class="built_in">local</span> name=<span class="string">"<span class="variable">$1</span>"</span></div><div class="line"></div><div class="line">  <span class="comment"># Separate lines for declaration and assignment:</span></div><div class="line">  <span class="built_in">local</span> my_var</div><div class="line">  my_var=<span class="string">"<span class="variable">$(my_func)</span>"</span> || <span class="built_in">return</span></div><div class="line"></div><div class="line">  <span class="comment"># DO NOT do this: $? contains the exit code of 'local', not my_func</span></div><div class="line">  <span class="built_in">local</span> my_var=<span class="string">"<span class="variable">$(my_func)</span>"</span></div><div class="line">  [[ $? <span class="_">-eq</span> 0 ]] || <span class="built_in">return</span></div><div class="line"></div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="函数位置"><a href="#函数位置" class="headerlink" title="函数位置"></a>函数位置</h2><p>如果你有函数, 请将他们一起放在文件头部. 只有<code>includes</code>,  <code>set声明</code>和<code>常量设置</code>可能在函数声明之前完成. 不要在函数之间隐藏可执行代码. 如果那样做,会使得代码在调试时难以跟踪并出现意想不到的讨厌结果.</p>
+<h2 id="主函数main"><a href="#主函数main" class="headerlink" title="主函数main"></a>主函数main</h2><p>对于包含至少一个其他函数的足够长的脚本, 需要称为 main 的函数.</p>
+<p>为了方便查找程序的开始, 将主程序放入一个称为 main 的函数，作为最下面的函数. 这使其和代码库的其余部分保持一致性, 同时允许你定义更多变量为局部变量（如果主代码不是一个函数就不能这么做）。</p>
+<p>文件中最后的非注释行应该是对 main 函数的调用, 例如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">main <span class="string">"<span class="variable">$@</span>"</span></div></pre></td></tr></table></figure>
+<p>然然仅仅是顺序执行(线性流)的脚本, main函数的出现可能会有些多余.</p>
+<h1 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h1><h2 id="缩进"><a href="#缩进" class="headerlink" title="缩进"></a>缩进</h2><p>主要注意点如下:</p>
+<ol>
+<li>缩进两个空格, 没有制表符</li>
+<li>在代码块之间请使用空行以提升可读性</li>
+<li>缩进为两个空格,  无论你做什么, 请不要使用制表符</li>
+<li>对于已有文件，保持已有的缩进格式</li>
+</ol>
+<h2 id="长度"><a href="#长度" class="headerlink" title="长度"></a>长度</h2><p>行的最大长度为80个字符</p>
+<p>如果你必须写长度超过80个字符的字符串, 如果可能的话, 尽量使用here document或者嵌入的换行符.</p>
+<ul>
+<li>END; 语法</li>
+<li>字符串内嵌换行符号</li>
+</ul>
+<p>例如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># DO use 'here document's</span></div><div class="line">cat &lt;&lt; END;</div><div class="line">I am an exceptionally long</div><div class="line">string.</div><div class="line">END</div><div class="line"></div><div class="line"><span class="comment"># Embedded newlines are ok too</span></div><div class="line">long_string=<span class="string">"I am an exceptionally</span></div><div class="line">  long string."</div></pre></td></tr></table></figure>
+<p>长度超过80个字符的文字串且不能被合理地分割, 这是正常的, 但强烈建议找到一个方法使其变短.</p>
+<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>如果一行容得下整个管道操作，那么请将整个管道操作写在同一行。<br>否则应该将整个管道操作分割成每行一个管段, 管道操作的下一部分应该将管道符放在新行并且缩进2个空格. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># All fits on one line</span></div><div class="line"><span class="built_in">command</span>1 | <span class="built_in">command</span>2</div><div class="line"></div><div class="line"><span class="comment"># Long commands</span></div><div class="line"><span class="built_in">command</span>1 \</div><div class="line">  | <span class="built_in">command</span>2 \</div><div class="line">  | <span class="built_in">command</span>3 \</div><div class="line">  | <span class="built_in">command</span>4</div></pre></td></tr></table></figure>
+<p>(注意上面代码, 如果在第二行, 要进行缩进)</p>
+<p>这适用于使用管道符’|’的合并命令链以及使用’||’和’&amp;&amp;’的逻辑运算链.</p>
+<h2 id="循环和分支"><a href="#循环和分支" class="headerlink" title="循环和分支"></a>循环和分支</h2><p>请将 <code>; do</code>, <code>; then</code> 和 <code>while</code> , <code>for</code> , <code>if</code> 放在同一行.<br>else 应该单独一行, 结束语句应该单独一行并且跟开始语句垂直对齐.</p>
+<p>例如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> dir <span class="keyword">in</span> <span class="variable">$&#123;dirs_to_cleanup&#125;</span>; <span class="keyword">do</span></div><div class="line">  <span class="keyword">if</span> [[ <span class="_">-d</span> <span class="string">"<span class="variable">$&#123;dir&#125;</span>/<span class="variable">$&#123;ORACLE_SID&#125;</span>"</span> ]]; <span class="keyword">then</span></div><div class="line">    log_date <span class="string">"Cleaning up old files in <span class="variable">$&#123;dir&#125;</span>/<span class="variable">$&#123;ORACLE_SID&#125;</span>"</span></div><div class="line">    rm <span class="string">"<span class="variable">$&#123;dir&#125;</span>/<span class="variable">$&#123;ORACLE_SID&#125;</span>/"</span>*</div><div class="line">    <span class="keyword">if</span> [[ <span class="string">"$?"</span> <span class="_">-ne</span> 0 ]]; <span class="keyword">then</span></div><div class="line">      error_message</div><div class="line">    <span class="keyword">fi</span></div><div class="line">  <span class="keyword">else</span></div><div class="line">    mkdir -p <span class="string">"<span class="variable">$&#123;dir&#125;</span>/<span class="variable">$&#123;ORACLE_SID&#125;</span>"</span></div><div class="line">    <span class="keyword">if</span> [[ <span class="string">"$?"</span> <span class="_">-ne</span> 0 ]]; <span class="keyword">then</span></div><div class="line">      error_message</div><div class="line">    <span class="keyword">fi</span></div><div class="line">  <span class="keyword">fi</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<h2 id="case语句"><a href="#case语句" class="headerlink" title="case语句"></a>case语句</h2><p>主要注意缩进和换行:</p>
+<ul>
+<li>缩进: <ul>
+<li>通过2个空格缩进可选项</li>
+<li>匹配表达式<code>value )</code>比 case 和 esac 缩进一级; 多行操作要再缩进一级</li>
+</ul>
+</li>
+<li>换行: <ul>
+<li>在同一行可选项的模式<code>右圆括号</code>之后和结束符<code>;;</code>之前各需要一个空格</li>
+<li>长可选项或者多命令可选项应该被拆分成多行: 模式、操作和结束符 ;; 在不同的行</li>
+</ul>
+</li>
+</ul>
+<p>例如:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">case</span> <span class="string">"<span class="variable">$&#123;expression&#125;</span>"</span> <span class="keyword">in</span></div><div class="line">  a)</div><div class="line">    variable=<span class="string">"..."</span></div><div class="line">    some_command <span class="string">"<span class="variable">$&#123;variable&#125;</span>"</span> <span class="string">"<span class="variable">$&#123;other_expr&#125;</span>"</span> ...</div><div class="line">    ;;</div><div class="line">  absolute)</div><div class="line">    actions=<span class="string">"relative"</span></div><div class="line">    another_command <span class="string">"<span class="variable">$&#123;actions&#125;</span>"</span> <span class="string">"<span class="variable">$&#123;other_expr&#125;</span>"</span> ...</div><div class="line">    ;;</div><div class="line">  *)</div><div class="line">    error <span class="string">"Unexpected expression '<span class="variable">$&#123;expression&#125;</span>'"</span></div><div class="line">    ;;</div><div class="line"><span class="keyword">esac</span></div></pre></td></tr></table></figure></p>
+<p>同一行的情况:右括号之后和结束符<code>;;</code>之前请使用一个空格分隔<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">verbose=<span class="string">'false'</span></div><div class="line">aflag=<span class="string">''</span></div><div class="line">bflag=<span class="string">''</span></div><div class="line">files=<span class="string">''</span></div><div class="line"><span class="keyword">while</span> <span class="built_in">getopts</span> <span class="string">'abf:v'</span> flag; <span class="keyword">do</span></div><div class="line">  <span class="keyword">case</span> <span class="string">"<span class="variable">$&#123;flag&#125;</span>"</span> <span class="keyword">in</span></div><div class="line">    a) aflag=<span class="string">'true'</span> ;;</div><div class="line">    b) bflag=<span class="string">'true'</span> ;;</div><div class="line">    f) files=<span class="string">"<span class="variable">$&#123;OPTARG&#125;</span>"</span> ;;</div><div class="line">    v) verbose=<span class="string">'true'</span> ;;</div><div class="line">    *) error <span class="string">"Unexpected option <span class="variable">$&#123;flag&#125;</span>"</span> ;;</div><div class="line">  <span class="keyword">esac</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure></p>
+<h2 id="变量扩展-引用"><a href="#变量扩展-引用" class="headerlink" title="变量扩展(引用)"></a>变量扩展(引用)</h2><p>推荐将其他所有变量用大括号括起来(但不是强制)<br>荐用<code>${var}</code> 而不是 <code>$var</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Section of recommended cases.</span></div><div class="line"></div><div class="line"><span class="comment"># Preferred style for 'special' variables:</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Positional: <span class="variable">$1</span>"</span> <span class="string">"<span class="variable">$5</span>"</span> <span class="string">"<span class="variable">$3</span>"</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Specials: !=$!, -=$-, _=<span class="variable">$_</span>. ?=$?, #=<span class="variable">$#</span> *=$* @=<span class="variable">$@</span> \$=$$ ..."</span></div><div class="line"></div><div class="line"><span class="comment"># Braces necessary:</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"many parameters: <span class="variable">$&#123;10&#125;</span>"</span></div><div class="line"></div><div class="line"><span class="comment"># Braces avoiding confusion:</span></div><div class="line"><span class="comment"># Output is "a0b0c0"</span></div><div class="line"><span class="built_in">set</span> -- a b c</div><div class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;1&#125;</span>0<span class="variable">$&#123;2&#125;</span>0<span class="variable">$&#123;3&#125;</span>0"</span></div><div class="line"></div><div class="line"><span class="comment"># Preferred style for other variables:</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"PATH=<span class="variable">$&#123;PATH&#125;</span>, PWD=<span class="variable">$&#123;PWD&#125;</span>, mine=<span class="variable">$&#123;some_var&#125;</span>"</span></div><div class="line"><span class="keyword">while</span> <span class="built_in">read</span> f; <span class="keyword">do</span></div><div class="line">  <span class="built_in">echo</span> <span class="string">"file=<span class="variable">$&#123;f&#125;</span>"</span></div><div class="line"><span class="keyword">done</span> &lt; &lt;(ls <span class="_">-l</span> /tmp)</div><div class="line"></div><div class="line"><span class="comment"># Section of discouraged cases</span></div><div class="line"></div><div class="line"><span class="comment"># Unquoted vars, unbraced vars, brace-quoted single letter</span></div><div class="line"><span class="comment"># shell specials.</span></div><div class="line"><span class="built_in">echo</span> a=<span class="variable">$avar</span> <span class="string">"b=<span class="variable">$bvar</span>"</span> <span class="string">"PID=<span class="variable">$&#123;$&#125;</span>"</span> <span class="string">"<span class="variable">$&#123;1&#125;</span>"</span></div><div class="line"></div><div class="line"><span class="comment"># Confusing use: this is expanded as "$&#123;1&#125;0$&#123;2&#125;0$&#123;3&#125;0",</span></div><div class="line"><span class="comment"># not "$&#123;10&#125;$&#123;20&#125;$&#123;30&#125;</span></div><div class="line"><span class="built_in">set</span> -- a b c</div><div class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$10</span><span class="variable">$20</span><span class="variable">$30</span>"</span></div></pre></td></tr></table></figure>
+<h2 id="引用-号"><a href="#引用-号" class="headerlink" title="引用(号)"></a>引用(号)</h2><p>主要涉及:</p>
+<ul>
+<li>单引号</li>
+<li>双引号</li>
+<li>引用(命令行-函数)参数</li>
+</ul>
+<p>大致规则如下:(google原文档比较难理解)</p>
+<ul>
+<li>引号用于包裹变量、命令替换符、空格或shell元字符的字符串</li>
+<li>单引号用于引用字符串中没有子串(shell元字符可以不用转义)</li>
+<li>双引号用于引用的字符串中可以有子串, 或者”$( )”命令子串, 或者”命令行(位置)参数”,例如<code>&quot;$1&quot;</code></li>
+<li>推荐引用是单词的字符串</li>
+<li>千万不要引用整数</li>
+<li>请使用<code>$@</code> 除非你有特殊原因需要使用<code>$*</code> (参考下面的代码)</li>
+</ul>
+<p>代码演示如下:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 'Single' quotes indicate that no substitution is desired.</span></div><div class="line"><span class="comment"># "Double" quotes indicate that substitution is required/tolerated.</span></div><div class="line"></div><div class="line"><span class="comment"># Simple examples</span></div><div class="line"><span class="comment"># "quote command substitutions"</span></div><div class="line">flag=<span class="string">"<span class="variable">$(some_command and its args "$@" 'quoted separately')</span>"</span></div><div class="line"></div><div class="line"><span class="comment"># "quote variables"</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;flag&#125;</span>"</span></div><div class="line"></div><div class="line"><span class="comment"># "never quote literal integers"</span></div><div class="line">value=32</div><div class="line"></div><div class="line"><span class="comment"># "quote command substitutions", even when you expect integers</span></div><div class="line">number=<span class="string">"<span class="variable">$(generate_number)</span>"</span></div><div class="line"></div><div class="line"><span class="comment"># "prefer quoting words", not compulsory</span></div><div class="line"><span class="built_in">readonly</span> USE_INTEGER=<span class="string">'true'</span></div><div class="line"></div><div class="line"><span class="comment"># "quote shell meta characters" 这里单引号和双引号作用不一样</span></div><div class="line"><span class="built_in">echo</span> <span class="string">'Hello stranger, and well met. Earn lots of $$$'</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Process $$: Done making \$\$\$."</span></div><div class="line"></div><div class="line"><span class="comment"># "command options or path names"</span></div><div class="line"><span class="comment"># ($1 is assumed to contain a value here)</span></div><div class="line">grep -li Hugo /dev/null <span class="string">"<span class="variable">$1</span>"</span></div><div class="line"></div><div class="line"><span class="comment"># Less simple examples</span></div><div class="line"><span class="comment"># "quote variables, unless proven false": ccs might be empty</span></div><div class="line">git send-email --to <span class="string">"<span class="variable">$&#123;reviewers&#125;</span>"</span> <span class="variable">$&#123;ccs:+"--cc" "$&#123;ccs&#125;</span><span class="string">"&#125;</span></div><div class="line"></div><div class="line"># Positional parameter precautions: <span class="variable">$1</span> might be unset</div><div class="line"># Single quotes leave regex as-is.</div><div class="line">grep -cP '([Ss]pecial|\|?characters*)$' <span class="variable">$&#123;1:+"$1"&#125;</span></div><div class="line"></div><div class="line"># For passing on arguments,</div><div class="line"># "<span class="variable">$@</span><span class="string">" is right almost everytime, and</span></div><div class="line"># $* is wrong almost everytime:</div><div class="line">#</div><div class="line"># * $* and <span class="variable">$@</span> will split on spaces, clobbering up arguments</div><div class="line">#   that contain spaces and dropping empty strings;</div><div class="line"># * "<span class="variable">$@</span><span class="string">" will retain arguments as-is, so no args</span></div><div class="line">#   provided will result in no args being passed on;</div><div class="line">#   This is in most cases what you want to use for passing</div><div class="line">#   on arguments.</div><div class="line"># * "$*<span class="string">" expands to one argument, with all args joined</span></div><div class="line">#   by (usually) spaces,</div><div class="line">#   so no args provided will result in one empty string</div><div class="line">#   being passed on.</div><div class="line"># (Consult 'man bash' for the nit-grits ;-)</div><div class="line"></div><div class="line">set -- 1 "2 two<span class="string">" "</span>3 three tres<span class="string">"; echo <span class="variable">$#</span> ; set -- "</span>$*<span class="string">"; echo "</span><span class="variable">$#</span>, <span class="variable">$@</span><span class="string">")</span></div><div class="line">set -- 1 "2 two<span class="string">" "</span>3 three tres<span class="string">"; echo <span class="variable">$#</span> ; set -- "</span><span class="variable">$@</span><span class="string">"; echo "</span><span class="variable">$#</span>, <span class="variable">$@</span><span class="string">")</span></div></pre></td></tr></table></figure></p>
+<h1 id="调用命令"><a href="#调用命令" class="headerlink" title="调用命令"></a>调用命令</h1><h2 id="检查返回值"><a href="#检查返回值" class="headerlink" title="检查返回值"></a>检查返回值</h2><p>总是检查返回值并给出信息返回值.</p>
+<p>对于非管道命令, 使用 <code>$?</code> 或直接通过一个 <code>if</code> 语句来检查以保持其简洁.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ! mv <span class="string">"<span class="variable">$&#123;file_list&#125;</span>"</span> <span class="string">"<span class="variable">$&#123;dest_dir&#125;</span>/"</span> ; <span class="keyword">then</span></div><div class="line">  <span class="built_in">echo</span> <span class="string">"Unable to move <span class="variable">$&#123;file_list&#125;</span> to <span class="variable">$&#123;dest_dir&#125;</span>"</span> &gt;&amp;2</div><div class="line">  <span class="built_in">exit</span> <span class="string">"<span class="variable">$&#123;E_BAD_MOVE&#125;</span>"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="comment"># Or</span></div><div class="line">mv <span class="string">"<span class="variable">$&#123;file_list&#125;</span>"</span> <span class="string">"<span class="variable">$&#123;dest_dir&#125;</span>/"</span></div><div class="line"><span class="keyword">if</span> [[ <span class="string">"$?"</span> <span class="_">-ne</span> 0 ]]; <span class="keyword">then</span></div><div class="line">  <span class="built_in">echo</span> <span class="string">"Unable to move <span class="variable">$&#123;file_list&#125;</span> to <span class="variable">$&#123;dest_dir&#125;</span>"</span> &gt;&amp;2</div><div class="line">  <span class="built_in">exit</span> <span class="string">"<span class="variable">$&#123;E_BAD_MOVE&#125;</span>"</span></div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure>
+<p>Bash也有 <code>PIPESTATUS</code> 变量, 允许检查从管道所有部分返回的代码.<br>如果仅仅需要检查整个管道是成功还是失败, 以下的方法是可以接受的:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">tar -cf - ./* | ( <span class="built_in">cd</span> <span class="string">"<span class="variable">$&#123;dir&#125;</span>"</span> &amp;&amp; tar -xf - )</div><div class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$&#123;PIPESTATUS[0]&#125;</span>"</span> <span class="_">-ne</span> 0 || <span class="string">"<span class="variable">$&#123;PIPESTATUS[1]&#125;</span>"</span> <span class="_">-ne</span> 0 ]]; <span class="keyword">then</span></div><div class="line">  <span class="built_in">echo</span> <span class="string">"Unable to tar files to <span class="variable">$&#123;dir&#125;</span>"</span> &gt;&amp;2</div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure>
+<p>可是, 只要你运行任何其他命令, <code>PIPESTATUS</code> 将会被覆盖.如果你需要基于管道中发生的错误执行不同的操作, 那么你需要在运行命令后立即将 <code>PIPESTATUS</code>数组 赋值给另一个(数组)变量(别忘了 [ 是一个会将 PIPESTATUS 擦除的命令)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">tar -cf - ./* | ( <span class="built_in">cd</span> <span class="string">"<span class="variable">$&#123;DIR&#125;</span>"</span> &amp;&amp; tar -xf - )</div><div class="line">return_codes=(<span class="variable">$&#123;PIPESTATUS[*]&#125;</span>)</div><div class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$&#123;return_codes[0]&#125;</span>"</span> <span class="_">-ne</span> 0 ]]; <span class="keyword">then</span></div><div class="line">  do_something</div><div class="line"><span class="keyword">fi</span></div><div class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$&#123;return_codes[1]&#125;</span>"</span> <span class="_">-ne</span> 0 ]]; <span class="keyword">then</span></div><div class="line">  do_something_else</div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure>
+<h2 id="内建or外部"><a href="#内建or外部" class="headerlink" title="内建or外部"></a>内建or外部</h2><p>可以在调用shell内建命令和调用另外的程序之间选择, 请选择内建命令.<br>(从健壮性和扩展性方面进行考虑)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Prefer this:</span></div><div class="line">addition=$((<span class="variable">$&#123;X&#125;</span> + <span class="variable">$&#123;Y&#125;</span>))</div><div class="line">substitution=<span class="string">"<span class="variable">$&#123;string/#foo/bar&#125;</span>"</span></div><div class="line"></div><div class="line"><span class="comment"># Instead of this:</span></div><div class="line">addition=<span class="string">"<span class="variable">$(expr $&#123;X&#125; + $&#123;Y&#125;)</span>"</span></div><div class="line">substitution=<span class="string">"<span class="variable">$(echo "$&#123;string&#125;" | sed -e 's/^foo/bar/')</span>"</span></div></pre></td></tr></table></figure>
+<p>(我个人的习惯, 使用<code>$[  ]</code> 而不是 <code>$((  ))</code> 进行数学计算)</p>
+<h1 id="特性及错误"><a href="#特性及错误" class="headerlink" title="特性及错误"></a>特性及错误</h1><h2 id="命令替换"><a href="#命令替换" class="headerlink" title="命令替换"></a>命令替换</h2><p>使用 <code>$(command)</code> 而不是反引号. 理由如下:</p>
+<p>嵌套的反引号要求用反斜杠转义内部的反引号.<br>而 <code>$(command)</code> 形式嵌套时不需要改变, 而且更易于阅读.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># This is preferred:</span></div><div class="line">var=<span class="string">"<span class="variable">$(command "$(command1)</span>"</span>)<span class="string">"</span></div><div class="line"></div><div class="line"># This is not:</div><div class="line">var="`<span class="built_in">command</span> \`<span class="built_in">command</span>1\``<span class="string">"</span></div></pre></td></tr></table></figure>
+<h2 id="和"><a href="#和" class="headerlink" title="[和[["></a>[和[[</h2><p>条件测试, 推荐使用 <code>[[ ... ]]</code> ，而不是 <code>[</code>, <code>test</code> , 和 <code>/usr/bin/ [</code>.</p>
+<ul>
+<li>因为在 “[[“ 和 “]]” 之间不会有路径名称扩展或单词分割发生</li>
+<li>“[[ … ]]” 允许正则表达式匹配, 而 “[ … ]” 不允许</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># This ensures the string on the left is made up of characters in the</span></div><div class="line"><span class="comment"># alnum character class followed by the string name.</span></div><div class="line"><span class="comment"># Note that the RHS should not be quoted here.</span></div><div class="line"><span class="comment"># For the gory details, see</span></div><div class="line"><span class="comment"># E14 at http://tiswww.case.edu/php/chet/bash/FAQ</span></div><div class="line"><span class="keyword">if</span> [[ <span class="string">"filename"</span> =~ ^[[:alnum:]]+name ]]; <span class="keyword">then</span></div><div class="line">  <span class="built_in">echo</span> <span class="string">"Match"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="comment"># This matches the exact pattern "f*" (Does not match in this case)</span></div><div class="line"><span class="keyword">if</span> [[ <span class="string">"filename"</span> == <span class="string">"f*"</span> ]]; <span class="keyword">then</span></div><div class="line">  <span class="built_in">echo</span> <span class="string">"Match"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="comment"># This gives a "too many arguments" error as f* is expanded to the</span></div><div class="line"><span class="comment"># contents of the current directory</span></div><div class="line"><span class="keyword">if</span> [ <span class="string">"filename"</span> == f* ]; <span class="keyword">then</span></div><div class="line">  <span class="built_in">echo</span> <span class="string">"Match"</span></div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure>
+<h2 id="测试字符串"><a href="#测试字符串" class="headerlink" title="测试字符串"></a>测试字符串</h2><p>尽可能使用引用,而不是过滤字符串.</p>
+<p>即应该这样:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Do this:</span></div><div class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$&#123;my_var&#125;</span>"</span> = <span class="string">"some_string"</span> ]]; <span class="keyword">then</span></div><div class="line">  do_something</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="comment"># -z (string length is zero) and -n (string length is not zero) are</span></div><div class="line"><span class="comment"># preferred over testing for an empty string</span></div><div class="line"><span class="keyword">if</span> [[ -z <span class="string">"<span class="variable">$&#123;my_var&#125;</span>"</span> ]]; <span class="keyword">then</span></div><div class="line">  do_something</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="comment"># This is OK (ensure quotes on the empty side), but not preferred:</span></div><div class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$&#123;my_var&#125;</span>"</span> = <span class="string">""</span> ]]; <span class="keyword">then</span></div><div class="line">  do_something</div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure></p>
+<p>而不是这样:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Not this:</span></div><div class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$&#123;my_var&#125;</span>X"</span> = <span class="string">"some_stringX"</span> ]]; <span class="keyword">then</span></div><div class="line">  do_something</div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure></p>
+<p>判断空串,应该使用<code>-n</code>选项, 而不是直接应用字符串.(测试目的明确)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Use this</span></div><div class="line"><span class="keyword">if</span> [[ -n <span class="string">"<span class="variable">$&#123;my_var&#125;</span>"</span> ]]; <span class="keyword">then</span></div><div class="line">  do_something</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="comment"># Instead of this as errors can occur if $&#123;my_var&#125; expands to a test</span></div><div class="line"><span class="comment"># flag</span></div><div class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$&#123;my_var&#125;</span>"</span> ]]; <span class="keyword">then</span></div><div class="line">  do_something</div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure>
+<h2 id="点通配符"><a href="#点通配符" class="headerlink" title="点通配符"></a>点通配符</h2><p>如果你要使用<code>*</code>作为文件/目录的通配符, 那么请用目录路径作为限制,这样比较安全.</p>
+<p>即使用 <code>./*</code> 而不是直接使用 <code>*</code> , 因为文件名可能以<code>-</code>开头.</p>
+<p>演示代码如下:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Here's the contents of the directory:</span></div><div class="line"><span class="comment"># -f  -r  somedir  somefile</span></div><div class="line"></div><div class="line"><span class="comment"># This deletes almost everything in the directory by force</span></div><div class="line">psa@bilby$ rm -v *</div><div class="line">removed directory: `somedir<span class="string">'</span></div><div class="line">removed `somefile'</div><div class="line"></div><div class="line"><span class="comment"># As opposed to:</span></div><div class="line">psa@bilby$ rm -v ./*</div><div class="line">removed `./<span class="_">-f</span><span class="string">'</span></div><div class="line">removed `./-r'</div><div class="line">rm: cannot remove `./somedir<span class="string">': Is a directory</span></div><div class="line">removed `./somefile'</div></pre></td></tr></table></figure></p>
+<h2 id="Eval"><a href="#Eval" class="headerlink" title="Eval"></a>Eval</h2><p>当用于给变量赋值时, 避免使用<code>eval</code>, 因为Eval解析输入, 并且能够设置变量, 但无法检查这些变量是什么.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># What does this set?</span></div><div class="line"><span class="comment"># Did it succeed? In part or whole?</span></div><div class="line"><span class="built_in">eval</span> $(set_my_variables)</div><div class="line"></div><div class="line"><span class="comment"># What happens if one of the returned values has a space in it?</span></div><div class="line">variable=<span class="string">"<span class="variable">$(eval some_function)</span>"</span></div></pre></td></tr></table></figure>
+<h2 id="管道导向循环"><a href="#管道导向循环" class="headerlink" title="管道导向循环"></a>管道导向循环</h2><p>总之, 请使用过程替换或者for循环, 而不是管道导向while循环.</p>
+<p>把第一个命令的结果传递给第二个命令, 如果第二个命令是循环, 则称为”管道导向循环”, 例如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">last_line=<span class="string">'NULL'</span></div><div class="line">your_command | <span class="keyword">while</span> <span class="built_in">read</span> line; <span class="keyword">do</span></div><div class="line">  last_line=<span class="string">"<span class="variable">$&#123;line&#125;</span>"</span></div><div class="line"><span class="keyword">done</span></div><div class="line"></div><div class="line"><span class="comment"># This will output 'NULL'</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;last_line&#125;</span>"</span></div></pre></td></tr></table></figure>
+<p>子进行中修改了变量last_line, 回到父进程的时候, 还是没有变.<br>管道导向while循环中的隐式子shell使得追踪bug变得很困难.</p>
+<p>在while循环中被修改的变量是不能传递给父shell的, 因为循环命令是在一个子shell中运行的.(父子进行不共享内部变量)</p>
+<p>如果你确定输入中不包含空格或者特殊符号（通常意味着不是用户输入的），那么可以使用一个for循环:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">total=0</div><div class="line"><span class="comment"># Only do this if there are no spaces in return values.</span></div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> $(<span class="built_in">command</span>); <span class="keyword">do</span></div><div class="line">  total+=<span class="string">"<span class="variable">$&#123;value&#125;</span>"</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<p>特殊情况:<br>使用过程替换允许重定向输出, 但是请将命令放入一个 <code>显式的子shell</code> 中, 而不是bash为while循环创建的隐式子shell.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">total=0</div><div class="line">last_file=</div><div class="line"><span class="keyword">while</span> <span class="built_in">read</span> count filename; <span class="keyword">do</span></div><div class="line">  total+=<span class="string">"<span class="variable">$&#123;count&#125;</span>"</span></div><div class="line">  last_file=<span class="string">"<span class="variable">$&#123;filename&#125;</span>"</span></div><div class="line"><span class="keyword">done</span> &lt; &lt;(your_command | uniq -c)</div><div class="line"></div><div class="line"><span class="comment"># This will output the second field of the last line of output from</span></div><div class="line"><span class="comment"># the command.</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Total = <span class="variable">$&#123;total&#125;</span>"</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Last one = <span class="variable">$&#123;last_file&#125;</span>"</span></div></pre></td></tr></table></figure>
+<p>当不需要传递复杂的结果给父shell时可以使用while循环, 当你特别不希望改变父shell的范围变量时这可能也是有用的.</p>
+<p>但这种情况的, 代码逻辑的解析过程会比较复杂, 还不如直接使用 <code>awk</code> 这类工具.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Trivial implementation of awk expression:</span></div><div class="line"></div><div class="line">cat /proc/mounts | <span class="keyword">while</span> <span class="built_in">read</span> src dest <span class="built_in">type</span> opts rest; <span class="keyword">do</span></div><div class="line">  <span class="keyword">if</span> [[ <span class="variable">$&#123;type&#125;</span> == <span class="string">"nfs"</span> ]]; <span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"NFS <span class="variable">$&#123;dest&#125;</span> maps to <span class="variable">$&#123;src&#125;</span>"</span></div><div class="line">  <span class="keyword">fi</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk <span class="string">'$3 == "nfs" &#123; print $2 " maps to " $1 &#125;'</span> /proc/mounts</div></pre></td></tr></table></figure>
+<h1 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h1><p>借用别人的话:</p>
+<blockquote>
+<p>运用常识和判断力, 并且 保持一致.</p>
+<p>风格指南的重点在于提供一个通用的编程规范, 这样大家可以把精力集中在实现内容而不是表现形式上. 我们展示的是一个总体的的风格规范, 但局部风格也很重要, 如果你在一个文件中新加的代码和原有代码风格相去甚远, 这就破坏了文件本身的整体美观, 也让打乱读者在阅读代码时的节奏, 所以要尽量避免.</p>
+</blockquote>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/05/12/using-regex-in-python.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-05-14 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>11</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/shell/">shell<span>1</span></a></li> <li><a href="/tags/coding-rules/">coding_rules<span>2</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#用shell的时机"><span class="toc-article-text">用shell的时机</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#文件扩展名"><span class="toc-article-text">文件扩展名</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#STDOUT-vs-STDERR"><span class="toc-article-text">STDOUT vs STDERR</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#注释"><span class="toc-article-text">注释</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#文件头"><span class="toc-article-text">文件头</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#函数"><span class="toc-article-text">函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#技巧注释"><span class="toc-article-text">技巧注释</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#TODO注释"><span class="toc-article-text">TODO注释</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#命名约定"><span class="toc-article-text">命名约定</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#函数名"><span class="toc-article-text">函数名</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#变量名"><span class="toc-article-text">变量名</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#常量和环境变量名"><span class="toc-article-text">常量和环境变量名</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#源文件名"><span class="toc-article-text">源文件名</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#只读变量"><span class="toc-article-text">只读变量</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用本地变量"><span class="toc-article-text">使用本地变量</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#函数位置"><span class="toc-article-text">函数位置</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#主函数main"><span class="toc-article-text">主函数main</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#格式"><span class="toc-article-text">格式</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#缩进"><span class="toc-article-text">缩进</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#长度"><span class="toc-article-text">长度</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#管道"><span class="toc-article-text">管道</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#循环和分支"><span class="toc-article-text">循环和分支</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#case语句"><span class="toc-article-text">case语句</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#变量扩展-引用"><span class="toc-article-text">变量扩展(引用)</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#引用-号"><span class="toc-article-text">引用(号)</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#调用命令"><span class="toc-article-text">调用命令</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#检查返回值"><span class="toc-article-text">检查返回值</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#内建or外部"><span class="toc-article-text">内建or外部</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#特性及错误"><span class="toc-article-text">特性及错误</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#命令替换"><span class="toc-article-text">命令替换</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#和"><span class="toc-article-text">[和[[</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#测试字符串"><span class="toc-article-text">测试字符串</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#点通配符"><span class="toc-article-text">点通配符</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Eval"><span class="toc-article-text">Eval</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#管道导向循环"><span class="toc-article-text">管道导向循环</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#结束语"><span class="toc-article-text">结束语</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>
