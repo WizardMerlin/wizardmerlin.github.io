@@ -1,0 +1,294 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>network-io | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="summary of server side network programming model">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="network-io"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> network-io</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> summary of server side network programming model
+		 </div> <!-- alert -->
+	  		
+
+	  <p>每次看到有人讲server端的内容就讲的超级复杂, 要么是图形很多, 要么说半天也没有说到key point.<br>本文按照我自己的编程经验和理解, 迅速的过一遍 <code>5种网络IO模型</code> .</p>
+<p>本文要求读者拥有linux下基本的socket编程经验, 文章写给懂的人看.</p>
+<p>具体的 <code>网络编程经验(细节)</code> 可以参考我的github教程network_life:<br><a href="https://github.com/WizardMerlin/network_life" target="_blank" rel="external">https://github.com/WizardMerlin/network_life</a><br>(照顾新手)</p>
+<p>有不正确的地方, 希望您能发邮件帮忙指正一下, 谢谢.<br>(本文后续可能有修订)</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>引入网络IO的最初原因, 其实是硬件问题想从软件上解决; 毕竟让计算速度非常快的cpu去等硬盘或者速度缓慢的网络IO, 资源浪费. 之后改进网络IO模型就是为了提升效率, 应对更多的客户端请求, 也就是常说的”高并发”, 当然并发只是一种(提高服务器应答能力的)手段.</p>
+<p>下面按照不断改进的过程, 用我自己的话, 叙述一下网络IO模型的发展. 大致顺序是:</p>
+<pre><code>阻塞型(包括多进程和多线程, 池模型) --&gt; 非阻塞型(带有简单异步机制) --&gt; 事件驱动(多路复用) --&gt;  异步IO模型(信号驱动和回调)
+</code></pre><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="阻塞型"><a href="#阻塞型" class="headerlink" title="阻塞型"></a>阻塞型</h2><p>简要说明: 小规模的请求量(一种古代的原始模型)</p>
+<p>得益于socket api的良好设计, accept能返回一个响应socket fd, 去处理客户端的请求.<br>但是啊, 在没有完成请求之前, 就无法处理其他的请求, 这个就比较尴尬.(也就是说原始api模型其实是一种阻塞型应答模型)<br>由此可以引入了多线程或者多进程(取决你计算量或者占用资源的时间), 如果处理请求占用的实践比较长, 那么单独开一个进程吧.</p>
+<p>这个方案虽然解决了多个请求以及部分性能问题, 但是请求数量一旦超过某个范围, 服务器还是受不了.</p>
+<p>为此又引入了 <code>池</code>, 包括“线程池”, “连接池”. 该机制一定程度上缓解了IO接口的资源占用问题.</p>
+<p>但是还是治标不治本, 为啥呢？<br>因为啊是个池子就一定有大小, 有上限; 池子只是把资源维持在一个稳定水平, 减少频繁的创建&amp;销毁或者最大限度的重用以前的连接数量, 但是一旦请求规模超过池子的能力, 也是不行的.<br>(或者你不断扩大池子, 但这本身也是需要开销的; 扩大了浪费, 少了还需要频繁扩大)</p>
+<p>值得注意的是, 这里所说的阻塞包括:</p>
+<pre><code>1. 没有收到请求时的阻塞(没有数据报准备好), 同步等待; 
+2. 内核数据没有准备好时, 阻塞等待; 
+</code></pre><p>也就是说(服务端)用户进程 <code>等待请求数据</code> 以及 <code>将数据从内核空间拷贝到用户空间</code> , 两方面都在等待.<br>补充说明: recvfrom等系统调用默认都是阻塞的.</p>
+<p>下面的简单改进就是 <code>非阻塞</code>, 让io系统调用检查, 检查, 再检查.</p>
+<h2 id="非阻塞"><a href="#非阻塞" class="headerlink" title="非阻塞"></a>非阻塞</h2><p>简单一句话:   fcntl将事件句柄设置为异步, 即io函数异步调用.</p>
+<p>recvfrom等网络io函数不断的调用, 如果数据没有准备好就马上返回, 不必等待用户请求或者数据达到或者数据准备(socket io).<br>单线程内询问一个线程内的连接请求(也就是说还是要结合多线程技术), 或者多进程. (该模型中多线程和多进程没有本质区别)</p>
+<p>如果没有请求一直不断调用询问, 收到请求后开始阻塞(同步)执行拷贝动作(数据从内核空间到用户空间).</p>
+<p>(也就是说, 仅仅处理“没有请求”时需要等待的时间被省下来了, 因为立刻返回; 但是有了请求, 但数据没有准备好(拷贝到用户态进程空间才叫准备好), 这部分等待还是没有省下来)</p>
+<p>并且由于该模型通常还要结合多线程或者多进程的并发模式, 频繁调用socket io函数, 还引入了cpu占用率高的问题.</p>
+<h2 id="事件驱动IO"><a href="#事件驱动IO" class="headerlink" title="事件驱动IO"></a>事件驱动IO</h2><p>核心: 原来需要用socket io或者网络io系统调用检查数据是否到达的这事儿, 专门交给另外一个系统调用(函数吧), 它集中处理会高效一点儿呢.</p>
+<p>具体说明如下:</p>
+<p>(下面的select类系统调用, 还可能是 pselect或者epoll等, 根据不同posix系统的实现, 它们原理类似, 效率不一样）</p>
+<p>之后引入了select 探测所有客户端的connect请求和响应(当然还是要先注册fd到需要检测的数组中啊), 整个模型在没有请求或者数据的时候, select不断的轮询(服务端阻塞在select函数/系统调用), 一旦有了请求, 就开始用recv或者send进行响应.</p>
+<p>这就是事件驱动IO, 又称IO复用, 多路复用.</p>
+<p>那么为啥会比上面那个异步机制的非阻塞IO函数调用高效呢?<br>原来的那个模型需要开多个线程/进程, 然后在每个进程或者线程里再用网络io函数/系统调用进行探测检查, 这开销就非常大了. 而select不用切换线程, 应对所有线程的检查.</p>
+<p>缺点:</p>
+<pre><code>1. select需要耗费大量的时间去轮询相关fd; (轮询也要cpu时间资源的)
+2. select将事件的监测和响应放在了一起
+</code></pre><p>关于 <code>1</code> 的说明:<br>各个操作系统又提供了更加高效的接口: linux下面的epoll, bsd的kqueue, solaris提供的/dev/poll.如果想要实现高效的服务器程序, 建议用epoll, 但是epoll在Posix系统的实现差异很大, 所以要实现跨平台的服务器会比较困难</p>
+<p>关于 <code>2</code> 的说明:<br>如果上一个事件的执行体迟迟没有执行完毕, 会大大降低对下一事件处理的及时性(libevent, libev都会根据系统的特点选择合适的接口进行探测, 并且加入了异步响应—探测和响应分离)(到这里也就发现, 其实事件驱动IO模型其实和操作系统内核有关, 至少是内核探测函数有关)所以啊, 在事件驱动IO模型之上, 加入异步IO模型, 分离事件与响应岂不更美？可以直接参考libev或者你使用aio_read, aio_write也行—linux内核2.6提供</p>
+<p>但是你可以看到主动的轮询(监测)还是少不了, 轮询阻塞在select这边儿; 主动去调用相关读写调用(把数据从内核往用户空间拷贝)也少不了, 此时用户进程阻塞.</p>
+<p>缺点总结: 由于引入了除recvfrom之外的其他系统调用, 在请求数量少时真不见得比多线程同步模型高效; 但是请求数量多时, 该模型把并发数量提上去了.</p>
+<h2 id="异步IO模型"><a href="#异步IO模型" class="headerlink" title="异步IO模型"></a>异步IO模型</h2><p>非阻塞IO或者说事件IO还是要求用户进程主动检查, 并且当内核数据准备完成后, 也是它去主动调用readvfrom把数据拷贝到用户进程中. 整个事件用户进程都在积极参与, 只是没有数据的时候, 直接返回了, 减少了等待的事件.</p>
+<p>而异步IO则完全不同, 在这里就好像用户进程注册之后就不管了, 也不轮询了; 准备数据(收到请求)和拷贝数据到用户态进程的事儿直接交给内核了, 内核好了再调用相关回调，或者发信号通知.</p>
+<p>就好像注册之后就不管了, 你好了通知我一下; 这样对于单个请求不会慢的同时, 并发数量就可以上去了.</p>
+<pre><code>该模型的关键在哪里关键在哪？---在于异步IO接口。
+</code></pre><p>如果调用阻塞IO或者说同步IO, 那么在IO操作时会一直等待用户进程相关调用完成; 如果调用非阻塞IO, 如果没有请求虽然会立即返回, 但是真正读写的时候还是会阻塞. 多路复用不断监测所有IO请求, 没有请求时不断监测, 这本身就是一种用户进程的阻塞, 并且真正响应的时候还是会同步阻塞，直到完成后处理下一个请求; 而异步IO则是IO操作后直接返回(例如aio_read), 进程忙别的(而不是自己再去主动监测IO状态); 内核忙完了通知它就可以了.</p>
+<p>根据通知方式的不同, 又可以把异步IO复用模型分为: 信号通知型, 以及注册回调型.</p>
+<p>区别: </p>
+<pre><code>1. 回调时全程没有阻塞; (它通知用户进程IO操作都完成了, 全自动的, 根本不要用户进程担心)--终极懒
+2. 信号通知时在数据拷贝时阻塞; 因为使用信号通知的情况不是全自动的, 它通知用户进程可以启动IO操作了
+</code></pre><h2 id="IO复用思想"><a href="#IO复用思想" class="headerlink" title="IO复用思想"></a>IO复用思想</h2><p>(当然也还是没有图, 笑)<br>先构造一张或多张包含所有需要等待的描述符的表，然后调用一个函数，它要到这些描述符中的一个或多个已准备好进行I/O时才返回。在返回时，它告诉进程哪一个描述符已准备好进行I/O.</p>
+<p>也就是: 如果一个或多个I/O条件满足(如输入已准备好, 或者描述字可以处理更多的输出)时, 我们(用户进程)就被通知. 这个能力就称为I/O复用.</p>
+<p>IO复用技术本身是单线程的, 为了解决同事处理更多的请求这个场景下的问题, 一般 <code>IO复用</code> 比 <code>其他并发技术</code> 能处理更高的并发量. (当然最终还是受限于物理环境)</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>下面问题本文没有涉及:</p>
+<ol>
+<li>select, pselect, poll, epoll (当然这要求你非常熟悉socket api)</li>
+<li>网络库: libevent, libev, asio等.<br>(c++中当然少补了boost.asio)</li>
+<li>其他模型: Reactor, Proactor等</li>
+</ol>
+<p>可以参见我的 <a href="https://github.com/WizardMerlin/network_life" target="_blank" rel="external">network_life</a></p>
+<p>具体的IO模型, 其实可以在linux结合api进行实验.<br>网络编程是最有意思的, 有时间专门说说事件驱动IO (即select, pselect, poll, epoll等)</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/05/23/mysql-connector-cpp.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-06-04 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>13</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/network/">network<span>3</span></a></li> <li><a href="/tags/io/">io<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#阻塞型"><span class="toc-article-text">阻塞型</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#非阻塞"><span class="toc-article-text">非阻塞</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#事件驱动IO"><span class="toc-article-text">事件驱动IO</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#异步IO模型"><span class="toc-article-text">异步IO模型</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#IO复用思想"><span class="toc-article-text">IO复用思想</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>
