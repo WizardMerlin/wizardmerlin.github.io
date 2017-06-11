@@ -6,15 +6,15 @@
   <meta http-equiv="cache-control" content="no-cache">
   <meta http-equiv="expires" content="0">
   
-  <title>c-plus-plus | Merlin&#39;s Blog</title>
+  <title>advice-of-network-learning-steps | Merlin&#39;s Blog</title>
   <meta name="author" content="MerlinYu">
   
-  <meta name="description" content="本篇不是教程，而是我在需要面试C++时需要做的准备(干货)">
+  <meta name="description" content="summary of server side network programming model">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="c-plus-plus"/>
+  <meta property="og:title" content="advice-of-network-learning-steps"/>
   <meta property="og:site_name" content="Merlin&#39;s Blog"/>
 
   
@@ -87,7 +87,7 @@
 
 	
 		<div class="page-header">
-			<h1> c-plus-plus</h1>
+			<h1> advice-of-network-learning-steps</h1>
 		</div>
 	
 
@@ -104,39 +104,42 @@
 	<div class="mypage">		
 	  
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> 本篇不是教程，而是我在需要面试C++时需要做的准备(干货)
+			<i class="fa fa-info-circle"></i> summary of server side network programming model
 		 </div> <!-- alert -->
 	  		
 
-	  <p>我的老师说，你能在编程领域走多远，很大程度上依赖你对底层语言的理解程度(不过至今我体会更多的是，你对于操作系统/软件设计的理解程度)</p>
-<p>C++是一门好用但不好学的语言，相比起Java，Ｃ，Ｇroovy等，我投入时间＆精力最多的就是这一门语言。</p>
-<p>起初我是不喜欢这门语言的，因为作者故意提高了门槛，在学习语法的过程你就要话费大量的时间，并且为了兼容Ｃ，本来设计良好的语言，活生生被搞的很尴尬。然而C++11又进行了一次换血。</p>
+	  <p>以一个c/c++开发者的角度谈一谈网络编程的学习过程.</p>
 <a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>记录一下我过去学习网络编程的道路(目前还在不断探索中).<br>相关代码记录(或者一些基础记录), 可以参考的github库 <code>network_life</code> :</p>
+<p><a href="https://github.com/WizardMerlin/network_life" target="_blank" rel="external">https://github.com/WizardMerlin/network_life</a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>网络学习步骤:</p>
+<p>有基础的1个月; 没有基础的2.5个月. 深入学习3个月.</p>
+<p>(本文建立在你熟悉一门支持网络编程的计算机语言的基础上; 最好对于网络并发多线程; Linux系统编程有一定的了解)</p>
+<ol>
+<li>TCPIP模型 (网络的理论基础)</li>
+<li>学习socket api集.<ul>
+<li>创建 socket bind listen accept</li>
+<li>收发 read/recv/recvfrom write/send/sendto</li>
+<li>关闭 close shutdown</li>
+<li>参数 getsockopt/setsockopt</li>
+<li>地址 gethostbyaddr getaddrbyhost,…<br>在学习这些api时候，可以先关注在函数功能，参数意义上</li>
+</ul>
+</li>
+<li>基本的socket编程模型(socket api的理论实践)<ul>
+<li>tcp socket的语法如下: socket(AF_INET, SOCK_STREAM)</li>
+<li>udp socket的语法如下: socket(AF_INET, SOCK_DGRAM)</li>
+</ul>
+</li>
+<li>学习实现server端编程, 关注服务器<br>学习socket server端编程实现简单规约比如echo, time等, 然后通过cmd中的telnet来测试.</li>
+<li>学习相关网络IO模型()<br>演化过程, 比如阻塞, 非阻塞, 异步, 事件IO(select,poll,epoll, kqueue, WaitForMultipleObject)等</li>
+<li>学习Richard Stevens的<unix网络编程>, 深入学习其中的api原理以及服务端设计原理, 并通过代码编写</unix网络编程></li>
+<li>学习高性能网络框架libevent, libuv, boost.asio等</li>
+<li>把所学知识或者经验用于工业/商业项目</li>
+</ol>
+<p>以上均为个人的浅见, 不正确的地方还望指点.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>学习网络部分还是蛮有意思的, 不过深入学习可能需要几年的时间.<br>后续的学习推荐’《Linux网络内核分析与开发》’ </p>
 <hr>
-<p>其实等你真正学完之后，回过头来仔细看看，不难发现，其实Ｃ++核心没有多少(从用的角度来看)：</p>
-<ol>
-<li>兼容/扩展Ｃ的部分</li>
-<li>面向对象的部分(封装，继承，多态，友元，抽象(虚函数，抽象类)) </li>
-<li>类型转换</li>
-<li>异常处理</li>
-<li>基本ＩＯ(也是对于Ｃ基本ＩＯ的封装)</li>
-<li>模板(元编程)</li>
-<li>STL(容器，算法，迭代器，适配器，函数对象，特殊需求的话：allocator)</li>
-<li>Boost(bind, 智能指针)</li>
-<li>C++11</li>
-</ol>
-<p>但是，如果你从<code>造轮子</code>的角度，需要理解原理是再去看，这个内容就非常多，典型的：</p>
-<ol>
-<li>vptr虚表的实现原理</li>
-<li>智能指针的实现原理(引用计数知道么?)</li>
-<li>set容器的实现原理<br>…</li>
-</ol>
-<pre><code>我个人的观点是，一个高级Ｃ++开发人员不仅仅能玩熟C++，并且还能独立造轮子(只是不屑).
-</code></pre><p>(所以c++的开发人员，一个合格的c++开发人员，薪水确实要高一截)　</p>
-<pre><code>另外评价一个Ｃ++高级开发人员还要看他会不会｀性能优化｀---需要编译，链接，汇编知识.
-</code></pre><p>由于本篇不是教程，所以我是基于N＋１去写的，我非常熟悉的，我只是把item列出来(或者说出核心)，不大熟悉的会辅助仔细说明一下：</p>
-<h1 id="非常熟悉的"><a href="#非常熟悉的" class="headerlink" title="非常熟悉的"></a>非常熟悉的</h1><p>## </p>
-<h1 id="不太熟悉的"><a href="#不太熟悉的" class="headerlink" title="不太熟悉的"></a>不太熟悉的</h1><p>这篇文章我大概花了一个礼拜，写完本篇的时候，我浏览器里面关于C++的所有收藏全部可以清空了。</p>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
 
@@ -146,13 +149,12 @@
 
     
     
-    <a href="/2017/05/10/using-regex-in-c.html" type="button" class="btn btn-default"><i
-                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a href="/2017/04/06/what-if-i-die-tomorrow.html" type="button" class="btn btn-default ">Next<i
+    <a href="/2017/06/10/about-design-patterns.html" type="button" class="btn btn-default ">Next<i
                 class="fa fa-arrow-circle-o-right"></i></a>
     
 
@@ -175,7 +177,7 @@
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2017-04-06 
+	2017-06-11 
 	</div>
 	
 
@@ -199,7 +201,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/c/">c++<span>5</span></a></li> <li><a href="/tags/stl/">stl<span>1</span></a></li> <li><a href="/tags/boost/">boost<span>1</span></a></li>
+  <li><a href="/tags/network/">network<span>4</span></a></li>
     </ul>
 	</div>
 		
@@ -210,7 +212,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#非常熟悉的"><span class="toc-article-text">非常熟悉的</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#不太熟悉的"><span class="toc-article-text">不太熟悉的</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
 		</div>
 	
 	</div>
