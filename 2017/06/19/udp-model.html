@@ -1,0 +1,342 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>udp-model | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="summary of server side network programming model">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="udp-model"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> udp-model</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> summary of server side network programming model
+		 </div> <!-- alert -->
+	  		
+
+	  <p>tcp模型一般说的比较多, 因为tcp稳定,可靠; 但是代价就是传输效率不高, 实时性不强.<br>这个时候udp正好做了弥补. 本文就谈谈udp.<br>(所涉及的代码都是核心代码, 很多没有做出错和异常处理)<br><a id="more"></a></p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>本文主要总结:</p>
+<ul>
+<li>udp的特点(对比tcp), 优缺点, 适用场景</li>
+<li>basic udp c-s模型</li>
+<li>广播模型</li>
+<li>组播模型</li>
+</ul>
+<p>(网络基础就不说了)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="udp的特点"><a href="#udp的特点" class="headerlink" title="udp的特点"></a>udp的特点</h2><h3 id="简要说明"><a href="#简要说明" class="headerlink" title="简要说明"></a>简要说明</h3><ol>
+<li>通信速度快, 保证实时性</li>
+<li>不建立连接, 不维护连接, 更不用断开连接</li>
+<li>稳定性差, 正确率无保证(可靠性差)</li>
+</ol>
+<p>一句话概括: 无连接的,不可靠报文传输.</p>
+<h3 id="如何保证可靠性"><a href="#如何保证可靠性" class="headerlink" title="如何保证可靠性"></a>如何保证可靠性</h3><p>由于无需创建连接, 所以 UDP 开销较小, 数据传输速度快, 实时性较强.多用于对实时性要求较高的通信场合, 如视频会议, 电话会议等.<br>但随之也伴随着数据传输不可靠, 传输数据的正确率, 传输顺序和流量都得不到控制和保证.<br>所以, 通常情况下, 使用 UDP 协议进行数据传输, 为保证数据的正确性, 我们需要 <code>在应用层添加辅助校验协议</code> 来弥补 UDP 的不足, 以达到数据可靠传输的目的.</p>
+<h3 id="与TCP对比"><a href="#与TCP对比" class="headerlink" title="与TCP对比"></a>与TCP对比</h3><p>TCP: (TCP协议, 在IP网络不稳定的基础上, 做相关的弥补)</p>
+<ul>
+<li>数据稳定(有回传应答机制, 可以保证丢包后能重传)</li>
+<li>速率稳定(建立连接后, 基本上所有数据都是走的同一条连接线路)</li>
+<li>流量稳定(滑动窗口, 拥塞控制以及相关算法)</li>
+<li>传输效率低.<br>发送前一定要建立连接, 之后还要处理断开连接; 每次传递过去还需要回执之火才发送下一次数据(可能是多个接收对应一个回执, 稍稍弥补了一下).</li>
+</ul>
+<p>(适合大文件, 重要文件传输; 因为丢包可以重传)</p>
+<p>UDP</p>
+<ul>
+<li>需要自己在应用层, 添加辅助校验协议来弥补 UDP 的不足.<br>(可能接收方缓冲区满了, 对方还在继续发(接收方只能照单收), 这样就丢包了)<br>(也就是说, 需要在应用层自定义网络协议, 来弥补UDP的丢包; 但是应用层自定义协议的开发量的是非常大的, 技术要求高)</li>
+<li>传输效率高, 实时性强, 传输速度快.</li>
+</ul>
+<p>(适合视频会议, 视频电话, 广播, 聊天客户端)</p>
+<h3 id="udp流量控制"><a href="#udp流量控制" class="headerlink" title="udp流量控制"></a>udp流量控制</h3><p>由于它没有 TCP 滑动窗口的机制, 通常采用如下两种方法解决:</p>
+<ul>
+<li>服务器应用层设计流量控制, 控制发送数据速度</li>
+<li>借助 <code>setsockopt</code> 函数改变接收缓冲区大小(注意设置的是 <code>SO_RCVBUF</code>)</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">setsockopt</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">int</span> level, <span class="keyword">int</span> optname, <span class="keyword">const</span> <span class="keyword">void</span> *optval, <span class="keyword">socklen_t</span> optlen)</span></span>;</div><div class="line"><span class="keyword">int</span> n = <span class="number">220</span>x1024;</div><div class="line">setsockopt(sockfd, SOL_SOCKET, SO_RCVBUF, &amp;n, <span class="keyword">sizeof</span>(n));</div></pre></td></tr></table></figure>
+<p>但是设置缓冲区大小一般是在bind之后, 真正开始通信之前; 特别是TCP时, 一定要在listen之前设置.</p>
+<p>补充:  缓冲区大小, 不是越大越好, 经验表明 <code>220x1024</code>时,  缓冲区的丢包率最低.</p>
+<p>(网络环境不好, 属于硬件或者环境问题, 单单依靠软件, 如改变缓冲区的大小, 解决不了)</p>
+<h2 id="c-s模型"><a href="#c-s模型" class="headerlink" title="c-s模型"></a>c-s模型</h2><p>由于 UDP 不需要维护连接, 程序逻辑简单了很多, 但是 UDP 协议是不可靠的, 保证通讯可靠性的机制需要在应用层实现.<br>基本代码如下:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*server.cpp*/</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctype.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SERV_PORT 8000</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">struct</span> sockaddr_in serv_addr, clie_addr;</div><div class="line">  <span class="keyword">socklen_t</span> clie_addr_len;</div><div class="line"></div><div class="line">  <span class="keyword">int</span> sockfd;</div><div class="line">  <span class="keyword">char</span> buf[BUFSIZ] = &#123;<span class="number">0</span>&#125;;</div><div class="line"></div><div class="line">  <span class="keyword">char</span> str[INET_ADDRSTRLEN];</div><div class="line">  <span class="keyword">int</span> i, n;</div><div class="line"></div><div class="line">  <span class="comment">//watchout SOCK_DGRAM</span></div><div class="line">  sockfd = socket(AF_INET, SOCK_DGRAM, <span class="number">0</span>);</div><div class="line"></div><div class="line">  bzero(&amp;serv_addr, <span class="keyword">sizeof</span>(serv_addr));</div><div class="line">  serv_addr.sin_family = AF_INET;</div><div class="line">  serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);</div><div class="line">  serv_addr.sin_port = htons(SERV_PORT);</div><div class="line"></div><div class="line">  bind(sockfd, (<span class="keyword">struct</span> sockaddr *)&amp;serv_addr, <span class="keyword">sizeof</span>(serv_addr));</div><div class="line"></div><div class="line">  <span class="built_in">printf</span>(<span class="string">"bind ok, new waitting for recv\n"</span>);</div><div class="line">  </div><div class="line">  <span class="keyword">while</span>(<span class="number">1</span>)&#123;</div><div class="line">    clie_addr_len = <span class="keyword">sizeof</span>(clie_addr);</div><div class="line">    n = recvfrom(sockfd, buf, BUFSIZ, <span class="number">0</span>, (<span class="keyword">struct</span> sockaddr *)&amp;clie_addr, &amp;clie_addr_len);</div><div class="line">    <span class="keyword">if</span>(n == <span class="number">-1</span>) &#123;</div><div class="line">      perror(<span class="string">"recvfrom error"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"received from %s at PORT %d\n"</span>, inet_ntop(AF_INET, &amp;clie_addr.sin_addr, str, <span class="keyword">sizeof</span>(str)), </div><div class="line">       ntohs(clie_addr.sin_port));</div><div class="line"></div><div class="line">    <span class="comment">//processing</span></div><div class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;i++)&#123;</div><div class="line">      buf[i] = <span class="built_in">toupper</span>(buf[i]);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//buf[n] = '\0'; //n&lt;BUFSIZ</span></div><div class="line"></div><div class="line">    n = sendto(sockfd, buf, BUFSIZ, <span class="number">0</span>, (<span class="keyword">struct</span> sockaddr*)&amp;clie_addr, <span class="keyword">sizeof</span>(clie_addr));</div><div class="line">    <span class="keyword">if</span>(n==<span class="number">-1</span>)&#123;</div><div class="line">      perror(<span class="string">"send error"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">  &#125;<span class="comment">//end of while</span></div><div class="line"></div><div class="line">  close(sockfd);</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>bind之后直接开始传输数据, 不需要再进行listen等操作.</p>
+<p>client的代码更简单, 不需要connect了:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctype.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SERV_PORT 8000</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">  <span class="keyword">struct</span> sockaddr_in servaddr;</div><div class="line">  <span class="keyword">int</span> sockfd, n;</div><div class="line">  <span class="keyword">char</span> buf[BUFSIZ] = &#123;<span class="number">0</span>&#125;;</div><div class="line"></div><div class="line">  sockfd = socket(AF_INET, SOCK_DGRAM, <span class="number">0</span>);</div><div class="line"></div><div class="line">  bzero(&amp;servaddr, <span class="keyword">sizeof</span>(servaddr));</div><div class="line">  servaddr.sin_family = AF_INET;</div><div class="line">  inet_pton(AF_INET, <span class="string">"127.0.0.1"</span>, &amp;servaddr.sin_addr);</div><div class="line"></div><div class="line">  servaddr.sin_port = htons(SERV_PORT);</div><div class="line"></div><div class="line">  <span class="keyword">while</span>(fgets(buf, BUFSIZ, <span class="built_in">stdin</span>) != <span class="literal">NULL</span>) &#123;</div><div class="line">    n = sendto(sockfd, buf, <span class="built_in">strlen</span>(buf), <span class="number">0</span>, (<span class="keyword">struct</span> sockaddr *)&amp;servaddr, <span class="keyword">sizeof</span>(servaddr));</div><div class="line">    <span class="keyword">if</span>(n==<span class="number">-1</span>)&#123;</div><div class="line">      perror(<span class="string">"send error"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    n = recvfrom(sockfd, buf, BUFSIZ, <span class="number">0</span>, <span class="literal">NULL</span>, <span class="number">0</span>);<span class="comment">//do not care the server side</span></div><div class="line">    <span class="keyword">if</span>(n==<span class="number">-1</span>)&#123;</div><div class="line">      perror(<span class="string">"send error"</span>);</div><div class="line">    &#125;</div><div class="line">    buf[n]=<span class="string">'\0'</span>;</div><div class="line">    write(STDOUT_FILENO, buf, n);</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  </div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>具体代码可以参考: <a href="https://github.com/WizardMerlin/network_life/tree/master/code/udp_c_s" target="_blank" rel="external">https://github.com/WizardMerlin/network_life/tree/master/code/udp_c_s</a></p>
+<p>模型总结如下图:</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/udp%E6%A8%A1%E5%9E%8B.PNG" alt=""></p>
+<h2 id="广播"><a href="#广播" class="headerlink" title="广播"></a>广播</h2><p>广播(broadcast)一般用在局域网之内,需要的基础大概是:</p>
+<ul>
+<li>xxx.xxx.xxx.255 最后一个地址 <code>255</code> 表示广播</li>
+<li>一般是通过交换机进行转发(局域网内使用交换机足够了)<br><code>server---交换机(局域网)---局域网内的client(多个)</code></li>
+</ul>
+<p>简单说: 交换机发现数据包中的ip地址是255, 表明是一个广播, 就把该数据包发送给当前网络环境中的所有机器.(也就是说代码中你发送数据给 <code>255</code> 就足够了, 其他的你别管)</p>
+<p>socket默认是不允许广播的, 需要设置socket参数(开放广播权限, 即 <code>SO_BROADCAST</code> ):<br>(注意是在bind之后设置)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*int setsockopt(int sockfd, int level, intoptname, </span></div><div class="line">      const void *optval, socklen_t optlen);*/</div><div class="line"></div><div class="line"><span class="keyword">int</span> flag = <span class="number">1</span>;</div><div class="line">setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &amp;flag, <span class="keyword">sizeof</span>(flag));</div></pre></td></tr></table></figure>
+<p>具体代码参考如下:</p>
+<p>server发送给广播地址BROADCAST_IP(根据自己的网段指定), 填充client_ip的时候要手动指定端口号, 不能依靠隐式绑定了, 因为这个端口号也是client代码中需要显示绑定的.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;net/if.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SERVER_PORT 8000</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> CLIENT_PORT 9000 <span class="comment">/*must*/</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXLINE 1500</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//according to ur ip address, set client to broadcast ip</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> BROADCAST_IP <span class="meta-string">"192.168.1.255"</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">  <span class="keyword">int</span> sockfd;</div><div class="line">  <span class="keyword">struct</span> sockaddr_in serveraddr, clientaddr;</div><div class="line">  <span class="keyword">char</span> buf[MAXLINE] = &#123;<span class="number">0</span>&#125;;</div><div class="line"></div><div class="line">  <span class="comment">/*used for udp*/</span></div><div class="line">  sockfd = socket(AF_INET, SOCK_DGRAM, <span class="number">0</span>);</div><div class="line"></div><div class="line">  bzero(&amp;serveraddr, <span class="keyword">sizeof</span>(serveraddr));</div><div class="line">  serveraddr.sin_family = AF_INET;</div><div class="line">  serveraddr.sin_addr.s_addr = htonl(INADDR_ANY); <span class="comment">/*server ip whatever*/</span></div><div class="line">  serveraddr.sin_port = htons(SERVER_PORT);</div><div class="line"></div><div class="line"></div><div class="line">  bind(sockfd, (<span class="keyword">struct</span> sockaddr *)&amp;serveraddr, <span class="keyword">sizeof</span>(serveraddr));</div><div class="line"></div><div class="line">  <span class="comment">/*set broadcast previlege*/</span></div><div class="line">  <span class="keyword">int</span> flag = <span class="number">1</span>;</div><div class="line">  setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &amp;flag, <span class="keyword">sizeof</span>(flag));</div><div class="line"></div><div class="line">  <span class="comment">/*fill out client, remember port*/</span></div><div class="line">  bzero(&amp;clientaddr, <span class="keyword">sizeof</span>(clientaddr));</div><div class="line">  clientaddr.sin_family = AF_INET;</div><div class="line">  inet_pton(AF_INET, BROADCAST_IP, &amp;clientaddr.sin_addr.s_addr);</div><div class="line">  clientaddr.sin_port = htons(CLIENT_PORT); <span class="comment">//must</span></div><div class="line"></div><div class="line">  <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">    <span class="built_in">sprintf</span>(buf, <span class="string">"send %d message\n"</span>, i++);</div><div class="line">    sendto(sockfd, buf, <span class="built_in">strlen</span>(buf), <span class="number">0</span>, </div><div class="line">       (<span class="keyword">struct</span> sockaddr *)&amp;clientaddr, <span class="keyword">sizeof</span>(clientaddr));</div><div class="line">    sleep(<span class="number">1</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  close(sockfd);</div><div class="line">  </div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>client代码:</p>
+<p>client绑定IP的时候, 绑定”0.0.0.0”即可(不能只接受本机广播吧)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SERVER_PORT 8000</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXLINE 4096</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> CLIENT_PORT 9000 <span class="comment">/*the same as broadcast port*/</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">struct</span> sockaddr_in localaddr;</div><div class="line">  <span class="keyword">int</span> confd;</div><div class="line">  <span class="keyword">ssize_t</span> len;</div><div class="line">  <span class="keyword">char</span> buf[MAXLINE] = &#123;<span class="number">0</span>&#125;;</div><div class="line"></div><div class="line">  confd = socket(AF_INET, SOCK_DGRAM, <span class="number">0</span>);</div><div class="line"></div><div class="line">  bzero(&amp;localaddr, <span class="keyword">sizeof</span>(localaddr));</div><div class="line">  localaddr.sin_family = AF_INET;</div><div class="line">  inet_pton(AF_INET, <span class="string">"0.0.0.0"</span>, &amp;localaddr.sin_addr.s_addr);<span class="comment">//client ip whatever</span></div><div class="line">  localaddr.sin_port = htons(CLIENT_PORT);</div><div class="line"></div><div class="line">  <span class="keyword">int</span> ret = bind(confd, (<span class="keyword">struct</span> sockaddr *)&amp;localaddr, <span class="keyword">sizeof</span>(localaddr));<span class="comment">//must</span></div><div class="line">  </div><div class="line">  <span class="keyword">if</span>(ret == <span class="number">0</span>) &#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"bind ok..\n"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">    len = recvfrom(confd, buf, <span class="keyword">sizeof</span>(buf), <span class="number">0</span>, <span class="literal">NULL</span>, <span class="number">0</span>);</div><div class="line">    write(STDOUT_FILENO, buf, len);</div><div class="line">  &#125;</div><div class="line">  close(confd);</div><div class="line"></div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>具体代码请参考我的github库:<br><a href="https://github.com/WizardMerlin/network_life/tree/master/code/udp_broadcast" target="_blank" rel="external">https://github.com/WizardMerlin/network_life/tree/master/code/udp_broadcast</a></p>
+<h2 id="组播"><a href="#组播" class="headerlink" title="组播"></a>组播</h2><p>这个又叫多播(multicast), 也就是说, 发送随便你发, 但是我客户端接收不接受就有限制了, 只有在相应的组播组里, 才能接收.(简单举例: 不进相关的群, 就收不到群主的红包)</p>
+<p>组播组</p>
+<ul>
+<li>224.0.0.0～224.0.0.255 为预留的组播地址(永久组地址), 地址 224.0.0.0 保留不做分配, 其它地址供路由协议使用</li>
+<li>224.0.1.0～224.0.1.255 是公用组播地址, 可以用于 Internet; 欲使用需申请</li>
+<li>224.0.2.0～238.255.255.255 为用户可用的组播地址(临时组地址), 全网范围内有效;</li>
+<li>239.0.0.0～239.255.255.255 为本地管理组播地址, 仅在特定的本地范围内有效</li>
+</ul>
+<p>可以使用 <code>ip address</code> 或者 <code>ip ad</code> 查看一下网卡支持多播与否.<br>(可以使用命令打开或者关闭网卡 sudo ifconfig eth0 up/down)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP qlen 1000</div><div class="line">    link/ether 00:16:3e:30:e0:f9 brd ff:ff:ff:ff:ff:ff</div><div class="line">    inet 172.17.216.110/20 brd 172.17.223.255 scope global eth0</div></pre></td></tr></table></figure>
+<p>注意网卡编号, 代码中, 则通过 <code>if_nametoindex</code> 命令可以根据网卡名, 获取网卡序号:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;net/if.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">unsigned</span> <span class="title">if_nametoindex</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *ifname)</span></span>; <span class="comment">/*use this*/</span></div><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">if_indextoname</span><span class="params">(<span class="keyword">unsigned</span> ifindex, <span class="keyword">char</span> *ifname)</span></span>;</div><div class="line"><span class="function"><span class="keyword">struct</span> if_nameindex *<span class="title">if_nameindex</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">if_freenameindex</span><span class="params">(<span class="keyword">struct</span> if_nameindex *ptr)</span></span>;</div></pre></td></tr></table></figure>
+<p>编程中还涉及到要填充一个组播地址结构体,  <code>/usr/include/linux/in.h</code> 下定义的结构体 <code>ip_mreqn</code>:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> ip_mreqn &#123;</div><div class="line">        <span class="keyword">struct</span> in_addr  imr_multiaddr;          <span class="comment">/* IP multicast address of group */</span></div><div class="line">        <span class="keyword">struct</span> in_addr  imr_address;            <span class="comment">/* local IP address of interface */</span></div><div class="line">        <span class="keyword">int</span>             imr_ifindex;            <span class="comment">/* Interface index */</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>结构体 <code>imr_address group</code> 在设置server <code>发送组播权限</code> 时需要:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_IF, &amp;group, <span class="keyword">sizeof</span>(group));</div></pre></td></tr></table></figure></p>
+<p>补充: </p>
+<ul>
+<li>构造imr_address 如果传入 <code>0.0.0.0</code> 即INADDR_ANY, 那么会在发送的时候自动分配一个本地地址. </li>
+<li>server代码中clientaddr的地址设置为group ip即可, 例如 <code>#define GROUP &quot;239.0.0.2&quot;</code></li>
+</ul>
+<p>核心代码(构造):<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">inet_pton(AF_INET, GROUP, &amp;group.imr_multiaddr);  <span class="comment">/*设置组地址*/</span></div><div class="line">inet_pton(AF_INET, <span class="string">"0.0.0.0"</span>, &amp;group.imr_address);  <span class="comment">/*本地任意 IP*/</span></div><div class="line"></div><div class="line">group.imr_ifindex = if_nametoindex(<span class="string">"eth0"</span>);  <span class="comment">/* eth0 --&gt; 编号 命令: ip ad */</span></div><div class="line">setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_IF, &amp;group, <span class="keyword">sizeof</span>(group));</div></pre></td></tr></table></figure></p>
+<p>并且注意server代码中发送给client的端口也要和client代码保持一致, 即指定相同的port.</p>
+<p>详细代码如下:<br>服务端:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*server.cpp*/</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;net/if.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SERVER_PORT 6666</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> CLIENT_PORT 9000</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXLINE 1500</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> GROUP <span class="meta-string">"239.0.0.2"</span> <span class="comment">//watch out group ip set to client ip</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> sockfd, i ;</div><div class="line">  <span class="keyword">struct</span> sockaddr_in serveraddr, clientaddr;</div><div class="line">  <span class="keyword">char</span> buf[MAXLINE] = <span class="string">"itcast\n"</span>;</div><div class="line">  <span class="keyword">char</span> ipstr[INET_ADDRSTRLEN]; <span class="comment">/* 16 Bytes */</span></div><div class="line">  <span class="keyword">socklen_t</span> clientlen;</div><div class="line">  <span class="keyword">ssize_t</span> len;</div><div class="line">  <span class="keyword">struct</span> ip_mreqn group;</div><div class="line">  </div><div class="line">  sockfd = socket(AF_INET, SOCK_DGRAM, <span class="number">0</span>);</div><div class="line">  </div><div class="line">  bzero(&amp;serveraddr, <span class="keyword">sizeof</span>(serveraddr));</div><div class="line">  serveraddr.sin_family = AF_INET; <span class="comment">/* IPv4 */</span></div><div class="line">  serveraddr.sin_addr.s_addr = htonl(INADDR_ANY); <span class="comment">/* 本地任意 IP INADDR_ANY = 0 */</span></div><div class="line">  serveraddr.sin_port = htons(SERVER_PORT);</div><div class="line">  </div><div class="line">  bind(sockfd, (<span class="keyword">struct</span> sockaddr *)&amp;serveraddr, <span class="keyword">sizeof</span>(serveraddr));</div><div class="line">  </div><div class="line">  <span class="comment">/*设置组地址*/</span></div><div class="line">  inet_pton(AF_INET, GROUP, &amp;group.imr_multiaddr);</div><div class="line">  <span class="comment">/*本地任意 IP*/</span></div><div class="line">  inet_pton(AF_INET, <span class="string">"0.0.0.0"</span>, &amp;group.imr_address);</div><div class="line">  </div><div class="line">  <span class="comment">/* eth0 --&gt; 编号 命令： ip ad */</span></div><div class="line">  group.imr_ifindex = if_nametoindex(<span class="string">"eth0"</span>);</div><div class="line">  setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_IF, &amp;group, <span class="keyword">sizeof</span>(group));</div><div class="line">  </div><div class="line">  <span class="comment">/*构造 client 地址 IP+端口 */</span></div><div class="line">  bzero(&amp;clientaddr, <span class="keyword">sizeof</span>(clientaddr));</div><div class="line">  clientaddr.sin_family = AF_INET; <span class="comment">/* IPv4 */</span></div><div class="line">  <span class="comment">/*watch out group, not BROADCAST_IP*/</span></div><div class="line">  inet_pton(AF_INET, GROUP, &amp;clientaddr.sin_addr.s_addr); </div><div class="line">  clientaddr.sin_port = htons(CLIENT_PORT);</div><div class="line">  </div><div class="line">  <span class="keyword">while</span> (<span class="number">1</span>) &#123;</div><div class="line">    <span class="comment">//fgets(buf, sizeof(buf), stdin);</span></div><div class="line">    sendto(sockfd, buf, <span class="built_in">strlen</span>(buf), <span class="number">0</span>, (<span class="keyword">struct</span> sockaddr *)&amp;clientaddr, <span class="keyword">sizeof</span>(clientaddr));</div><div class="line">    sleep(<span class="number">1</span>);</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  close(sockfd);</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>客户端</p>
+<p>这边当然也要指定相关的组, 加入相关的组播组才可以接收到相关的数据.<br>(没有加入group组播组的客户端, 虽然server还是会借助交换机发送, 但是client不接收)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">setsockopt(sockfd, IPPROTO_IP, IP_ADD_MEMBERSHIP, &amp;group, <span class="keyword">sizeof</span>(group));</div></pre></td></tr></table></figure>
+<p>其中group即 <code>struct ip_mreqn group;</code></p>
+<p>核心代码:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> ip_mreqn group;</div><div class="line"></div><div class="line">inet_pton(AF_INET, GROUP, &amp;group.imr_multiaddr);  <span class="comment">/*设置组地址*/</span></div><div class="line">inet_pton(AF_INET, <span class="string">"0.0.0.0"</span>, &amp;group.imr_address);  <span class="comment">/*本地任意 IP*/</span></div><div class="line">group.imr_ifindex = if_nametoindex(<span class="string">"eth0"</span>);  <span class="comment">/* eth0*/</span></div><div class="line"></div><div class="line"><span class="comment">/*设置 client 加入多播组 */</span></div><div class="line">setsockopt(confd, IPPROTO_IP, IP_ADD_MEMBERSHIP, &amp;group, <span class="keyword">sizeof</span>(group));</div></pre></td></tr></table></figure></p>
+<p>详细代码如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*client.cpp*/</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;net/if.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SERVER_PORT 6666</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXLINE 4096</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> CLIENT_PORT 9000</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> GROUP <span class="meta-string">"239.0.0.2"</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">struct</span> sockaddr_in serveraddr, localaddr;</div><div class="line">  <span class="keyword">int</span> confd;</div><div class="line">  <span class="keyword">ssize_t</span> len;</div><div class="line">  <span class="keyword">char</span> buf[MAXLINE];</div><div class="line">  </div><div class="line">  <span class="comment">/* 定义组播结构体 */</span></div><div class="line">  <span class="keyword">struct</span> ip_mreqn group;</div><div class="line">  confd = socket(AF_INET, SOCK_DGRAM, <span class="number">0</span>);</div><div class="line">  <span class="comment">//初始化本地端地址</span></div><div class="line">  bzero(&amp;localaddr, <span class="keyword">sizeof</span>(localaddr));</div><div class="line">  localaddr.sin_family = AF_INET;</div><div class="line">  inet_pton(AF_INET, <span class="string">"0.0.0.0"</span> , &amp;localaddr.sin_addr.s_addr);</div><div class="line">  localaddr.sin_port = htons(CLIENT_PORT);</div><div class="line">  </div><div class="line">  bind(confd, (<span class="keyword">struct</span> sockaddr *)&amp;localaddr, <span class="keyword">sizeof</span>(localaddr));<span class="comment">//must</span></div><div class="line">  </div><div class="line"></div><div class="line">  inet_pton(AF_INET, GROUP, &amp;group.imr_multiaddr);  <span class="comment">/*设置组地址*/</span></div><div class="line">  inet_pton(AF_INET, <span class="string">"0.0.0.0"</span>, &amp;group.imr_address);  <span class="comment">/*本地任意 IP*/</span></div><div class="line">  group.imr_ifindex = if_nametoindex(<span class="string">"eth0"</span>);  <span class="comment">/* eth0*/</span></div><div class="line">  <span class="comment">/*设置 client 加入多播组 */</span></div><div class="line">  setsockopt(confd, IPPROTO_IP, IP_ADD_MEMBERSHIP, &amp;group, <span class="keyword">sizeof</span>(group));</div><div class="line">  </div><div class="line">  <span class="keyword">while</span> (<span class="number">1</span>) &#123;</div><div class="line">    len = recvfrom(confd, buf, <span class="keyword">sizeof</span>(buf), <span class="number">0</span>, <span class="literal">NULL</span>, <span class="number">0</span>);</div><div class="line">    write(STDOUT_FILENO, buf, len);</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  close(confd);</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>代码地址: <a href="https://github.com/WizardMerlin/network_life/tree/master/code/udp_multicast" target="_blank" rel="external">https://github.com/WizardMerlin/network_life/tree/master/code/udp_multicast</a></p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>全文把udp的核心内容大致讲了讲, 也说了开发中的注意事项.<br>详细的可以参考一下 《unp 卷1》.</p>
+<p>在做网络的应用的时候, 和udp还是有一些区别的(根据协议的特点做相应的调整), 它们适用的方向也不一样. 例如实时视频直播软件的时候可能是:</p>
+<ol>
+<li>屏幕截图模块(为保证画面流畅, 至少保证有24帧)</li>
+<li>截取帧数 (一般为保证画面, 8-12即可)</li>
+<li>压缩图片</li>
+<li>压缩数据包</li>
+<li>传递数据–(多播)</li>
+<li>解压缩</li>
+<li>成像</li>
+</ol>
+<p>其中传递数据的时候, 需要用到网络编程中的udp模型(加入错误和异常处理).</p>
+<p>基本就这样了, 不足和错误之处, 还望指正.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/06/13/why-not-epoll.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-06-19 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>18</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/network/">network<span>7</span></a></li> <li><a href="/tags/udp/">udp<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#udp的特点"><span class="toc-article-text">udp的特点</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#简要说明"><span class="toc-article-text">简要说明</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#如何保证可靠性"><span class="toc-article-text">如何保证可靠性</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#与TCP对比"><span class="toc-article-text">与TCP对比</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#udp流量控制"><span class="toc-article-text">udp流量控制</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#c-s模型"><span class="toc-article-text">c-s模型</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#广播"><span class="toc-article-text">广播</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#组播"><span class="toc-article-text">组播</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>
