@@ -122,7 +122,25 @@
 <li>拥塞控制——慢启动算法，拥塞窗口</li>
 </ul>
 <p>为了日常开发, 对于tcp客户端和服务器端各个 <code>tcp状态</code> 也要非常熟悉.<br>(但是我不爱贴图, 所以只贴几张核心的图, 网上都有, 重点在于自己的理解和叙述)</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="TCP套接字模型"><a href="#TCP套接字模型" class="headerlink" title="TCP套接字模型"></a>TCP套接字模型</h2><p>基本的TCP套接字模型已经说过了, <a href="https://wizardmerlin.github.io/2017/06/11/basic-socket-model.html" target="_blank" rel="external">参考</a> .<br>下面补充2个内容: </p>
+<ol>
+<li>监听<br>socket创建的套接字是主动套接字, 调用listen后变成监听套接字. TCP状态有CLOSE跃迁到LISTEN状态.<br>backlog是已完成队列和未完成队列大小之和, 对于监听套接字有两个队列, 一个是未完成队列, 一个是已完成队列.</li>
+</ol>
+<ul>
+<li>未完成队列：客户端发送一个SYN包, 服务器收到后变成SYN_RCVD状态, 这样的套接字被加入到未完成队列中</li>
+<li>已完成队列：TCP已经完成了3次握手后, 将这个套接字加入到已完成队列, 套接字处于ESTABLISHED状态</li>
+</ul>
+<p>accept函数返回时即从未完成队列到已完成队列转移一个连接.<br>该队列专门用于控制同时请求建立队列的客户端数量.</p>
+<ol>
+<li>建立连接客户端可能遇到的失败<br>客户端发送的SYN包可能会遇到失败, 可能有以下几种情况:</li>
+</ol>
+<ul>
+<li>如果客户端没有收到SYN的响应包(ACK), 根据TCP的超时重发机制进行重发. 75秒后还没收到, 就返回错误</li>
+<li>如果目的主机没有监听目的端口号, 就会返回一个RST的分节, 客户端收到RST后立刻返回错误</li>
+<li>如果SYN在中间路由遇到目的不可达, 客户端收到ICMP报文, 客户端保存这个报文信息, 并采用第一种情况方案解决, 也就是重发</li>
+</ul>
+<h2 id="连接管理"><a href="#连接管理" class="headerlink" title="连接管理"></a>连接管理</h2><p>为什么是3次, 为什么是4次?<br>个人认为这些问题都离不开关键词, 可靠传输.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -197,7 +215,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#TCP套接字模型"><span class="toc-article-text">TCP套接字模型</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#连接管理"><span class="toc-article-text">连接管理</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
 		</div>
 	
 	</div>
