@@ -108,9 +108,153 @@
 		 </div> <!-- alert -->
 	  		
 
-	  <p>有不正确的地方, 希望您能发邮件帮忙指正一下, 谢谢.<br>(本文后续可能有修订)</p>
+	  <p>c++除了面向对象部分, 其他值得一说的应该只剩下</p>
+<ul>
+<li>模板(泛型编程)</li>
+<li>类型转换和RTTI</li>
+<li>异常机制</li>
+<li>IO</li>
+</ul>
+<p>本文就说这4个方面. </p>
 <a id="more"></a>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>模板, 类型参数化, 这个在STL中用的比较多, 也容易把它和重载联系在一起.</p>
+<p>异常机制, 本来是一种很优秀的设计(更好的服务于面向对象), 结果是大多数c++程序员不太爱用这个机制.</p>
+<p>IO, c++的标准IO, 文件IO, 串IO是在c的基础上进行封装, 扩展后的产物, 比原来的printf, scanf等更加安全(多了编译时检查), 支持更加强大的格式控制; 然而就是由于扩充了太多东西, 所以用起来稍微有点儿复杂了(好吧, 我承认引入了相当的复杂度).</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h2><p>总结性的一句话: 模板可以看成参数的静多态, 一般用于表达逻辑结构相同, 但具体数据元素类型不同的数据对象的通用行为.</p>
+<p>实现手段: 泛型<br>  <code>template</code> 关键字告诉 C++编译器 我要开始泛型了, 你不要随便报错(其实就是进行两次编译, 第二次进行的是特化编译)</p>
+<p>具体分类</p>
+<pre><code>* 函数模板(和重载有重合, 但是绝对不冲突)
+* 类模板
+</code></pre><h3 id="函数模板"><a href="#函数模板" class="headerlink" title="函数模板"></a>函数模板</h3><p>函数模板举例:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">myswap</span><span class="params">(T &amp;a, T &amp;b)</span></span></div><div class="line">&#123;</div><div class="line">  T t;</div><div class="line">  t = a;</div><div class="line">  a = b;</div><div class="line">  b = t;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>代替<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">myswap</span><span class="params">(<span class="keyword">int</span> &amp;a, <span class="keyword">int</span> &amp;b)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> t = a;</div><div class="line">  a = b;</div><div class="line">  b = t;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">myswap</span><span class="params">(<span class="keyword">char</span> &amp;a, <span class="keyword">char</span> &amp;b)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">char</span> t = a;</div><div class="line">  a = b;</div><div class="line">  b = t;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>调用:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">myswap&lt;<span class="keyword">float</span>&gt;(a, b); <span class="comment">//显示类型调用</span></div><div class="line">myswap(a, b); <span class="comment">//自动数据类型推导(注意是严格匹配)</span></div></pre></td></tr></table></figure></p>
+<p>当然泛型参数也可以作为函数参数, 例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> T2&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">sortArray</span><span class="params">(T *a, T2 num)</span></span></div><div class="line">&#123;</div><div class="line">  T tmp ;</div><div class="line">  <span class="keyword">int</span> i, j ;</div><div class="line">  <span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;num; i++)</div><div class="line">    &#123;</div><div class="line">      <span class="keyword">for</span> (j=i+<span class="number">1</span>; j&lt;num; j++)</div><div class="line">	&#123;</div><div class="line">	  <span class="keyword">if</span> (a[i] &lt; a[j])</div><div class="line">	    &#123;</div><div class="line">	      tmp = a[i];</div><div class="line">	      a[i] = a[j];</div><div class="line">	      a[j] = tmp;</div><div class="line">	    &#125;</div><div class="line">	&#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用模板函数和普通函数的区别:</p>
+<ul>
+<li>普通函数可以进行自动类型转换, 但是带有泛型参数的函数模板不行(必须严格匹配)</li>
+<li>函数模板可以像普通函数一样被重载(函数重载和模板有重合, 但是大部分作用不同)</li>
+<li>C++编译器优先考虑普通函数(先考虑最优匹配(完美类型匹配), 如果两者都匹配, 则先考虑普通函数)</li>
+<li>可以通过空模板实参列表的语法限定编译器只通过模板匹配, 即调用时加上<code>&lt;&gt;</code>, 例如’Max&lt;&gt;(a, b)’, 而不是<code>Max(a,b)</code></li>
+</ul>
+<p>完整案例:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"iostream"</span></span></div><div class="line">  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">Max</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"int Max(int a, int b)"</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">  <span class="keyword">return</span> a &gt; b ? a : b;</div><div class="line">&#125;</div><div class="line"></div><div class="line"> </div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function">T <span class="title">Max</span><span class="params">(T a, T b)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"T Max(T a, T b)"</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">  <span class="keyword">return</span> a &gt; b ? a : b;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function">T <span class="title">Max</span><span class="params">(T a, T b, T c)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"T Max(T a, T b, T c)"</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">  <span class="keyword">return</span> Max(Max(a, b), c);</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> a = <span class="number">1</span>;</div><div class="line">  <span class="keyword">int</span> b = <span class="number">2</span>;</div><div class="line">  <span class="built_in">cout</span>&lt;&lt;Max(a, b)&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//当函数模板和普通函数都符合调用时,优先选择普通函数</span></div><div class="line">  <span class="built_in">cout</span>&lt;&lt;Max&lt;&gt;(a, b)&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//若显示使用函数模板,则使用&lt;&gt; 类型列表</span></div><div class="line">  <span class="built_in">cout</span>&lt;&lt;Max(<span class="number">3.0</span>, <span class="number">4.0</span>)&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//如果 函数模板产生更好的匹配 使用函数模板</span></div><div class="line">  <span class="built_in">cout</span>&lt;&lt;Max(<span class="number">5.0</span>, <span class="number">6.0</span>, <span class="number">7.0</span>)&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//重载</span></div><div class="line">  <span class="built_in">cout</span>&lt;&lt;Max(<span class="string">'a'</span>, <span class="number">100</span>)&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//调用普通函数 可以隐式类型转换</span></div><div class="line">  system(<span class="string">"pause"</span>);</div><div class="line">  <span class="keyword">return</span> ;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="编译器支持"><a href="#编译器支持" class="headerlink" title="编译器支持"></a>编译器支持</h3><p>泛型参数实现的模板机制, 需要C++编译器支持.</p>
+<p>编译机制探究:</p>
+<ul>
+<li>为什么函数模板可以和函数重载放在一块? (重载很简单, 就是编译时改名; 函数模板可以有多个重载, 它俩不冲突)</li>
+<li>C++编译器是如何提供函数模板机制的？(会针对存在的每种类型进行实参话编译么?)</li>
+</ul>
+<p>编译器并不是把函数模板处理成能够处理任意类的函数(代价太大), 而是对函数模板进行两次编译:</p>
+<ul>
+<li>在声明的地方对模板代码本身进行编译</li>
+<li>在调用的地方对参数替换后的代码进行编译(编译器从函数模板通过具体类型产生不同的函数)</li>
+</ul>
+<p>注明: 第二次就是特化编译, 产生具体的函数.</p>
+<h3 id="类模板"><a href="#类模板" class="headerlink" title="类模板"></a>类模板</h3><p>类模板一般用在容器类中比较多(类模板在表示如数组、 表、 图等数据结构显得特别重要, 这些数据结构的表示和算法不受所包含的元素类型的影响).</p>
+<p>举个简单的类模板的例子:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">		       </div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> A</div><div class="line">&#123; </div><div class="line"><span class="keyword">public</span>:</div><div class="line">	A(T t)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">this</span>-&gt;t = t;</div><div class="line">	&#125;</div><div class="line">			  </div><div class="line">	<span class="function">T&amp; <span class="title">getT</span><span class="params">()</span></span></div><div class="line">	&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span>:</div><div class="line">	T t;</div><div class="line">		       </div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span></div><div class="line">&#123;</div><div class="line">  <span class="comment">//模板了中如果使用了构造函数,则遵守以前的类的构造函数的调用规则</span></div><div class="line">  A&lt;<span class="keyword">int</span>&gt; a(<span class="number">100</span>);</div><div class="line">  a.getT();</div><div class="line">  printAA(a);</div><div class="line">  <span class="keyword">return</span> ;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>类模板还涉及到一些其他的问题, 特别是它和继承, 友元等扯在一起的时候, 以及类模板定义的位置.</p>
+<ul>
+<li><p>继承问题<br>例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> A &#123;&#125;;</div><div class="line"></div><div class="line"><span class="keyword">class</span> B: <span class="keyword">public</span> A&lt;<span class="keyword">int</span>&gt;</div><div class="line">&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>结论: </p>
+<ul>
+<li>子类从模板类继承的时候,需要让编译器知道,  父类的数据类型具体是什么. </li>
+<li>如果不初始化父类的参数类型, 那么实例化的时候就完全无法确定实例化时父类对象的大小, 本例中 <code>A&lt;int&gt;</code> (数据类型的本质:固定大小内存块的别名).</li>
+</ul>
+<p>一个具体的例子:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">	</div><div class="line"><span class="keyword">class</span> B : <span class="keyword">public</span> A&lt;<span class="keyword">int</span>&gt;</div><div class="line">&#123; </div><div class="line"><span class="keyword">public</span>:</div><div class="line">	B(<span class="keyword">int</span> i) : A&lt;<span class="keyword">int</span>&gt;(i) &#123; &#125; </div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">printB</span><span class="params">()</span></span></div><div class="line">	&#123;</div><div class="line">	   <span class="built_in">cout</span>&lt;&lt;<span class="string">"A:"</span>&lt;&lt;t&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//作为函数参数的情况</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">pintBB</span><span class="params">(B &amp;b)</span></span></div><div class="line">&#123;</div><div class="line">  b.printB();</div><div class="line">&#125; </div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">printAA</span><span class="params">(A&lt;<span class="keyword">int</span>&gt; &amp;a)</span> <span class="comment">//类模板做函数参数</span></span></div><div class="line">&#123;</div><div class="line">  a.getT();</div><div class="line">&#125; </div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">  A&lt;<span class="keyword">int</span>&gt; a(<span class="number">100</span>); </div><div class="line"></div><div class="line">  a.getT();</div><div class="line">  printAA(a);</div><div class="line">  <span class="function">B <span class="title">b</span><span class="params">(<span class="number">10</span>)</span></span>;</div><div class="line">  b.printB();</div><div class="line"></div><div class="line">  <span class="keyword">return</span> ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>总结就是: 模板可以有层次, 一个类模板可以作为基类, 派生出派生模板类.</p>
+</li>
+</ul>
+<ul>
+<li><p>模板函数的实现位置<br>大致上应该有三种情况:</p>
+<ul>
+<li>所有的类模板函数写在类的内部(.hpp文件)</li>
+<li>所有的类模板函数写在类的外部, 在一个 cpp 文件中</li>
+<li>所有的类模板函数写在类的外部, 在不同的.h 和.cpp中 (分开写的时候.h要包含.cpp)</li>
+</ul>
+<p>最好写在同一个文件中, 命名为.hpp, 具体参考 Boost库的写法就知道了.</p>
+</li>
+</ul>
+<ul>
+<li><p>模板和友元函数</p>
+<p>友元函数中带有类型参数怎么办?<br>案例: (用友元函数重载 <code>&lt;&lt;</code> <code>&gt;&gt;</code> )<br>// friend ostream&amp; operator&lt;&lt; <t> (ostream &amp;out, Complex<t> &amp;c3) ;</t></t></p>
+</li>
+</ul>
+<ul>
+<li><p>声明友元函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Complex;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line">Complex&lt;T&gt; mySub(Complex&lt;T&gt; &amp;c1, Complex&lt;T&gt; &amp;c2);</div></pre></td></tr></table></figure>
+</li>
+<li><p>类的内部声明</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">friend</span> Complex&lt;T&gt; mySub&lt;T&gt;(Complex&lt;T&gt; &amp;c1, Complex&lt;T&gt; &amp;c2);</div></pre></td></tr></table></figure>
+</li>
+<li><p>外部友元函数实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line">Complex&lt;T&gt; mySub(Complex&lt;T&gt; &amp;c1, Complex&lt;T&gt; &amp;c2)</div><div class="line">&#123;</div><div class="line">  Complex&lt;T&gt; tmp(c1.a - c2.a, c1.b-c2.b);</div><div class="line">  <span class="keyword">return</span> tmp;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>友元函数调用</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Complex&lt;<span class="keyword">int</span>&gt; c4 = mySub&lt;<span class="keyword">int</span>&gt;(c1, c2);</div><div class="line"><span class="built_in">cout</span>&lt;&lt;c4;</div></pre></td></tr></table></figure>
+<p>强调一点: 如果在类模板外定义成员函数, 应写成类模板形式:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> 虚拟类型参数&gt;</div><div class="line">函数类型 类模板名&lt;虚拟类型参数&gt;::成员函数名(函数形参表列) </div><div class="line">&#123;</div><div class="line">  <span class="comment">//TODO </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>类模板和static<br>两句话就可以概括:</p>
+<ul>
+<li>类模板实例化出来的模板类, 该模板类的所有实例共享该模板类的static成员.</li>
+<li>所有模板类static成员只是类模板的一个副本(即下次从类模板的编译出具体的模板类, static成员值不会变)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="关于类型转换"><a href="#关于类型转换" class="headerlink" title="关于类型转换"></a>关于类型转换</h2><h3 id="4种类型转换"><a href="#4种类型转换" class="headerlink" title="4种类型转换"></a>4种类型转换</h3><p>(当然Boost库也提供了自己的)<br>最主要的, 清楚要转的变量, 类型转换前是什么类型, 类型转换后是什么类型. 转换有什么后果.<br>一般情况下, 不建议进行类型转换; 避免进行类型转换.</p>
+<ul>
+<li><p>c 风格<br>强制类型转换(Type Cast)很简单, 不管什么类型的转换统统是:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">TYPE b = (TYPE)a;</div></pre></td></tr></table></figure>
+</li>
+<li><p>c++风格<br>类型转换提供了 4 种类型转换操作符来应对不同场合的应用:</p>
+<ul>
+<li>static_cast 静态类型转换, 如 int 转换成 char (但不用于指针类型)</li>
+<li>reinterpreter_cast 重新解释类型(主要用于指针类型)</li>
+<li>dynamic_cast 命名上理解是动态类型转换,如子类和父类之间的多态类型转换</li>
+<li>const_cast 字面上理解就是去 const 属性(或者加上const)</li>
+</ul>
+<p>格式如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">TYPE B = <span class="keyword">static_cast</span>&lt;TYPE&gt;(a);</div></pre></td></tr></table></figure>
+<p>好处可能是, 有编译时或者运行时检查; 运行时出错还会跑出 <code>bad_cast</code> 异常.</p>
+</li>
+</ul>
+<p> 总结:</p>
+<ul>
+<li><p>static_cast和reinterpret_cast&lt;&gt;</p>
+<ul>
+<li>static_cast&lt;&gt;() 静态类型转换, 编译时 c++编译器会做类型检查;基本类型能转换, 包括类型截断, 但是不能转换指针类型</li>
+<li><p>若不同类型的指针之间, 进行强制类型转换, 用 reinterpret_cast&lt;&gt;() 进行重新解释</p>
+</li>
+<li><p>一般性结论:</p>
+<ul>
+<li>c 语言中 能隐式类型转换的, 在 c++中可用 static_cast&lt;&gt;()进行类型转换. 因 C++编译器在编译检查一般都能通过;</li>
+<li>c 语言中不能隐式类型转换的, 在 c++中可以用 reinterpret_cast&lt;&gt;() 进行强行类型解释. (一般就是指不同类型的指针)</li>
+</ul>
+<p>总结: static_cast&lt;&gt;()和 reinterpret_cast&lt;&gt;() 基本上把 C 语言中的 强制类型转换给覆盖. 并且reinterpret_cast&lt;&gt;()很难保证移植性.</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>dynamic_cast 和const_cast<ul>
+<li>dynamic_cast&lt;&gt;()  动态类型转换, 安全的基类和子类之间转换(基类指针转换赋值给子类指针); 运行时类型检查</li>
+<li>const_cast&lt;&gt;()    去除变量的只读属性(小心引起异常; 如果原来的变量被const修饰, 去掉const就妄想改变其value, 一般会出错)</li>
+</ul>
+</li>
+</ul>
+<h3 id="RTTI"><a href="#RTTI" class="headerlink" title="RTTI"></a>RTTI</h3><p>RTTI获取父类指针真正指向哪个子类.</p>
+<p>Circle和Square皆是由Figure所衍生出来的子类别, 它们各有自己的draw()函数.<br>当C++ 提供了RTTI, 就可写个函数如下:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">drawing</span><span class="params">( Figure *p )</span> </span></div><div class="line">&#123; </div><div class="line">   <span class="keyword">if</span>( <span class="keyword">typeid</span>(*p).name() == <span class="string">"Circle"</span> ) &#123;</div><div class="line">         ((Circle*)p)-&gt;draw(); </div><div class="line">   &#125;</div><div class="line"></div><div class="line">   <span class="keyword">if</span>( <span class="keyword">typeid</span>(*p).name() == <span class="string">"Rectangle"</span> )&#123;</div><div class="line">     ((Rectangle*)p)-&gt;draw(); </div><div class="line">   &#125; </div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>此时typeid可以是非 virtual 的函数, 子类隐藏(shadow)了父类的实现.</p>
+<p>如果C++ 并未提供RTTI, 则程序员毫无选择必须使用虚拟函数来支持 drawing() 函数的多态性.<br>将draw()宣告为虚拟函数, 调用写法如下:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">drawing</span><span class="params">(Figure *p)</span> </span></div><div class="line">&#123;     </div><div class="line">      p-&gt;draw();				 </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>RTTI部分还有其他内容, 个人用的不是太多.</p>
+<hr>
+<h2 id="异常机制"><a href="#异常机制" class="headerlink" title="异常机制"></a>异常机制</h2><p>这个部分值得一说</p>
+<h2 id="IO"><a href="#IO" class="headerlink" title="IO"></a>IO</h2><p>个人不是太乐意去说, 因为太复杂了.<br>强大的功能是以巨大的复杂度为代价的.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>未完待续.<br>还没有写完.</p>
+<hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -174,7 +318,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/network/">network<span>13</span></a></li>
+  <li><a href="/tags/c/">c++<span>7</span></a></li>
     </ul>
 	</div>
 		
@@ -185,7 +329,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#模板"><span class="toc-article-text">模板</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#函数模板"><span class="toc-article-text">函数模板</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译器支持"><span class="toc-article-text">编译器支持</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#类模板"><span class="toc-article-text">类模板</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#关于类型转换"><span class="toc-article-text">关于类型转换</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#4种类型转换"><span class="toc-article-text">4种类型转换</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#RTTI"><span class="toc-article-text">RTTI</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#异常机制"><span class="toc-article-text">异常机制</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#IO"><span class="toc-article-text">IO</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
 		</div>
 	
 	</div>
