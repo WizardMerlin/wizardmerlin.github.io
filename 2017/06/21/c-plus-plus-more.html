@@ -342,21 +342,91 @@
 </li>
 </ul>
 <hr>
-<h2 id="IO"><a href="#IO" class="headerlink" title="IO"></a>IO</h2><p>个人不是太乐意去说, 因为太复杂了.</p>
-<p>比c io函数强的地方时, 安全(编译时类型检查 type safe); 功能丰富, 但是使用复杂(细节多).<br>(如果你使用习惯了c io api, 转变到使用c++ io api就需要一些时间过渡)</p>
+<h2 id="IO"><a href="#IO" class="headerlink" title="IO"></a>IO</h2><p> 个人不是太乐意去说, 因为太复杂了.(第二天我还是把这部分内容补全了, 进行了分类整理,  贴出了开发中比较实用的代码)</p>
+<p> 比c io函数强的地方时, 安全(编译时类型检查 type safe); 功能丰富, 但是使用复杂(细节多).<br> (如果你使用习惯了c io api, 转变到使用c++ io api就需要一些时间过渡)</p>
 <ul>
 <li>标准IO (标准输入输出) 头文件<iostream>, 包含抽象类 iostream ; 标准io类: istream, ostream, iostream.</iostream></li>
 <li>文件IO 头文件 <fstream>, 包含: ifstream, ofstream, fstream</fstream></li>
 <li>串IO  输入字符串流 <strstream>, 包含: istrstream, ostrstream, strstream. </strstream></li>
 </ul>
-<p>主要内容就是:</p>
+<p> 主要内容就是:</p>
 <ul>
-<li>格式控制类: iomanip</li>
 <li>继承关系图</li>
-<li>常用的流, 哪些是带缓存的, 哪些是不带缓存的</li>
+<li>流对象及iomanip, 缓存问题</li>
+<li>文件IO及错误处理</li>
 <li>二进制, 文本文件的读写</li>
 </ul>
-<p>这部分需要非常细心, 一点点儿积累.</p>
+<ul>
+<li><p>继承关系图</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">                        ---&gt; basic_istream ---&gt; ifstream</div><div class="line">                       |                      |</div><div class="line">ios_base ---&gt; basic_ios                        ---&gt; iostream  ---&gt; fstream </div><div class="line">                       |                      |</div><div class="line">                        ---&gt; basic_ostream ---&gt; ofstream</div><div class="line"> /*上面的ifstream, ofstream, fstream的位置替换成 </div><div class="line">         istringstream, ostringstream, stringstream, </div><div class="line">  就变成了串IO的继承关系图 */</div></pre></td></tr></table></figure>
+<p>贴一幅图, 地址参考cplusplus.com<br><img src="http://www.cplusplus.com/img/iostream.gif" alt="iostream"></p>
+<p>涉及到的头文件:</p>
+<ul>
+<li>ios</li>
+<li>istream</li>
+<li>ostream</li>
+<li>streambuf</li>
+<li>iostream</li>
+<li>fstream</li>
+<li>sstream</li>
+</ul>
+</li>
+<li><p>流对象</p>
+<ul>
+<li><p>流对象不能复制, 例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">fstream fs1,fs2;</div><div class="line"></div><div class="line">fs1 = fs2; <span class="comment">//error</span></div><div class="line"><span class="function">fstream <span class="title">fs3</span><span class="params">(fs2)</span></span>; <span class="comment">//error</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>流对象带缓冲(读写都要先经过缓冲区)</p>
+<ul>
+<li>刷新缓冲的行为: 程序正常结束, 缓冲区满, endl和flush函数的调用, <code>unitbuf</code> 的设置</li>
+</ul>
+</li>
+<li>除了使用流对象类定义的方法输入输出, 还可以使用 <code>&lt;&lt;</code> <code>&gt;&gt;</code> 进行输出和输入</li>
+<li><p>标准输入cin<br>常见的用法:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> a, b;</div><div class="line"><span class="keyword">char</span> buf[<span class="number">1024</span>]; <span class="comment">//string buf;</span></div><div class="line"><span class="built_in">cin</span> &gt;&gt; a &gt;&gt; b &gt;&gt; buf; <span class="comment">//读入字符串时遇到空格则止 12 23.5 aa bb cc dd</span></div></pre></td></tr></table></figure>
+<p>也就是说, 用标准输入读取不了字符串中的空格, 所以出现了get函数作为弥补, 其重载如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">//读入一个字符并返回(包括回车、tab、空格等空白字符)</span></div><div class="line"> <span class="function"><span class="keyword">char</span> <span class="title">get</span><span class="params">()</span></span>; </div><div class="line"></div><div class="line"> <span class="comment">//经典用法:</span></div><div class="line"> <span class="keyword">char</span> ch;</div><div class="line"> <span class="keyword">while</span>( (ch=<span class="built_in">cin</span>.get()) !=EOF) &#123;</div><div class="line">   <span class="built_in">cout</span>.put(ch);</div><div class="line"> &#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/*读入一个字符,如果读取成功则返回非 0 值(真),</span></div><div class="line">如失败(遇到文件结束符),则函数返回 0 值(假) */</div><div class="line"><span class="function">istream&amp; <span class="title">get</span><span class="params">(<span class="keyword">char</span>&amp;)</span></span>;</div><div class="line"></div><div class="line"><span class="comment">//经典用法</span></div><div class="line"><span class="keyword">char</span> ch;</div><div class="line"><span class="keyword">while</span>(<span class="built_in">cin</span>.get(ch)) &#123;</div><div class="line">  <span class="built_in">cout</span>.put(ch);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>还有一个重要的重载, 该函数遇到delimiter并不会读入自定义buf中(而是放在流中), 所以下次读要从delimiter后一个位置开始, 否则函数直接返回.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function">istream&amp; <span class="title">get</span><span class="params">(<span class="keyword">char</span> *, <span class="keyword">int</span> ,<span class="keyword">char</span> )</span></span></div><div class="line"><span class="comment">// istream&amp; get(字符数组，字符个数 n,终止字符) </span></div><div class="line"><span class="comment">//或 istream &amp; get(字符指针，字符个数 n,终止字符)</span></div></pre></td></tr></table></figure>
+<p>即不会越过中止符(最多读取n-1个), 读不满时, 会阻塞等待.</p>
+<p> 和该函数相似的就是 getline() :</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function">istream&amp; <span class="title">getline</span><span class="params">(<span class="keyword">char</span> *, <span class="keyword">int</span> , <span class="keyword">char</span> dilimeter = <span class="string">'\n'</span>)</span></span></div></pre></td></tr></table></figure>
+<p>这个函数最多也是读取n-1个字符, 不同的是, 它默认以换行为结束符, 并且从输入流中摘取 中止符(但不放入buf), 下次再从流中读取时, 中止符就没有了. 并且读不满时也会阻塞等待.</p>
+<p>cin对象还有3个重要的方法: </p>
+<ul>
+<li><code>ignore(streamsize n =1, int delim = EOF)</code>默认忽略一个字符(中止符是EOF)</li>
+<li><code>int peek()</code> 流指针不移动, 但是只是取下一个位置的字符看看.(字符还在流中)</li>
+<li><code>istream&amp; putback(char c)</code> 从流中读出来的(忽略的也算), 再退回去到流中(给下一次读取)</li>
+</ul>
+</li>
+<li><p>cout<br>和cout一起的还有cerr(只能在屏幕上输出, 不能输出到文件, 无缓存, 实时刷新到屏幕), clog(有缓存, 其他和cerr类似)<br>输出的时候可以结合 <code>iomanip</code> 进行很多格式控制, 例如: <code>cout &lt;&lt; hex &lt;&lt; n &lt;&lt; endl;</code> 等</p>
+<ul>
+<li>hex, oct, dec</li>
+<li>setw(n); //设置输出域宽</li>
+<li>setfill(c); //域宽不足的, 用指定字符c补</li>
+<li>setiosflags(ios::left)(左对齐)</li>
+<li>setiosflags(ios::right)(右对齐)</li>
+<li>setiosflags(ios::showpoint);// 强制显示小数点和尾0</li>
+<li>setiosflags(ios::showpos); //强制显示符号</li>
+<li>setiosflags(ios::scientific)(科学记数法)</li>
+<li>setiosflags(ios::fixed)(定点数)</li>
+<li>setprecision(n); //设置有效位数自动四舍五入</li>
+<li>setiosflags(ios::uppercase);//设置大写</li>
+<li>resetiosflags(ios::uppercase);//重新设置成小写</li>
+</ul>
+<p>成员函数大概如下:</p>
+<ul>
+<li>ostream put(char)</li>
+<li>write() //一般用于二进制格式读写</li>
+</ul>
+</li>
+<li><p>流异常处理是在说文件IO是遇到的fail(), eof(), bad(), good().</p>
+</li>
+</ul>
+</li>
+<li><p>文件IO及异常处理</p>
+</li>
+</ul>
 <h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>几乎花了一个上午在写这部分内容, 说起来不觉得多, 写起来还真有点儿多.</p>
 <p>人家说, “写一辈子程序, 看一辈子c++书”, c++确实有点儿复杂; 你不能老想着什么都要语言机制解决, 这样语言会越来越大, 越来越复杂.Java则是有选择的扩充, 该舍弃的舍弃; 只把好用的拿出来. 毕竟你不能假设所有人都是高手吧? (为了推广, 不能总是搞很小众的东西;大众能接收的是小众的东西)</p>
 <p>就这样吧, 其他内容请参考 《c++ primer 5e》, 《C++标准库自修手册》, 官方文档.</p>
