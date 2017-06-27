@@ -9,7 +9,7 @@
   <title>stl | Merlin&#39;s Blog</title>
   <meta name="author" content="MerlinYu">
   
-  <meta name="description" content="summary of server side network programming model">
+  <meta name="description" content="c++ and stl">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -104,13 +104,74 @@
 	<div class="mypage">		
 	  
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> summary of server side network programming model
+			<i class="fa fa-info-circle"></i> c++ and stl
 		 </div> <!-- alert -->
 	  		
 
-	  <p>有不正确的地方, 希望您能发邮件帮忙指正一下, 谢谢.<br>(本文后续可能有修订)</p>
+	  <p>STL模板中, 唯一比较难得熟悉的是算法部分; 容器, 迭代器部分则相对好一些.</p>
 <a id="more"></a>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>STL汇总<br>标准库的学习不需要认认真真地读书, 需要的是在了解概貌的情况下, 在实践中深入.<br>(有什么, 能做什么？ 之后才是怎么实现的)<br>(工作中的常用技术; STL 需要模板基础; 一个经验丰富的程序员必定能够熟练的使用STL)<br>(再次强调这里需要泛型基础, 模板:参数类型化,当使用类模板建立对象时, 系统会根据实参的类型取代类模板中的虚拟类型, 从而实现不同类的功能。)</p>
+<p>主要涉及: 容器, 迭代器, 算法, 仿函数, 适配器, 分配器.</p>
+<p>在 C++标准中， STL 被组织为下面的 13 个头文 件: (不用记忆, 用的久了就知道了)</p>
+<p><algorithm>,  <deque>, <functional>, <iterator>, <vector>,、 <list>, <map>, <memory>, <numeric>, <queue>, <set>, <stack>, <utility></utility></stack></set></queue></numeric></memory></map></list></vector></iterator></functional></deque></algorithm></p>
+<p>除了分配器不常用, 其他5个组件都非常常用, 而且是配合使用.</p>
+<ul>
+<li>STL是c++的一部分, 编译器支持.</li>
+<li>STL在设计时就是算法和数据结构分离的(其实是得益于泛型).</li>
+<li>程序员可以不用思考 STL 具体的实现过程, 只要能够熟练使用 STL 就 OK 了, 这样他们就可以把精力放在程序开发的别的方面.</li>
+<li>STL的实现也比较高效: 如 map 可以高效地从十万条记录里面查找出指定的记录, 因为 map 是采用红黑树的变体实现的(红黑树是平横二叉树的一种)</li>
+<li>什么情况下使用什么容器和算法, 这个很重要.</li>
+</ul>
+<p>C++中10类标准库, 用的时候再去看吧.</p>
+<p>真正对于stl, 我们更多的关注的是, 各种容器&amp;算法的使用场景, 具体的用法; 通过使用算法和容器, 简化编程任务.<br>具体的容器和算法的讲解, 可以参考一下我的github教程(string, vector, deque, stack, queue, list, priority_queue, set, map等)</p>
+<p>但是有些容器是需要了解底层实现的数据结构的, 比如说 “为什么不可以修改set元素的值?”<br>(因为set底层是用红黑树实现的, 因为该类容器是自动排序的(改变节点的值会打乱原有的顺序). 如果希望修改一个set元素值, 必须先删除原有的元素, 再插入新的元素)</p>
+<h2 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h2><p>数据结构一般不会让你去实现, 但是会让你根据合适的场景选择和包装数据结构.</p>
+<p>常用的容器如下 (注意下容器适配器)</p>
+<p><vector>, <list>, <deque>, <set>, <map>, <stack> 和 <queue>.</queue></stack></map></set></deque></list></vector></p>
+<p>必须非常熟悉的容器有:<br>序列式容器: (有固定位置, 和插入时间和地点有关, 和元素本身无关)<br>vector: 向量  (顺序存储)<br>list: 双向链表 (链式存储)<br>deque: 双端队列  (顺序存储)</p>
+<p>关联式容器: (元素位置取决于特定的排序准则, 和插入顺序无关)<br>set/multiset: 集合 (多重集合, 允许存在两个次序相等的元素的集合)由节点组成的红黑树, 每个节点都包含着一个元素<br>map/multimap: 键值对(映射)–多重映射允许键对有相等的次序(key可以不唯一); map默认按照key升序<br>(这两种容器遍历的时候可能用到pair结构: 函数返回两个迭代器， 而这两个迭代器被封装在 <code>pair</code> 中, pair.first, pair.second)</p>
+<p>其他不常用容器: (操作受限的容器, 又可以称作序列容器适配器)</p>
+<ul>
+<li>stack: 栈 (简单装饰deque而形成的一种容器)</li>
+<li>queue: 队列(简单装饰deque而形成的一种容器)</li>
+<li>priority_queue: 优先队列(最大值优先级队列, 最小值优先级队列)<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">priority_queue&lt;<span class="keyword">int</span>&gt; p1; <span class="comment">//默认是 最大值优先级队列</span></div><div class="line"><span class="comment">//priority_queue&lt;int, vector&lt;int&gt;, less&lt;int&gt; &gt; p1; //相当于这样写</span></div><div class="line">priority_queue&lt;<span class="keyword">int</span>, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;, greater&lt;<span class="keyword">int</span>&gt;&gt; p2; <span class="comment">//最小值优先级队列</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这个元素没有iterator迭代器成员, 注意其遍历方式<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">priority_queue&lt;<span class="keyword">int</span>&gt; p1; </div><div class="line">p1.push(<span class="number">11</span>);<span class="comment">//...</span></div><div class="line"><span class="keyword">while</span> (p2.size() &gt; <span class="number">0</span>)</div><div class="line">&#123;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; p2.top() &lt;&lt; <span class="string">" "</span>;</div><div class="line">    p2.pop();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><p>迭代器部分主要由头文件<utility>,<iterator>和<memory>组 成。 <utility>是一个很小的头文件, 它包括了贯穿使用在 STL 中的几个模板的声明, <iterator>中提供了迭代器 使用的许多方法, 而对于<memory>的描述则十分的困难, 它以不同寻常的方式为容器中的元素分配存储空间, 同时也为某些算法执行期间产生的临时对象提供机制.</memory></iterator></utility></memory></iterator></utility></p>
+<p><memory>中的主要部分是模板类 allocator, 它负责产生所有容器中的默认分配器.</memory></p>
+<p>(allocator是模板类还是类模板)</p>
+<p>大概5种迭代器: 输入迭代器, 输出迭代器, 正向迭代器, 双向迭代器, 随机访问迭代器. (后两种用的比较多)</p>
+<p>双向迭代器支持: ++, –, *, =, !=, ==操作 (list,set,multiset,map,multimap)<br>随机迭代器在此基础上支 +=n, &gt;, &gt;=, &lt;, &lt;=操作  (一般是顺序存储的序列容器支持, vector, deque)</p>
+<p>注意end()总是指向容器最后的下一个位置, rend()指向开头的前一个位置;</p>
+<p>下面是迭代器的简单使用:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::iterator it=vecInt.begin(); it!=vecInt.end(); ++it)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> iItem = *it;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; iItem; <span class="comment">//或直接使用 cout &lt;&lt; *it;</span></div><div class="line">&#125;</div><div class="line"><span class="comment">//或者反向</span></div><div class="line"><span class="keyword">for</span>(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::reverse_iterator rit=vecInt.rbegin(); rit!=vecInt.rend(); ++rit)&#123;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; *it;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其他<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//不修改元素的值</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::const_iterator 与 <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::const_reverse_iterator</div></pre></td></tr></table></figure></p>
+<p>(iterator推荐使用, 而不是 <code>const_iterator</code>, <code>reverse_iterator</code>等迭代器)</p>
+<p>不过容器中的 insert 和 erase 方法仅接受这四种类型中的 iterator, 其它三种不支持.<br>《Effective STL 》 建 议 我 们 尽 量 使 用 iterator 取 代 const_iterator , reverse_iterator 和<br>const_reverse_iterator</p>
+<p>直接使用 <code>iterator</code> .</p>
+<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><p>是怎么样让模板参数支持不同类型的呢? (模板特化, 延迟类型选择)<br>只需要通过调用一两个算法模板, 就可以完成所需要 的功能并大大地提升效率.</p>
+<p>算法部分主要由头文件<algorithm>, <numeric>和<functional>组成. </functional></numeric></algorithm></p>
+<ul>
+<li><algorithm>是所有STL 头文件中最大的一个(尽管它很好理解), 它是由一大堆模版函数组成的, 可以认为每个函数在很大程度上都是独立的, 其中常用到的功能范围涉及到比较、 交换、 查找、 遍历操作、 复制、 修改、 移除、 反转、 排序、 合并等等 (最常用的算法: 置换, 排序, 合并, 搜索)</algorithm></li>
+<li><numeric>体积很小, 只包括几个在序列上面进行简单数学运算的模板函数, 包括加法和乘法在序列上的一些操作</numeric></li>
+<li><functional>中则定义了一些模板类, 用以声明函数对象</functional></li>
+</ul>
+<p>这个部分内容比较多(非常多, 差不多将近80个常用算法).</p>
+<p>比如for_each()函数和 transform函数 的区别?</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v(<span class="number">5</span>,<span class="number">2</span>); <span class="comment">//2, 2, 2, 2, 2</span></div><div class="line">for_each(v.begin(), v.end(), mycompare);</div><div class="line">transform(v.begin(), v.end(), v.begin(), mycompare2);</div></pre></td></tr></table></figure>
+<p>一般情况下:<br>for_each所使用的的函数对象, 参数是引用, 没有返回值;<br>transform所使用的函数对象, 参数不使用引用, 而且有返回值.</p>
+<h1 id="函数对象和谓词"><a href="#函数对象和谓词" class="headerlink" title="函数对象和谓词"></a>函数对象和谓词</h1><ul>
+<li>函数对象(functor)<br>重载函数调用操作符的类, 其对象常称为函数对象(function object), 即它们是行为类似函数的对象. 一个类对象, 表现出一个函数的特征, 就是通过”对象名+(参数列表)”的方式使用一个类对象. 如果没有上下文, 完全可以把它看作一个函数对待. 这是通过重载类或者struct的 operator()来实现的. “在标准库中, 函数对象被广泛地使用以获得弹性”, 标准库中的很多算法都可以使用函数对象或者函数来作为自定的回调行为(就相当于函数指针).</li>
+</ul>
+<p>下面举出 greater<int>的简易实现原理:<br>struct greater<br>{<br>    bool operator() (const int&amp; iLeft, const int&amp; iRight)<br>    {<br>        //如果是实现 less<int>的话， 这边是写 return (iLeft<iright); return="" (ileft="">iRight);<br>    }<br>}<br>容器就是调用函数对象的 operator()方法去比较两个值的大小.</iright);></int></int></p>
+<ul>
+<li>谓词<ul>
+<li>n元函数对象: 函数参数 n 个</li>
+<li>n元谓词 函数参数 n 个, 函数返回值是 bool 类型, 可以作为一个判断式</li>
+</ul>
+</li>
+</ul>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -174,7 +235,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/network/">network<span>12</span></a></li>
+  <li><a href="/tags/c/">c++<span>8</span></a></li> <li><a href="/tags/stl/">stl<span>2</span></a></li>
     </ul>
 	</div>
 		
@@ -185,7 +246,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#容器"><span class="toc-article-text">容器</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#迭代器"><span class="toc-article-text">迭代器</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#算法"><span class="toc-article-text">算法</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#函数对象和谓词"><span class="toc-article-text">函数对象和谓词</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
 		</div>
 	
 	</div>
