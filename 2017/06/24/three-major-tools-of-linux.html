@@ -108,16 +108,18 @@
 		 </div> <!-- alert -->
 	  		
 
-	  <p>在刷apue或者学习Linux系统编程的时候, 最开始学习的是?<br>三大件儿:</p>
+	  <p>在刷apue或者学习Linux系统编程的时候, 最开始学习的是? 三大件儿:</p>
 <ul>
 <li>gcc</li>
 <li>gdb</li>
 <li>makefile</li>
 </ul>
-<p>正好礼拜天, 有时间总结一下(笑).<br>(你基础很好? 那么我问题你, 你怎么调试多线程程序, 多进程呢?)</p>
+<p>正好礼拜天, 有时间总结一下(笑).<br>(你怎么调试多线程程序, 多进程呢? 不如听听我的方法)</p>
 <a id="more"></a>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>gcc, gdb, makefile当前在Linux下编程比windows下编程困难的, 莫过于先跨过他们.<br>本文是一个常用选项的总结(不是教程), 说的都是工作经验, 工程实践.</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="Gcc"><a href="#Gcc" class="headerlink" title="Gcc"></a>Gcc</h2><p>GCC的编译过程:<br>gcc 是 GNU Compiler Collection 的缩写, gcc 是按模块化设计的， 可以加入新语言和新 CPU 架构的支持.<br>最初是作为 C 语言的编译器(GNU C Compiler), 现在已经支持多种语言了,  如 C、 C++、 Java、 Pascal、 Ada、 COBOL 语言等.</p>
+<p>btw: 感谢《Linux C一站式编程这本书》, 当初由这本书入坑…</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="gcc"><a href="#gcc" class="headerlink" title="gcc"></a>gcc</h2><p>gcc 是 GNU Compiler Collection 的缩写, gcc 是按模块化设计的, 可以加入新语言和新 CPU 架构的支持.<br>(g++也涵盖在此范围内)</p>
+<h3 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h3><p>GCC的编译过程:</p>
 <ul>
 <li>预处理（Pre-Processing）</li>
 <li>编译（Compiling）</li>
@@ -131,10 +133,46 @@ Gcc –S 1.i –o 1.s
 Gcc –c 1.s –o 1.o
 Gcc 1.o –o 1exe
 </code></pre><p>文本: 源程序, 预处理后被修改的源程序, 汇编替换后的程序<br>二进制: 可重定向的目标程序(.o), 可执行的目标程序(真正的可执行程序)</p>
-<p>gcc常用编译选项:<br>-o 产生目标（.i、 .s、 .o、 可执行文件等）<br>-c 通知 gcc 取消链接步骤， 即编译源码并在最后生成目标文件<br>-E 只运行 C 预编译器<br>-S 告诉编译器产生汇编语言文件后停止编译， 产生的汇编语言文件扩展名为.s</p>
-<p>-Wall 使 gcc 对源文件的代码有问题的地方发出警告<br>-Idir 将 dir 目录加入搜索头文件的目录路径<br>-Ldir 将 dir 目录加入搜索库的目录路径<br>-llib 链接 lib 库<br>-g 在目标文件中嵌入调试信息， 以便 gdb 之类的调试程序调试</p>
-<p>举例:<br>gcc -E hello.c -o hello.i（预处理）<br>gcc -S hello.i -o hello.s（编译）<br>gcc -c hello.s -o hello.o（汇编）<br>gcc hello.o -o hello（链接）</p>
-<p>以上四个步骤， 可合成一个步骤<br>gcc hello.c -o hello（直接编译链接成可执行目标文件）<br>gcc -c hello.c 或 gcc -c hello.c -o hello.o（编译生成可重定位目标文件）</p>
+<p>注意一下第二个阶段是编译阶段而不是汇编阶段, 将预处理过的代码编译成汇编代码, 第三阶段才是汇编, 由汇编指令生成机器代码.</p>
+<h3 id="编译选项"><a href="#编译选项" class="headerlink" title="编译选项"></a>编译选项</h3><p>gcc常用编译选项:<br>    -o 产生目标（.i、 .s、 .o、 可执行文件等）<br>    -c 通知 gcc 取消链接步骤， 即编译源码并在最后生成目标文件<br>    -E 只运行 C 预编译器<br>    -S 告诉编译器产生汇编语言文件后停止编译， 产生的汇编语言文件扩展名为.s</p>
+<pre><code>-Wall 使 gcc 对源文件的代码有问题的地方发出警告(-W打开输出警告)
+-Idir 将 dir 目录加入搜索头文件的目录路径
+-Ldir 将 dir 目录加入搜索库的目录路径
+-llib 链接 lib 库
+-g 在目标文件中嵌入调试信息(地址和符号建立关联) 以便 gdb 之类的调试程序调试
+-D 编译时提供宏(gcc -D__DEBUG__)
+</code></pre><p>-L只能指定编译时路径, 动态库在运行时可能还要提供环境变量支持.</p>
+<p>举例:<br>    gcc -E hello.c -o hello.i（预处理）<br>    gcc -S hello.i -o hello.s（编译）<br>    gcc -c hello.s -o hello.o（汇编）<br>    gcc hello.o -o hello（链接）</p>
+<p>以上四个步骤， 可合成一个步骤:</p>
+<ul>
+<li>gcc hello.c -o hello<br>（直接编译链接成可执行目标文件）</li>
+</ul>
+<p>一般都是需要中间文件的.o的, 因为一般都是多文件编程, 避免一个文件的改动导致需要全盘重新编译.</p>
+<ul>
+<li>gcc -c hello.c 或 gcc -c hello.c -o hello.o<br>（编译生成可重定位目标文件）</li>
+</ul>
+<p>其他一些疑惑的问题:</p>
+<ul>
+<li>可重定向? 链接的时候链接器ld会检查一个可重定向的目标文件是否有其他文件提供其所需要的符号.</li>
+<li>只编译不链接会不会编译时报错? 如果没有用到具体的定义则不会, 比如<code>ClassA *a</code>; 但是<code>ClassA *a = new ClassA</code>则会报错(实例化没有定义的声明类型)</li>
+<li><p>gcc调用编译工具链, 前一个命令的执行结果会传递给下一个命令, 可以使用 <code>-pipe</code>　选项查看在 <code>/tmp</code>目录下生成的临时文件.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line">g++ main.cpp &amp;</div><div class="line">sleep 0.05</div><div class="line">ls --color=auto /tmp/cc*</div></pre></td></tr></table></figure>
+</li>
+<li><p>debug版本和release版本需要靠<code>__DEBUG__</code>宏来控制.</p>
+</li>
+</ul>
+<h3 id="优化相关"><a href="#优化相关" class="headerlink" title="优化相关"></a>优化相关</h3><p>调用函数之后, 返回值压栈, 之后需要给另外函数传参的时候又出栈到寄存器, 之后调用完成在压栈.<br>一系列过程, 汇编代码看起来有很多, 但是内存和寄存器来回其实浪费很多时间资源, 比如说入栈和出栈的过程.</p>
+<p>编译器完全可以在编译期间进行代码优化以及编译过程优化:<br>一共有三级: -O1, -O2, -O3; (-O0是默认的)<br>低级别的时候就是进行的编译过程优化, 高级别的时候可能涉及修改代码编译优化(例如循环过程的步长增长优化)<br>并且级别越高, 需要编译器做的优化工作也就越多, 需要的运行内存也可能更多, 那么编译时间越长.</p>
+<blockquote>
+<p>执行效率和编译时间之间, 就看你怎么选了.</p>
+</blockquote>
+<ul>
+<li>-O1 提高运行效率, 减少可执行文件大小</li>
+<li>-O2 进一步提高代码执行效率(优化器几乎全打开了)</li>
+<li>-O3 优化器全部打开</li>
+</ul>
+<p>一般O2就好; 但是你要debug时, 不要加优化.</p>
+<hr>
 <h2 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h2><h2 id="makefile"><a href="#makefile" class="headerlink" title="makefile"></a>makefile</h2><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
@@ -210,7 +248,7 @@ Gcc 1.o –o 1exe
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Gcc"><span class="toc-article-text">Gcc</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#gdb"><span class="toc-article-text">gdb</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#makefile"><span class="toc-article-text">makefile</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#gcc"><span class="toc-article-text">gcc</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译过程"><span class="toc-article-text">编译过程</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译选项"><span class="toc-article-text">编译选项</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#优化相关"><span class="toc-article-text">优化相关</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#gdb"><span class="toc-article-text">gdb</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#makefile"><span class="toc-article-text">makefile</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
 		</div>
 	
 	</div>
