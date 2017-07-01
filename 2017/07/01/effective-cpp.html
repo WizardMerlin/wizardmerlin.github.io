@@ -6,15 +6,15 @@
   <meta http-equiv="cache-control" content="no-cache">
   <meta http-equiv="expires" content="0">
   
-  <title>advice-of-network-learning-steps | Merlin&#39;s Blog</title>
+  <title>effective-cpp | Merlin&#39;s Blog</title>
   <meta name="author" content="MerlinYu">
   
-  <meta name="description" content="summary of server side network programming model">
+  <meta name="description" content="好好说说《effective c++》这本书吧">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="advice-of-network-learning-steps"/>
+  <meta property="og:title" content="effective-cpp"/>
   <meta property="og:site_name" content="Merlin&#39;s Blog"/>
 
   
@@ -87,7 +87,7 @@
 
 	
 		<div class="page-header">
-			<h1> advice-of-network-learning-steps</h1>
+			<h1> effective-cpp</h1>
 		</div>
 	
 
@@ -104,41 +104,13 @@
 	<div class="mypage">		
 	  
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> summary of server side network programming model
+			<i class="fa fa-info-circle"></i> 好好说说《effective c++》这本书吧
 		 </div> <!-- alert -->
 	  		
 
-	  <p>以一个c/c++开发者的角度谈一谈网络编程的学习过程.</p>
+	  <p>C++貌似和别的语言不一样, 在这么个 <code>狭小</code> 的领域有太多经典著作.<br>正所谓, “干一辈子革命, 读一辈子C++的书”.</p>
 <a id="more"></a>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>记录一下我过去学习网络编程的道路(目前还在不断探索中).<br>相关代码记录(或者一些基础记录), 可以参考的github库 <code>network_life</code> :</p>
-<p><a href="https://github.com/WizardMerlin/network_life" target="_blank" rel="external">https://github.com/WizardMerlin/network_life</a></p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>网络学习步骤:</p>
-<p>有基础的1个月; 没有基础的2.5个月. 深入学习3个月.</p>
-<p>(本文建立在你熟悉一门支持网络编程的计算机语言的基础上; 最好对于网络并发多线程; Linux系统编程有一定的了解)</p>
-<ol>
-<li>TCPIP模型 (网络的理论基础)</li>
-<li>学习socket api集.<ul>
-<li>创建 socket bind listen accept</li>
-<li>收发 read/recv/recvfrom write/send/sendto</li>
-<li>关闭 close shutdown</li>
-<li>参数 getsockopt/setsockopt</li>
-<li>地址 gethostbyaddr getaddrbyhost,…<br>在学习这些api时候，可以先关注在函数功能，参数意义上</li>
-</ul>
-</li>
-<li>基本的socket编程模型(socket api的理论实践)<ul>
-<li>tcp socket的语法如下: socket(AF_INET, SOCK_STREAM)</li>
-<li>udp socket的语法如下: socket(AF_INET, SOCK_DGRAM)</li>
-</ul>
-</li>
-<li>学习实现server端编程, 关注服务器<br>学习socket server端编程实现简单规约比如echo, time等, 然后通过cmd中的telnet来测试.</li>
-<li>学习相关网络IO模型()<br>演化过程, 比如阻塞, 非阻塞, 异步, 事件IO(select,poll,epoll, kqueue, WaitForMultipleObject)等</li>
-<li>学习Richard Stevens的<unix网络编程>, 深入学习其中的api原理以及服务端设计原理, 并通过代码编写</unix网络编程></li>
-<li>学习高性能网络框架libevent, libuv, boost.asio等</li>
-<li>把所学知识或者经验用于工业/商业项目</li>
-</ol>
-<p>以上均为个人的浅见, 不正确的地方还望指点.</p>
-<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>学习网络部分还是蛮有意思的, 不过深入学习可能需要几年的时间.<br>后续的学习推荐’《Linux网络内核分析与开发》’ </p>
-<hr>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -149,13 +121,13 @@
 
     
     
-    <a href="/2017/06/11/basic-socket-model.html" type="button" class="btn btn-default"><i
+    <a href="/2017/07/01/more-effective-cpp.html" type="button" class="btn btn-default"><i
                 class="fa fa-arrow-circle-o-left"></i> Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a href="/2017/06/10/about-design-patterns.html" type="button" class="btn btn-default ">Next<i
+    <a href="/2017/07/01/smart-pointers.html" type="button" class="btn btn-default ">Next<i
                 class="fa fa-arrow-circle-o-right"></i></a>
     
 
@@ -178,7 +150,7 @@
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2017-06-11 
+	2017-07-01 
 	</div>
 	
 
@@ -189,7 +161,7 @@
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/codings/">codings<span>31</span></a></li>
+    <li><a href="/categories/books/">books<span>5</span></a></li>
   </li>
 
     </ul>
@@ -202,7 +174,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/network/">network<span>10</span></a></li>
+  <li><a href="/tags/c/">c++<span>15</span></a></li>
     </ul>
 	</div>
 		

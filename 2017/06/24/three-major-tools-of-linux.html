@@ -134,8 +134,12 @@ Gcc –c 1.s –o 1.o
 Gcc 1.o –o 1exe
 </code></pre><p>文本: 源程序, 预处理后被修改的源程序, 汇编替换后的程序<br>二进制: 可重定向的目标程序(.o), 可执行的目标程序(真正的可执行程序)</p>
 <p>注意一下第二个阶段是编译阶段而不是汇编阶段, 将预处理过的代码编译成汇编代码, 第三阶段才是汇编, 由汇编指令生成机器代码.</p>
-<h3 id="编译选项"><a href="#编译选项" class="headerlink" title="编译选项"></a>编译选项</h3><p>gcc常用编译选项:<br>    -o 产生目标（.i、 .s、 .o、 可执行文件等）<br>    -c 通知 gcc 取消链接步骤， 即编译源码并在最后生成目标文件<br>    -E 只运行 C 预编译器<br>    -S 告诉编译器产生汇编语言文件后停止编译， 产生的汇编语言文件扩展名为.s</p>
-<pre><code>-Wall 使 gcc 对源文件的代码有问题的地方发出警告(-W打开输出警告)
+<h3 id="编译选项"><a href="#编译选项" class="headerlink" title="编译选项"></a>编译选项</h3><p>gcc常用编译选项:</p>
+<pre><code>-o 产生目标（.i、 .s、 .o、 可执行文件等）
+-c 通知 gcc 取消链接步骤， 即编译源码并在最后生成目标文件
+-E 只运行 C 预编译器
+-S 告诉编译器产生汇编语言文件后停止编译， 产生的汇编语言文件扩展名为.s
+-Wall 使 gcc 对源文件的代码有问题的地方发出警告(-W打开输出警告)
 -Idir 将 dir 目录加入搜索头文件的目录路径
 -Ldir 将 dir 目录加入搜索库的目录路径
 -llib 链接 lib 库
@@ -230,7 +234,7 @@ Gcc 1.o –o 1exe
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/codings/">codings<span>30</span></a></li>
+    <li><a href="/categories/codings/">codings<span>31</span></a></li>
   </li>
 
     </ul>
