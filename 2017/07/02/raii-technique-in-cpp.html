@@ -6,15 +6,15 @@
   <meta http-equiv="cache-control" content="no-cache">
   <meta http-equiv="expires" content="0">
   
-  <title>more-effective-cpp | Merlin&#39;s Blog</title>
+  <title>raii-technique-in-cpp | Merlin&#39;s Blog</title>
   <meta name="author" content="MerlinYu">
   
-  <meta name="description" content="这也是C++领域一本经典的书">
+  <meta name="description" content="说说RAII技术和auto_ptr">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="more-effective-cpp"/>
+  <meta property="og:title" content="raii-technique-in-cpp"/>
   <meta property="og:site_name" content="Merlin&#39;s Blog"/>
 
   
@@ -87,7 +87,7 @@
 
 	
 		<div class="page-header">
-			<h1> more-effective-cpp</h1>
+			<h1> raii-technique-in-cpp</h1>
 		</div>
 	
 
@@ -104,11 +104,12 @@
 	<div class="mypage">		
 	  
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> 这也是C++领域一本经典的书
+			<i class="fa fa-info-circle"></i> 说说RAII技术和auto_ptr
 		 </div> <!-- alert -->
 	  		
 
-	  <p>相比上一本《effective c++》, 这本《more effective c++》探讨的问题就有点儿泛, 但是仍旧不失为一本好书.<br>一起说说吧, 我用通俗的话说说里面比较实用的rules.</p>
+	  <p>自动资源回收机制 <code>Resource Acquisition Is Initialization</code>, 说白了不值得一提.<br>但是我是想借助此说明, 资源回收的另外一种方式, 以及抛弃 <code>auto_ptr</code>的理由.</p>
+<p>有不正确的地方, 希望您能发邮件帮忙指正一下, 谢谢.</p>
 <a id="more"></a>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
@@ -121,13 +122,12 @@
 
     
     
-    <a href="/2017/07/01/thread-poll-model-again.html" type="button" class="btn btn-default"><i
-                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a href="/2017/07/01/effective-cpp.html" type="button" class="btn btn-default ">Next<i
+    <a href="/2017/07/01/smart-pointers-again.html" type="button" class="btn btn-default ">Next<i
                 class="fa fa-arrow-circle-o-right"></i></a>
     
 
@@ -150,7 +150,7 @@
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2017-07-01 
+	2017-07-02 
 	</div>
 	
 
@@ -161,7 +161,7 @@
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/books/">books<span>5</span></a></li>
+    <li><a href="/categories/codings/">codings<span>37</span></a></li>
   </li>
 
     </ul>

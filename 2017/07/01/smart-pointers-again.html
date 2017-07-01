@@ -109,6 +109,11 @@
 	  		
 
 	  <p>引用计数, 标记擦除, 还有其他实现方式么?<br>今天礼拜六最后一个任务, 尝试写写 智能指针.<br>(我两个Tencent T3的老师年轻的时候都写过, 那我也要写写看)</p>
+<p>本篇主要涉及: </p>
+<ol>
+<li>尝试实现自己引用计数智能指针</li>
+<li>剖析一下我感兴趣的 <code>unique_ptr</code></li>
+</ol>
 <a id="more"></a>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
@@ -121,7 +126,8 @@
 
     
     
-    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
+    <a href="/2017/07/02/raii-technique-in-cpp.html" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
@@ -160,7 +166,7 @@
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/codings/">codings<span>36</span></a></li>
+    <li><a href="/categories/codings/">codings<span>37</span></a></li>
   </li>
 
     </ul>
@@ -173,7 +179,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/c/">c++<span>18</span></a></li>
+  <li><a href="/tags/c/">c++<span>19</span></a></li>
     </ul>
 	</div>
 		
