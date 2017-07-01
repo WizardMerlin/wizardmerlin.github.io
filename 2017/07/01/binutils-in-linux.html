@@ -6,15 +6,15 @@
   <meta http-equiv="cache-control" content="no-cache">
   <meta http-equiv="expires" content="0">
   
-  <title>smart-pointers | Merlin&#39;s Blog</title>
+  <title>binutils-in-linux | Merlin&#39;s Blog</title>
   <meta name="author" content="MerlinYu">
   
-  <meta name="description" content="集中说说Boost和标准库中的智能指针">
+  <meta name="description" content="linux下开发需要使用到的工具链">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="smart-pointers"/>
+  <meta property="og:title" content="binutils-in-linux"/>
   <meta property="og:site_name" content="Merlin&#39;s Blog"/>
 
   
@@ -87,7 +87,7 @@
 
 	
 		<div class="page-header">
-			<h1> smart-pointers</h1>
+			<h1> binutils-in-linux</h1>
 		</div>
 	
 
@@ -104,13 +104,27 @@
 	<div class="mypage">		
 	  
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> 集中说说Boost和标准库中的智能指针
+			<i class="fa fa-info-circle"></i> linux下开发需要使用到的工具链
 		 </div> <!-- alert -->
 	  		
 
-	  <p>智能指针的引入并没有完全解决资源自动回收的问题, 或者你不能做刷手掌柜, 但是也很大程度上简化了相关问题的处理.<br>本文集中讲讲Boost或者标准库中的几种智能指针, 以 <code>用好</code> 为宗旨.</p>
+	  <p>注意这里说的是 <code>bin utils</code> 而不是 <code>core utils</code>, 所以只包含开发相关, 不包括运维相关.<br>大致上有: ar, as, ld, nm, objcopy, objdump, ranlib, readelf, size, strings, strip</p>
 <a id="more"></a>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>binutils工具链: </p>
+<ul>
+<li>ar 静态库生成(打包)</li>
+<li>as 汇编器</li>
+<li>ld 链接器</li>
+<li>nm 查看目标文件中的符号</li>
+<li>objcopy 复制目标文件 (例如去除某些ELF目标文件)</li>
+<li>ranlib 为静态库创建索引, 相当于ar的s选项</li>
+<li>readelf 解读ELF文件头</li>
+<li>size 列出目标文件每一个断的大小和总的大小</li>
+<li>strings 列出目标文件中的字符串</li>
+<li>strip 去除目标文件中的所有符号(使目标文件尺寸减小)</li>
+</ul>
+<p>glibc linux下标准c库(包括linux系统库), 库就不说了.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -121,13 +135,13 @@
 
     
     
-    <a href="/2017/07/01/effective-cpp.html" type="button" class="btn btn-default"><i
+    <a href="/2017/07/01/lambda-in-cpp.html" type="button" class="btn btn-default"><i
                 class="fa fa-arrow-circle-o-left"></i> Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a href="/2017/06/30/cpp-library-in-linux.html" type="button" class="btn btn-default ">Next<i
+    <a href="/2017/07/01/thread-poll-model-again.html" type="button" class="btn btn-default ">Next<i
                 class="fa fa-arrow-circle-o-right"></i></a>
     
 
@@ -174,7 +188,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/c/">c++<span>16</span></a></li> <li><a href="/tags/boost/">boost<span>3</span></a></li>
+  <li><a href="/tags/linux/">linux<span>8</span></a></li>
     </ul>
 	</div>
 		

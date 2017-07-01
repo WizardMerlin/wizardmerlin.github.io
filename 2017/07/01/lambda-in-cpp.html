@@ -1,0 +1,287 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>lambda-in-cpp | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="lambda表达式, 感觉不错">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="lambda-in-cpp"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> lambda-in-cpp</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> lambda表达式, 感觉不错
+		 </div> <!-- alert -->
+	  		
+
+	  <p>你知道的, 像函数指针, 函数对象(functor)这类都是非常方便的用于回调, 由于解耦的方式;<br>那么为什么还要弄一个lambda? 因为这是 C++, 这理由充分不?</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>函数指针, 灵活, 但是危险, 因为没有类型安全检查, 或者你可以按照自己的意愿进行强转.<br>函数对象, 或者仿函数, 个人觉得麻烦, 虽然我可以按照面向对象的方式传递一个对象, 但是我为之付出的代价是 <code>operator()()</code> 以及定义一个类.</p>
+<p>其实我只是想传递一个代码块儿, 在预定的条件触发下, 做一些我指定的操作, 那为什么不弄个匿名函数呢? lambda现身了, 好听的 <code>函数式编程</code> 来了.</p>
+<p>最初体验lambda表达式时在 groovy 这门 <code>domain specific language</code> 里, 不过它语法太过简单(没有太多强制书写rules), 所以可读性差(特别是代码复杂的时候).</p>
+<p>然后到了 c++ 这里, 其实也差不多, 也就这个样了, 来看看 C++ 中的语法和使用吧.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><p>直接上代码: (简单的案例代码)<br>(注意编译方式 <code>g++ -std=c++11 -g -Wall main.cpp -o main</code>)<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;functional&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</div><div class="line">  <span class="keyword">int</span> x = <span class="number">5</span>;</div><div class="line"></div><div class="line"></div><div class="line">  <span class="comment">//std::vector&lt;int&gt;::iterator </span></div><div class="line">  <span class="keyword">auto</span> new_end = <span class="built_in">std</span>::remove_if(v.begin(), v.end(), </div><div class="line">				[x](<span class="keyword">int</span> n) &#123; <span class="keyword">return</span> n &lt; x; &#125;);</div><div class="line">  <span class="keyword">auto</span> old_end = v.end();</div><div class="line"></div><div class="line">  v.erase(new_end, old_end);</div><div class="line"> </div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"v: "</span>;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span> i: v) &#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="string">' '</span>;</div><div class="line">  &#125;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">  </div><div class="line">  </div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>看到啦<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[x](<span class="keyword">int</span> n)&#123;</div><div class="line"> <span class="keyword">return</span> n&lt;x;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这段匿名 <code>闭包(closure)</code> 替代了原来的 <code>一元谓词函数</code> .</p>
+<h2 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h2><p>lambda表达式其实就是一段匿名的闭包逻辑, 也可以称为匿名函数.<br>但是它能不能被命名呢? 可以, 如果你要多次使用这样的闭包逻辑的话(但是这是愚蠢的, 如果你要名字, 可以直接写一个函数呀)</p>
+<ul>
+<li><p>方法1 : auto<br>使用 <code>auto</code> 自行推断多好.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> func = [](<span class="keyword">int</span> i) &#123; <span class="keyword">return</span> ++i; &#125;;</div><div class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"func: "</span> &lt;&lt; func(<span class="number">6</span>) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>方法2 : std::function<br>利用可调用函数对象的形式绑定</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::function&lt;<span class="keyword">int</span>(<span class="keyword">int</span>)&gt; func = [](<span class="keyword">int</span> i) &#123; <span class="keyword">return</span> ++i; &#125;;</div><div class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"func: "</span> &lt;&lt; func(<span class="number">6</span>) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>果然还是觉得很傻, 劝你不要这样, 除非吧, 你要用 <code>std::function</code> 统一调用的形式.</p>
+<h2 id="详细语法"><a href="#详细语法" class="headerlink" title="详细语法"></a>详细语法</h2><p>详细语法你可以参考 cppreference手册, 我这里简单的说吧.</p>
+<p>完整的语法:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[ capture ] ( params ) <span class="keyword">mutable</span> exception attribute -&gt; ret &#123; body &#125;</div></pre></td></tr></table></figure></p>
+<p>但是其中很多部分都是可以省略的, 就像我喜欢省略返回值类型一样:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[ capture ] ( params ) -&gt; ret &#123; body &#125;   <span class="comment">//省略限定</span></div><div class="line">[ capture ] ( params ) &#123; body &#125;  <span class="comment">//省略返回值类型</span></div><div class="line">[ capture ] &#123; body &#125;  <span class="comment">//参数,返回值都省略</span></div></pre></td></tr></table></figure></p>
+<p>劝你还是写完整的吧.</p>
+<p>详细说明:</p>
+<ul>
+<li>省略限定时, 该类型的表达式不能改捕获 “capture” 列表中的值; 相当于一个const的闭包(默认就是不改变捕获对象的, 因为捕获对象属于外部域)</li>
+<li>省略返回值时, 按照如下规则推断:<ul>
+<li>如果包含了 return 语句, 则该 lambda 表达式的返回类型由 return 语句的返回类型确定</li>
+<li>如果没有 return 语句,则类似 void f(…) 函数</li>
+</ul>
+</li>
+<li>省略了参数列表，类似于无参函数 f()</li>
+</ul>
+<p>限定列表的说明:</p>
+<ul>
+<li>mutable 修饰符说明 lambda 表达式体内的代码可以修改被捕获的变量，并且可以访问被捕获对象的 non-const 方法</li>
+<li>exception 说明 lambda 表达式是否抛出异常(noexcept)，以及抛出何种异常，类似于void f() throw(X, Y)</li>
+<li>attribute 用来声明属性</li>
+</ul>
+<p>capture列表说明: (就相当于外部传递给内部的实参)</p>
+<ul>
+<li><code>[a,&amp;b]</code> a变量以值的方式呗捕获，b以引用的方式被捕获</li>
+<li><code>[this]</code> 以值的方式捕获 this 指针</li>
+<li><code>[&amp;]</code> 以引用的方式捕获所有的外部自动变量</li>
+<li><code>[=]</code> 以值的方式捕获所有的外部自动变量</li>
+<li><code>[]</code> 不捕获外部的任何变量</li>
+</ul>
+<p>params 指定 lambda 表达式的参数, 就相当于形参呀. </p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>其实 lambda 表达式本身没有多少内容, 但是带来的改变却很大.<br>然而 C++ 做同一件事儿的方式从来都是多种多样的, 就看你怎么选了.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/07/01/binutils-in-linux.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-07-01 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>34</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/c/">c++<span>16</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#闭包"><span class="toc-article-text">闭包</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#命名"><span class="toc-article-text">命名</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#详细语法"><span class="toc-article-text">详细语法</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>
