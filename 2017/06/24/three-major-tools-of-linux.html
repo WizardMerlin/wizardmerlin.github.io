@@ -117,7 +117,7 @@
 <p>正好礼拜天, 有时间总结一下(笑).<br>(你怎么调试多线程程序, 多进程呢? 不如听听我的方法)</p>
 <a id="more"></a>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>gcc, gdb, makefile当前在Linux下编程比windows下编程困难的, 莫过于先跨过他们.<br>本文是一个常用选项的总结(不是教程), 说的都是工作经验, 工程实践.</p>
-<p>btw: 感谢《Linux C一站式编程这本书》, 当初由这本书入坑…</p>
+<p>btw: 感谢 <code>《Linux C一站式编程这本书》</code>, 当初由这本书入坑…</p>
 <h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="gcc"><a href="#gcc" class="headerlink" title="gcc"></a>gcc</h2><p>gcc 是 GNU Compiler Collection 的缩写, gcc 是按模块化设计的, 可以加入新语言和新 CPU 架构的支持.<br>(g++也涵盖在此范围内)</p>
 <h3 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h3><p>GCC的编译过程:</p>
 <ul>
@@ -183,7 +183,212 @@ Gcc 1.o –o 1exe
 </ul>
 <p>要说清楚, 就要说符号表, ELF文件格式(包括其各个段, 运行时加载的段);<br>具体可以参考<a href="http://www.cnblogs.com/xiaomanon/p/4210016.html" target="_blank" rel="external">ELF格式</a></p>
 <hr>
-<h2 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h2><h2 id="makefile"><a href="#makefile" class="headerlink" title="makefile"></a>makefile</h2><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h2 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h2><p>gdb部分还是内容蛮多的, 基本的就一笔带过(其实也蛮多), 重点在于 <code>多进程</code> 和 <code>多线程的调试</code>.<br>但是法无常法, 每个人都可能采用不同的手段进行, 这里只是说一些通用的, 常用的手段.</p>
+<h3 id="查看源码"><a href="#查看源码" class="headerlink" title="查看源码"></a>查看源码</h3><pre><code>l/list
+list &lt;line-number&gt;
+list &lt;function&gt;
+list &lt;line1, line2&gt;
+</code></pre><p>这里没有用 <code>info &lt;line-num&gt;</code> 这种查看源码对应内存地址的方式.</p>
+<h3 id="带参数运行"><a href="#带参数运行" class="headerlink" title="带参数运行"></a>带参数运行</h3><p>   run/r<br>   run <arg1 arg2="" ...=""></arg1></p>
+<p>如果启动gdb运行可执行文件时忘记传入参数(gdb已经启动), 这个时候可以设置参数</p>
+<pre><code>set args 参数1 参数2 ...
+</code></pre><p>(设置以后再run/r)<br>查看参数 <code>show args</code></p>
+<p>或者使用file命令<br><code>file &lt;excutable&gt;</code> 载入文件, 之后在 <code>run</code></p>
+<h3 id="继续执行"><a href="#继续执行" class="headerlink" title="继续执行"></a>继续执行</h3><ul>
+<li><code>continue/c</code> 运行到下一个断点或者观察点</li>
+<li><code>next/n</code> 运行下一个语句</li>
+<li><code>step/s</code> 步入函数执行</li>
+<li><code>finish</code> 跳出函数执行</li>
+</ul>
+<h3 id="断点"><a href="#断点" class="headerlink" title="断点"></a>断点</h3><p>break/b<br>(断电通常设置在关键执行语句上, 不要设置在空行和注释上)</p>
+<ul>
+<li><p>设置断电</p>
+<p>  break <line-num><br>  break <function> (break main 表示在进入main函数就中断)<br>  break <line-number> if <cond-expression></cond-expression></line-number></function></line-num></p>
+</li>
+</ul>
+<p>一般用在控制循环的次数 例如: <code>b 16 if i==9</code> , 如果已经在16行设置了断点, 那么可以用condition设置变量 <code>condition 16 if i==9</code> .<br>(不加条件则是取消断点)</p>
+<p>多文件的时候设置断点?</p>
+<pre><code>break &lt;filename:line-num&gt;
+break &lt;filename:function&gt;
+</code></pre><ul>
+<li><p>删除断点</p>
+<p>  delete/d<br>  delete breakpoint <point-num></point-num></p>
+</li>
+</ul>
+<ul>
+<li><p>禁用启用断点</p>
+<p>  enable breakpoint <point-num><br>  disable breakpoint <point-num><br>  (简写 d b <point-num>)</point-num></point-num></point-num></p>
+</li>
+</ul>
+<ul>
+<li><p>清除断点</p>
+<p>  clear 删除所有断点</p>
+<pre><code>clear &lt;breakpiont-num&gt;
+</code></pre></li>
+</ul>
+<h3 id="观察点"><a href="#观察点" class="headerlink" title="观察点"></a>观察点</h3><p>   watch <condition></condition></p>
+<p>观察点是cpu对某地址读写时触发中断, 通俗说就是 condition里设置的变量值改变时中断; 断点则是cpu执行某指令时.<br>设置观察点, 一般是设置对某个变量的预判条件. 观察点的其他命令(禁用启用,删除,查看等)都和断点类似.</p>
+<h3 id="查看信息"><a href="#查看信息" class="headerlink" title="查看信息"></a>查看信息</h3><p>i/info<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">info locals  查看局部变量(特别是你尝试用print/call func(...)主动调用某函数时)</div><div class="line">info break  查看断电(注意前面的编号)</div><div class="line">info display 查看display设置的自动显示信息</div><div class="line">info registers &lt;reg-num&gt; 查看寄存器</div><div class="line">info all-registers</div></pre></td></tr></table></figure></p>
+<p>p/print<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print &lt;variable&gt;  查看任何变量</div><div class="line">print &lt;file::variable&gt; 指定查看全局变量</div><div class="line">print &lt;function::variable&gt; 指定查看局部变量</div></pre></td></tr></table></figure></p>
+<p>例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">p &apos;main.cpp&apos;:func::count</div><div class="line">p func::count</div></pre></td></tr></table></figure></p>
+<p>(查看main.cpp中func函数中count的值)<br>(不用担心和c++的域作用福重复)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print func_name(arg1, arg2, ...) 进行函数调用</div><div class="line">print &lt;expression&gt; 查看表达式的值(可以带上变量) 例如 print a-b</div><div class="line">print &lt;array-name/string-name&gt;  查看数组或者容器的值 (但是不能查看指定长度, 看到的是全部)</div></pre></td></tr></table></figure>
+<ul>
+<li><p>(指定)内存查看<br>使用<code>@</code>, 具体说:  <code>第一个地址的值@长度</code></p>
+<p>   print &lt;*pointer-name/array-name&gt;@len</p>
+</li>
+</ul>
+<p>(一般用于查看动态分配的,或者指定长度的)</p>
+<ul>
+<li>print 输出格式</li>
+</ul>
+<p>p/格式 <code>&lt;variable-name/array-name/string-name&gt;</code><br>其中格式:</p>
+<pre><code>x/a 十六进制
+u 十六进制无符号
+d 十进制
+o 八进制
+t 二进制
+c 字符类型
+f 浮点格式
+</code></pre><p>(查看一个变量的值, 之后可以用 <code>print $num</code> 的形式查看其历史值)</p>
+<ul>
+<li><p>查看内存(一般用于汇编调试)</p>
+<p>examine/x<br>x[/nfu] <address></address></p>
+</li>
+</ul>
+<p>(多个参数可以一起使用, address可以是变量地址名)</p>
+<ul>
+<li><p>自动显示<br>每次停住都会显示变量或者表达式的值</p>
+<p>  display[/格式] <expr></expr></p>
+</li>
+</ul>
+<p>这里多一个格式 <code>i</code> 表示汇编指令<br><code>display/i $pc</code>  显示gdb的环境变量(汇编指令的形式)</p>
+<ul>
+<li><p>取消自动显示</p>
+<p>  undisplay 删除所有自动显示<br>  delete display <num>  删除指定编号display信息(info display 可以查看到具体的信息)</num></p>
+</li>
+</ul>
+<p>(可以一次性写多个num)</p>
+<ul>
+<li><p>启用/禁用自动显示</p>
+<p>  enable display <num></num></p>
+<pre><code>disable display &lt;num&gt;
+</code></pre></li>
+</ul>
+<p>(不加<num>时是作用于所有)</num></p>
+<ul>
+<li><p>设置显示选项</p>
+<p>  set print address on/off 默认print的时候是显示地址的<br>  show print address 查看当前是否打开显示地址选项</p>
+</li>
+<li><p>查看数组元素地址设置(默认不显示地址)</p>
+<p>  set print elements on/off<br>  show print elements </p>
+</li>
+<li><p>设置结构体/联合的显示<br>(打开时是具体显示每个字段, 否则可能省略性显示)</p>
+<p>  set print union on/off<br>  show print union</p>
+</li>
+<li><p>设置分行显示</p>
+<p>  set pretty on/off<br>  show print pretty </p>
+</li>
+</ul>
+<ul>
+<li><p>设置虚函数表显示(特别是指针指向子类对象的时候)默认是关闭的</p>
+<p>  set print object on/off<br>  show print object</p>
+</li>
+</ul>
+<ul>
+<li><p>是否显示虚函数表 (默认关闭)</p>
+<pre><code>set print vtbl on/off
+</code></pre><p>  show print vtbl</p>
+</li>
+</ul>
+<ul>
+<li><p>设置显示类的静态成分设置</p>
+<p>  set print static-members on/off<br>  show print static-members</p>
+</li>
+</ul>
+<ul>
+<li><p>设置环境变量</p>
+<p>  set <expression><br>  print <expression></expression></expression></p>
+</li>
+</ul>
+<p>主要是为了调试方便, 需要临时量的时候. 表达式里面可以包含赋值 <code>set $variable_num= *ptr</code> , 之后也可以做一些运算 <code>print array[$i]</code><br>(注意: 一旦包含了对变量的赋值, 可能改变程序的执行流程)</p>
+<ul>
+<li><p>查看某变量的类型</p>
+<p>  whatis <variable></variable></p>
+</li>
+</ul>
+<h3 id="使用shell"><a href="#使用shell" class="headerlink" title="使用shell"></a>使用shell</h3><pre><code>`shell [command]`
+</code></pre><p>找出问题之后, 可以直接在gdb里面使用shell命令修改源程序 然后重新编译</p>
+<pre><code>shell gcc -g main.cpp -o main
+</code></pre><p>编译后再运行, run.</p>
+<h3 id="栈帧"><a href="#栈帧" class="headerlink" title="栈帧"></a>栈帧</h3><p>backtrace/bt和frame<br>一个栈就是一次函数调用, 一般跟踪栈的原因是:</p>
+<ul>
+<li>info locals  查看调用某函数时该作用域的局部变量(比如查看main函数调用别的函数时, main函数内的变量)</li>
+<li>切换到具体的调用栈, 查看问题</li>
+</ul>
+<p>特别是用bt查看栈帧之后, 就可以初步判断, 适当<code>frame &lt;num&gt;</code> 到具体编号的栈上.<br>(frame到具体的栈编号时, 已经可以看到调用信息和该调用的源码, 当然也可以借助 <code>info locals</code> 来看)</p>
+<h3 id="绑定"><a href="#绑定" class="headerlink" title="绑定"></a>绑定</h3><p><code>attach</code> 绑定到已经运行的进程上:</p>
+<pre><code>gdb &lt;excutable&gt; &lt;pid&gt;
+</code></pre><p>一般是拿来调试多进程程序或者后台运行的守护程序的. gdb进去之后, <code>bt</code> 可以看调用栈, 然后切换到你关心的地方进行查看, frame和info locals, print等. 已经载入gdb的可执行文件, 也可以使用<code>attach &lt;pid&gt;</code> 在gdb内部绑定.</p>
+<p>调试完毕<code>detach</code> 脱离绑定, 让进行继续执行 或者 <code>kill</code>结束当前进程.</p>
+<h3 id="core文件"><a href="#core文件" class="headerlink" title="core文件"></a>core文件</h3><p><code>ulimit -c ulimited</code>  (Ubuntu平台默认不产生core dump文件, 所以要设置产生)</p>
+<p>特别是在命令行运行的时候, 发生错误应该让它产生core dump文件. 运行时载入: </p>
+<pre><code>gdb &lt;excutable&gt; [core-file]
+</code></pre><p>这样生成的调试信息就在你指定的core文件中. (gdb中仍旧可以查看info locals, print, info args) (如果一个程序有异常报错, gdb加载进去之后, 就直接run就行, 自然会停在报错的位置)</p>
+<h3 id="其他部分"><a href="#其他部分" class="headerlink" title="其他部分"></a>其他部分</h3><ul>
+<li><p>跳转执行(特别在循环里)</p>
+<p>  jump <location></location></p>
+</li>
+</ul>
+<p>(跳转不会修改栈的内容, 但是跨函数跳跃的时候则难说, 一般都在一个函数里面跳跃)<br>(jump的本质是修改保存当前执行代码地址的寄存器的值, 相当于 <code>set $pc=下一条指令的地址</code> )</p>
+<ul>
+<li><p>信号处理</p>
+<p>  signal <signum>   一般是1-15号信号, 写可以写SIGINT这种程序名字</signum></p>
+</li>
+</ul>
+<p>(外部发送的信号是被gdb截获的, 但是这里signal发送的直接发给被调试的程序)<br>一般用于程序中处理信号的代码调试.</p>
+<pre><code>hanle &lt;sig-name&gt; &lt;what-to-do&gt;
+</code></pre><p>what-to-do, 可以把接收到的信号发送给程序, 打印一条信息, 停止程序或者只是停止程序而发送:</p>
+<pre><code>nostop 接收到信号, 不要停止, 自然也不发送给程序
+stop  停止(不发送), 方便调试
+print 接收到信号打印一条消息
+noprint 收到信号不要显示消息
+pass    发送消息, 但具体停止与否自行处理
+nopass 停止运行, 但是不发消息
+</code></pre><p>一般使用的是停止, 具体发不发送要看具体的需求. 例如:  <code>handle SIGPIPE stop print</code></p>
+<ul>
+<li><p>强制调用</p>
+<p>  call func-name(arg1, arg2…)</p>
+</li>
+</ul>
+<ul>
+<li><p>强制返回(某值)</p>
+<p>  return [value]</p>
+</li>
+</ul>
+<ul>
+<li>gdb内搜索相关源码<br><code>search regexpr</code> 和 <code>reverse-search regexpr</code></li>
+</ul>
+<ul>
+<li><p>程序源码语言相关</p>
+<p>  show language<br>  set [language-name] 或者 set language [language-name]<br>  info frame 当前调用函数的程序语言<br>  info source 当前文件的程序语言</p>
+</li>
+</ul>
+<h3 id="高级调试"><a href="#高级调试" class="headerlink" title="高级调试"></a>高级调试</h3><p>这部分适合高级玩家, 对于计算机原理, 汇编语言比较熟悉的, 而不仅仅涉及栈帧层面.</p>
+<pre><code>info &lt;line/func-name/file:line/file:func-name&gt;  查看对应源码的内存地址
+</code></pre><p>查看4个通用寄存器(使用 print 查看)</p>
+<ul>
+<li><code>$ip</code> 程序当前运行的指令地址</li>
+<li><code>$pc</code> 程序计数器</li>
+<li><code>$fp</code> 当前堆栈帧</li>
+<li><code>$sp</code> 栈指针</li>
+<li><code>$pc</code> 处理器状态</li>
+</ul>
+<p>查看某函数的具体汇编代码:<br><code>disassemble &lt;function&gt;</code></p>
+<hr>
+<h2 id="makefile"><a href="#makefile" class="headerlink" title="makefile"></a>makefile</h2><p>makefile 这个东西, 从上学的时候, 开始就学过, 期间不断的巩固, 有些规则还是学了忘学了忘. 后来我总结了一条: 到用的时候再去查看手册吧.</p>
+<h3 id="跟我学Makefile"><a href="#跟我学Makefile" class="headerlink" title="跟我学Makefile"></a>跟我学Makefile</h3><p>这方面写的好的是 <code>陈硕</code> 大佬的 《跟我学Makefile》, 敬请参考.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -258,7 +463,7 @@ Gcc 1.o –o 1exe
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#gcc"><span class="toc-article-text">gcc</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译过程"><span class="toc-article-text">编译过程</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译选项"><span class="toc-article-text">编译选项</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#优化相关"><span class="toc-article-text">优化相关</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#链接原理"><span class="toc-article-text">链接原理</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#gdb"><span class="toc-article-text">gdb</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#makefile"><span class="toc-article-text">makefile</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#gcc"><span class="toc-article-text">gcc</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译过程"><span class="toc-article-text">编译过程</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译选项"><span class="toc-article-text">编译选项</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#优化相关"><span class="toc-article-text">优化相关</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#链接原理"><span class="toc-article-text">链接原理</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#gdb"><span class="toc-article-text">gdb</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#查看源码"><span class="toc-article-text">查看源码</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#带参数运行"><span class="toc-article-text">带参数运行</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#继续执行"><span class="toc-article-text">继续执行</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#断点"><span class="toc-article-text">断点</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#观察点"><span class="toc-article-text">观察点</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#查看信息"><span class="toc-article-text">查看信息</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用shell"><span class="toc-article-text">使用shell</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#栈帧"><span class="toc-article-text">栈帧</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#绑定"><span class="toc-article-text">绑定</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#core文件"><span class="toc-article-text">core文件</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#其他部分"><span class="toc-article-text">其他部分</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#高级调试"><span class="toc-article-text">高级调试</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#makefile"><span class="toc-article-text">makefile</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#跟我学Makefile"><span class="toc-article-text">跟我学Makefile</span></a></li></ol></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
 		</div>
 	
 	</div>
