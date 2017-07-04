@@ -108,33 +108,34 @@
 		 </div> <!-- alert -->
 	  		
 
-	  <p>个人觉得对于线程的把控，难度要小于进程，进程的通信方式多到能写一本书，并且每种方式还有其各自的适用范围以及注意事项，真正玩起来还是有点儿多。甚至对于内核而言，它都不区分进程和线程。<br>但是线程就不一样，只是Linux下面的话，线程当前的模型就一种：<code>内核支持的NPTL</code>(Native POSIX Thread Library), 但是如果你读过<a href="">《7周7并发模型》</a>的话就会知道并发问题远不止这么点儿<br>东西。所以，此处强调一下，本文从实战的角度展开(尽可能不去涉及一些非IO的东西，比如说unix套接字，比如说各种IO模型，同步异步模型，甚至是其中涉及到的权限问题)</p>
-<p>实战的东西，API偏多，注意一下常用的使用场景以及一些注意事项即可，但是，请注意这个“但是”：我<code>强烈推荐</code><a href="">《Programming With POSIX Threads》</a>这本书(本文也对核心的东西进行了总结)</p>
-<p>本文大致上会把<code>pthread</code>的全部内容概括，但是核心的东西如下：</p>
-<ol>
-<li>线程的控制(创建，销毁/分离)</li>
-<li>线程的同步(信号量(PV)，互斥量，竞争/冒险条件，文件锁，屏障)</li>
-<li>线程的属性</li>
-<li>线程的调试(多线程其实是不好调试的)</li>
-</ol>
+	  <p>个人觉得对于线程的把控，难度要小于进程，进程的通信方式多到能写一本书，并且每种方式还有其各自的适用范围以及注意事项，真正玩起来还是有点儿多。甚至对于内核而言，它都不区分进程和线程。<br>但是线程就不一样，只是Linux下面的话，线程当前的模型就一种：<code>内核支持的NPTL</code>(Native POSIX Thread Library), 但是如果你读过<a href="">《7周7并发模型》</a>的话就会知道并发问题远不止这么点儿东西。<br>本文从实战的角度展开主要涉及4个方面:</p>
+<ul>
+<li>Thread management - creating, joining threads etc.</li>
+<li>Mutexes</li>
+<li>Condition variables</li>
+<li>Synchronization between threads using read/write locks and barriers</li>
+</ul>
+<p>The POSIX semaphore API works with POSIX threads but is not part of threads standard.</p>
+<p>但是实际上就两大类: </p>
+<ul>
+<li>线程的控制原语(包括线程属性) </li>
+<li>线程的同步原语(信号量(PV)，互斥量，竞争/冒险条件，文件锁，屏障)</li>
+</ul>
+<p>API偏多, 注意一下常用的使用场景以及一些注意事项即可, <code>深入理解线程</code> 请参考专业书籍, 后续再写.<br>(本文是详细总结, 所以细节偏多)</p>
 <a id="more"></a>
-<p>实战的东西(也会谈一些理论，不会太多)，API偏多，注意一下常用的使用场景以及一些注意事项即可，但是，我还是<code>强烈推荐</code><a href="">《Programming With POSIX Threads》</a>这本书。不仅仅可以学习API相关的东西，而且对于线程的一些关键性的概念，使用模型，介绍的深入并且清晰。(可以明显发现作者在这个方面是经验丰富的)</p>
-<p>预计耗时(只是用工作之余的时间进行总结)： 5天到7天(至多一个礼拜)</p>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>(此处把整个线程里面要涉及到的东西全部过一遍)</p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><blockquote>
+<p>那么先问一个问题，一个Linux进程最多起多少个线程？</p>
+</blockquote>
+<p>本文涉及哪些内容:</p>
 <ol>
 <li>_REENTRANT 宏的问题</li>
 <li>pthread_XXX 返回值问题(成功返回0，失败不返回0，而是返回错误代码)</li>
 <li>线程控制函数<br>pthread_create(), pthread_exit(), pthread_join()</li>
-<li><p>线程的同步(控制线程同时执行 &amp;&amp; 访问代码临界区)<br>信号量： sem_init(), sem_wai(), sem_post(), sem_destroy(),<br>互斥量： pthread_mutex_init(), pthread_mutex_lock(), pthread_mutex_unlock(), pthread_mutex_destroy()<br>(线程与信号配合的并不好，所以不要这样相互使用)</p>
-</li>
-<li><p>线程的属性(比较多，但是常用的不多，大概6个左右)<br>pthread_attr_init(), pthread_attr_setscope(), pthread_attr_setdetachstate(), pthread_attr_setschedpolicy(), pthread_attr_setschedparam(), pthread_attr_destroy()<br>设置一些取消状态等</p>
-</li>
+<li>线程的同步(控制线程同时执行 &amp;&amp; 访问代码临界区)<br>信号量： sem_init(), sem_wai(), sem_post(), sem_destroy(),<br>互斥量： pthread_mutex_init(), pthread_mutex_lock(), pthread_mutex_unlock(), pthread_mutex_destroy()<br>(线程与信号配合的并不好，所以不要这样相互使用)</li>
+<li>线程的属性(比较多，但是常用的不多，大概6个左右)<br>pthread_attr_init(), pthread_attr_setscope(), pthread_attr_setdetachstate(), pthread_attr_setschedpolicy(), pthread_attr_setschedparam(), pthread_attr_destroy()<br>设置一些取消状态等</li>
 <li>多个线程竞争问题</li>
 <li>RAII手法， 资源的释放，随着对象的构建和析构而释放，而锁是传递给对象的参数。<br>具体可以参考一下<a href="http://en.cppreference.com/w/cpp/language/raii" target="_blank" rel="external">RAII参考</a></li>
 </ol>
-<blockquote>
-<p>那么先问一个问题，一个Linux进程最多起多少个线程？</p>
-</blockquote>
 <h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="线程安全和可重入"><a href="#线程安全和可重入" class="headerlink" title="线程安全和可重入"></a>线程安全和可重入</h2><p>先说一些核心概念：</p>
 <ol>
 <li>异步(Asynchronous)：如果两个操作可以独立进行，称它们是异步的(就是常说的，不会阻塞等待)。</li>
@@ -212,7 +213,7 @@
 <p>循环创建多个线程</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(i =<span class="number">0</span>; i&lt; <span class="number">5</span>; ++i)&#123;</div><div class="line">  ret = pthread_create(&amp;tid[i], <span class="literal">NULL</span>, my_func, (<span class="keyword">void</span> *)i); </div><div class="line">  <span class="keyword">if</span>(ret != <span class="number">0</span> )&#123;</div><div class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"pthread_create thread %d error: %s\n"</span>, i+<span class="number">1</span>, strerror(ret));</div><div class="line">    <span class="built_in">exit</span>(<span class="number">-1</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>为什么传递值而不是传递地址, 因为当子线程真正解引用去拿值的时候main函数这个线程可能已经走到了别的位置，i的值已经在main中被改变了;所以这里只能用值传递。</p>
-<p>加上pthread_join和pthread_exit之后， 完整的创建多个线程的例子如下：(既然创建了，就要负责回收—如果它不是detach线程的话)</p>
+<p>加上pthread_join和pthread_exit之后, 完整的创建多个线程的例子如下：(既然创建了, 就要负责回收—如果它不是detach线程的话)</p>
 <todo>
 
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
@@ -223,7 +224,7 @@
 <p>可以看到，玩下来，基本上操作&amp;弄懂API没有多大难度，难的是理解这么设计的理由是什么？以及设计并发流程，换句话说，到目前为了所有的练习全部是为了掌握并发编程的工具，真正的核心可能在于并发的模式或者算法上，而相关内容本文并没有深入设计，而这方面你只能参考业界相关领域的大牛，甚至是写相关库的本人的论述。</p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
 <li><a href="https://www.ibm.com/developerworks/library/l-posix1/" target="_blank" rel="external">  POSIX threads explained</a>  –IBM的技术贴很有趣</li>
-<li><a href="">《Programming With POSIX Theads》</a> –作者: David R.Butenhof (市面上已经绝版)—强烈推荐</li>
+<li><a href="">《Programming With POSIX Theads》</a> 作者: David R.Butenhof (市面上已经绝版)—强烈推荐</li>
 <li><a href="">《Unix Networking Programming Volume 1》</a> chapter 26–作者: W.Richard Stevens等</li>
 </ol>
 </todo>	  
@@ -275,7 +276,7 @@
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/codings/">codings<span>37</span></a></li>
+    <li><a href="/categories/codings/">codings<span>38</span></a></li>
   </li>
 
     </ul>
@@ -288,7 +289,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/linux/">linux<span>8</span></a></li> <li><a href="/tags/thread/">thread<span>4</span></a></li>
+  <li><a href="/tags/linux/">linux<span>8</span></a></li> <li><a href="/tags/thread/">thread<span>5</span></a></li>
     </ul>
 	</div>
 		

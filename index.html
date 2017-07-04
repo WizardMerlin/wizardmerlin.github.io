@@ -107,6 +107,36 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
+			<a href="/2017/07/04/deep-in-thread.html" title="深入探究线程问题">deep-in-thread</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2017-07-04  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<p>前面已经有两篇 <code>非常详细</code> 的文章说过了 <code>pthread</code> 和 <code>c++并发库</code>, 这里再次对其进行深入探究.<br>如果对c/c++线程库不太熟悉, 可以参考我以前写的总结:</p>
+<ul>
+<li><a href="http://www.merlinblog.site/2017/03/19/linux-pthread.html">linux-pthread</a></li>
+<li><a href="http://www.merlinblog.site/2017/06/29/thread-again.html">c++线程库</a>
+	
+	</div>
+  <a type="button" href="/2017/07/04/deep-in-thread.html#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
 			<a href="/2017/07/02/raii-technique-in-cpp.html" title="说说RAII技术和auto_ptr">raii-technique-in-cpp</a>
 		</h3>
 		</div>
@@ -1245,15 +1275,20 @@
   <div class="row">
 	
 	
-		<p>个人觉得对于线程的把控，难度要小于进程，进程的通信方式多到能写一本书，并且每种方式还有其各自的适用范围以及注意事项，真正玩起来还是有点儿多。甚至对于内核而言，它都不区分进程和线程。<br>但是线程就不一样，只是Linux下面的话，线程当前的模型就一种：<code>内核支持的NPTL</code>(Native POSIX Thread Library), 但是如果你读过<a href="">《7周7并发模型》</a>的话就会知道并发问题远不止这么点儿<br>东西。所以，此处强调一下，本文从实战的角度展开(尽可能不去涉及一些非IO的东西，比如说unix套接字，比如说各种IO模型，同步异步模型，甚至是其中涉及到的权限问题)</p>
-<p>实战的东西，API偏多，注意一下常用的使用场景以及一些注意事项即可，但是，请注意这个“但是”：我<code>强烈推荐</code><a href="">《Programming With POSIX Threads》</a>这本书(本文也对核心的东西进行了总结)</p>
-<p>本文大致上会把<code>pthread</code>的全部内容概括，但是核心的东西如下：</p>
-<ol>
-<li>线程的控制(创建，销毁/分离)</li>
-<li>线程的同步(信号量(PV)，互斥量，竞争/冒险条件，文件锁，屏障)</li>
-<li>线程的属性</li>
-<li>线程的调试(多线程其实是不好调试的)</li>
-</ol>
+		<p>个人觉得对于线程的把控，难度要小于进程，进程的通信方式多到能写一本书，并且每种方式还有其各自的适用范围以及注意事项，真正玩起来还是有点儿多。甚至对于内核而言，它都不区分进程和线程。<br>但是线程就不一样，只是Linux下面的话，线程当前的模型就一种：<code>内核支持的NPTL</code>(Native POSIX Thread Library), 但是如果你读过<a href="">《7周7并发模型》</a>的话就会知道并发问题远不止这么点儿东西。<br>本文从实战的角度展开主要涉及4个方面:</p>
+<ul>
+<li>Thread management - creating, joining threads etc.</li>
+<li>Mutexes</li>
+<li>Condition variables</li>
+<li>Synchronization between threads using read/write locks and barriers</li>
+</ul>
+<p>The POSIX semaphore API works with POSIX threads but is not part of threads standard.</p>
+<p>但是实际上就两大类: </p>
+<ul>
+<li>线程的控制原语(包括线程属性) </li>
+<li>线程的同步原语(信号量(PV)，互斥量，竞争/冒险条件，文件锁，屏障)</li>
+</ul>
+<p>API偏多, 注意一下常用的使用场景以及一些注意事项即可, <code>深入理解线程</code> 请参考专业书籍, 后续再写.<br>(本文是详细总结, 所以细节偏多)</p>
 	
 	</div>
   <a type="button" href="/2017/03/19/linux-pthread.html#more" class="btn btn-default more">Read More</a>
@@ -1408,7 +1443,7 @@
 		
 			<li><a href="/categories/books/">books<span>5</span></a></li>
 		
-			<li><a href="/categories/codings/">codings<span>37</span></a></li>
+			<li><a href="/categories/codings/">codings<span>38</span></a></li>
 		
 			<li><a href="/categories/musings/">musings<span>3</span></a></li>
 		
@@ -1421,45 +1456,45 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/tcp/">tcp<span>2</span></a></li>
+			<li><a href="/tags/trading/">trading<span>1</span></a></li>
 		
-			<li><a href="/tags/network/">network<span>10</span></a></li>
-		
-			<li><a href="/tags/udp/">udp<span>1</span></a></li>
-		
-			<li><a href="/tags/boost/">boost<span>3</span></a></li>
-		
-			<li><a href="/tags/linux/">linux<span>8</span></a></li>
-		
-			<li><a href="/tags/coding-rules/">coding_rules<span>2</span></a></li>
-		
-			<li><a href="/tags/http/">http<span>1</span></a></li>
-		
-			<li><a href="/tags/thread/">thread<span>4</span></a></li>
-		
-			<li><a href="/tags/thinking/">thinking<span>5</span></a></li>
+			<li><a href="/tags/design-pattern/">design-pattern<span>1</span></a></li>
 		
 			<li><a href="/tags/epoll/">epoll<span>1</span></a></li>
 		
-			<li><a href="/tags/trading/">trading<span>1</span></a></li>
-		
 			<li><a href="/tags/socket/">socket<span>1</span></a></li>
-		
-			<li><a href="/tags/ip/">ip<span>1</span></a></li>
-		
-			<li><a href="/tags/c/">c<span>1</span></a></li>
 		
 			<li><a href="/tags/python/">python<span>1</span></a></li>
 		
-			<li><a href="/tags/stl/">stl<span>2</span></a></li>
+			<li><a href="/tags/c/">c<span>1</span></a></li>
 		
-			<li><a href="/tags/java/">java<span>1</span></a></li>
-		
-			<li><a href="/tags/c/">c++<span>19</span></a></li>
-		
-			<li><a href="/tags/shell/">shell<span>1</span></a></li>
+			<li><a href="/tags/network/">network<span>10</span></a></li>
 		
 			<li><a href="/tags/regex/">regex<span>4</span></a></li>
+		
+			<li><a href="/tags/c/">c++<span>20</span></a></li>
+		
+			<li><a href="/tags/thinking/">thinking<span>5</span></a></li>
+		
+			<li><a href="/tags/linux/">linux<span>8</span></a></li>
+		
+			<li><a href="/tags/thread/">thread<span>5</span></a></li>
+		
+			<li><a href="/tags/boost/">boost<span>3</span></a></li>
+		
+			<li><a href="/tags/udp/">udp<span>1</span></a></li>
+		
+			<li><a href="/tags/ip/">ip<span>1</span></a></li>
+		
+			<li><a href="/tags/mysql/">mysql<span>1</span></a></li>
+		
+			<li><a href="/tags/http/">http<span>1</span></a></li>
+		
+			<li><a href="/tags/stl/">stl<span>2</span></a></li>
+		
+			<li><a href="/tags/tcp/">tcp<span>2</span></a></li>
+		
+			<li><a href="/tags/shell/">shell<span>1</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span>22</span></a></li>
@@ -1475,6 +1510,10 @@
   <ul class="entry list-unstyled">
     
       <li>
+        <a href="/2017/07/04/deep-in-thread.html"  title="深入探究线程问题" ><i class="fa fa-file-o"></i>deep-in-thread</a>
+      </li>
+    
+      <li>
         <a href="/2017/07/02/raii-technique-in-cpp.html"  title="说说RAII技术和auto_ptr" ><i class="fa fa-file-o"></i>raii-technique-in-cpp</a>
       </li>
     
@@ -1488,10 +1527,6 @@
     
       <li>
         <a href="/2017/07/01/lambda-in-cpp.html"  title="lambda表达式, 感觉不错" ><i class="fa fa-file-o"></i>lambda-in-cpp</a>
-      </li>
-    
-      <li>
-        <a href="/2017/07/01/binutils-in-linux.html"  title="linux下开发需要使用到的工具链" ><i class="fa fa-file-o"></i>binutils-in-linux</a>
       </li>
     
   </ul>
