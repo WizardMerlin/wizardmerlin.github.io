@@ -386,9 +386,118 @@ nopass 停止运行, 但是不发消息
 </ul>
 <p>查看某函数的具体汇编代码:<br><code>disassemble &lt;function&gt;</code></p>
 <hr>
-<h2 id="makefile"><a href="#makefile" class="headerlink" title="makefile"></a>makefile</h2><p>makefile 这个东西, 从上学的时候, 开始就学过, 期间不断的巩固, 有些规则还是学了忘学了忘. 后来我总结了一条: 到用的时候再去查看手册吧.</p>
-<h3 id="跟我学Makefile"><a href="#跟我学Makefile" class="headerlink" title="跟我学Makefile"></a>跟我学Makefile</h3><p>这方面写的好的是 <code>陈硕</code> 大佬的 《跟我学Makefile》, 敬请参考.</p>
-<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h2 id="makefile"><a href="#makefile" class="headerlink" title="makefile"></a>makefile</h2><p>make 这个东西, 从上学的时候, 开始就学过, 期间不断的巩固, 有些规则还是学了忘学了忘. 后来我总结了一条: 到用的时候再去查看手册吧.<br>btw: make在c/c++中的地位和maven,ant在java中地位相当, 一般都是用于工程管理, 不过现在用Cmake或者Xmake的比较多, 然而Makefile必须熟悉.</p>
+<p>下面我以一个案例去简单说说其注意点:</p>
+<h3 id="核心内容"><a href="#核心内容" class="headerlink" title="核心内容"></a>核心内容</h3><p>(主要牢记变量,包括自动变量(系统预定义的符号); 规则; 函数(主要是内置函数))</p>
+<ul>
+<li>make的作用<ul>
+<li>通过读入 Makefile 文件来执行大量的编译工作</li>
+<li>自动管理器能根据文件时间自动发现更新过的文件而减少编译的工作量</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>make的格式<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">target: dependency_files //目标项:依赖项</div><div class="line">	command //必须以 tab 开头, command 编译命令</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>一个最简单的案例: (main函数调用一个简单的打印函数, main.cpp, func.cpp)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">main:main.o func.o</div><div class="line">	g++ -o main main.o func.o</div><div class="line">main.o:main.cpp</div><div class="line">	g++ -c main.cpp</div><div class="line">func.o:func.cpp</div><div class="line">	g++ -c func.cpp</div></pre></td></tr></table></figure></p>
+<p>放心吧, 工程项目中绝对没有这么简单, 这里只是讲一个demo. 但是有一点是一样的, make的执行流程都是: 为目标文件的依赖文件.</p>
+<ul>
+<li>特殊处理(伪目标)<br><code>.PHONY</code> 是 makefile 文件的关键字, 表示它后面列表中的目标均为伪目标, 例如:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.PHONY:sub_target</div><div class="line">sub_target:</div><div class="line">	echo ‘b’ //通常用@echo “hello”</div></pre></td></tr></table></figure>
+<p>实体目标是为了编译出具体的文件, 那么伪目标呢?<br>通常用于清理文件, 强制重新编译等情况.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">main:main.o func.o</div><div class="line">        g++ -o main main.o func.o</div><div class="line">main.o:main.cpp</div><div class="line">	g++ -c main.cpp</div><div class="line">func.o:func.cpp</div><div class="line">	g++ -c func.cpp</div><div class="line"></div><div class="line">.PHONY:rebuild clean</div><div class="line">rebuild:clean main</div><div class="line">clean:</div><div class="line">rm –rf main.o func.o main</div></pre></td></tr></table></figure></p>
+<p>最后的俩目标 rebuild 和 clean 都是伪目标, rebuild又依赖clean和main这俩目标(并且先执行clean 在执行main, 即在下一次编译之前先清理上一次的编译结果)</p>
+<ul>
+<li>执行目标<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">make  //直接make表示执行 makefile文件的第一个目标</div><div class="line">make clean  //执行具体的目标, 此处是clean目标</div><div class="line">make func.o   //执行具体的目标, 此处是func.o目标</div><div class="line">make rebuild  //执行为目标 rebuild</div><div class="line">make -f xxx clean //当你的makefile指定为xxx名字时, -f来指定具体的规则文件</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>下面说 变量, 规则, 函数, 这三个机制是保证makefile更加通用, 提升编译效率的手段.</p>
+<hr>
+<ul>
+<li>变量<br>变量用来代表字符串(通常可以是目标, 或者需要编译的文件等)</li>
+<li>定义变量:<ul>
+<li>变量名=变量值 递规变量展开, 真正引用值得时候才展开//不推荐, 容易引发问题</li>
+<li>变量名:=变量值 立即展开 //通常采用这种形式</li>
+</ul>
+</li>
+<li>引用变量<ul>
+<li><code>$(变量名)</code>  和shell类似, 不同的是, 可以做左值   </li>
+</ul>
+</li>
+</ul>
+<p>最开始的那个例子, 就可以写成:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">OBJS:=main.o func.o</div><div class="line">EXE:=main</div><div class="line"></div><div class="line">$(EXE):$(OBJS)</div><div class="line">	g++ -o <span class="variable">$(EXE)</span> <span class="variable">$(OBJS)</span></div><div class="line">main.o:main.cpp</div><div class="line">	g++ -c main.cpp –o main.o</div><div class="line">func.o:func.cpp</div><div class="line">	g++ -c func.cpp –o func.o</div><div class="line"><span class="section">clean:</span></div><div class="line">	rm –rf <span class="variable">$(EXE)</span> <span class="variable">$(OBJS)</span></div></pre></td></tr></table></figure></p>
+<p>(有过编程经验的人就能体会这样写的对于后续维护的好处, 我不说了)</p>
+<p>变量种类:</p>
+<ul>
+<li>用户自定义变量, 预定义: 量, 自动变量, 环境变量</li>
+<li>自动变量: 指在使用的时候, 自动用特定的值替换</li>
+</ul>
+<p>自动变量, 常用的有:</p>
+<ul>
+<li><code>$@</code> 当前规则的目标(文件)</li>
+<li><code>$&lt;</code> 当前规则的第一个依赖(文件)</li>
+<li><code>$^</code> 当前规则的全部依赖文件, 以逗号分隔</li>
+<li><code>$?</code> 规则中日期新于目标文件的所有相关文件(即做过修改的文件), 以逗号分隔</li>
+<li><code>$(@D)</code> 目标文件的目录名部分</li>
+<li><code>$(@F)</code> 目标文件的文件名部分</li>
+</ul>
+<p>还是上面那个例子, 再修改试试:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">OBJS:= main.o func.o</div><div class="line">EXE:=main</div><div class="line">CFLAGS:=-Wall -g -O2 -fPIC</div><div class="line">LIBFUNCSO:= libfunc.so</div><div class="line">LIBFUNCA:= libfunc.a</div><div class="line"></div><div class="line">$(EXE):$(OBJS) $(LIBFUNCSO) $(LIBFUNCA)</div><div class="line">main.o: main.c</div><div class="line">	gcc -c <span class="variable">$(CFLAGS)</span> $&lt; -o $@</div><div class="line">func.o: func.c</div><div class="line">	gcc -c <span class="variable">$(CFLAGS)</span> $&lt; -o $@</div><div class="line">libfunc.a: func.o</div><div class="line">	ar srcv $@ $&lt;</div><div class="line">libfunc.so: func.o</div><div class="line">	gcc -shared -o $@ $&lt;</div><div class="line">	#cp -f $@ /lib</div><div class="line"></div><div class="line">.PHNOY:rebuild clean</div><div class="line">rebuild:clean $(EXE)</div><div class="line"><span class="section">clean:</span></div><div class="line">	rm -rf <span class="variable">$(EXE)</span> <span class="variable">$(OBJS)</span> <span class="variable">$(LIBFUNCSO)</span> <span class="variable">$(LIBFUNCA)</span></div></pre></td></tr></table></figure></p>
+<p>内部预定义的变量:</p>
+<ul>
+<li>AR        库文件打包程序默认为 ar</li>
+<li>AS        汇编程序，默认为 as</li>
+<li>CC         c 编译器默认为 cc</li>
+<li>CPP        c 预编译器，默认为$(CC) –E</li>
+<li>CXX        c++编译器，默认为 g++</li>
+<li>RM         删除，默认为 rm –f</li>
+<li>ARFLAGS    库选项，无默认</li>
+<li>ASFLAGS    汇编选项，无默认</li>
+<li>CFLAGS     c 编译器选项，无默认</li>
+<li>CPPFLAGS   c 预编译器选项，无默认</li>
+<li>CXXFLAGS   c++编译器选项</li>
+</ul>
+<p>(注意预处理器cpp)<br>一般用c少不了 <code>CC</code> 和 <code>CFLAGS</code>, 用c++少不了 <code>CXX</code> 和 <code>CXXFLAGS</code> .</p>
+<p>现在再修改一下上面的例子:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">OBJS:=main.o func.o</div><div class="line">CC:=g++</div><div class="line"></div><div class="line">main:$(OBJS)</div><div class="line">	<span class="variable">$(CC)</span>  $^ -o $@</div><div class="line">main.o:main.cpp</div><div class="line">	<span class="variable">$(CC)</span> -c $^ -o $@</div><div class="line">func.o:func.cpp</div><div class="line">	<span class="variable">$(CC)</span> -c $^ -o $@</div></pre></td></tr></table></figure></p>
+<ul>
+<li>规则</li>
+</ul>
+<p>规则主要分为: 普通规则, 隐含规则, 模式规则.说起来也简单, 下面总结:</p>
+<ul>
+<li>普通规则就是你写的规则, 非常明确指定的规则</li>
+<li><p>隐含规则就是你不写的时候默认(生成)的规则</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">OBJS:=main.o fun.o</div><div class="line">CFLAGS:=-Wall -O2 -g</div><div class="line">CC:=gcc</div><div class="line"></div><div class="line">main:$(OBJS)</div><div class="line">	<span class="variable">$(CC)</span> $^ -o $@</div><div class="line"><span class="comment">#后面不用写了, *.o 文件自动依赖*.c 或*.cc 文件</span></div><div class="line"><span class="comment">#所以可以省略 main.o:main.cpp 等</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>模式规则<br>就是使用了通配符, 模式匹配的规则 : <code>%匹配 1 或多个任意字符串</code>, 例如: <code>%.o: %.cpp</code> . 任何.o依赖相应的.cpp.</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">OBJS:=main.o fun.o</div><div class="line">CFLAGS:= -Wall –O2 –g</div><div class="line">	 </div><div class="line">main.exe:$(OBJS)</div><div class="line">	 gcc $^ -o $@</div><div class="line">%.o:%.cpp</div><div class="line">     gcc -o $@ -c $^</div></pre></td></tr></table></figure>
+</li>
+<li><p>函数<br>你是否承认, 这个部分是最难记忆的一部分, 我只说几个最最常用的(<code>wildcard</code>, <code>patsubst</code>, <code>addprefix</code>), 其他的你查查表吧.</p>
+</li>
+<li><p><code>wildcard</code> wildcard 搜索当前目录下的文件名, 结合提供的参数, 展开成一列所包含参数的文件名; 多个文件之间用空格分隔.<br>例如 <code>SOURCES = $(wildcard *.cpp)</code> , 把当前目录下所有’.cpp’文件存入变量 SOURCES 里</p>
+</li>
+<li><code>patsubst</code> 字符串替换, 一般是这么用 <code>$(ptsubst, 要查找的子串, 替换后的目标子串, 源字符串)</code> , 其中源字符串是以空格分隔的<br>例如: <code>OBJS = $(patsubst %.cpp, %.o, $(SOURCES))</code> , 把 SOURCES 中’.cpp’ 替换为’.o’ .</li>
+<li><code>addprefix</code> 添加前缀,  $(addprefix 前缀，源字符串), $(addprefix -l, $(LIBS); 一般用引用静态或者动态库 <code>$(addprefix -l, $(LIBS)</code><br>例如: <code>$(addprefix -l, $(LIBS)</code></li>
+</ul>
+<p>一个完整的例子<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">DIR := ./debug</div><div class="line">EXE := <span class="variable">$(DIR)</span>/main</div><div class="line">CC := g++</div><div class="line">LIBS :=</div><div class="line">SRCS := <span class="variable">$(wildcard *.cpp)</span> <span class="variable">$(wildcard *.c)</span> <span class="variable">$(wildcard *.cc)</span></div><div class="line"></div><div class="line">OCPP := <span class="variable">$(patsubst %.cpp, $(DIR)</span>/%.o, <span class="variable">$(wildcard *.cpp)</span>)</div><div class="line"><span class="comment">#OC := $(patsubst %.c, $(DIR)/%.co, $(wildcard *.c))</span></div><div class="line"><span class="comment">#OCC := $(patsubst %.cc, $(DIR)/%.cco, $(wildcard *.cc))</span></div><div class="line"></div><div class="line"><span class="comment">#OBJS := $(OC) $(OCC) $(OCPP)</span></div><div class="line">OBJS := <span class="variable">$(OCPP)</span></div><div class="line">RM := rm -rf</div><div class="line">CXXFLAGS := -Wall -g -O2</div><div class="line"></div><div class="line">start : mkdebugdir $(EXE)</div><div class="line">mkdebugdir :</div><div class="line">	@if [ ! -d <span class="variable">$(DIR)</span> ]; then mkdir <span class="variable">$(DIR)</span>; fi;</div><div class="line"></div><div class="line">$(EXE) : $(OBJS)</div><div class="line">       	 $(CC) -o $@ $^ $(addprefix -l,$(LIBS))</div><div class="line">$(DIR)/%.o : %.cpp</div><div class="line">	 <span class="variable">$(CC)</span> -c <span class="variable">$(CXXFLAGS)</span> $&lt; -o $@</div><div class="line"></div><div class="line"><span class="comment">#$(DIR)/%.co : %.c</span></div><div class="line"><span class="comment">#	 $(CC) -c $(CXXFLAGS) $&lt; -o $@</span></div><div class="line"><span class="comment">#$(DIR)/%.cco : %.cc</span></div><div class="line"><span class="comment">#	 $(CC) -c $(CXXFLAGS) $&lt; -o $@</span></div><div class="line"></div><div class="line">.PHONY : clean rebuild</div><div class="line">clean :</div><div class="line">      $(RM) $(DIR)/main $(DIR)/*.o <span class="comment">#$(DIR)/*.co $(DIR)/*.cco</span></div><div class="line">rebuild: clean start</div></pre></td></tr></table></figure></p>
+<p>(注意第一个目标是start, 而不是$(exe))</p>
+<p>说过了函数比较多, 不说了, 查手册去.</p>
+<p>最后一点, 怎么调试make?</p>
+<ul>
+<li>make常用命令</li>
+<li><code>-C dir</code>  指定执行makefile的目录</li>
+<li><code>-f file</code> 指定make需要的file (通常用于不是makefile的文件)</li>
+<li><code>-i</code> 忽略所有执行的错误</li>
+<li><code>-I dir</code> 指定被包含的makefile所在目录</li>
+<li><code>-n</code> dry-run, just-print 只打印,不真正执行</li>
+<li><code>-p</code> 显示make编译库和隐藏规则</li>
+<li><code>-s</code> slient静默编译, 编译时不显示命令</li>
+<li><code>-w</code> 如果make执行中改变目录, 则打印当前目录名字</li>
+<li><code>-d</code> 打印debug信息</li>
+</ul>
+<h3 id="详细讲解"><a href="#详细讲解" class="headerlink" title="详细讲解"></a>详细讲解</h3><p>我上面只是说了核心内容, 还有很多细节没有说, 也没有那么多时间去说.</p>
+<p>这方面写的好的是 <code>陈硕</code> 大佬的 《跟我学Makefile》, 敬请参考.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>写的好辛苦, 明明是很基础的东西, 写出来, 整理出来, 真的比看别人的累太多了.<br>就这样, 以后有时间再慢慢修正吧.</p>
+<hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -463,7 +572,7 @@ nopass 停止运行, 但是不发消息
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#gcc"><span class="toc-article-text">gcc</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译过程"><span class="toc-article-text">编译过程</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译选项"><span class="toc-article-text">编译选项</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#优化相关"><span class="toc-article-text">优化相关</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#链接原理"><span class="toc-article-text">链接原理</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#gdb"><span class="toc-article-text">gdb</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#查看源码"><span class="toc-article-text">查看源码</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#带参数运行"><span class="toc-article-text">带参数运行</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#继续执行"><span class="toc-article-text">继续执行</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#断点"><span class="toc-article-text">断点</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#观察点"><span class="toc-article-text">观察点</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#查看信息"><span class="toc-article-text">查看信息</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用shell"><span class="toc-article-text">使用shell</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#栈帧"><span class="toc-article-text">栈帧</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#绑定"><span class="toc-article-text">绑定</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#core文件"><span class="toc-article-text">core文件</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#其他部分"><span class="toc-article-text">其他部分</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#高级调试"><span class="toc-article-text">高级调试</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#makefile"><span class="toc-article-text">makefile</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#跟我学Makefile"><span class="toc-article-text">跟我学Makefile</span></a></li></ol></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#gcc"><span class="toc-article-text">gcc</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译过程"><span class="toc-article-text">编译过程</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译选项"><span class="toc-article-text">编译选项</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#优化相关"><span class="toc-article-text">优化相关</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#链接原理"><span class="toc-article-text">链接原理</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#gdb"><span class="toc-article-text">gdb</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#查看源码"><span class="toc-article-text">查看源码</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#带参数运行"><span class="toc-article-text">带参数运行</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#继续执行"><span class="toc-article-text">继续执行</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#断点"><span class="toc-article-text">断点</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#观察点"><span class="toc-article-text">观察点</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#查看信息"><span class="toc-article-text">查看信息</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用shell"><span class="toc-article-text">使用shell</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#栈帧"><span class="toc-article-text">栈帧</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#绑定"><span class="toc-article-text">绑定</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#core文件"><span class="toc-article-text">core文件</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#其他部分"><span class="toc-article-text">其他部分</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#高级调试"><span class="toc-article-text">高级调试</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#makefile"><span class="toc-article-text">makefile</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#核心内容"><span class="toc-article-text">核心内容</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#详细讲解"><span class="toc-article-text">详细讲解</span></a></li></ol></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
 		</div>
 	
 	</div>
