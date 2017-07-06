@@ -6,15 +6,15 @@
   <meta http-equiv="cache-control" content="no-cache">
   <meta http-equiv="expires" content="0">
   
-  <title>thread-poll-model-again | Merlin&#39;s Blog</title>
+  <title>seven-concurrency-models | Merlin&#39;s Blog</title>
   <meta name="author" content="MerlinYu">
   
-  <meta name="description" content="再说线程池">
+  <meta name="description" content="遍历一下并发模型">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="thread-poll-model-again"/>
+  <meta property="og:title" content="seven-concurrency-models"/>
   <meta property="og:site_name" content="Merlin&#39;s Blog"/>
 
   
@@ -87,7 +87,7 @@
 
 	
 		<div class="page-header">
-			<h1> thread-poll-model-again</h1>
+			<h1> seven-concurrency-models</h1>
 		</div>
 	
 
@@ -104,12 +104,14 @@
 	<div class="mypage">		
 	  
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> 再说线程池
+			<i class="fa fa-info-circle"></i> 遍历一下并发模型
 		 </div> <!-- alert -->
 	  		
 
-	  <p>其实线程池这种东西, 我身边后端的前辈真的是玩的不要了, 玩烂了.<br>不过但凡别人能指出我的不足或者给我看了更好的源码, 总要忍不住再说说.</p>
-<p>这回看看别人怎么实现的(我大概找了3份不一样的实现, 他们水平一观便知).<br><a id="more"></a></p>
+	  <p>以前在谈 <a href="http://www.merlinblog.site/2017/03/19/linux-pthread.html" target="_blank" rel="external">pthread</a>的时候曾经说过这本书, 真正的大牛, 将好多个并发模型的核心思想用简短的描述解释.</p>
+<p>这里说说我的体会和感受(结合我谈过的并发模式).</p>
+<p>TODO</p>
+<a id="more"></a>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
@@ -121,13 +123,12 @@
 
     
     
-    <a href="/2017/07/01/binutils-in-linux.html" type="button" class="btn btn-default"><i
-                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a href="/2017/07/01/more-effective-cpp.html" type="button" class="btn btn-default ">Next<i
+    <a href="/2017/07/06/tdd.html" type="button" class="btn btn-default ">Next<i
                 class="fa fa-arrow-circle-o-right"></i></a>
     
 
@@ -150,7 +151,7 @@
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2017-07-01 
+	2017-07-06 
 	</div>
 	
 
@@ -161,7 +162,7 @@
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/codings/">codings<span>39</span></a></li>
+    <li><a href="/categories/books/">books<span>6</span></a></li>
   </li>
 
     </ul>
