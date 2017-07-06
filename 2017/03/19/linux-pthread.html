@@ -108,7 +108,7 @@
 		 </div> <!-- alert -->
 	  		
 
-	  <p>个人觉得对于线程的把控，难度要小于进程，进程的通信方式多到能写一本书，并且每种方式还有其各自的适用范围以及注意事项，真正玩起来还是有点儿多。甚至对于内核而言，它都不区分进程和线程。<br>但是线程就不一样，只是Linux下面的话，线程当前的模型就一种：<code>内核支持的NPTL</code>(Native POSIX Thread Library), 但是如果你读过<a href="">《7周7并发模型》</a>的话就会知道并发问题远不止这么点儿东西。<br>本文从实战的角度展开主要涉及4个方面:</p>
+	  <p>个人觉得对于线程的把控，难度要小于进程，进程的通信方式多到能写一本书，并且每种方式还有其各自的适用范围以及注意事项，真正玩起来还是有点儿多。甚至对于内核而言，它都不区分进程和线程。<br>但是线程就不一样，只是Linux下面的话，线程当前的模型就一种：<code>内核支持的NPTL</code>(Native POSIX Thread Library), 但是如果你读过<a href="http://www.merlinblog.site/2017/07/06/seven-concurrency-models.html" target="_blank" rel="external">《7周7并发模型》</a>的话就会知道并发问题远不止这么点儿东西。<br>本文从实战的角度展开主要涉及4个方面:</p>
 <ul>
 <li>Thread management - creating, joining threads etc.</li>
 <li>Mutexes</li>
