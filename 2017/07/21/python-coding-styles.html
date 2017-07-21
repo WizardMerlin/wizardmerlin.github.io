@@ -1,0 +1,294 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>python-coding-styles | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="coding-rules of python">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="python-coding-styles"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> python-coding-styles</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> coding-rules of python
+		 </div> <!-- alert -->
+	  		
+
+	  <p>分享一下我个人的编码习惯, Coding Rules.</p>
+<p>注意本文和google的代码规范不一样, 本文是我根据网上多份代码参考, 以及结合自己的实际情况制定的.</p>
+<p>仅供参考.</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>本文详细梳理了相关的规范, 有些明显的规则, 我就直接省略了(例如 “分号” 的使用)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="文件头的配置"><a href="#文件头的配置" class="headerlink" title="文件头的配置"></a>文件头的配置</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/local/bin/python2.7</span></div><div class="line"><span class="comment">#encoding:utf-8</span></div><div class="line"><span class="comment">#author:merlin</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    <span class="keyword">pass</span></div></pre></td></tr></table></figure>
+<p><code>#!</code> 先用于帮助内核找到Python解释器, 但是在导入模块时, 将会被忽略. 因此只有被直接执行的文件中才有必要加入 <code>#!</code> .</p>
+<h2 id="空白和缩进"><a href="#空白和缩进" class="headerlink" title="空白和缩进"></a>空白和缩进</h2><p>请用4个空格替换TAB<br>(注意第一行顶头写)</p>
+<h2 id="行"><a href="#行" class="headerlink" title="行"></a>行</h2><h3 id="不换行"><a href="#不换行" class="headerlink" title="不换行"></a>不换行</h3><p>即便长度过长, 也不要使用反斜杠, 比如注释中的URL, 导入模块; 表达式过长的时候可以加括号(Python自动将过长的内容连接起来)<br>(条件表达式过长的时候, 才使用括号, 一般的if是可以不使用的)</p>
+<p>总结就是, 行连接不适用左倒斜杠, 而是括号. (一般是圆括号, 当然也可以是其他的括号)</p>
+<h3 id="换行"><a href="#换行" class="headerlink" title="换行"></a>换行</h3><p>换行的参数, 请对齐, 例如:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 与起始变量对齐</span></div><div class="line">foo = long_function_name(var_one, var_two,</div><div class="line">                         var_three, var_four)</div><div class="line">				</div><div class="line"><span class="comment"># 字典中与起始值对齐</span></div><div class="line">       foo = &#123;</div><div class="line">           long_dictionary_key: value1 +</div><div class="line">                                value2,</div><div class="line">           ...</div><div class="line">       &#125;</div></pre></td></tr></table></figure></p>
+<p>多行字符串也注意对齐</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> (<span class="string">"This is much nicer.\n"</span></div><div class="line">       <span class="string">"Do it this way.\n"</span>)</div></pre></td></tr></table></figure>
+<h3 id="空行"><a href="#空行" class="headerlink" title="空行"></a>空行</h3><p>类与其他定义间空2行; 函数定义之间空1行.</p>
+<h2 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h2><ul>
+<li>括号内不要有空格; </li>
+<li>括号外: 变量名, 关键字, 符号之间都应该有空格. (但是贴着括号外的不要有空格)</li>
+</ul>
+<p>(括号包括: 大括号, 中括号, 小括号)</p>
+<p>(符号里默认参数的”=”两边不加括号)</p>
+<h2 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h2><p>编码统一使用 <code>utf-8</code></p>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><h3 id="一般要求"><a href="#一般要求" class="headerlink" title="一般要求"></a>一般要求</h3><ul>
+<li>注释不要求对齐 (如果在同一行, 那么至少保持两个空格的举例)</li>
+<li>注释一定不要使用中文</li>
+<li>给外部使用的方法一定要加上注释</li>
+</ul>
+<h3 id="函数注释"><a href="#函数注释" class="headerlink" title="函数注释"></a>函数注释</h3><p>一般类或者方法的注释, 要使用文档注释(即三重双引号), 方便 <code>pydoc</code> 提取, 例如函数注释的模板可以是:<br>(注意第一行顶头写)<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">fetch_bigtable_rows</span><span class="params">(big_table, keys, other_silly_variable=None)</span>:</span></div><div class="line">    <span class="string">"""Fetches rows from a Bigtable.</span></div><div class="line"></div><div class="line">    Retrieves rows pertaining to the given keys from the Table instance</div><div class="line">    represented by big_table.  Silly things may happen if</div><div class="line">    other_silly_variable is not None.</div><div class="line"></div><div class="line">    Args:</div><div class="line">        big_table: An open Bigtable Table instance.</div><div class="line">        keys: A sequence of strings representing the key of each table row</div><div class="line">            to fetch.</div><div class="line">        other_silly_variable: Another optional variable, that has a much</div><div class="line">            longer name than the other args, and which does nothing.</div><div class="line"></div><div class="line">    Returns:</div><div class="line">        A dict mapping keys to the corresponding table row data</div><div class="line">        fetched. Each row is represented as a tuple of strings. For</div><div class="line">        example:</div><div class="line"></div><div class="line">        &#123;'Serak': ('Rigel VII', 'Preparer'),</div><div class="line">         'Zim': ('Irk', 'Invader'),</div><div class="line">         'Lrrr': ('Omicron Persei 8', 'Emperor')&#125;</div><div class="line"></div><div class="line">        If a key from the keys argument is missing from the dictionary,</div><div class="line">        then that row was not found in the table.</div><div class="line"></div><div class="line">    Raises:</div><div class="line">        IOError: An error occurred accessing the bigtable.Table object.</div><div class="line">    """</div><div class="line">    <span class="keyword">pass</span></div></pre></td></tr></table></figure></p>
+<h3 id="类注释"><a href="#类注释" class="headerlink" title="类注释"></a>类注释</h3><p>直接给出一个模板<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SampleClass</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="string">"""Summary of class here.</span></div><div class="line"></div><div class="line">    Longer class information....</div><div class="line">    Longer class information....</div><div class="line"></div><div class="line">    Attributes:</div><div class="line">        likes_spam: A boolean indicating if we like SPAM or not.</div><div class="line">        eggs: An integer count of the eggs we have laid.</div><div class="line">    """</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, likes_spam=False)</span>:</span></div><div class="line">        <span class="string">"""Inits SampleClass with blah."""</span></div><div class="line">        self.likes_spam = likes_spam</div><div class="line">        self.eggs = <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">public_method</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="string">"""Performs operation blah."""</span></div></pre></td></tr></table></figure></p>
+<h2 id="默认继承"><a href="#默认继承" class="headerlink" title="默认继承"></a>默认继承</h2><p>基类或者没有指定继承的类, 最好继承 <code>object</code> 类.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChildClass</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="string">"""Explicitly inherits from object."""</span></div></pre></td></tr></table></figure></p>
+<p>除了保证和python3的兼容性, 还可以有一些方法的默认实现(语义), 包括:</p>
+<ul>
+<li><code>__init__</code></li>
+<li><code>__new__</code></li>
+<li><code>__del__</code></li>
+<li><code>__hash__</code></li>
+</ul>
+<p>等等.</p>
+<h2 id="命名规范"><a href="#命名规范" class="headerlink" title="命名规范"></a>命名规范</h2><ul>
+<li>目录名字全部小写, 单词(词组), 例如 <code>resource</code></li>
+<li>内部方法和属性 <code>_</code>开头, 私有成分 <code>__</code>开头</li>
+<li>文件名, 单词(词组), 单词组合首字母大写(文件名不使用下划线), 例如 <code>Driver.py</code></li>
+<li>类名中单词首字母大写, 例如 <code>class DeviceDriver</code></li>
+<li>常量名使用大写和下划线, 例如 <code>MAX_LEN</code></li>
+<li>变量名参数名字使用驼峰 <code>shellConfig</code>  —-(注意这里区别于函数)</li>
+<li>变量名和参数名尽量不要缩写</li>
+<li>方法名字尽量小写, 单词之间下划线, 并且采用 <code>动 + 宾 + 形容词</code> 结构, 例如 <code>check_user()</code></li>
+<li>在一个模块中集中内聚本包需要提供的接口, 例如 <code>__init__.py</code> 中 import 本包的其他接口, 外部使用该模块即可</li>
+<li>基础层, 领域层, 服务层, 需要向上汇报异常测试结果, 并且打印明确的报错信息</li>
+<li>服务层只返回结果, 用例来决定是否决定流程</li>
+</ul>
+<p>用单下划线(_)开头表示模块变量或函数是protected的(使用import * from时不会包含)</p>
+<h2 id="Main函数"><a href="#Main函数" class="headerlink" title="Main函数"></a>Main函数</h2><p>通常为了保证了脚本可重用, 最好把main函数内容封装一下, 也可以方便其他模块导入:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">pass</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    main()</div></pre></td></tr></table></figure>
+<h2 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h2><p>短期或者暂时的解决方案并不是很完美, 所以可以写一个 <code>TODO</code> 注释, 一定要写明自己名字或者Email地址.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">TODO(merlin@gmail.com):todo sth</div></pre></td></tr></table></figure>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>仔细说下来, 要注意的事情貌似也没有那么多, 都习惯了.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/07/20/lessons-history.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-07-21 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>41</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/coding-rules/">coding_rules<span>3</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#文件头的配置"><span class="toc-article-text">文件头的配置</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#空白和缩进"><span class="toc-article-text">空白和缩进</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#行"><span class="toc-article-text">行</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#不换行"><span class="toc-article-text">不换行</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#换行"><span class="toc-article-text">换行</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#空行"><span class="toc-article-text">空行</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#空格"><span class="toc-article-text">空格</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#编码"><span class="toc-article-text">编码</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#注释"><span class="toc-article-text">注释</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#一般要求"><span class="toc-article-text">一般要求</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#函数注释"><span class="toc-article-text">函数注释</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#类注释"><span class="toc-article-text">类注释</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#默认继承"><span class="toc-article-text">默认继承</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#命名规范"><span class="toc-article-text">命名规范</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Main函数"><span class="toc-article-text">Main函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#TODO"><span class="toc-article-text">TODO</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>
