@@ -6,15 +6,15 @@
   <meta http-equiv="cache-control" content="no-cache">
   <meta http-equiv="expires" content="0">
   
-  <title>smart-pointers-again | Merlin&#39;s Blog</title>
+  <title>futures | Merlin&#39;s Blog</title>
   <meta name="author" content="MerlinYu">
   
-  <meta name="description" content="说完了Boost和std中的智能指针, 也尝试实现看看">
+  <meta name="description" content="summary of server side network programming model">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="smart-pointers-again"/>
+  <meta property="og:title" content="futures"/>
   <meta property="og:site_name" content="Merlin&#39;s Blog"/>
 
   
@@ -87,7 +87,7 @@
 
 	
 		<div class="page-header">
-			<h1> smart-pointers-again</h1>
+			<h1> futures</h1>
 		</div>
 	
 
@@ -104,18 +104,30 @@
 	<div class="mypage">		
 	  
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> 说完了Boost和std中的智能指针, 也尝试实现看看
+			<i class="fa fa-info-circle"></i> summary of server side network programming model
 		 </div> <!-- alert -->
 	  		
 
-	  <p>引用计数, 标记擦除, 还有其他实现方式么?<br>今天礼拜六最后一个任务, 尝试写写 智能指针.<br>(我两个Tencent T3的老师年轻的时候都写过, 那我也要写写看)</p>
-<p>本篇主要涉及: </p>
-<ol>
-<li>尝试实现自己引用计数智能指针</li>
-<li>剖析一下我感兴趣的 <code>unique_ptr</code></li>
-</ol>
-<a id="more"></a>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+	  <p>futures, 指的是 <code>期货</code> . 本文也主要谈期货.<br><a id="more"></a></p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>不管对于投资还是投机, 期货都是一个非常不错的选择; </p>
+<ul>
+<li>储蓄, 利率跑不过CPI</li>
+<li>股票, 风险比较大, 专业要求高</li>
+<li>投资网贷, 搞不好平台跑路了, 血本无归</li>
+<li>期货, ??</li>
+</ul>
+<p>本文就来主要说说, 期货.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>期货: 期,未来; 货,交易的商品或者指数; 交易双发支付保证金, 预定在未来某一时间进行交易的一种标准化合约; (其他概念可以查下wiki, 我下面总结关键点)</p>
+<p>关键点:</p>
+<ul>
+<li>保证金: 不需要支付全部货款, 只需要支付交易金额10%的保证金给交易所即可.</li>
+<li>双向: 低买高卖, 高买低卖, 只要你预判正确, 那么都是可以盈利的.</li>
+<li>T+0: 当日买日即可当日卖出, 不需要等到下一个交易日.</li>
+<li>当日结算: 每天收盘即结算盈亏, 盈收亏补, 账务不欠账, 违约分享小.</li>
+</ul>
+<p>中国四大期货交易所:</p>
+<p>TODO</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -126,13 +138,12 @@
 
     
     
-    <a href="/2017/07/02/raii-technique-in-cpp.html" type="button" class="btn btn-default"><i
-                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a href="/2017/07/01/bind-in-cpp.html" type="button" class="btn btn-default ">Next<i
+    <a href="/2017/07/22/the-logic-of-the-economy.html" type="button" class="btn btn-default ">Next<i
                 class="fa fa-arrow-circle-o-right"></i></a>
     
 
@@ -155,7 +166,7 @@
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2017-07-01 
+	2017-07-22 
 	</div>
 	
 
@@ -179,7 +190,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/c/">c++<span>19</span></a></li>
+  <li><a href="/tags/network/">network<span>11</span></a></li>
     </ul>
 	</div>
 		
