@@ -6,15 +6,15 @@
   <meta http-equiv="cache-control" content="no-cache">
   <meta http-equiv="expires" content="0">
   
-  <title>bind-in-cpp | Merlin&#39;s Blog</title>
+  <title>stl-algorithm | Merlin&#39;s Blog</title>
   <meta name="author" content="MerlinYu">
   
-  <meta name="description" content="主要讲讲 std::bind">
+  <meta name="description" content="专门说说STL中的算法">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="bind-in-cpp"/>
+  <meta property="og:title" content="stl-algorithm"/>
   <meta property="og:site_name" content="Merlin&#39;s Blog"/>
 
   
@@ -87,7 +87,7 @@
 
 	
 		<div class="page-header">
-			<h1> bind-in-cpp</h1>
+			<h1> stl-algorithm</h1>
 		</div>
 	
 
@@ -104,12 +104,12 @@
 	<div class="mypage">		
 	  
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> 主要讲讲 std::bind
+			<i class="fa fa-info-circle"></i> 专门说说STL中的算法
 		 </div> <!-- alert -->
 	  		
 
-	  <p>以前常用的是 <code>std::bind1st</code> 和 <code>std::bind2nd</code> , 现在主推 <code>std::bind</code><br>常常和 <code>std::function</code> 一起使用的就是 <code>std::bind</code> , 用于绑定类成员函数.</p>
-<p>(std::function 可以直接绑定全局函数, 静态函数; 但成员函数就要借助 bind )</p>
+	  <p>以前学习STL的时候, 只是把常用的算法说了一下, 大部分算法都是一笔带过的.</p>
+<p>现在就专门把这些 <code>算法</code> 全部说一说 (熟悉的过程是螺旋式的渐进, 同样的东西今天再嚼嚼) .<br>如果你是初学者, 不妨参考一下我上传的 <a href="https://github.com/WizardMerlin/stl_life" target="_blank" rel="external">学习记录</a></p>
 <a id="more"></a>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
@@ -122,13 +122,12 @@
 
     
     
-    <a href="/2017/07/01/smart-pointers-again.html" type="button" class="btn btn-default"><i
-                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a href="/2017/07/01/lambda-in-cpp.html" type="button" class="btn btn-default ">Next<i
+    <a href="/2017/07/28/ur-tree.html" type="button" class="btn btn-default ">Next<i
                 class="fa fa-arrow-circle-o-right"></i></a>
     
 
@@ -151,7 +150,7 @@
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2017-07-01 
+	2017-07-29 
 	</div>
 	
 
@@ -175,7 +174,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/c/">c++<span>18</span></a></li>
+  <li><a href="/tags/cpp/">cpp<span>3</span></a></li> <li><a href="/tags/stl/">stl<span>3</span></a></li>
     </ul>
 	</div>
 		
