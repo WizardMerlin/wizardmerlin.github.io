@@ -181,15 +181,16 @@
 <ul>
 <li><p>函数对象(functor)<br>重载 <code>函数调用操作符</code> 的类, 其对象常称为函数对象(function object), 即它们是行为类似函数的对象. 一个类对象, 表现出一个函数的特征, 就是通过”对象名+(参数列表)”的方式使用一个类对象. 如果没有上下文, 完全可以把它看作一个函数对待. 这是通过重载类或者struct的 operator()来实现的. “在标准库中, 函数对象被广泛地使用以获得弹性”, 标准库中的很多算法都可以使用函数对象或者函数来作为自定的回调行为(就相当于函数指针).<br>下面举出 greater<int>的简易实现原理:</int></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> greater</div><div class="line">&#123;</div><div class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">operator</span><span class="params">()</span> <span class="params">(<span class="keyword">const</span> <span class="keyword">int</span>&amp; iLeft, <span class="keyword">const</span> <span class="keyword">int</span>&amp; iRight)</span></span></div><div class="line">    &#123;</div><div class="line">        <span class="comment">//如果是实现 less&lt;int&gt;的话， 这边是写 return (iLeft&lt;iRight);</span></div><div class="line">        <span class="keyword">return</span> (iLeft&gt;iRight);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>容器就是调用函数对象的 operator()方法去比较两个值的大小.</p>
+<p>容器就是调用函数对象的 operator()方法去比较两个值的大小.<br>并且关联容器如果想使用sort, merge, less, greater等算法, 那么放入其中的元素就要提供operator&lt;()或者operator&gt;()运算重载.</p>
 </li>
-<li>谓词<ul>
+<li><p>谓词</p>
+<ul>
 <li>n元函数对象: 函数参数 n 个</li>
 <li>n元谓词函数: 函数参数 n 个, 函数返回值是 bool 类型, 可以作为一个判断表达式</li>
 </ul>
 </li>
 <li>算数函数对象<br>主要有 <code>plus</code> , <code>minus</code> , <code>multiplies</code> , <code>divides</code> 等.</li>
-<li>特殊函数对象<br>主要是指 <code>约束器</code>, <code>适配器</code>, <code>否定器</code><ul>
+<li>特殊函数对象<br>主要是指 <code>约束器</code>, <code>适配器</code>, <code>否定器</code> (绑定适配器, 组合适配器, 指针函数适配器, 成员函数适配器)<ul>
 <li>bind1st(x), bind2nd(y)</li>
 <li>not1(), not2()</li>
 <li>ptr_fun()等</li>
