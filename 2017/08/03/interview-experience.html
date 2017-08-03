@@ -114,7 +114,7 @@
 <pre><code>( 博客停一个月, 整个 2017.8 月都用于面试 )
 </code></pre><a id="more"></a>
 <hr>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>但是同时王老师也提醒我, 如果你去小公司, 因为不是知名企业, 所以再往大公司里走, 他们HR算工作经验时一般要求的是知名企业的相关工作经验…却是让我担忧了一下, 然而:</p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>但是同时王老师也提醒我, 如果你去小公司, 因为不是知名企业, 所以再往大公司里走, 他们HR算工作经验时一般要求的是知名企业的相关工作经验; 以及户口问题…却是让我担忧了一下, 然而:</p>
 <blockquote>
 <p>每一个选择都会有成本和风险以及代价, 如果想清楚了, 就要果断行动, 并且不管将来结果如何, 都不要后悔.</p>
 </blockquote>
@@ -132,8 +132,35 @@
 <li>操作系统(主要内核部分)</li>
 <li>数据库</li>
 </ul>
-<p>(大致7个部分, 磊科说一线任你挑…)</p>
+<p>(大致7个部分, 磊哥说一线任你挑…)</p>
 <p>(社招一般没有笔试题, 但不意味着不注重基础, 社招以会用的工具多, 会用&amp;封装过的库多为上)</p>
+<hr>
+<h2 id="并发编程部分"><a href="#并发编程部分" class="headerlink" title="并发编程部分"></a>并发编程部分</h2><p>这个部分我真的是玩太多了, 前前后后写过6篇文章去介绍: (不再多说)</p>
+<ol>
+<li><a href="http://www.merlinblog.site/2017/03/19/linux-pthread.html" target="_blank" rel="external">linux-pthread</a></li>
+<li><a href="http://www.merlinblog.site/2017/06/29/thread-again.html" target="_blank" rel="external">C++中thread模型</a></li>
+<li><a href="http://www.merlinblog.site/2017/06/19/thread-pool-model.html" target="_blank" rel="external">初探线程池</a></li>
+<li><a href="http://www.merlinblog.site/2017/07/01/thread-poll-model-again.html" target="_blank" rel="external">再探线程池</a></li>
+<li><a href="http://www.merlinblog.site/2017/07/04/deep-in-thread.html" target="_blank" rel="external">深入探索线程</a></li>
+<li><a href="http://www.merlinblog.site/2017/07/06/seven-concurrency-models.html" target="_blank" rel="external">《7周7并发模型》思考</a></li>
+</ol>
+<p>截图如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/thread_blog.jpg" alt=""></p>
+<p>被问道的值得record的问题:<br>(由于对线程比较熟悉, 对方技术主管都喜欢问我 <code>线程池</code> 的问题):</p>
+<ul>
+<li>线程池的了解, 有点, 调度处理方式, 保护任务队列的方式?</li>
+<li>线程池对线程的管理方式(包括初始化线程的方法, 线程创建后的管理, 指派任务的方式)?</li>
+</ul>
+<p>我个人准备的还有:</p>
+<ul>
+<li>无锁编程(主要针对单生产者和多消费者)?</li>
+<li>死锁问题以及处理方式?</li>
+<li>进程与线程的区别?</li>
+<li>多线程与多核?</li>
+<li>协程的了解 libco?</li>
+<li>线程间通信(同步)?</li>
+<li>多线程如何调试?</li>
+</ul>
+<hr>
 <h2 id="C-系"><a href="#C-系" class="headerlink" title="C++系"></a>C++系</h2><p>像 <code>虚函数的实现机制</code> , <code>重载的实现原理</code> 什么的都是常问的… 我感觉这个部分要被说烂了…个人不太想说.</p>
 <p>注意一下, STL中C++11的扩展, 以及把《Effective C++》,《More Effective C++》相关读书笔记(可以参考 <code>我的博客文章</code> , 不贴链接了)复习一下, 做一下知识点回顾就好了; 我还是列举一下清单吧:</p>
 <ul>
@@ -147,7 +174,6 @@
 <li>hash结构</li>
 <li>最好分析一下STL的相关实现</li>
 </ul>
-<p>并且通常分</p>
 <h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>(等我找到心仪的单位, 再补上)</p>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
@@ -223,7 +249,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#C-系"><span class="toc-article-text">C++系</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#数据结构和算法"><span class="toc-article-text">数据结构和算法</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#并发编程部分"><span class="toc-article-text">并发编程部分</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#C-系"><span class="toc-article-text">C++系</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#数据结构和算法"><span class="toc-article-text">数据结构和算法</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
 		</div>
 	
 	</div>
