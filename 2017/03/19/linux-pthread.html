@@ -171,12 +171,11 @@
 <p>为了防止, 将来pthread_t类型可能变成结构体类型, 所以最好还是用该函数进行判断.</p>
 <h2 id="线程属性控制"><a href="#线程属性控制" class="headerlink" title="线程属性控制"></a>线程属性控制</h2><ol>
 <li>修改线程属性的方法</li>
-</ol>
-<ol>
 <li>设置分离状态<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">pthread_attr_t</span> attr;</div><div class="line">pthread_attr_init(&amp;attr);</div><div class="line">pthread_attr_setdetachstate(&amp;attr, PTHREAD_CREATE_DETACH);</div><div class="line"></div><div class="line">pthread_create(&amp;tid, &amp;attr, func, <span class="literal">NULL</span>);</div></pre></td></tr></table></figure>
 </li>
 </ol>
-<h2 id="线程的同步"><a href="#线程的同步" class="headerlink" title="线程的同步"></a>线程的同步</h2><h2 id="其他注意事项"><a href="#其他注意事项" class="headerlink" title="其他注意事项"></a>其他注意事项</h2><p>线程的诸多好处, 貌似总是相对于进程的, 比如通信, 共享等都比进程方便; 但是线程也有不方便的:</p>
+<h2 id="线程的同步"><a href="#线程的同步" class="headerlink" title="线程的同步"></a>线程的同步</h2><p>主要是使用互斥量和临界区</p>
+<h2 id="其他注意事项"><a href="#其他注意事项" class="headerlink" title="其他注意事项"></a>其他注意事项</h2><p>线程的诸多好处, 貌似总是相对于进程的, 比如通信, 共享等都比进程方便; 但是线程也有不方便的:</p>
 <ol>
 <li>gdb调试困难</li>
 <li>线程对于信号的支持不好</li>
