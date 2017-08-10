@@ -107,6 +107,37 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
+			<a href="/2017/08/11/debug-multi-thread.html" title="summary of server side network programming model">多线程进程调试问题</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2017-08-11  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<p>最近面试的时候, 反复被问到相关的技巧或者处理方式, 在<a href="http://www.merlinblog.site/2017/08/03/interview-experience.html">面经</a>一文中也谈到了.</p>
+<p>调试多线程不一定用 <code>gdb</code> , 也可以用mdb(modular debugger)等其他工具(<a href="http://nptltracetool.sourceforge.net">nptl trace tools</a> 也是不错的工具)</p>
+<p>当然我看到的高手调试, 不用工具, 直接加打印语句, 跑程序, 甚至面码. (不得不说, 高手其实是懒得学习使用别人的工具的…)</p>
+<p>这里就单独拎出来总结一下 <code>多线程</code>, <code>多进程</code>的调试问题.</p>
+<p>注: modula-3 supports user-space thread breakpoints.</p>
+	
+	</div>
+  <a type="button" href="/2017/08/11/debug-multi-thread.html#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
 			<a href="/2017/08/03/interview-experience.html" title="记录我准备面试的过程和一些经验">面经</a>
 		</h3>
 		</div>
@@ -1942,7 +1973,7 @@
 		
 			<li><a href="/categories/books/">books<span>13</span></a></li>
 		
-			<li><a href="/categories/codings/">codings<span>44</span></a></li>
+			<li><a href="/categories/codings/">codings<span>45</span></a></li>
 		
 			<li><a href="/categories/music/">music<span>1</span></a></li>
 		
@@ -1957,45 +1988,45 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/socket/">socket<span>1</span></a></li>
-		
-			<li><a href="/tags/cpp/">cpp<span>3</span></a></li>
-		
-			<li><a href="/tags/dev/">dev<span>1</span></a></li>
-		
-			<li><a href="/tags/mysql/">mysql<span>1</span></a></li>
-		
-			<li><a href="/tags/linux/">linux<span>8</span></a></li>
-		
-			<li><a href="/tags/shell/">shell<span>1</span></a></li>
-		
-			<li><a href="/tags/algorithm/">algorithm<span>1</span></a></li>
-		
-			<li><a href="/tags/regex/">regex<span>4</span></a></li>
-		
-			<li><a href="/tags/udp/">udp<span>1</span></a></li>
+			<li><a href="/tags/ip/">ip<span>1</span></a></li>
 		
 			<li><a href="/tags/network/">network<span>10</span></a></li>
 		
-			<li><a href="/tags/coding-rules/">coding_rules<span>3</span></a></li>
+			<li><a href="/tags/dev/">dev<span>1</span></a></li>
 		
-			<li><a href="/tags/http/">http<span>1</span></a></li>
+			<li><a href="/tags/design-pattern/">design-pattern<span>1</span></a></li>
+		
+			<li><a href="/tags/python/">python<span>2</span></a></li>
 		
 			<li><a href="/tags/java/">java<span>1</span></a></li>
 		
-			<li><a href="/tags/thinking/">thinking<span>15</span></a></li>
+			<li><a href="/tags/algorithm/">algorithm<span>1</span></a></li>
 		
-			<li><a href="/tags/tcp/">tcp<span>2</span></a></li>
+			<li><a href="/tags/trading/">trading<span>1</span></a></li>
 		
 			<li><a href="/tags/boost/">boost<span>3</span></a></li>
 		
-			<li><a href="/tags/piano/">piano<span>1</span></a></li>
-		
-			<li><a href="/tags/epoll/">epoll<span>1</span></a></li>
+			<li><a href="/tags/udp/">udp<span>1</span></a></li>
 		
 			<li><a href="/tags/stl/">stl<span>3</span></a></li>
 		
-			<li><a href="/tags/trading/">trading<span>1</span></a></li>
+			<li><a href="/tags/mysql/">mysql<span>1</span></a></li>
+		
+			<li><a href="/tags/tcp/">tcp<span>2</span></a></li>
+		
+			<li><a href="/tags/thinking/">thinking<span>15</span></a></li>
+		
+			<li><a href="/tags/shell/">shell<span>1</span></a></li>
+		
+			<li><a href="/tags/socket/">socket<span>1</span></a></li>
+		
+			<li><a href="/tags/piano/">piano<span>1</span></a></li>
+		
+			<li><a href="/tags/thread/">thread<span>6</span></a></li>
+		
+			<li><a href="/tags/c/">c<span>1</span></a></li>
+		
+			<li><a href="/tags/coding-rules/">coding_rules<span>3</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span>26</span></a></li>
@@ -2011,6 +2042,10 @@
   <ul class="entry list-unstyled">
     
       <li>
+        <a href="/2017/08/11/debug-multi-thread.html"  title="summary of server side network programming model" ><i class="fa fa-file-o"></i>多线程进程调试问题</a>
+      </li>
+    
+      <li>
         <a href="/2017/08/03/interview-experience.html"  title="记录我准备面试的过程和一些经验" ><i class="fa fa-file-o"></i>面经</a>
       </li>
     
@@ -2024,10 +2059,6 @@
     
       <li>
         <a href="/2017/07/28/ur-tree.html"  title="平衡树, 二叉树, 平衡二叉树, 二叉查找树都上吧" ><i class="fa fa-file-o"></i>ur-tree</a>
-      </li>
-    
-      <li>
-        <a href="/2017/07/25/options.html"  title="本文主要推荐一下期权相关的内容" ><i class="fa fa-file-o"></i>options</a>
       </li>
     
   </ul>

@@ -6,15 +6,15 @@
   <meta http-equiv="cache-control" content="no-cache">
   <meta http-equiv="expires" content="0">
   
-  <title>smart-pointers-again | Merlin&#39;s Blog</title>
+  <title>多线程进程调试问题 | Merlin&#39;s Blog</title>
   <meta name="author" content="MerlinYu">
   
-  <meta name="description" content="说完了Boost和std中的智能指针, 也尝试实现看看">
+  <meta name="description" content="summary of server side network programming model">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="smart-pointers-again"/>
+  <meta property="og:title" content="多线程进程调试问题"/>
   <meta property="og:site_name" content="Merlin&#39;s Blog"/>
 
   
@@ -87,7 +87,7 @@
 
 	
 		<div class="page-header">
-			<h1> smart-pointers-again</h1>
+			<h1> 多线程进程调试问题</h1>
 		</div>
 	
 
@@ -104,18 +104,27 @@
 	<div class="mypage">		
 	  
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> 说完了Boost和std中的智能指针, 也尝试实现看看
+			<i class="fa fa-info-circle"></i> summary of server side network programming model
 		 </div> <!-- alert -->
 	  		
 
-	  <p>引用计数, 标记擦除, 还有其他实现方式么?<br>今天礼拜六最后一个任务, 尝试写写 智能指针.<br>(我两个Tencent T3的老师年轻的时候都写过, 那我也要写写看)</p>
-<p>本篇主要涉及: </p>
-<ol>
-<li>尝试实现自己引用计数智能指针</li>
-<li>剖析一下我感兴趣的 <code>unique_ptr</code></li>
-</ol>
+	  <p>最近面试的时候, 反复被问到相关的技巧或者处理方式, 在<a href="http://www.merlinblog.site/2017/08/03/interview-experience.html" target="_blank" rel="external">面经</a>一文中也谈到了.</p>
+<p>调试多线程不一定用 <code>gdb</code> , 也可以用mdb(modular debugger)等其他工具(<a href="http://nptltracetool.sourceforge.net" target="_blank" rel="external">nptl trace tools</a> 也是不错的工具)</p>
+<p>当然我看到的高手调试, 不用工具, 直接加打印语句, 跑程序, 甚至面码. (不得不说, 高手其实是懒得学习使用别人的工具的…)</p>
+<p>这里就单独拎出来总结一下 <code>多线程</code>, <code>多进程</code>的调试问题.</p>
+<p>注: modula-3 supports user-space thread breakpoints.</p>
 <a id="more"></a>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>最常见的用GDB的方式, 莫过于:</p>
+<ul>
+<li>All-Stop Mode:    All threads stop when GDB takes control</li>
+<li>Non-Stop Mode:    Other threads continue to execute</li>
+<li>Background Execution:         Running your program asynchronously</li>
+<li>Thread-Specific Breakpoints:      Controlling breakpoints</li>
+<li>Interrupted System Calls:    GDB may interfere with system calls</li>
+<li>Observer Mode:    GDB does not alter program behavior</li>
+</ul>
+<p>其他gdb的调试问题, 可以参考我的文章 <a href="http://www.merlinblog.site/2017/06/24/three-major-tools-of-linux.html" target="_blank" rel="external">linux下3大件儿</a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -126,13 +135,12 @@
 
     
     
-    <a href="/2017/07/02/raii-technique-in-cpp.html" type="button" class="btn btn-default"><i
-                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a href="/2017/07/01/bind-in-cpp.html" type="button" class="btn btn-default ">Next<i
+    <a href="/2017/08/03/interview-experience.html" type="button" class="btn btn-default ">Next<i
                 class="fa fa-arrow-circle-o-right"></i></a>
     
 
@@ -155,7 +163,7 @@
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2017-07-01 
+	2017-08-11 
 	</div>
 	
 
@@ -179,7 +187,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/c/">c++<span>18</span></a></li>
+  <li><a href="/tags/linux/">linux<span>9</span></a></li>
     </ul>
 	</div>
 		
