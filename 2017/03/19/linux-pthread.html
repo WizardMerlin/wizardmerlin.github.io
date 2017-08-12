@@ -328,7 +328,12 @@
 <h2 id="其他注意事项"><a href="#其他注意事项" class="headerlink" title="其他注意事项"></a>其他注意事项</h2><p>线程的诸多好处, 貌似总是相对于进程的, 比如通信, 共享等都比进程方便; 但是线程也有不方便的:</p>
 <ol>
 <li>gdb调试困难</li>
-<li>线程对于信号的支持不好</li>
+<li>线程对于 <code>信号</code> 的支持不好(有些函数在不同平台的意义未定义)</li>
+<li>保证使用的pthread版本一致, <code>getconf GNU_LIBPTHREAD_VERSION</code></li>
+<li>detach后的进程，不要去join，会得到invalid argument的运行时报错(人家自己已经处理完毕资源了，在Join函数之前)； </li>
+<li>被cancel的线程, 也需要回收，但是得到的返回值是-1</li>
+<li>malloc, mmap的堆空间会被其他线程共享(小心其他线程给你free掉)—-可重入中也说过，如果想要可重入，不要调用malloc和free</li>
+<li>多线程模型中最好不要调用fork, 除非立即exec*; 此时创建出来的子进程中只有调用fork调用的这个线程存在，其他线程全部pthread_exit()了—最好不要用fork.</li>
 </ol>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文几乎通篇都在介绍pthread API及其含义&amp;使用, 从线程的控制, 线程的属性, 以及线程的同步(mutex函数，条件变量函数，信号量，同步屏障函数，读写锁), 线程私有变量, 最后其他的一些uitl函数. 当然也还有没有涉及到了如 <code>pthread_once</code>.</p>
 <p>但是, 已经花费了很长时间, 几乎把pthread全部总结了一下.</p>
