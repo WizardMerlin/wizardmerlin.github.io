@@ -108,9 +108,14 @@
 		 </div> <!-- alert -->
 	  		
 
-	  <p>以前有专门说过posix-thread, 说实话这个也是蛮强大的.<br>这里总结一下c++中常用的thread库, 包括c++11提供的(原来boost提供的)</p>
+	  <p>以前有专门说过 <a href="http://www.merlinblog.site/2017/03/19/linux-pthread.html" target="_blank" rel="external">posix-thread</a>, linux平台下非常不错的库.<br>这里总结一下c++中常用的thread库, 主要是c++11提供的, 从原来boost移植过来的 <code>boost::thread</code> (现在已经被纳入标准了).</p>
+<p>c++语言自己支持的线程语法.<br>同时可以参考以前的一篇文章: <a href="http://www.merlinblog.site/2017/06/21/boost.html" target="_blank" rel="external">Boost总结</a> .</p>
 <a id="more"></a>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>首先, C++11以来, C++这门语言越来越强大, 并且好用. 所以使用boost库的机会是越来越少, 而且由于Boost库太大, 使用的时候, 也可能需要去进行适当的裁剪.</p>
+<p>那么今天总结Boost的意义在于?</p>
+<p>其实个人认为意义已经不大了, 因为你可以直接上手学习C++11了, <code>regex</code>, <code>thread</code>, <code>tuple</code>, <code>unordered</code>, 智能指针等, 精华已经被抽取到了C++11标准中.</p>
+<p>本文是对过往Boost常用库的总结.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -174,7 +179,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/c/">c++<span>18</span></a></li> <li><a href="/tags/thread/">thread<span>6</span></a></li>
+  <li><a href="/tags/c/">c++<span>18</span></a></li> <li><a href="/tags/boost/">boost<span>4</span></a></li> <li><a href="/tags/thread/">thread<span>6</span></a></li>
     </ul>
 	</div>
 		
