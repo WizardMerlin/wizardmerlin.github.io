@@ -9,7 +9,7 @@
   <title>boost | Merlin&#39;s Blog</title>
   <meta name="author" content="MerlinYu">
   
-  <meta name="description" content="boost lib">
+  <meta name="description" content="boost中常用库的总结">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -104,12 +104,12 @@
 	<div class="mypage">		
 	  
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> boost lib
+			<i class="fa fa-info-circle"></i> boost中常用库的总结
 		 </div> <!-- alert -->
 	  		
 
 	  <p>首先, C++11以来, C++这门语言越来越强大, 并且好用. 所以使用boost库的机会是越来越少, 而且由于Boost库太大, 使用的时候, 也可能需要去进行适当的裁剪.</p>
-<p>那么今天总结Boost的意义在于? 其实个人认为意义已经不大了(除非你的编译器不支持C++11, 而只到C++03), 因为你可以直接上手学习C++11了, <code>regex</code>, <code>thread</code>, <code>tuple</code>, <code>unordered</code>, 智能指针等, 精华已经被抽取到了C++11标准中.</p>
+<p>那么今天总结Boost的意义在于? 其实个人认为 <code>意义已经不大了</code> (除非你的编译器不支持C++11, 而只到C++03), 因为你可以直接上手学习C++11了, <code>regex</code>, <code>thread</code>, <code>tuple</code>, <code>unordered</code>, 智能指针等, 精华已经被抽取到了C++11标准中. (但是就我个人而言, 当年在学习Boost的时候, 确实收获很多)</p>
 <p>本文是对Boost常用库的总结.<br>(长文, 慎入)<br><a id="more"></a></p>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>本文是总结, 也是相关的工程实践(意思是说, 可能涉及到的实践细节比较多&amp;篇幅比较长), 但是不讲安装配置之类的.</p>
 <p>主要内容有:</p>
@@ -141,8 +141,8 @@
 </ul>
 <p>但是下面讲解可能不按照顺序, 按照我的熟悉程度讲解的. (越简单的越熟悉, 用的越多的越熟悉)</p>
 <p>(需要一定的STL基础, 最好非常熟悉STL)</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>TODO, 东西比较多, 我有时间一点点儿写.</p>
-<h2 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h2><p>这里简要说说安装环境问题, 不管你在哪个平台, 都要涉及这个问题. Boost很大, 先把工作中常用的那几个部分非常熟悉了, 之后慢慢在工作中积累.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>TODO, 东西比较多, 有时间一点点儿写. (整理思路和理清头绪, 再书写出来, 比想象中的费时间)</p>
+<h2 id="安装和建议"><a href="#安装和建议" class="headerlink" title="安装和建议"></a>安装和建议</h2><p>这里简要说说安装环境问题, 不管你在哪个平台, 都要涉及这个问题. Boost很大, 先把工作中常用的那几个部分非常熟悉了, 之后慢慢在工作中积累.</p>
 <p>下面是安装: (Linux平台, Ubuntu; )<br>如果你是用<a href="https://conan.io/#carousel" target="_blank" rel="external">conan</a>这种C++包管理器来管理库的话, 请自己玩.</p>
 <p>下面我记录一下，按照Boost Jam的安装方式来<code>完全安装</code>，借助其提供b2工具。<br>(安装的意思， 把头文件放在/usr/local/include, 把库文件放在/usr/local/lib目录)</p>
 <ul>
@@ -155,10 +155,13 @@
 <p>当然我下载的是源码版本, 所以先编译吧.</p>
 <ul>
 <li>解压文件，在cmd中打开到boost库的根目录下: (我的解压在 <code>C:\local\boost_1_53_0</code>)</li>
-<li><p>双击bootstrap.bat文件或者cmd执行 <code>C:\local\boost_1_64_0&gt;C:\local\boost_1_64_0\bootstrap.bat</code><br>运行结果如下:</p>
+<li><p>双击bootstrap.bat文件或者cmd执行 <code>C:\local\boost_1_53_0&gt;C:\local\boost_1_53_0\bootstrap.bat</code><br>运行结果如下:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Building Boost.Build engine</div><div class="line"></div><div class="line">Bootstrapping is done. To build, run:</div><div class="line"></div><div class="line">    .\b2</div><div class="line"></div><div class="line">To adjust configuration, edit &apos;project-config.jam&apos;.</div><div class="line">Further information:</div><div class="line"></div><div class="line">    - Command line help:</div><div class="line">    .\b2 --help</div><div class="line"></div><div class="line">    - Getting started guide:</div><div class="line">    http://boost.org/more/getting_started/windows.html</div><div class="line"></div><div class="line">    - Boost.Build documentation:</div><div class="line">    http://www.boost.org/build/doc/html/index.html</div></pre></td></tr></table></figure>
 </li>
-<li><p>生成bjam.exe, 直接双击bjam.exe或者执行以下命令<code>C:\local\boost_1_64_0\bjam.exe --toolset=msvc --build-type=complete stage</code><br>等待程序编译完成, 大约要两个小时左右, 会在boost根目录下生成 bin.v2 和 stage 两个文件夹, 其中bin.v2下是生成的中间文件, 大小在2.7G左右, 可以直接删除. stage下才是生成的dll和lib文件.</p>
+<li><p>生成bjam.exe, 直接双击bjam.exe或者执行以下命令<code>C:\local\boost_1_53_0\bjam.exe -j4 --debug-symbols=on --build-type=complete toolset=msvc-14.0 threading=multi runtime-link=shared</code> . (msvc-14.0针对msvc2015, 如果是vs2017, 请选择 toolset=msvc-14.1; 之后不用在项目属性页面切换 <code>平台工具集</code>)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">..updated 2219 targets...</div><div class="line"></div><div class="line">The Boost C++ Libraries were successfully built!</div><div class="line"></div><div class="line">The following directory should be added to compiler include paths:</div><div class="line"></div><div class="line">    C:\local\boost_1_53_0</div><div class="line"></div><div class="line">The following directory should be added to linker library paths:</div><div class="line"></div><div class="line">    C:\local\boost_1_53_0\stage\lib</div></pre></td></tr></table></figure>
+<p>等待程序编译完成, 大约要两个小时左右, 会在boost根目录下生成 bin.v2 和 stage 两个文件夹, 其中bin.v2下是生成的中间文件, 大小在2.7G左右, 可以直接删除. stage下才是生成的dll和lib文件. 补充选项的意义:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Properties:</div><div class="line"></div><div class="line">  toolset=toolset         Indicate the toolset to build with.</div><div class="line"></div><div class="line">  variant=debug|release   Select the build variant</div><div class="line"></div><div class="line">  link=static|shared      Whether to build static or shared libraries</div><div class="line"></div><div class="line">  threading=single|multi  Whether to build single or multithreaded binaries</div><div class="line"></div><div class="line">  runtime-link=static|shared</div><div class="line">                          Whether to link to static or shared C and C++</div><div class="line">                          runtime.</div></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>下面进行配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">路径是: 视图-&gt;属性管理器-&gt;当前项目-&gt;Debug|Win32-&gt;Microsoft.Cpp.Win32.user 双击</div><div class="line">在弹出的属性对话框中:</div><div class="line">通用属性-&gt;VC++目录：&quot;包含目录&quot;: boost的根目录，例: C:\boost_1_53_0</div><div class="line">&quot;库目录&quot;: stage下的链接库目录，例:C:\boost_1_53_0\stage\lib</div><div class="line">通用属性-&gt;链接器-&gt;常规:&quot;附加库目录&quot;:例:C:\boost_1_53_0\stage\lib</div></pre></td></tr></table></figure></p>
@@ -202,7 +205,12 @@ Boost.Exception
 </ul>
 </li>
 </ul>
-<h2 id="Thread库"><a href="#Thread库" class="headerlink" title="Thread库"></a>Thread库</h2><p>该库有多个头文件<br>相比线程库.</p>
+<p>下面所有的代码都是在Widnows环境VS下书写(别问我为什么)</p>
+<h2 id="Thread库"><a href="#Thread库" class="headerlink" title="Thread库"></a>Thread库</h2><p>该库有多个头文件, 最常用的是 <code>boost/thread.hpp</code>, 其他还有<code>boost/atomic.hpp</code>. 相比传统的pthread线程库, 新的线程库是为了简化线程的开发工作(并发操作在这个真多核时代越来越重要). 如果你有 <code>pthread</code> 相关基础, 这里接受起来会非常爽, 非常快, 话不多说, 我就叙述一下.</p>
+<h3 id="线程管理"><a href="#线程管理" class="headerlink" title="线程管理"></a>线程管理</h3><p>最简单的.<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;boost/config.hpp&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;boost/thread.hpp&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">int</span> sec)</span></span></div><div class="line">&#123;</div><div class="line">  boost::this_thread::sleep(boost::posix_time::seconds(sec));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">thread</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; ++i)</div><div class="line">    &#123;</div><div class="line">      wait(<span class="number">1</span>);</div><div class="line">      <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">  boost::<span class="function">thread <span class="title">t</span><span class="params">(thread)</span></span>;</div><div class="line"></div><div class="line">  t.join();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>出现问题: 无法打开文件”libboost_thread-vc140-mt-gd-xxx.lib”, 请检查上面的安装步骤, 以及使用的<code>平台工具集</code>是否和你编译的库版本一致. (即toolset=msvc-14.0对应vs2015)</p>
+<p>上述程序的解释:</p>
+<p>一个线程总是在一开始就绑定到一个类型为 boost::thread 的变量，但是一旦创建，就不在取决于它。即使 t 越界或者析构了，该线程也将继续执行。</p>
 <h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
 <li><a href="http://www.boost.org/doc/libs/1_53_0/doc/html/index.html" target="_blank" rel="external">Boost官方文档</a>  (boost_1_53_pdf, N个pdf, 够你一看; 推荐给初学者)</li>
 <li>《Beyond the C++ Standard Library: An Introduction to Boost》 (有中文版翻译, 还不错; 推荐初学者)</li>
@@ -285,7 +293,7 @@ Boost.Exception
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建议"><span class="toc-article-text">建议</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Thread库"><span class="toc-article-text">Thread库</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装和建议"><span class="toc-article-text">安装和建议</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Thread库"><span class="toc-article-text">Thread库</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#线程管理"><span class="toc-article-text">线程管理</span></a></li></ol></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
