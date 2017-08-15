@@ -1,0 +1,346 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>time-in-cpp | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="编程中需要注意的时间相关的问题">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="time-in-cpp"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> time-in-cpp</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 编程中需要注意的时间相关的问题
+		 </div> <!-- alert -->
+	  		
+
+	  <p>习惯用的使用c-style的时间, 导致有时候在cpp程序中看着很别扭.</p>
+<p>网上的有些文章看的实在是太敷衍, 索性自己写一篇吧.</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>本文以如下方式展开:</p>
+<ul>
+<li>时间相关的概念</li>
+<li>Linux C中常用时间编程方式和手段</li>
+<li>现代C++时间编程的方式和惯例</li>
+</ul>
+<p>(代码, 命令环境Ubuntu 14)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h2><h3 id="UTC"><a href="#UTC" class="headerlink" title="UTC"></a>UTC</h3><p>Coordinated Universal Time,  即GMT(Greenwich Mean Time); 把格林威治标准时间作为标准时间.<br>比如, 中国内地的时间与UTC的时差为+8, 也就是UTC+8, 美国是UTC-5.</p>
+<h3 id="CST"><a href="#CST" class="headerlink" title="CST"></a>CST</h3><p>CST: 中部标准时间, 这个时间是要分时区的. 一般看到的是:</p>
+<ul>
+<li>CST China Standard Time</li>
+<li>CST Cuba Standard Time</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ date</div><div class="line">Tue Jul 29 08:07:51 CST 2017</div></pre></td></tr></table></figure>
+<h3 id="DST"><a href="#DST" class="headerlink" title="DST"></a>DST</h3><p>Daylight Saving Time, 又称“日光节约时制”和“夏令时间”，是一种为节约能源而人为规定地方时间的制度，在这一制度实行期间所采用的统一时间称为“夏令时间”。一般在天亮早的夏季人为将时间调快一小时，可以使人早起早睡，减少照明量，以充分利用光照资源，从而节约照明用电。</p>
+<p>根据时区不同, 也不有不同算法调整, 具体可以参考man手册 <code>man gettimeofday</code> .<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">gettimeofday</span><span class="params">(<span class="keyword">struct</span> timeval *tv, <span class="keyword">struct</span> timezone *tz)</span></span>; <span class="comment">//第二个参数一般传入NULL</span></div><div class="line"></div><div class="line"><span class="keyword">struct</span> timezone &#123;</div><div class="line">       <span class="keyword">int</span> tz_minuteswest;     <span class="comment">/* minutes west of Greenwich */</span></div><div class="line">       <span class="keyword">int</span> tz_dsttime;         <span class="comment">/* type of DST correction */</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h3 id="Epoch"><a href="#Epoch" class="headerlink" title="Epoch"></a>Epoch</h3><p>1970年1月1日0:0:0 UTC(世界标准时间)<br>相当于计时起始时间.</p>
+<h3 id="CalendarTime"><a href="#CalendarTime" class="headerlink" title="CalendarTime"></a>CalendarTime</h3><p><code>日历时间</code> 是用 “从一个标准时间点到此时的时间经过的秒数” 来表示的时间, 它是一个相对时间. (距离时间起点经过的时间)</p>
+<p>这个标准时间点对不同的编译器来说会有所不同, 但对一个编译系统来说, 这个标准时间点是不变的, 该编译系统中的时间对应的日历时间都通过该标准时间点来衡量, 所以可以说日历时间是”相对时间”, 但是无论你在哪一个时区, 在同一时刻对同一个标准时间点来说, 日历时间都是一样的.</p>
+<p>下面的命令可以查看自1970年1月1日0:0:0 UTC(世界标准时间)到现在的秒数:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ date +%s</div></pre></td></tr></table></figure></p>
+<p>然后把这些时间按照我们的年月日换算就可以算出现在的日历时间:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ date <span class="_">-d</span> @秒数</div></pre></td></tr></table></figure></p>
+<h3 id="ClockTick"><a href="#ClockTick" class="headerlink" title="ClockTick"></a>ClockTick</h3><p>时钟计时单元(而不把它叫做时钟滴答次数), 一个 <code>clock tick</code> 不是 CPU 的一个时钟周期, 而是系统的一个基本计时单位(时钟中断的间隔时长).</p>
+<h3 id="Second"><a href="#Second" class="headerlink" title="Second"></a>Second</h3><p>时间单位:</p>
+<ul>
+<li>millisecond 毫秒 ms 1e-3秒</li>
+<li>microsecond 微秒 us 1e-6秒</li>
+<li>nanosecond 纳秒 ns 1e-9秒</li>
+<li>picosecond 皮秒 ps 1e-12秒</li>
+</ul>
+<p>我一般记忆到纳秒:</p>
+<p>1秒是1000毫秒, 100万微妙, 10亿纳秒.</p>
+<hr>
+<p>下面总结编程中需要用的时间内容, 一般是为了</p>
+<ul>
+<li>具体某个函数调用</li>
+<li>统计进程运行时间</li>
+<li>获取系统时间</li>
+<li>profile/性能测试</li>
+</ul>
+<hr>
+<h2 id="C风格"><a href="#C风格" class="headerlink" title="C风格"></a>C风格</h2><p>在Linux C下有两个重要的头文件, <code>time.h</code>, <code>sys/time.h</code>, 主要还是使用 <code>time.h</code>.</p>
+<h3 id="结构体定义"><a href="#结构体定义" class="headerlink" title="结构体定义"></a>结构体定义</h3><p>常用的结构体或定义:</p>
+<ul>
+<li>time_t 统计秒数(注意范围)</li>
+<li>clock_t 时钟单位值(一般用于统计程序运行时间)</li>
+<li>timeval 时间间隔(一般用于gettimeofday, 定时器之类函数参数上)</li>
+<li>tm 正规时间格式, 分解时间(broken-down time)</li>
+</ul>
+<p>你不要关心具体的实现或者定义, 但是知道最好(可能你需要在time_t和tm之间进行转换).</p>
+<p>下面说一下: (环境Ubuntu 64)</p>
+<ul>
+<li><p>time_t的定义:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">__STD_TYPE __TIME_T_TYPE <span class="keyword">__time_t</span>;      <span class="comment">/* Seconds since the Epoch.  */</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> __TIME_T_TYPE           __SLONGWORD_TYPE</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> __SLONGWORD_TYPE        long int</span></div><div class="line"></div><div class="line"><span class="comment">//微妙suseconds_t 也是long int</span></div></pre></td></tr></table></figure>
+<p>(他和tm结构体完全不一样)一看就是记录的当前时间秒数, 但是各个编译器厂商记录该时间的定义可能不太一样, 在Visual C++中采用了__time64_t数据类型来保存日历时间, 相应的通过 <code>_time64()</code>来获取日历秒数(这样表示的大小更大了)</p>
+</li>
+<li><p>timeval的定义: (<code>man gettimeofday</code>)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> timeval &#123;</div><div class="line">       <span class="keyword">time_t</span>      tv_sec;     <span class="comment">/* seconds */</span></div><div class="line">       <span class="keyword">suseconds_t</span> tv_usec;    <span class="comment">/* microseconds */</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">struct</span> timezone &#123;</div><div class="line">       <span class="keyword">int</span> tz_minuteswest;     <span class="comment">/* minutes west of Greenwich */</span></div><div class="line">       <span class="keyword">int</span> tz_dsttime;         <span class="comment">/* type of DST correction */</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>如果你使用<time.h>则要手动加宏:</time.h></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;time.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> __need_timeval 1</span></div></pre></td></tr></table></figure>
+<p>不加宏, 直接用</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></div></pre></td></tr></table></figure>
+<p>小的测试:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;time.h&gt; //ctime</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">struct</span> timeval tv;</div><div class="line">  gettimeofday(&amp;tv, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">  <span class="built_in">printf</span>(<span class="string">"%s \n"</span>, ctime(&amp;tv.tv_sec) );</div><div class="line"></div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>tm 的定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">struct tm &#123;</div><div class="line">      int tm_sec;         /* seconds */</div><div class="line">      int tm_min;         /* minutes */</div><div class="line">      int tm_hour;        /* hours */</div><div class="line">      int tm_mday;        /* day of the month */</div><div class="line">      int tm_mon;         /* month */</div><div class="line">      int tm_year;        /* year */</div><div class="line">      int tm_wday;        /* day of the week */</div><div class="line">      int tm_yday;        /* day in the year */</div><div class="line">      int tm_isdst;       /* daylight saving time */</div><div class="line">  &#125;;</div></pre></td></tr></table></figure>
+<p>值得注意的是, glic可能有自己的实现, 也就是说还有更多的字段. 其他详细信息可以参考 <code>man ctime</code> 里的说明.</p>
+</li>
+<li><p>clock_t 定义:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _CLOCK_T_DEFINED</span></div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">clock_t</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> _CLOCK_T_DEFINED  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>还定义了一秒有多少个 <code>时钟单元</code> :</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> CLOCKS_PER_SEC ((clock_t)1000)</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="函数定义"><a href="#函数定义" class="headerlink" title="函数定义"></a>函数定义</h3><p>定义在 <code>time.h</code> 中的重要函数:</p>
+<ul>
+<li>extern clock_t clock(time_t *__timer);  //查看进程运行时间</li>
+<li>extern time_t time(time_t *__timer); //获取当前系统时间(你拿到的是秒数)</li>
+<li>extern char <em>ctime(__const time_t </em>__timer); //把秒数转换成当前时间格式字符串</li>
+<li>extern char <em>asctime(const struct tm </em>tm); //作用同上, 参数不同</li>
+<li>extern struct tm <em>gmtime(__const time_t </em>__timer);//作用同上, 不过返回是UCT格式结构体</li>
+<li>extern struct tm <em>localtime(const time_t </em>__timer); //作用同上, 不过是当前时区格式结构体</li>
+<li>extern time_t mktime(struct tm *__time); //得到当前时间秒数</li>
+<li>extern double difftime(time_t time1, time_t time0); //计算时间差, 可以自己算</li>
+</ul>
+<p>还有一个提取 <code>struct tm</code> 时间结构体某一项的函数:(类似 sprintf 这种格式化输出)<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">extern</span> size_t <span class="title">strftime</span><span class="params">(<span class="keyword">char</span> *s, </span></span></div><div class="line">                       <span class="keyword">size_t</span> max, </div><div class="line">                       <span class="keyword">const</span> <span class="keyword">char</span> *format,</div><div class="line">                       <span class="keyword">const</span> <span class="keyword">struct</span> tm *tm);</div><div class="line"><span class="comment">/*</span></div><div class="line">%a 星期几的简写 </div><div class="line">%A 星期几的全称 </div><div class="line">%b 月分的简写 </div><div class="line">%B 月份的全称 </div><div class="line">%c 标准的日期的时间串 </div><div class="line">%C 年份的后两位数字 </div><div class="line">%d 十进制表示的每月的第几天 </div><div class="line">%D 月/天/年 </div><div class="line">%e 在两字符域中，十进制表示的每月的第几天 </div><div class="line">%F 年-月-日 </div><div class="line">%g 年份的后两位数字，使用基于周的年 </div><div class="line">%G 年分，使用基于周的年 </div><div class="line">%h 简写的月份名 </div><div class="line">%H 24小时制的小时 </div><div class="line">%I 12小时制的小时</div><div class="line">%j 十进制表示的每年的第几天 </div><div class="line">%m 十进制表示的月份 </div><div class="line">%M 十时制表示的分钟数 </div><div class="line">%n 新行符 </div><div class="line">%p 本地的AM或PM的等价显示 </div><div class="line">%r 12小时的时间 </div><div class="line">%R 显示小时和分钟：hh:mm </div><div class="line">%S 十进制的秒数 </div><div class="line">%t 水平制表符 </div><div class="line">%T 显示时分秒：hh:mm:ss </div><div class="line">%u 每周的第几天，星期一为第一天 （值从0到6，星期一为0）</div><div class="line">%U 第年的第几周，把星期日做为第一天（值从0到53）</div><div class="line">%V 每年的第几周，使用基于周的年 </div><div class="line">%w 十进制表示的星期几（值从0到6，星期天为0）</div><div class="line">%W 每年的第几周，把星期一做为第一天（值从0到53） </div><div class="line">%x 标准的日期串 </div><div class="line">%X 标准的时间串 </div><div class="line">%y 不带世纪的十进制年份（值从0到99）</div><div class="line">%Y 带世纪部分的十制年份 </div><div class="line">%z，%Z 时区名称，如果不能得到时区名称则返回空字符。</div><div class="line">%% 百分号</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p>一个小demo: (12进制显示当前时间)<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">char</span> str[<span class="number">100</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line"><span class="keyword">struct</span> tm *tm_ptr = localtime(time(<span class="literal">NULL</span>));</div><div class="line">strftime(str, <span class="number">100</span>, <span class="string">"It is now : %I %p"</span>, pt);</div></pre></td></tr></table></figure></p>
+<p>注意:</p>
+<ul>
+<li><p>注意 <code>clock()</code> 函数, 返回的是 <code>usr time + system time</code>, 即用户时间+内核时间, 返回的时间(始终计数器值)需要转换成秒, 可以用下面的公式:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//result / CLOCKS_PER_SECOND; //1毫秒, 时钟计数器+1, 即调用clock()函数返回的值就加1</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">elapsed_time</span><span class="params">()</span></span></div><div class="line">&#123;  </div><div class="line">   <span class="built_in">printf</span>(<span class="string">"Elapsed time:%u secs./n"</span>, clock()/CLOCKS_PER_SEC);  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当然你可以计算某一个调用, 某一个循环化了多长时间:(但是精度到毫秒)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">long</span>    i = <span class="number">10000000L</span>; <span class="comment">//把i减至0花了多长时间</span></div><div class="line"></div><div class="line"><span class="keyword">clock_t</span> start = clock();  </div><div class="line"><span class="keyword">while</span>( i-- );</div><div class="line"><span class="keyword">clock_t</span> finish = clock();</div><div class="line"></div><div class="line"><span class="keyword">double</span> duration = (<span class="keyword">double</span>)(finish - start) / CLOCKS_PER_SEC;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>asctime</code> 和 <code>ctime</code> 将时间以固定的格式显示出来，两者的返回值都是char*型的字符串, 但是参数不同</p>
+</li>
+<li>注意 <code>gmtime()</code> 以及 <code>localtime</code> 是可以把 time_t 转换成 tm 的; 这两个函数涉及到了tm, 也就不仅仅只有时间, 还有日期了</li>
+<li>注意 <code>mktime()</code> 可以把 tm 当前时间格式, 转换成 time_t 当前时间秒数</li>
+<li>注意 <code>time</code> 拿到的是当前时间的秒数, 见到某平台的库实现 <code>_time64()</code> 也不必惊慌</li>
+</ul>
+<p>完整的定义可以查看 man 手册:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">	<span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;time.h&gt;</span></span></div><div class="line"></div><div class="line">       <span class="function"><span class="keyword">char</span> *<span class="title">asctime</span><span class="params">(<span class="keyword">const</span> <span class="keyword">struct</span> tm *tm)</span></span>;</div><div class="line">       <span class="function"><span class="keyword">char</span> *<span class="title">asctime_r</span><span class="params">(<span class="keyword">const</span> <span class="keyword">struct</span> tm *tm, <span class="keyword">char</span> *buf)</span></span>;</div><div class="line"></div><div class="line">       <span class="function"><span class="keyword">char</span> *<span class="title">ctime</span><span class="params">(<span class="keyword">const</span> <span class="keyword">time_t</span> *timep)</span></span>;</div><div class="line">       <span class="function"><span class="keyword">char</span> *<span class="title">ctime_r</span><span class="params">(<span class="keyword">const</span> <span class="keyword">time_t</span> *timep, <span class="keyword">char</span> *buf)</span></span>;</div><div class="line"></div><div class="line">       <span class="function"><span class="keyword">struct</span> tm *<span class="title">gmtime</span><span class="params">(<span class="keyword">const</span> <span class="keyword">time_t</span> *timep)</span></span>;</div><div class="line">       <span class="function"><span class="keyword">struct</span> tm *<span class="title">gmtime_r</span><span class="params">(<span class="keyword">const</span> <span class="keyword">time_t</span> *timep, <span class="keyword">struct</span> tm *result)</span></span>;</div><div class="line"></div><div class="line">       <span class="function"><span class="keyword">struct</span> tm *<span class="title">localtime</span><span class="params">(<span class="keyword">const</span> <span class="keyword">time_t</span> *timep)</span></span>;</div><div class="line">       <span class="function"><span class="keyword">struct</span> tm *<span class="title">localtime_r</span><span class="params">(<span class="keyword">const</span> <span class="keyword">time_t</span> *timep, <span class="keyword">struct</span> tm *result)</span></span>;</div><div class="line"></div><div class="line">       <span class="keyword">time_t</span> mktime(<span class="keyword">struct</span> tm *tm);</div><div class="line"></div><div class="line"><span class="comment">/*--------------------------------------------------------------*/</span></div><div class="line">       <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;time.h&gt;</span></span></div><div class="line"></div><div class="line">       <span class="keyword">size_t</span> strftime(<span class="keyword">char</span> *s, <span class="keyword">size_t</span> max, <span class="keyword">const</span> <span class="keyword">char</span> *format,</div><div class="line">                       <span class="keyword">const</span> <span class="keyword">struct</span> tm *tm);</div></pre></td></tr></table></figure></p>
+<p>定义在sys/time.h中的重要函数<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">gettimeofday</span><span class="params">(<span class="keyword">struct</span> timeval *tv, <span class="keyword">struct</span> timezone *tz)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">settimeofday</span><span class="params">(<span class="keyword">const</span> <span class="keyword">struct</span> timeval *tv, <span class="keyword">const</span> <span class="keyword">struct</span> timezone *tz)</span></span>;</div></pre></td></tr></table></figure></p>
+<h3 id="综合案例"><a href="#综合案例" class="headerlink" title="综合案例"></a>综合案例</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<h2 id="Cpp风格"><a href="#Cpp风格" class="headerlink" title="Cpp风格"></a>Cpp风格</h2><p>基本上已经看到了, 如果你去使用C库 <code>ctime</code>, 那么时间操作都是够用的.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a href="/2017/07/29/stl-algorithm.html" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/07/29/deep-in-muduo-framework.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-07-29 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>52</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/cpp/">cpp<span>12</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#相关概念"><span class="toc-article-text">相关概念</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#UTC"><span class="toc-article-text">UTC</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#CST"><span class="toc-article-text">CST</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#DST"><span class="toc-article-text">DST</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Epoch"><span class="toc-article-text">Epoch</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#CalendarTime"><span class="toc-article-text">CalendarTime</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#ClockTick"><span class="toc-article-text">ClockTick</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Second"><span class="toc-article-text">Second</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#C风格"><span class="toc-article-text">C风格</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#结构体定义"><span class="toc-article-text">结构体定义</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#函数定义"><span class="toc-article-text">函数定义</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#综合案例"><span class="toc-article-text">综合案例</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Cpp风格"><span class="toc-article-text">Cpp风格</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>
