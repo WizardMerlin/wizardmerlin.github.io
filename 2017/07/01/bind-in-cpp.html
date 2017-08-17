@@ -159,6 +159,7 @@
 <p>补充: </p>
 <ul>
 <li>bind的返回值是可调用实体, 可以直接赋给std::function对象; </li>
+<li>山寨一个<a href="http://www.cnblogs.com/xusd-null/p/3693817.html" target="_blank" rel="external">bind</a></li>
 </ul>
 <hr>
 <h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>在使用 <code>std::bind</code> 的时候注意一下, 绑定的参数的安全性, 顺序, 以及绑定成员成分(函数, 数据)时, 一定要在后面传入this指针或者本对象的地址, 如果你不绑定, 那么实际调用的时候就要传入.</p>
