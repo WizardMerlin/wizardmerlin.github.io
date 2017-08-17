@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>network-libs-in-cpp | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="谈一谈接触到的网络库, 及其比较">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="network-libs-in-cpp"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> network-libs-in-cpp</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 谈一谈接触到的网络库, 及其比较
+		 </div> <!-- alert -->
+	  		
+
+	  <p>从最初的 <code>libevent</code> 及其升级版本 <code>libev</code> , 到昨天的 <code>Boost::asio</code> , C++中的网络库还真不少.</p>
+<p>当然像ACE那种大库, 我就不说了, 太大了, 也很复杂.</p>
+<p>本文基于过去的linux网络编程知识, 以及相应的库, 源码, 一个个说一说, 并且给出一个bench mark.</p>
+<p>(当然也会说到开发难度)<br><a id="more"></a></p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>libevent, libev, asio, IOCP, reactor, proactor等</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>ACE是一个大型的中间件产品，代码20万行左右，过于宏大，一堆的设计模式，架构了一层又一层，使用的时候， 要根据情况，看你从那一层来进行使用。支持跨平台。<br>Boost的ASIO是一个异步IO库，封装了对Socket的常用操作，简化了基于socket程序的开发。支持跨平台。</p>
+<p>libevent是一个C语言写的网络库， 官方主要支持的是类Linux 操作系统， 最新的版本添加了对windows的IOCP的支持。由于IOCP是异步IO，与linux下的POLL模型，EPOLL模型，还有freebsd的KQUEUE等这些同步模型在用法上完全不一致，所以使用方法也不一样，就好比ACE中的Reactor和Proactor模式一样， 使用起来需要转变思路。如果对性能没有特别的要求， 那么使用libevent中的select模型来实现跨平台的操作， select模型可以横跨windows， linux， unix，solaris等系统。<br>libev是一个c语言写的，只支持linux系统的库，我以前研究的时候只封装了EPOLL模型， 不知道现在的新版有没有改进。使用方法类似libevent， 但是非常简洁，代码量是最少的一个库，也就几千行代码。显然这样的代码跨平台肯定是无法支持的了， 如果你只需要在linux下面运行，那用这个库也是可以的。</p>
+<p>ACE网络库在使用中，一直对其中的内存管理搞得一头雾水，分配的内存需要在哪里释放都不知道，ACE不愧是一个做研究用的库， 可以说里面的封装把设计模式这本书中列出的模式都在代码里面实现了一番，用起来感觉是在用Java一样，如果你想使用ACE作为你的网络库， 千万不要仅仅把它当成一个网络库使用， 你要把它当成一个框架来使用，如果你只想用它的网络库， 那大可不必用ACE， 因为它太庞大了，学习起来太费劲。但是你把它当成一个框架来用，你会感觉用的还真爽，该有的东西都有，比如线程池，内存池，定时器，递归锁等，都很方便的。Boost的ASIO，在内存管理方面要直观的多。下面简单地与ACE做个比较。</p>
+<p>1.层次架构：<br>ACE底层是C风格的OS适配层，上一层基于C++的wrap类，再上一层是一些框架（Accpetor, Connector，Reactor，Proactor等），最上一层是框架上服务。<br>Boost.ASIO与之类似，底层是OS的适配层，上一层一些模板类，再上一层模板类的参数化（TCP/UDP），再上一层是服务，它只有一种框架为io_service。<br>livevent在不同的操作系统下，做了多路复用模型的抽象，可以选择使用不同的模型，通过事件函数提供服务。</p>
+<p>2.涉及范围：<br>ACE包含了日志，IPC，线程池，共享内存，配置服务，递归锁，定时器等。<br>ASIO只涉及到Socket，提供简单的线程操作。<br>libevent只提供了简单的网络API的封装， 线程池， 内存池， 递归锁等均需要自己实现。</p>
+<p>3.设计模式：<br>ACE主要应用了Reactor，Proactor等。<br>而ASIO主要应用了Proactor。<br>libevent为Reactor模式</p>
+<p>4.线程调度：<br>ACE的Reactor是单线程调度，Proactor支持多线程调度。<br>ASIO支持单线程与多线程调度。<br>libevent的线程调度需要自己来注册不同的事件句柄。</p>
+<p>5.事件分派处理：<br>ACE主要是注册handler类，当事件分派时，调用其handler的虚挂勾函数。实现ACE_Handler / ACE_Svc_Handler / ACE_Event_handler等类的虚函数。<br>ASIO是基于函数对象的hanlder事件分派。任何函数都可能成为hanlder，少了一堆虚表的维护，调度上优于ACE。<br>libevent基于注册的事件回调函数来实现事件分发。</p>
+<p>6.发布方式：<br>ACE是开源免费的，不依赖于第3方库， 一般应用使用它时，以动态链接的方式发布动态库。<br>ASIO是开源免费的，依赖Boost，应用使用时只要include头文件，不需动态库。<br>libevent为开源免费的，一般编译为静态库进行使用。</p>
+<p>7.可移植性：<br>ACE支持多种平台，可移植性不存在问题，据说socket编程在linux下有不少bugs。<br>ASIO支持多种平台，可移植性不存在问题。<br>libevent主要支持linux平台，freebsd平台， 其他平台下通过select模型进行支持， 效率不是太高。</p>
+<p>8.开发难度：<br>基于ACE开发应用，对程序员要求比较高，要用好它，必须非常了解其框架。在其框架下开发，往往new出一个对象，不知在什么地方释放好。<br>基于ASIO开发应用，要求程序员熟悉函数对象，函数指针，熟悉boost库中的boost::bind。内存管理控制方面。</p>
+<p>基于libevent开发应用，相对容易， 具体大家可以参考memcached这个开源的应用，里面使用了libevent这个库。</p>
+<p>其他参考: </p>
+<ul>
+<li><a href="http://blog.csdn.net/earbao/article/details/10934261" target="_blank" rel="external">http://blog.csdn.net/earbao/article/details/10934261</a></li>
+<li><a href="http://blog.csdn.net/csfreebird/article/details/49283743" target="_blank" rel="external">http://blog.csdn.net/csfreebird/article/details/49283743</a></li>
+</ul>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a href="/2017/08/14/debug-multi-thread.html" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/08/11/Asio.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-08-12 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>53</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/network/">network<span>14</span></a></li> <li><a href="/tags/cpp/">cpp<span>14</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>
