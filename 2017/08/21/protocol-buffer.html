@@ -1,0 +1,321 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>protocol-buffer | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="google protocolbuffer使用心得">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="protocol-buffer"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> protocol-buffer</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> google protocolbuffer使用心得
+		 </div> <!-- alert -->
+	  		
+
+	  <p>最初是在 “序列化” 问题时接触到这个库的(作为XML的替代方案), 之后慢慢熟悉, 发现其在数据存储和RPC数据交换领域有大作为.(可能前后端通信也会使用这个库)</p>
+<p>网上相关的文章一大堆, 本文就简单的介绍一下我的一些心得.</p>
+<p>注: 本文是参考网络上N多文章,观点的总结和体会(都有详细参考链接)<br><a id="more"></a></p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>快速说一下他的某个简单使用, 引入话题.</p>
+<p>比如有个电子商务的系统（假设用C++实现），其中的模块A需要发送大量的订单信息给模块B，通讯的方式使用socket。</p>
+<p>假设订单包括如下属性：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">　　时间：time（用整数表示）</div><div class="line">　　客户id：userid（用整数表示）</div><div class="line">　　交易金额：price（用浮点数表示）</div><div class="line">　　交易的描述：desc（用字符串表示）</div></pre></td></tr></table></figure></p>
+<p>如果使用protobuf实现，首先要写一个proto文件（不妨叫Order.proto），在该文件中添加一个名为”Order”的message结构，用来描述通讯协议中的结构化数据。该文件的内容大致如下：<br>(解释一下: .proto文件确定数据协议，数据结构中存在哪些数据，数据类型是怎么样; 该文件就是一个接口规范)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">message Order</div><div class="line">&#123;</div><div class="line">  required int32 time = 1;</div><div class="line">  required int32 userid = 2;</div><div class="line">  required float price = 3;</div><div class="line">  optional string desc = 4;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>关于modifiers的说明:</p>
+<ul>
+<li>required 不可以增加或删除的字段，必须初始化</li>
+<li>optional 可选字段，可删除，可以不初始化</li>
+<li>repeated 可重复字段， 对应到java文件里，生成的是List</li>
+</ul>
+<p>(在protoBuf 3中，optional和required都不需要的了，如果配了两个，protoBuf 编译器还会报错，但是repeated的还是保留的，用来说明该字段是一个list)</p>
+<p>然后，使用protobuf内置的编译器编译 该proto。由于本例子的模块是C++，你可以通过protobuf编译器的命令行参数，让它生成C++语言的“订单包装类”。（一般来说，一个message结构会生成一个包装类）然后你使用类似下面的代码来序列化/解析该订单包装类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">// 发送方</div><div class="line">Order order;</div><div class="line">order.set_time(XXXX);</div><div class="line">order.set_userid(123);</div><div class="line">order.set_price(100.0f);</div><div class="line">order.set_desc(&quot;a test order&quot;);</div><div class="line">string sOrder;</div><div class="line">order.SerailzeToString(&amp;sOrder);</div><div class="line">// 然后调用某种socket的通讯库把序列化之后的字符串发送出去</div><div class="line">// ......</div><div class="line"></div><div class="line">// 接收方</div><div class="line">string sOrder;</div><div class="line">// 先通过网络通讯库接收到数据，存放到某字符串sOrder</div><div class="line">// ......</div><div class="line">Order order;</div><div class="line">if(order.ParseFromString(sOrder))  // 解析该字符串</div><div class="line">&#123;</div><div class="line">  cout &lt;&lt; &quot;userid:&quot; &lt;&lt; order.userid() &lt;&lt; endl</div><div class="line">          &lt;&lt; &quot;desc:&quot; &lt;&lt; order.desc() &lt;&lt; endl;</div><div class="line">&#125;</div><div class="line">else</div><div class="line">&#123;</div><div class="line">  cerr &lt;&lt; &quot;parse error!&quot; &lt;&lt; endl;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注: 生成的类中还有其他的序列化API, 比如 <code>ParseFromIstream(&amp;input)</code> 以及 <code>SerializeToOstream(&amp;output)</code> 等.</p>
+<p>有了这种代码生成机制，开发人员再也不用吭哧吭哧地编写那些协议解析的代码了.</p>
+<p>万一将来需求发生变更，要求给订单再增加一个“状态”的属性，那只需要在Order.proto文件中增加一行代码。对于发送方（模块A），只要增加一行设置状态的代码；对于接收方（模块B）只要增加一行读取状态的代码。哇塞，简直太轻松了！</p>
+<p>不说了, 太激动, 请看详情.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>性能好, 效率高(XML解析速度慢, XML冗余信息多空间占用多)</li>
+<li>代码生成机制, 数据解析类自动生成(这个最赞, 你不需要自己去写解析代码了)</li>
+<li>支持向后兼容和向前兼容(得益于约定好的协议)</li>
+<li>多语言支持(主流语言Cpp,Java,Python; 前后端语言不一样也没有关系, 协议的处理一致)</li>
+<li>平台无关</li>
+</ul>
+<p>性能上和 JSON 拼也是不怕的 <a href="http://cxshun.iteye.com/blog/1974498" target="_blank" rel="external">参考</a></p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>应用不够广</li>
+<li>为了提高性能, 采用二进制格式导致可读性差(二进制格式)</li>
+</ul>
+<p>正是由于可读性, Protocol Buffer还取代不了XML.</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>Linux平台 和 Window(VS2015)<br>源码安装: <a href="http://code.google.com/p/protobuf/downloads/list" target="_blank" rel="external">http://code.google.com/p/protobuf/downloads/list</a> 或者 <a href="https://github.com/google/protobuf/releases" target="_blank" rel="external">https://github.com/google/protobuf/releases</a></p>
+<h3 id="Linux平台"><a href="#Linux平台" class="headerlink" title="Linux平台"></a>Linux平台</h3><p>Ubuntu 14, 64bit<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/google/protobuf.git</div></pre></td></tr></table></figure></p>
+<p>当然你也可以去release网页下找到相关的包, 在进行编译.</p>
+<p>先确保你及其上有相关的工具集合:</p>
+<ul>
+<li>autoconf</li>
+<li>automake</li>
+<li>libtool</li>
+<li>curl</li>
+<li>make</li>
+<li>g++</li>
+<li>unzip</li>
+</ul>
+<p>然后确保有<code>configure</code>文件, 没有话 <code>./autogen.sh</code> 生成相关脚本(并下载gmock).<br>然后编译安装(可以自己制定位置, 我就默认了)<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ ./configure</div><div class="line">$ make</div><div class="line">$ make check</div><div class="line">$ sudo make install</div><div class="line">$ sudo ldconfig <span class="comment"># refresh shared library cache.</span></div></pre></td></tr></table></figure></p>
+<p>此时 <code>/usr/local/include/google/protobuf</code> 以及 <code>/usr/local/lib</code> 下就有了相应的头文件和库文件, 并且增加了<code>/usr/local/bin/protoc</code>编译器, 此时安装成功.</p>
+<h3 id="windows平台"><a href="#windows平台" class="headerlink" title="windows平台"></a>windows平台</h3><p>这里采用的是VS2015, 操作系统win10 64位.</p>
+<p>在这个<a href="https://github.com/google/protobuf/releases" target="_blank" rel="external">网站</a>找到 <code>protoc-$VERSION-win32.zip</code><br>It contains the protoc binary as well as public proto files of protobuf library.</p>
+<p>这个<a href="https://github.com/google/protobuf/blob/master/cmake/README.md" target="_blank" rel="external">文档</a>记录了相关过程, 这一篇<a href="http://blog.csdn.net/majianfei1023/article/details/45371743" target="_blank" rel="external">文档</a>也可以供您参考</p>
+<h2 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h2><p>主要的使用步骤就是:</p>
+<ol>
+<li>定义你自己的数据结构格式(.pro)源文件</li>
+<li>利用 ProtoBuf 提供的编译器编译源文件</li>
+<li>使用 ProtoBuf C++的 API 读写消息</li>
+</ol>
+<h3 id="简单Demo"><a href="#简单Demo" class="headerlink" title="简单Demo"></a>简单Demo</h3><p>以linux平台为例, 先实践一个简单的:</p>
+<p>定义一个person.pro<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">syntax = &quot;proto2&quot;;</div><div class="line">package lm;</div><div class="line"></div><div class="line">message helloworld</div><div class="line">&#123;</div><div class="line">   required int32     id = 1;  // ID</div><div class="line">   required string    str = 2;  // str</div><div class="line">   optional int32     opt = 3;  //optional field</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>编译:(/usr/local/bin/protoc)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">protoc -I. --cpp_out=. lm.helloworld.proto</div></pre></td></tr></table></figure></p>
+<p>生成了一个头文件和一个源文件:</p>
+<ul>
+<li>lm.helloworld.pb.cc</li>
+<li>lm.helloworld.pb.h</li>
+</ul>
+<p>相当于POJO类或者domain类已经有(并且序列化API也已经有了), 类名 <code>lm::helloworld</code>, 现在可以进行序列化了.</p>
+<p>简单的操作代码如下:<br>(Writer和Reader来对消息进行操作, 序列化和反序列化)<br>writer.cpp<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"lm.helloworld.pb.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="comment">//主要逻辑如下</span></div><div class="line">  lm::helloworld msg1;</div><div class="line">  </div><div class="line">  msg1.set_id(<span class="number">101</span>); </div><div class="line">  msg1.set_str(<span class="string">"hello"</span>); </div><div class="line">    </div><div class="line">  <span class="comment">// Write the new address book back to disk. </span></div><div class="line">  <span class="function">fstream <span class="title">output</span><span class="params">(<span class="string">"./log"</span>, ios::out | ios::trunc | ios::binary)</span></span>; </div><div class="line">        </div><div class="line">  <span class="keyword">if</span> (!msg1.SerializeToOstream(&amp;output)) &#123; </div><div class="line">    <span class="built_in">cerr</span> &lt;&lt; <span class="string">"Failed to write msg."</span> &lt;&lt; <span class="built_in">endl</span>; </div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>; </div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>reader.cpp<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"lm.helloworld.pb.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">ListMsg</span><span class="params">(<span class="keyword">const</span> lm::helloworld &amp; msg)</span> </span>&#123; </div><div class="line">  <span class="built_in">cout</span> &lt;&lt; msg.id() &lt;&lt; <span class="built_in">endl</span>; </div><div class="line">  <span class="built_in">cout</span> &lt;&lt; msg.str() &lt;&lt; <span class="built_in">endl</span>; </div><div class="line">&#125; </div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span> </span>&#123; </div><div class="line"></div><div class="line">  lm::helloworld msg1; </div><div class="line"> </div><div class="line">  &#123; </div><div class="line">    <span class="function">fstream <span class="title">input</span><span class="params">(<span class="string">"./log"</span>, ios::in | ios::binary)</span></span>; </div><div class="line">    <span class="keyword">if</span> (!msg1.ParseFromIstream(&amp;input)) &#123; </div><div class="line">      <span class="built_in">cerr</span> &lt;&lt; <span class="string">"Failed to parse address book."</span> &lt;&lt; <span class="built_in">endl</span>; </div><div class="line">      <span class="keyword">return</span> <span class="number">-1</span>; </div><div class="line">    &#125; </div><div class="line">  &#125; </div><div class="line"> </div><div class="line">  ListMsg(msg1);</div><div class="line">  </div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后编译一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">main:write read</div><div class="line"></div><div class="line">write:writer.cpp lm.helloworld.pb.cc</div><div class="line">		 g++ -g -Wall -O0 writer.cpp lm.helloworld.pb.cc -o write -I. -L/usr/local/include -lprotobuf</div><div class="line">read:reader.cpp lm.helloworld.pb.cc</div><div class="line">		g++ -g -Wall -O0 reader.cpp lm.helloworld.pb.cc -o read -I. -L/usr/local/include -lprotobuf</div><div class="line"></div><div class="line">clean:</div><div class="line">	rm -f read write</div></pre></td></tr></table></figure></p>
+<p>如果你不知道库的具体位置, 那么可以使用<code>pkg-config --cflags --libs protobuf</code>代替后面的 <code>-I</code>等(该工具通过PKG_CONFIG_PATH环境变量指定的地址去找.pc文件, 该文件记录了ProtoBuf安装时头文件和库文件所在的目录, 但是注意, 把<code>PKG_CONFIG_PATH</code>环境变量设置正确, 例如<code>$export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/</code>)</p>
+<p>运行结果:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">merlin@remote~/test/pb_test$ ./write</div><div class="line">merlin@remote~/test/pb_test$ ./read</div><div class="line">101</div><div class="line">hello</div></pre></td></tr></table></figure></p>
+<p>总结下来, 其操作过程其实并不难(可能还要结合文档熟悉更多的API).</p>
+<h3 id="复杂案例"><a href="#复杂案例" class="headerlink" title="复杂案例"></a>复杂案例</h3><p>这个案例取自官网 <a href="https://developers.google.com/protocol-buffers/docs/cpptutorial" target="_blank" rel="external">Protocol Buffer Basics: C++</a></p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="http://mikewang.blog.51cto.com/3826268/1432136" target="_blank" rel="external">http://mikewang.blog.51cto.com/3826268/1432136</a></li>
+<li><a href="http://blog.csdn.net/caisini_vc/article/details/5599468" target="_blank" rel="external">http://blog.csdn.net/caisini_vc/article/details/5599468</a></li>
+<li><a href="http://cxshun.iteye.com/blog/1974498" target="_blank" rel="external">http://cxshun.iteye.com/blog/1974498</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/l-cn-gpb/" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/linux/l-cn-gpb/</a>  基本上读完这一篇可以直接去看doc文档了</li>
+<li><a href="http://blog.csdn.net/sheismylife/article/category/1227779" target="_blank" rel="external">http://blog.csdn.net/sheismylife/article/category/1227779</a></li>
+<li><a href="http://blog.csdn.net/hailong0715/article/details/52057873" target="_blank" rel="external">http://blog.csdn.net/hailong0715/article/details/52057873</a></li>
+<li><a href="https://developers.google.com/protocol-buffers/docs/cpptutorial" target="_blank" rel="external">https://developers.google.com/protocol-buffers/docs/cpptutorial</a></li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a href="/2017/08/23/interview-experience.html" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/08/14/debug-multi-thread.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-08-21 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>54</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/cpp/">cpp<span>15</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#优缺点"><span class="toc-article-text">优缺点</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#优点"><span class="toc-article-text">优点</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#缺点"><span class="toc-article-text">缺点</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Linux平台"><span class="toc-article-text">Linux平台</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#windows平台"><span class="toc-article-text">windows平台</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用案例"><span class="toc-article-text">使用案例</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#简单Demo"><span class="toc-article-text">简单Demo</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#复杂案例"><span class="toc-article-text">复杂案例</span></a></li></ol></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>
