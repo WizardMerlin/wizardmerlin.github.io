@@ -1,0 +1,263 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>gtest | Merlin&#39;s Blog</title>
+  <meta name="author" content="MerlinYu">
+  
+  <meta name="description" content="GoogleTest老牌用于自动化测试的框架">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="gtest"/>
+  <meta property="og:site_name" content="Merlin&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="ico">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Merlin&#39;s Blog</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> gtest</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> GoogleTest老牌用于自动化测试的框架
+		 </div> <!-- alert -->
+	  		
+
+	  <p>以前写过一个 <a href="http://www.merlinblog.site/2017/07/06/tdd.html" target="_blank" rel="external">TDD</a>, 当你的用例全部通过了测试, 你的代码写就写完了.<br>但是如果你只是一个人编码, 或者只有少数的测试用例, 那么就不会觉得一个个测试去维护的痛苦; 退一步讲, 就算一个小组的人, 所有人提交上来的代码, 都要先跑一下相关的测试用例, 才能上传, 此时就需要一个自动化的测试框架.</p>
+<p>这方面有CppUnit, Gtest, 不过Gest优势明显. 本文主要总结Gtest.</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>Google test:</p>
+<p>下面简称 gtest, 比较老牌的用于自动化继承测试的框架, 全平台支持.<br>采用成熟框架的好处是不用维护测试框架.</p>
+<p>测试框架, 可以结合CLog系统一起使用吗.</p>
+<p>使用gtest的成熟项目有:</p>
+<ul>
+<li>Chromium</li>
+<li>LLVM</li>
+<li>Protocol Buffers</li>
+<li>Open CV</li>
+</ul>
+<p>使用gtest应该不少于使用cmake的.</p>
+<p>repo地址: <a href="https://github.com/google/googletest" target="_blank" rel="external">https://github.com/google/googletest</a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><p>gtest在xUnit架构的基础上增加了很多特性:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1. Test discovery</div><div class="line">2. A rich set of assertions (including User-defined)</div><div class="line">3. Death tests</div><div class="line">4. Fatal and non-fatal failures</div><div class="line">5. value/type parameterized tests</div><div class="line">6. various options for running the tests</div><div class="line">7. XML test report generation</div></pre></td></tr></table></figure></p>
+<p>当我没有用过的时候, 我也不知道它到底在说啥, 不过用多了就好了.<br>(你可以参考一下docs目录下的相关文档)</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>下载源码, 编译安装:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ git <span class="built_in">clone</span> https://github.com/google/googletest</div><div class="line">$ cmake .</div><div class="line">$ make </div><div class="line">$ sudo make install</div></pre></td></tr></table></figure></p>
+<p>日志大致如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">Install the project...</div><div class="line">-- Install configuration: &quot;&quot;</div><div class="line">-- Installing: /usr/local/lib/libgtest.a</div><div class="line">-- Installing: /usr/local/lib/libgtest_main.a</div><div class="line">-- Installing: /usr/local/include/gtest</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-typed-test.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-death-test.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-message.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-param-test.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-test-part.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-printers.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest_pred_impl.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-param-test.h.pump</div><div class="line">-- Installing: /usr/local/include/gtest/gtest_prod.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-param-util-generated.h.pump</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-tuple.h.pump</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-internal.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-filepath.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/custom</div><div class="line">-- Installing: /usr/local/include/gtest/internal/custom/gtest-printers.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/custom/gtest.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/custom/gtest-port.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-type-util.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-linked_ptr.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-death-test-internal.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-param-util-generated.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-tuple.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-string.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-port-arch.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-param-util.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-type-util.h.pump</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-port.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-spi.h</div></pre></td></tr></table></figure></p>
+<p>主要是:<br><code>/usr/local/lib/</code> 和 <code>/usr/local/include/gtest</code></p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li>玩转Google开源C++单元测试框架Google Test系列  (不过它是window平台, 我选用的是linux平台)</li>
+<li>官方文档(docs目录): Primer.md , AdvancedGuide.md , FAQ.md</li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+
+    
+    
+    <a href="/2017/08/21/protocol-buffer.html" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2017/08/14/debug-multi-thread.html" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-08-20 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/codings/">codings<span>59</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/cpp/">cpp<span>20</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#优势"><span class="toc-article-text">优势</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 MerlinYu
+  
+     
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>
