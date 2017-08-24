@@ -124,14 +124,73 @@
 </ul>
 <p>使用gtest应该不少于使用cmake的.</p>
 <p>repo地址: <a href="https://github.com/google/googletest" target="_blank" rel="external">https://github.com/google/googletest</a></p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><p>gtest在xUnit架构的基础上增加了很多特性:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1. Test discovery</div><div class="line">2. A rich set of assertions (including User-defined)</div><div class="line">3. Death tests</div><div class="line">4. Fatal and non-fatal failures</div><div class="line">5. value/type parameterized tests</div><div class="line">6. various options for running the tests</div><div class="line">7. XML test report generation</div></pre></td></tr></table></figure></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><p>测试框架帮我们提供了 case 的管理，执行，断言集，运行参数，全局事件工作，所有的这些使得我们只需关注：于对于特定的输入，被测对象的返回是否正常. (但是编写测试用例还是我们自己做).</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p>一般的测试框架的基本架构:(下图中先忽略TestSuite)<br><img src="http://omotkhw3y.bkt.clouddn.com/test_case.jpg" alt=""></p>
+<p>如上图所示，单测框架中通常包括TestRunner, Test, TestResult, TestCase, TestSuite, TestFixture六个组件。</p>
+<ul>
+<li>TestRuner：负责驱动单元测试用例的执行，汇报测试执行的结果，从而简化测试</li>
+<li>TestFixture：以测试套件的形式提供setUp()和tearDown()方法，保证两个test case之间的执行是相互独立，互不影响的。</li>
+<li>TestResult：这个组件用于收集每个test case的执行结果</li>
+<li>Test：作为TestSuite和TestCase的父类暴露run()方法为TestRunner调用</li>
+<li>TestCase：暴露给用户的一个类，用户通过继承TestCase，编写自己的测试用例逻辑</li>
+<li>TestSuite：提供suite功能管理testCase</li>
+</ul>
+<p>正因为相似的体系结构，所以大多数单元测试框架都提供了类似的功能和使用方法。</p>
+<p>那么在单测中引入单元测试框架会带来什么好处，在现有单元测试框架下还会存在什么样不能解决的问题呢？</p>
+<h2 id="优劣势"><a href="#优劣势" class="headerlink" title="优劣势"></a>优劣势</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><p>降低编写单元测试的难度:<br>在单元测试中引入单测框架使得编写单测用例时，不需要再关注于如何驱动case的执行，如何收集结果，如何管理case集，只需要关注于如何写好单个测试用例即可；同时，在一些测试框架中通过提供丰富的断言集，公用方法，以及运行参数使得编写单个testcase的过程得到了最大的简化。</p>
+<p>gtest在xUnit架构的基础上增加了很多特性:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1. Test discovery</div><div class="line">2. A rich set of assertions (including User-defined)</div><div class="line">3. Death tests</div><div class="line">4. Fatal and non-fatal failures</div><div class="line">5. value/type parameterized tests</div><div class="line">6. various options for running the tests</div><div class="line">7. XML test report generation</div></pre></td></tr></table></figure></p>
 <p>当我没有用过的时候, 我也不知道它到底在说啥, 不过用多了就好了.<br>(你可以参考一下docs目录下的相关文档)</p>
+<h3 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h3><p>单元测试本身不能解决如何编写的问题: (反而增加了系统复杂度)<br>我在单元测试框架中写一个TestCase，与我单独写一个cpp文件在main()方法里写测试代码有什么本质却别吗？用了单元测试框架，并没有解决我在对复杂系统做单测时遇到的问题。<br>没错，对于单个case这两者从本质上说是没有区别的。单元测试框架本身并没有告诉你如何去写TestCase，在这一点上他是没有提供任何帮助的。所以对于一些复杂的场景，只用单元测试框架是有点多少显得无能为力的。</p>
+<p>适用场景有限:<br>使用单元测试框架往往适用于以下场景的测试：单个函数，一个class，或者几个功能相关class的测试，对于纯函数测试，接口级别的测试尤其适用。但是，对于一些复杂场景, 如:</p>
+<ul>
+<li>被测对象依赖复杂，甚至无法简单new出这个对象</li>
+<li>对于一些failure场景的测试</li>
+<li>被测对象中涉及多线程合作</li>
+<li>被测对象通过消息与外界交互的场景<br>(gtest只是一定程度上解决了)<br>单纯依赖单测框架是无法实现单元测试的，而从某种意义上来说，这些场景反而是测试中的重点。以分布式系统的测试为例，class 与 function级别的单元测试对整个系统的帮助不大，当然，这种单元测试对单个程序的质量有帮助；分布式系统测试的要点是测试进程间的交互：一个进程收到客户请求，该如何处理，然后转发给其他进程；收到响应之后，又修改并应答客户；同时分布式系统测试中通常更关注一些异常路径的测试，这些场景才是测试中的重点，也是难点所在。(Mock方法的引入通常能帮助我们解决以上场景中遇到的难题)</li>
+</ul>
+<h2 id="Mock"><a href="#Mock" class="headerlink" title="Mock"></a>Mock</h2><p>Mock在测试中的语义就是虚假, 模拟的意思.</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Mock对象, 或者Mock实现, 或者Mock方法<br>这个虚拟的对象就是mock对象. mock对象就是真实对象在调试期间的代替品.<br>在被测试代码中只是通过接口来引用对象, 所以它不知道这个引用的对象是真实对象, 还是mock对象.</p>
+<p>使用MockObject进行测试，主要是用来模拟那些在应用中不容易构造（如HttpServletRequest必须在Servlet容器中才能构造出来）或者比较复杂的对象（如JDBC中的ResultSet对象）从而使测试顺利进行的工具。 一个具体的例子是:<br>UserServiceImpl保留一个UserDao的引用, 但是UserDao目前没有实现, 但是现在测试service的功能又需要UserDao对象, 那么此时就可以用一个Mock的UserDao对象来替代.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">ublic <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImplTest</span> </span>&#123;  </div><div class="line">        <span class="meta">@Test</span>  </div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testQuery</span><span class="params">()</span> </span>&#123;  </div><div class="line">            User expectedUser = <span class="keyword">new</span> User();  </div><div class="line">            user.setId(“<span class="number">1001</span>”);  </div><div class="line">            UserDao mock  = EasyMock.createMock(UserDao.class);<span class="comment">//创建Mock对象  </span></div><div class="line">            Easymock.expect(mock.getById(<span class="string">"1001"</span>)).andReturn(expectedUser);<span class="comment">//录制Mock对象预期行为  </span></div><div class="line">            Easymock.replay(mock);<span class="comment">//重放Mock对象，测试时以录制的对象预期行为代替真实对象的行为  </span></div><div class="line">  </div><div class="line">            UserServiceImpl  service = <span class="keyword">new</span> UserServiceImpl();  </div><div class="line">            service.setUserDao(mock);  </div><div class="line">            user user = service.query(<span class="string">"1001"</span>);<span class="comment">//调用测试方法  </span></div><div class="line">            assertEquals(expectedUser, user); <span class="comment">//断言测试结果   </span></div><div class="line">            Easymock.verify(mock);<span class="comment">//验证Mock对象被调用  </span></div><div class="line">        &#125;  </div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>简而言之就是, 在缺少真实对象但又测试另外的代码又需要该实例对象的时候, 就拿Mock对象替代. </p>
+<h3 id="优势-1"><a href="#优势-1" class="headerlink" title="优势"></a>优势</h3><p>引入Mock最大的优势在于: Mock的行为固定, 它确保当你访问该Mock的某个方法时总是能够获得一个没有任何逻辑的直接就返回的预期结果(杜绝了其他模块的影响).</p>
+<p>Mock Object的使用通常会带来以下一些好处:</p>
+<ul>
+<li>隔绝其他模块出错引起本模块的测试错误</li>
+<li>隔绝其他模块的开发状态, 只要定义好接口, 不用管他们开发有没有完成</li>
+<li>一些速度较慢的操作, 可以用Mock Object代替, 快速返回</li>
+</ul>
+<p>对于分布式系统的测试，使用Mock Object会有另外两项很重要的收益:</p>
+<ul>
+<li>通过Mock Object可以将一些分布式测试转化为本地的测试</li>
+<li>将Mock用于压力测试，可以解决测试集群无法模拟线上集群大规模下的压力</li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>在使用Mock的过程中, 发现Mock是有一些通用性的, 对于一些应用场景, 是非常适合使用Mock的:</p>
+<ul>
+<li>真实对象具有不可确定的行为(产生不可预测的结果，如股票的行情)—而我们当前需要确定性</li>
+<li>真实对象很难被创建(比如具体的web容器)</li>
+<li>真实对象的某些行为很难触发(比如网络错误)</li>
+<li>真实情况令程序的运行速度很慢</li>
+<li>真实对象有用户界面</li>
+<li>测试需要询问真实对象它是如何被调用的(比如测试可能需要验证某个回调函数是否被调用了)</li>
+<li>真实对象实际上并不存在(当需要和其他开发小组，或者新的硬件系统打交道的时候，这是一个普遍的问题)</li>
+</ul>
+<p>就是一些需要条件才能达成的场景:</p>
+<ul>
+<li>一些比较难构造的Object：这类Object通常有很多依赖，在单元测试中构造出这样类通常花费的成本太大</li>
+<li>执行操作的时间较长Object：有一些Object的操作费时，而被测对象依赖于这一个操作的执行结果，例如大文件写操作，数据的更新等</li>
+<li>异常逻辑：一些异常的逻辑往往在正常测试中是很难触发的，通过Mock可以人为的控制触发异常逻辑</li>
+</ul>
+<p>在一些压力测试的场景下，也不得不使用Mock，例如在分布式系统测试中，通常需要测试一些单点（如namenode，jobtracker）在压力场景下的工作是否正常。而通常测试集群在正常逻辑下无法提供足够的压力（主要原因是受限于机器数量），这时候就需要应用Mock去满足。</p>
+<p>目前，在Java阵营中主要的Mock测试工具有JMock，MockCreator，Mockrunner，EasyMock，MockMaker等，Cpp中常用的CppUnit, Gtest(google  test中集成了 <code>Google mock</code>)等.</p>
+<p>关于Mock还有很多内容可以说, 具体请参考别的资料.</p>
+<p>google mock : <a href="https://github.com/google/googletest/blob/master/googlemock/README.md" target="_blank" rel="external">https://github.com/google/googletest/blob/master/googlemock/README.md</a></p>
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>下载源码, 编译安装:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ git <span class="built_in">clone</span> https://github.com/google/googletest</div><div class="line">$ cmake .</div><div class="line">$ make </div><div class="line">$ sudo make install</div></pre></td></tr></table></figure></p>
 <p>日志大致如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">Install the project...</div><div class="line">-- Install configuration: &quot;&quot;</div><div class="line">-- Installing: /usr/local/lib/libgtest.a</div><div class="line">-- Installing: /usr/local/lib/libgtest_main.a</div><div class="line">-- Installing: /usr/local/include/gtest</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-typed-test.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-death-test.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-message.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-param-test.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-test-part.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-printers.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest_pred_impl.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-param-test.h.pump</div><div class="line">-- Installing: /usr/local/include/gtest/gtest_prod.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-param-util-generated.h.pump</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-tuple.h.pump</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-internal.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-filepath.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/custom</div><div class="line">-- Installing: /usr/local/include/gtest/internal/custom/gtest-printers.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/custom/gtest.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/custom/gtest-port.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-type-util.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-linked_ptr.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-death-test-internal.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-param-util-generated.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-tuple.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-string.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-port-arch.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-param-util.h</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-type-util.h.pump</div><div class="line">-- Installing: /usr/local/include/gtest/internal/gtest-port.h</div><div class="line">-- Installing: /usr/local/include/gtest/gtest-spi.h</div></pre></td></tr></table></figure></p>
 <p>主要是:<br><code>/usr/local/lib/</code> 和 <code>/usr/local/include/gtest</code></p>
 <h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
 <li>玩转Google开源C++单元测试框架Google Test系列  (不过它是window平台, 我选用的是linux平台)</li>
 <li>官方文档(docs目录): Primer.md , AdvancedGuide.md , FAQ.md</li>
+<li><a href="http://baidutech.blog.51cto.com/4114344/743740/" target="_blank" rel="external">http://baidutech.blog.51cto.com/4114344/743740/</a></li>
 </ol>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
@@ -208,7 +267,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#优势"><span class="toc-article-text">优势</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#作用"><span class="toc-article-text">作用</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#架构"><span class="toc-article-text">架构</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#优劣势"><span class="toc-article-text">优劣势</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#优势"><span class="toc-article-text">优势</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#劣势"><span class="toc-article-text">劣势</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Mock"><span class="toc-article-text">Mock</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#简介"><span class="toc-article-text">简介</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#优势-1"><span class="toc-article-text">优势</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#应用场景"><span class="toc-article-text">应用场景</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
