@@ -122,7 +122,7 @@
 <li>要求维护一套完备的测试用例(集)</li>
 </ul>
 <p>大概的流程图如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/tdd.jpg" alt="tdd"></p>
-<p>简单来说, 就是不可运行/可运行/重构——这正是测试驱动开发的口号.</p>
+<p>简单来说, 就是 不可运行-可运行-重构, 或者<code>红灯 -&gt; 绿灯 -&gt; 重构</code>, 这正是测试驱动开发的口号.</p>
 <p>通过测试来推动整个开发的进行, 其中编码的时候, 只编写能通过当前测试的功能代码. 下面是其优点综述:</p>
 <ul>
 <li>TDD根据客户需求编写测试用例，对功能的过程和接口都进行了设计，而且这种从使用者角度对代码进行的设计通常更符合后期开发的需求。因为关注用户反馈，可以及时响应需求变更，同时因为从使用者角度出发的简单设计，也可以更快地适应变化。(从使用者角度)</li>
@@ -138,7 +138,15 @@
 <p>盖房子的时候，工人师傅砌墙，会先用桩子拉上线，以使砖能够垒的笔直，因为垒砖的时候都是以这根线为基准的。TDD就像这样，先写测试代码，就像工人师傅先用桩子拉上线，然后编码的时候以此为基准，<code>只编写符合这个测试的功能代码</code>。而一个新手或菜鸟级的小师傅，却可能不知道拉线，而是直接把砖往上垒，垒了一些之后再看是否笔直，这时候可能会用一根线，量一下砌好的墙是否笔直，如果不直再进行校正，敲敲打打。使用传统的软件开发过程就像这样，我们先编码，编码完成之后才写测试程序，以此检验已写的代码是否正确，如果有错误再一点点修改。</p>
 </blockquote>
 <p>你是希望先砌墙再拉线，还是希望先拉线再砌墙呢？如果你喜欢前者，那就算了，而如果你喜欢后者，那就转入TDD阵营吧！</p>
-<h2 id="入门实践"><a href="#入门实践" class="headerlink" title="入门实践"></a>入门实践</h2><p>理论扯再多, 也不敌来一些实践更有效果. 结合Gtest, 尝试一下 TDD 开发的妙处和代价.</p>
+<p>补充:<br>有些人认为TDD入门难, 原因是:在还没项目代码之前写测试用例，那就是等于我要凭空想象那些个抽象又晦涩难懂的功能点，还得要在心中勾勒出它们的轮廓以及细节. 但是问题是, 所有的用例都是根据需求设计而来的, 也就是说,前期设计还是要有的, 只是代码实现这个环节, 采用了测试用例优先的原则.</p>
+<h2 id="相关技术"><a href="#相关技术" class="headerlink" title="相关技术"></a>相关技术</h2><p>TDD开发中, 根据业务的不同, 编程语言的不同, 所使用的相关技术可能也会有一些不同, 但是有几样是相同的.</p>
+<p>工作流:<br>首先以一个未能通过的测试开始，随后编写足以通过该测试的代码，然后再重构代码。当然我们都不愿意看到不能通过的测试CASE，当你再继续编写项目代码，让原本不能通过的测试CASE通过的时候，你会感觉心里有一丝丝的惬意，然后再将代码优化重构，瞬间又有了些成就感。抿一口水，工作就这么快乐的完成了。</p>
+<p>模拟对象:<br>先写测试用例, 给出接口调用流程, 那么在这里伪对象是必须的(特别是在模块间有依赖的时候, 比如分层模型); 根据具体的编程语言, 可能出现依赖注入框(DI/IOC)与模拟框架(Mock) 等技术.</p>
+<p>Mock对象测试框架:<br>合作任务量一旦比较大的时候, 可能会频繁的需要模拟对象, 这个时候, 怎么办? 手工创建? 每个对象内部需要不一样, 哪有什么通用格式创建伪对象? 更麻烦的是伪对象之间有依赖关系怎么办?对象内部状态中没保存,怎么维护?<br>这个时候, 显然你需要一个框架, 单元测试框架, Mock框架.</p>
+<p>单元&amp;回归测试框架:<br>测试用例跑过了, 不代表代码就写好了; 有时候代码质量不高, 肯定会被上级要求重构的, 这个时候, 好不容易重构好了, 又担心引入了新问题, 这个时候又要重新跑测试用例, 并且不仅仅是跑当前的, 以前的要一起跑(整体测试), 这个时候就需要一个回归测试框架.</p>
+<p>注: 有时候, 例如 Gtest 测试工具(框架)就包含了单元测试, 回归测试, Mock对象等功能.</p>
+<h2 id="入门实践"><a href="#入门实践" class="headerlink" title="入门实践"></a>入门实践</h2><p>理论扯再多, 也不敌来一些实践更有效果. 结合Gtest, 尝试一下 TDD 开发的妙处和代价.<br>TDD要保证代码刚刚好适量, 仅为当前测试用例编写代码, 也就是说, 先给出简明扼要的对象调用接口, 具体的实现放在后面, 等实现写出来再测试一下. 这样一来即使相互依赖的模块也不必再等对方完成之后, 在开始自己的模块开发, 因为可以直接在测试用例中使用Mock对象了(当然项目组成员之间使用IOC或者其他解耦合技术也是可以的).</p>
+<p>本案例, 需要你有Google Test, Google Mock基础.</p>
 <h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
 <li><a href="">软件工程-实践者的研究方法 7e</a>  第五部分, 有一小节专门讲这个</li>
 <li><a href="http://www.agiledata.org/essays/tdd.html" target="_blank" rel="external">Introduction to TDD</a> 作为敏捷的一部分讲的, 排版很糟糕(写的很乱)</li>
@@ -220,7 +228,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#快速概览"><span class="toc-article-text">快速概览</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#入门实践"><span class="toc-article-text">入门实践</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#快速概览"><span class="toc-article-text">快速概览</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#相关技术"><span class="toc-article-text">相关技术</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#入门实践"><span class="toc-article-text">入门实践</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
