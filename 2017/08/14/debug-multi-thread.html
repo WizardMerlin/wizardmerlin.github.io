@@ -122,7 +122,33 @@
 <li>Observer Mode:    GDB does not alter program behavior</li>
 </ul>
 <p>其他gdb的调试问题, 可以参考我的文章 <a href="http://www.merlinblog.site/2017/06/24/three-major-tools-of-linux.html" target="_blank" rel="external">linux下3大件儿</a></p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="调试多线程"><a href="#调试多线程" class="headerlink" title="调试多线程"></a>调试多线程</h2><p>如果你程序是多线程的话，你可以定义你的断点是否在所有的线程上，或是在某个特定的线程。<br>GDB很容易帮你完成这一工作:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">break &lt;linespec&gt; thread &lt;threadno&gt;  </div><div class="line">break &lt;linespec&gt; thread &lt;threadno&gt; if ...</div></pre></td></tr></table></figure></p>
+<p>说明:</p>
+<ul>
+<li>linespec指定了断点设置在的源程序的行号。</li>
+<li>threadno指定了线程的ID，注意，这个ID是GDB分配的，你可以通过“info threads”命令来查看正在运行程序中的线程信息。如果你不指定thread <threadno>则表示你的断点设在所有线程上面。</threadno></li>
+<li>if表示你还可以为某线程指定断点条件, 例如: (gdb) break frik.c:13 thread 28 if bartab &gt; lim</li>
+</ul>
+<p>当你的程序被GDB停住时，所有的运行线程都会被停住。这方便你你查看运行程序的总体情况。而在你恢复程序运行时，所有的线程也会被恢复运行(哪怕主进程是被在单步调试)。</p>
+<p>thread命令介绍:</p>
+<ul>
+<li>info threads   显示当前可调试的所有线程，GDB为其分配的ID，后面操作线程的时候会用到这个ID (前面有*的是当前调试的线程)</li>
+<li>thread ID   切换当前调试的线程为指定ID的线程</li>
+<li>thread apply ID1 ID2 command   让一个或者多个线程执行GDB命令command</li>
+<li>thread apply all command   让所有被调试线程执行GDB命令command</li>
+<li>set scheduler-locking off|on|step 估计是实际使用过多线程调试的人都可以发现，在使用step或者continue命令调试当前被调试线程的时候，其他线程也是同时执行的，怎么只让被调试程序执行呢？通过这个命令就可以实现这个需求。<ul>
+<li>off 不锁定任何线程，也就是所有线程都执行，这是默认值</li>
+<li>on 只有当前被调试程序会执行</li>
+<li>step 在单步的时候，除了next过一个函数的情况以外，只有当前线程会执行<br>*</li>
+</ul>
+</li>
+</ul>
+<p>注意next其实也是借助break和continue实现的行为.</p>
+<p>(GDB关于线程的实现思路要结合源码看, 需要一定技术水平, 我就不说了)</p>
+<p>最后介绍一下我最近遇见的一个多线程调试和解决:</p>
+<p>调试多线程程序不正常, info threads看不到多线程的信息.  用命令 <code>maintenance print target-stack</code> 看一下target的装载情况, 发现target “multi-thread”没有被装载, 用gdb对gdb程序调试发现在函数 <code>check_for_thread_db</code> 在调用 libthread_db中的函数 “td_ta_new” 的时候, 返回了TD_NOLIBTHREAD, 所以没有装载target “multi-thread”.<br>也就是说, libpthread可能有问题, 检查一下环境发现 libpthread是被strip过的(影响了td_ta_new函数对于libpthread符号信息的获取). 改换一个包含富含信息的(比如debug版本的)libpthread库到lib目录下, 问题解决了.</p>
+<h2 id="调试多进程"><a href="#调试多进程" class="headerlink" title="调试多进程"></a>调试多进程</h2><p>最先想到的就是 attach. attach: 用gdb调试一个正在运行中的进程 <code>gdb &lt;program&gt; PID</code> .</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -197,7 +223,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#调试多线程"><span class="toc-article-text">调试多线程</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#调试多进程"><span class="toc-article-text">调试多进程</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
 		</div>
 	
 	</div>
