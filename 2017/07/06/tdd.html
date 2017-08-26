@@ -108,23 +108,29 @@
 		 </div> <!-- alert -->
 	  		
 
-	  <p>测试驱动开发模式.</p>
-<p><todo><br>单元测试的编写也不是一件容易的事情，除非使用TDD方式，否则编写出容易测试的代码不但对开发人员的设计编码要求很高，而且代码中的各种依赖也常常为单元测试带来无穷无尽的障碍。<br><a id="more"></a></todo></p>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>TDD</p>
-<p>测试驱动是一种软件开发模式:</p>
-<ol>
+	  <p>单元测试的编写也不是一件容易的事情, 除非使用 TDD 方式, 否则编写出容易测试的代码不但对开发人员的设计编码要求很高, 而且代码中的各种依赖也常常为单元测试带来无穷无尽的障碍.</p>
+<p>测试驱动开发模式, 这并不是一种新技术, 而是一个趋势, 它强调生成源代码之前测试用例的设计(敏捷过程模型也这样强调).</p>
+<p>本文详细探索一下TDD模型.</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>TDD的流程非常简单, 每次在引入代码之前, 先设计测试用例, 然后写下代码顺应测试用例; 之后每次一小段的增量开发, 直到构建完成. 每次发现测试失败, 那么以前相关的旧代码都要在回归测试中重新测试(避免新代码在旧代码中产生副作用).</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="快速概览"><a href="#快速概览" class="headerlink" title="快速概览"></a>快速概览</h2><p>测试驱动是一种软件开发模式:</p>
+<ul>
 <li>首先 编写测试用例</li>
 <li>除非存在相关的测试用例, 否则不编写代码</li>
 <li>由测试内容决定编写代码内容</li>
-<li>要求维护一套完备的测试用例</li>
-</ol>
+<li>要求维护一套完备的测试用例(集)</li>
+</ul>
+<p>大概的流程图如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/tdd.jpg" alt="tdd"></p>
 <p>这些步骤是一个循环的过程:</p>
 <ul>
 <li>先写失败的测试用例</li>
 <li>让测试用例通过</li>
 <li>重构</li>
 </ul>
-<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="">软件工程-实践者的研究方法 7e</a></li>
+</ol>
+<hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -199,7 +205,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#快速概览"><span class="toc-article-text">快速概览</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
