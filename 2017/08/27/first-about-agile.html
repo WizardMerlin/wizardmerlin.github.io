@@ -112,7 +112,48 @@
 <pre><code>哦, 敏捷已经是趋势了.
 </code></pre><p>开始认真接受 <code>Agile</code> .</p>
 <a id="more"></a>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>我亲身实践的敏捷, 印象比较深刻的有两部分内容:</p>
+<ul>
+<li>站会的反馈</li>
+<li>(配合SCM)持续集成</li>
+<li>测试驱动</li>
+</ul>
+<p>总结起来, 我所重视的是: <code>参与</code>, <code>协作</code>, <code>持续交付</code> (每个阶段都是可交付的).</p>
+<p>本文先说敏捷, 之后再说我的个人体会.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>敏捷到底是一种软件开发方法, 还是一种技术思想? 到现在我的觉得, 这些已经不再重要, 重要的是, 我们通过 Agile 能够获得什么, 而不是我最初跟风的, 尝试敏捷.</p>
+<h2 id="敏捷宣言"><a href="#敏捷宣言" class="headerlink" title="敏捷宣言"></a>敏捷宣言</h2><p>主要的内容就这么几句话:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Individuals and interactions over processes and tools</div><div class="line">Working software over comprehensive documentation</div><div class="line">Customer collaboration over contract negotiation</div><div class="line">Responding to change over following a plan</div></pre></td></tr></table></figure></p>
+<p>如下图:<br><img src="http://omotkhw3y.bkt.clouddn.com/agile.jpg" alt="agile"></p>
+<p>看得出, 宣言其实是很空洞的, 所以又出现了下面的 <code>12项原则</code> .</p>
+<h2 id="12项原则"><a href="#12项原则" class="headerlink" title="12项原则"></a>12项原则</h2><p><img src="http://omotkhw3y.bkt.clouddn.com/agile_principle" alt="agile"></p>
+<p>从中可以提取很多关键思想: <code>不断交付</code>, <code>拥抱变化</code>, <code>合作</code>, <code>可工作的软件</code>, <code>简洁为本</code>, <code>定期反思</code> …</p>
+<h2 id="Scrum"><a href="#Scrum" class="headerlink" title="Scrum"></a>Scrum</h2><p>不管一个产品, 还是一个项目, 整个团队的协作, 参与是最重要的. 所以比起其他一些(重视开发流程, 过程的)方法, Scrum更加注重协作&amp;参与(当然也包括交付, 每一个过程都是可交付的).</p>
+<p>是的, 我这里多次强调了 <code>参与</code> .</p>
+<p>关于这部分理论, 请找专业的资料参考吧, 不要去网上看一些不太专业的转载.</p>
+<h2 id="站会反馈"><a href="#站会反馈" class="headerlink" title="站会反馈"></a>站会反馈</h2><p>每天早上9:30, 会有一个站会, 内容是围绕看板任务, 大家各自汇报一下. 说实话, 效果很差. 因为除非是你的模块, 否则大家对你的进度, 遇到的困难, 没有太多的体会, 也很难给出意见. (何况有时候我都是单独一个项目, 单枪匹马).</p>
+<p>但是在这里, 我却有一些很深刻的体会, 大体可以归纳为: 我们认为重要的, 用户不一定觉得重要.</p>
+<p>这么说呢? 具体解释:</p>
+<p>好比我的模块, 是否需要一个数据库View(视图), 一个Contoller调度模块, 是否要给出应用界面, 表格是竖着展开还是横向排列, 你的意见, 和最终用户的意见可能相差很远, 甚至你觉得重要的, 用户完全不care, 不关注的.</p>
+<p>所以站会反馈, 最好能让用户, 客户参与到团队的开发中; 这里增加一点儿成本, 却省下了后期需求变更, 调整的代价. 好处不言自明.</p>
+<p>也就是宣言中所说的 <code>Customer collaboration over contract negotiation</code>, 客户协作胜过合同谈判.</p>
+<h2 id="持续集成"><a href="#持续集成" class="headerlink" title="持续集成"></a>持续集成</h2><p>在持续集成方面, 老东家 <code>ZTE</code> 可以说, 做的非常好; 因为面对的北美项目比较多, 所以在集成测试做不好, 不仅会加大人力投入, 还会降低开发效率. 但是就像自动测试一样, 是否应该持续集成关键在于投资回报率和缓解风险. 我想这一点, 不必多解释, 请看下面的要点.</p>
+<p>持续集成的要点:</p>
+<ul>
+<li>统一的代码库</li>
+<li>自动构建</li>
+<li>自动测试</li>
+<li>每个人每天都要向代码库主干提交代码</li>
+<li>每次代码递交后都会在持续集成服务器上触发一次构建</li>
+<li>保证快速构建</li>
+<li>模拟生产环境的自动测试</li>
+<li>每个人都可以很容易的获取最新可执行的应用程序</li>
+<li>每个人都清楚正在发生的状况</li>
+<li>自动化的部署</li>
+</ul>
+<p>个人的经验是:<br>以前我的代码入库前, 至少经历这样的步骤:<br>代码编写完毕, 本地验证通过(包括编译和功能验证), 然后在本地集成(可能是具体的开发板,比如手机), 之后上传代码, 在容器(生产环境)中测试, 而且分两次, 早上和下午(赶上一次就可以了), 之后通过了, 才合入dev分支, 经过几个版本的测试, 没有问题了, 才最终合入master分支. 中间经过了N次自动化测试, 集成, 而且你的提交根本不干预集成.</p>
+<p>这里面相关的技术也很多, Jekins, Gerrit, repo, Docker等.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>关心团队协作, 用心做产品.</p>
+<p>希望敏捷的路越走越顺吧.</p>
+<hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -186,7 +227,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#敏捷宣言"><span class="toc-article-text">敏捷宣言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#12项原则"><span class="toc-article-text">12项原则</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Scrum"><span class="toc-article-text">Scrum</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#站会反馈"><span class="toc-article-text">站会反馈</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#持续集成"><span class="toc-article-text">持续集成</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
 		</div>
 	
 	</div>
