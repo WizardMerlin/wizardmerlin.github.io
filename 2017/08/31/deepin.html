@@ -108,13 +108,28 @@
 		 </div> <!-- alert -->
 	  		
 
-	  <p>以前的老系统, 由于系统太老, 有时候安装软件真的非常不适合. 我个人开发一直使用linux(Ubuntu64), 主要用terminal(emacs -nw). 所以要换一个稳定, 新一点儿的系统; 考虑了ubuntu麒麟, 16, 17, 不得不说, 一点儿也不好用, 支持的非常差. 原版的ubuntu也是, 系统有时动不动就内部错误.<br>正好 <code>武汉深之度</code> 开发的 <code>deepin</code> 近来大家伙好评不断, 所以, 我就来试试. </p>
+	  <p>以前的老系统, 由于系统太老, 有时候安装软件真的非常不适合. 我个人开发一直使用linux(Ubuntu64), 主要用terminal(emacs -nw). 所以要换一个稳定, 新一点儿的系统; 考虑了ubuntu麒麟, 16, 17, 不得不说, 一点儿也不好用, 支持的非常差. 原版的ubuntu也是, 系统有时动不动就内部错误(Ubuntu可能会突然告诉你已经不提供软件更新了, 请升级到17.04; 然后你升级的时候又引来内部错误).<br>正好 <code>武汉深之度</code> 开发的 <code>deepin</code> 近来大家伙好评不断, 所以, 我就来试试. </p>
 <p>趁此机会, 把原来的所有开发环境切换到 deepin (老的ubuntu仅用于发布博客).<br>(如果有机会, 以后也想为它贡献代码)</p>
 <a id="more"></a>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>为什么换deepin? 原系统 和 deepin对比如下, 不多解释了.</p>
 <p><img src="http://omotkhw3y.bkt.clouddn.com/deepin1.jpg" alt=""></p>
-<p>(好吧,还是说一下,它的这个terminal真的是太棒了)</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<p>(好吧,还是说一下,它的这个terminal真的是太棒了;后期发现和emacs有些键可能冲突, 自己改以下就好了)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>这里我装的是虚拟机.</p>
+<p>电脑的原配操作系统win10专业版, 所以一般不改变, 主要工作环境全部放在虚拟机里面, 一来编程对机器要求不是太高, 而来虚拟机文件也方便在电脑间移植.</p>
+<p>虚拟机里安装deepin很简单: 原来怎么安装ubuntu_amd64, 这里就怎么装deepin, 并且操作习惯也不用改, 和debain系列一致.</p>
+<p>安装完, 先升级一下系统 <code>sudo apt-get dist-upgrade</code> 或者可能也需要 <code>sudo apt-get update</code> 和 <code>sudo apt-get upgrade</code>.</p>
+<p>下面开始安装主要工作软件以及环境配置.</p>
+<p>–</p>
+<h2 id="emacs"><a href="#emacs" class="headerlink" title="emacs"></a>emacs</h2><p>最先安装的就是emacs, 不然后面很捉急.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install emacs25</div><div class="line"></div><div class="line"><span class="comment">#安装完毕之后</span></div><div class="line">$ emacs --version</div><div class="line">GNU Emacs 25.1.1</div><div class="line">Copyright (C) 2016 Free Software Foundation, Inc.</div><div class="line">GNU Emacs comes with ABSOLUTELY NO WARRANTY.</div><div class="line">You may redistribute copies of GNU Emacs</div><div class="line">under the terms of the GNU General Public License.</div><div class="line">For more information about these matters, see the file named COPYING.</div></pre></td></tr></table></figure>
+<p>不过我使用的时候, 一般都是不带界面的emacs, 习惯了; 所以去加一个alias.</p>
+<p>现在<code>.bashrc</code>结尾面添加一个语句(<code>$ nano .bashrc</code>)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">if [ -f ~/.merlin_bash ]; then</div><div class="line">    . ~/.merlin_bash</div><div class="line">fi</div></pre></td></tr></table></figure>
+<p>保存之后建立一个<code>.merlin_bash</code>文件:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># here we confiure some alias and environment info </span></div><div class="line"><span class="comment"># 1. alias</span></div><div class="line"><span class="comment"># 2. environmen path</span></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># my alias</span></div><div class="line"><span class="built_in">alias</span> ll=<span class="string">'ls -l'</span></div><div class="line"><span class="built_in">alias</span> la=<span class="string">'ls -A'</span></div><div class="line"><span class="built_in">alias</span> l=<span class="string">'ls -CF'</span></div><div class="line"></div><div class="line"><span class="built_in">alias</span> em=<span class="string">'emacs -nw'</span></div></pre></td></tr></table></figure></p>
+<p>(重新打开以下终端或者source .bashrc)<br>现在可以使用emacs了, 还不错哦.</p>
+<p>关于emacs的配置, 请看我的另外一篇 <a href="">文章</a>.</p>
+<p>如果你配置<code>emacs</code>, 基本呵呵, 不配置除非你是神(要求你水平非常高), 不然很难用的顺手.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -125,7 +140,8 @@
 
     
     
-    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
+    <a href="/2017/08/31/my-emacs.html" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
@@ -164,7 +180,7 @@
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/codings/">codings<span>61</span></a></li>
+    <li><a href="/categories/codings/">codings<span>62</span></a></li>
   </li>
 
     </ul>
@@ -177,7 +193,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/linux/">linux<span>10</span></a></li>
+  <li><a href="/tags/linux/">linux<span>11</span></a></li>
     </ul>
 	</div>
 		
@@ -188,7 +204,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#emacs"><span class="toc-article-text">emacs</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
 		</div>
 	
 	</div>
