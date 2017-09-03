@@ -108,14 +108,14 @@
 		 </div> <!-- alert -->
 	  		
 
-	  <p>有同行老早就在实践这个库了.<br>毫无疑问, 本文是继 protobuffer 之后, 又要花大力气讲解的一个(FB的)库(而且绝对是值得你花一个晚上自习看看的库). 不过可惜的是, 实际开发中它并不如pb应用广泛, 可能很大一个原因是因为太重了, 而且代码还依赖了外部库boost, libevent等, 相比之下, RESTful的做法就会简单很多.</p>
-<p>本篇也作为跨语言编程实践的最后一篇, 后期可能会有更新.<br>(我不得不说, 花了很多时间再踩开源的坑…最终结论, 于开源来说, Thrift可能不是最好的选择)<br><a id="more"></a></p>
+	  <p>有同行老早就在实践这个库了.<br>毫无疑问, 本文是继 protobuffer 之后, 又要花大力气讲解的一个(FB的)库(而且绝对是值得你花一个晚上自习看看的库). 不过可惜的是, 实际开发中它并不如pb应用广泛, 可能很大一个原因是因为太重了, 而且代码还依赖了外部库boost, libevent等, 相比之下, RESTful的做法就会简单很多.(我不得不说, 花了很多时间在踩开源的坑…最终结论, 于开源来说, Thrift可能不是最好的选择)</p>
+<p>本篇也作为跨语言编程实践的最后一篇, 后期可能会有更新.<br><a id="more"></a></p>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>From Wikipedia, the free encyclopedia:</p>
 <blockquote>
 <p>Thrift is an interface definition language and binary communication protocol that is used to define and create services for numerous languages.</p>
 </blockquote>
 <p>wiki上的一句话概括了: 用于使用接口定义语言和二进制通信协议定义并创建跨语言服务的框架.(通信格式是二进制, 和pb一样)</p>
-<p>实际上, 谈thrift更多的也是从服务架构, 传输, RPC上说它的作用, 简单的了解可以说它如何构建服务, 深入的可以分析一下它的rpc调用机制. 总之, 你不仅可以了解它的序列化机制, c-s服务模型, 传输体系, 还能学习它内部代码生成引擎.</p>
+<p>实际上, 谈thrift更多的也是从服务架构, 传输, RPC上说它的作用(可以简单把RPC理解成非同一进程调用, 非异步网络情况下的阻塞调用), 简单的了解可以说它如何构建服务, 深入的可以分析一下它的rpc调用机制. 总之, 你不仅可以了解它的序列化机制, c-s服务模型, 传输体系, 还能学习它内部代码生成引擎. (看样子是应该不支持协程的)</p>
 <p>(有时间可以学习一下它的源码)</p>
 <h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>下面记录在Ubuntu64上进行编译安装的过程, 我不得不说, 编译安装是个很坑爹的过程, 所有我接触过的开源产品里面, thrift做的支持最差了.<br>安装绝对没有那么顺利, 上述任何过程出错, 请根据相关提示拍错, 下面是我遇到的:</p>
 <p>首先确保你的环境里面安装了 libssl-dev, libtool, flex, bison(即yacc), pkg-config, boost和libevent(a minimal RPC framework), 之后再去安装thrift. 下面是一个详细记录.</p>
@@ -170,7 +170,8 @@
 <h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p>本段内容是对 <a href="https://en.wikipedia.org/wiki/Apache_Thrift" target="_blank" rel="external">thrift-wiki</a> 架构部分的剖析.</p>
 <p>总体的架构图如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/Apache_Thrift_architecture.png" alt="架构"></p>
 <p>可以看到, thrift实际跨了两层: 应用层和传输层; 也就是我们再网络编程中最长需要打交道的. 并且<code>read/write</code>以下的部分, 即TProtocol, TTransport属于thrift框架的传输体系, 如果不是研究源码, 可以暂时不关注(使用的时候具体选择以下使用哪种类型的传输协议). 我们真正需要处理的也就是<code>Input code</code>部分和<code>Service Client</code>.</p>
-<p>实际上<code>TProtocol</code>定义了传输协议规范, <code>TTransport</code>定义了传输数据标准. </p>
+<p>实际上<code>TProtocol</code>定义了传输协议规范, <code>TTransport</code>定义了传输数据标准(以及服务器类型, 当然服务器类型不仅仅包含IO类型). </p>
+<p>(有些博文非要把它的那个颜色认为是不同的层, 我也就无话可说了)</p>
 <h3 id="协议规范"><a href="#协议规范" class="headerlink" title="协议规范"></a>协议规范</h3><p>Thrift可以让用户选择客户端与服务端之间传输通信协议的类别，在传输协议上总体划分为文本(text)和二进制(binary)传输协议，为节约带宽，提高传输效率，一般情况下使用二进制类型的传输协议为多数，有时还会使用基于文本类型的协议，这需要根据项目/产品中的实际需求.<br>常用协议有以下几种: </p>
 <ul>
 <li>BinaryProtocol: 二进制编码格式进行数据传输使</li>
@@ -200,10 +201,24 @@
 <li>TThreadPoolServer : 多线程池服务器端使用标准的阻塞式 I/O</li>
 <li>TNonblockingServer : 多线程非阻塞IO</li>
 </ul>
+<p>当然还有其他类型的:</p>
+<h2 id="详细说明"><a href="#详细说明" class="headerlink" title="详细说明"></a>详细说明</h2><p>这一部分是阅读其官网文档的总结.</p>
 <h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><p>框架本身有很多精华, 我抽取其中我熟悉的进行分析.</p>
+<h3 id="调用流程"><a href="#调用流程" class="headerlink" title="调用流程"></a>调用流程</h3><p>这个要结合源码起来看, 不同源码版本可能不一样.</p>
+<p>服务端主要流程如下:</p>
+<blockquote>
+<p>TThreadPoolServer 的 serve() 方法后，server 进入阻塞监听状态，其阻塞在 TServerSocket 的 accept()方法上。当接收到来自客户端的消息后，服务器发起一个新线程处理这个消息请求，原线程再次进入阻塞状态。在新线程中，服务器通过 TBinaryProtocol 协议读取消息内容，调用 HelloServiceImpl 的 helloVoid() 方法，并将结果写入 helloVoid_result 中传回客户端。</p>
+</blockquote>
+<p>过程如下图:(下面的图请单独拉开网页看)<br><img src="http://omotkhw3y.bkt.clouddn.com/thrift_call_1.png" alt="server"></p>
+<p>(整理处理流程比较简单, 就是调用过程负责)</p>
+<p>客户端的处理流程如下: (下面的图请单独拉开网页看)</p>
+<blockquote>
+<p>程序调用了 Hello.Client 的 helloVoid() 方法，在 helloVoid() 方法中，通过 send_helloVoid() 方法发送对服务的调用请求，通过 recv_helloVoid() 方法接收服务处理请求后返回的结果。远程rpc调用过程,以及网络传输过程, 全部被封装在框架里了.</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/thrift_call_2.png" alt="client"></p>
 <h3 id="连接池实现"><a href="#连接池实现" class="headerlink" title="连接池实现"></a>连接池实现</h3><h2 id="对比protobuffer"><a href="#对比protobuffer" class="headerlink" title="对比protobuffer"></a>对比protobuffer</h2><p>通过IDL, 即thrft秒数文件, 对其中定义的<code>数据结构</code>,如struct等, 以及传输业务逻辑, 根据不同的运行环境构建相应的代码. 至于内部序列化, 压缩, 文本交互, 并发, 这个在其框架内部已经解决.</p>
 <h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>综合一圈玩下来, 这个库, 坑太多, 目前还不适合; 并且由于其框架太重, 所以可能学习成本会稍高.</p>
-<p>墨迹王(王家卫导演啦)东邪西毒里有一句话,<br>“</p>
+<p>墨镜王(王家卫导演啦)东邪西毒里有一句话,<br>“</p>
 <blockquote>
 <p>男人看见一座山总想翻过去, 看看山的那一边是什么, 等真正翻过去了, 也没发现有什么好, 说不定山的这一边儿反而更好.”</p>
 </blockquote>
@@ -215,6 +230,7 @@
 <li><a href="http://thrift.apache.org/static/files/thrift-20070401.pdf" target="_blank" rel="external">http://thrift.apache.org/static/files/thrift-20070401.pdf</a></li>
 <li><a href="https://wiki.apache.org/thrift/ThriftInstallation" target="_blank" rel="external">https://wiki.apache.org/thrift/ThriftInstallation</a></li>
 <li><a href="https://wiki.apache.org/thrift/FrontPage" target="_blank" rel="external">https://wiki.apache.org/thrift/FrontPage</a></li>
+<li><a href="http://www.cnblogs.com/cyfonly/p/6059374.html" target="_blank" rel="external">http://www.cnblogs.com/cyfonly/p/6059374.html</a></li>
 </ol>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
@@ -291,7 +307,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#开发流程"><span class="toc-article-text">开发流程</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#案例"><span class="toc-article-text">案例</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#rpc"><span class="toc-article-text">rpc</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#数据传递"><span class="toc-article-text">数据传递</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#架构"><span class="toc-article-text">架构</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#协议规范"><span class="toc-article-text">协议规范</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#传输标准"><span class="toc-article-text">传输标准</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#服务端类型"><span class="toc-article-text">服务端类型</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#代码分析"><span class="toc-article-text">代码分析</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#连接池实现"><span class="toc-article-text">连接池实现</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#对比protobuffer"><span class="toc-article-text">对比protobuffer</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#开发流程"><span class="toc-article-text">开发流程</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#案例"><span class="toc-article-text">案例</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#rpc"><span class="toc-article-text">rpc</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#数据传递"><span class="toc-article-text">数据传递</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#架构"><span class="toc-article-text">架构</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#协议规范"><span class="toc-article-text">协议规范</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#传输标准"><span class="toc-article-text">传输标准</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#服务端类型"><span class="toc-article-text">服务端类型</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#详细说明"><span class="toc-article-text">详细说明</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#代码分析"><span class="toc-article-text">代码分析</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#调用流程"><span class="toc-article-text">调用流程</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#连接池实现"><span class="toc-article-text">连接池实现</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#对比protobuffer"><span class="toc-article-text">对比protobuffer</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
