@@ -229,10 +229,12 @@
 <p>下面是主要的服务端类型:(源码剖析的时候会再说)</p>
 <ul>
 <li>TSimpleServer : 单线程服务器端使用标准的阻塞式 I/O</li>
+<li>TNonblockingServer : 单线程异步IO(多路轮询, 处理读写的时候还是阻塞IO)</li>
 <li>TThreadPoolServer : 多线程池服务器端使用标准的阻塞式 I/O</li>
-<li>TNonblockingServer : 多线程非阻塞IO</li>
 </ul>
-<p>如何选?<br>TODO</p>
+<p>TSimpleServer 接受一个连接，处理连接请求，直到客户端关闭了连接，它才回去接受一个新的连接。正因为它只在一个单独的线程中以阻塞 I/O 的方式完成这些工作，所以它只能服务一个客户端连接，其他所有客户端在被服务器端接受之前都只能等待. 可以看到TSimpleServer基本只能用于测试.</p>
+<p>TThreadPoolServer 如果有连接请求来了, 那么从线程池中拿一个工作线程来应对网络IO事件, 主线程是非阻塞的, worker线程则是使用阻塞IO. (但是吞吐量是原来的N倍, N为work线程的个数)</p>
+<p>TNonblockingServer 这种模式对应linux网络编程中的select模型; 所以socket都注册到select, 然后一个线程中通过seletor循环监控所有的socket，每次selector结束时，处理所有的处于就绪状态的socket，对于有数据到来的socket进行数据读取操作，对于有数据发送的socket则进行数据发送，对于监听socket则产生一个新业务socket并将其注册到selector中. (如果没有则进行下一次轮询, 如果有, 就必须处理完相关的socket IO才能进行下一次轮询) 该模式比TSimpleServer好的地方在于, 原来是单线程阻塞, 即一旦连接上了, 非要你IO完毕, 我服务端才处理下一个请求. (该模型是, 我都处理, 你都连接吧, 但是真正有IO读写的, select才去调用阻塞IO去处理读写任务)</p>
 <h2 id="详细说明"><a href="#详细说明" class="headerlink" title="详细说明"></a>详细说明</h2><p>这一部分是阅读其官网文档的总结, 你可以把它看做使用手册.</p>
 <h3 id="传输框架"><a href="#传输框架" class="headerlink" title="传输框架"></a>传输框架</h3><p>该部分请 <code>参考架构部分</code>. (上面)</p>
 <p>主要是协议protocol, transport方式, 以及server类型即可. 协议部分我们在pb里面以及涉及到编码规则内容了,没有必要详细深挖; 主要值得研究的是在 <code>传输方式</code>和<code>服务器类型</code>上, 不同的方式有不同的实现细节, 以及后端思想; 并且效率也可能相差很多.</p>
