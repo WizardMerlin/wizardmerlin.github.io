@@ -267,8 +267,12 @@
   <div class="row">
 	
 	
-		<p>有同行老早就在实践这个库了.<br>毫无疑问, 本文是继 protobuffer 之后, 又要花大力气讲解的一个(FB的)库(而且绝对是值得你花一个晚上自习看看的库). 不过可惜的是, 实际开发中它并不如pb应用广泛, 可能很大一个原因是因为太重了, 而且代码还依赖了外部库boost, libevent等, 相比之下, RESTful的做法就会简单很多.(我不得不说, 花了很多时间在踩开源的坑…最终结论, 于开源来说, Thrift可能不是最好的选择)</p>
-<p>本篇也作为跨语言编程实践的最后一篇, 后期可能会有更新.<br>
+		<p>有同行老早就在实践这个库了.毫无疑问, 本文是继 protobuffer 之后, 又要花大力气讲解的一个(FB的)库(而且绝对是值得你花一个晚上自习看看的库). 不过可惜的是, 实际开发中它并不如pb应用广泛, 可能很大一个原因是因为太重了, 而且代码还依赖了外部库boost, libevent等, 相比之下, RESTful的做法就会简单很多.(我不得不说, 花了很多时间在踩开源的坑…最终结论, 于开源来说, Thrift可能不是最好的选择) </p>
+<p>还是强调一些最基本的概念吧:</p>
+<blockquote>
+<p>框架的协议是指传输时候的编码方式(而不是网络协议); 框架的传输方式包括文件, 缓存buffer, 压缩二进制或者文本, 以及其他需要服务器端同步阻塞或者非阻塞操作,多线程或者异步IO支持的方式(因为可能传输方式使用了一些同步或者异步的IO), 传输方式也会(包括)指定传输的网络协议. 服务器类型是指服务器的工作模式, 是同步阻塞处理请求还是非阻塞操作(轮询检查IO-fd), 是否支持多线程模型, 还是异步多路IO.</p>
+</blockquote>
+<p>本篇也作为 <code>跨语言编程实践</code> 的最后一篇, 后期可能会有更新(主要是补充 <code>源码分析</code> 部分).</p>
 	
 	</div>
   <a type="button" href="/2017/08/22/thrift.html#more" class="btn btn-default more">Read More</a>
@@ -2505,43 +2509,43 @@
 		
 			<li><a href="/tags/c/">c<span>1</span></a></li>
 		
-			<li><a href="/tags/piano/">piano<span>1</span></a></li>
-		
-			<li><a href="/tags/tcp/">tcp<span>2</span></a></li>
-		
-			<li><a href="/tags/algorithm/">algorithm<span>1</span></a></li>
-		
-			<li><a href="/tags/shell/">shell<span>2</span></a></li>
-		
-			<li><a href="/tags/design-pattern/">design-pattern<span>1</span></a></li>
-		
-			<li><a href="/tags/stl/">stl<span>3</span></a></li>
+			<li><a href="/tags/python/">python<span>2</span></a></li>
 		
 			<li><a href="/tags/mysql/">mysql<span>1</span></a></li>
 		
-			<li><a href="/tags/java/">java<span>1</span></a></li>
+			<li><a href="/tags/tcp/">tcp<span>2</span></a></li>
+		
+			<li><a href="/tags/design-pattern/">design-pattern<span>1</span></a></li>
+		
+			<li><a href="/tags/algorithm/">algorithm<span>1</span></a></li>
+		
+			<li><a href="/tags/network/">network<span>15</span></a></li>
+		
+			<li><a href="/tags/ip/">ip<span>1</span></a></li>
+		
+			<li><a href="/tags/thinking/">thinking<span>16</span></a></li>
 		
 			<li><a href="/tags/linux/">linux<span>12</span></a></li>
 		
-			<li><a href="/tags/thread/">thread<span>7</span></a></li>
+			<li><a href="/tags/cpp/">cpp<span>21</span></a></li>
 		
-			<li><a href="/tags/regex/">regex<span>4</span></a></li>
-		
-			<li><a href="/tags/dev/">dev<span>1</span></a></li>
+			<li><a href="/tags/shell/">shell<span>2</span></a></li>
 		
 			<li><a href="/tags/udp/">udp<span>1</span></a></li>
 		
-			<li><a href="/tags/c/">c++<span>12</span></a></li>
-		
-			<li><a href="/tags/socket/">socket<span>1</span></a></li>
-		
-			<li><a href="/tags/cpp/">cpp<span>21</span></a></li>
-		
-			<li><a href="/tags/trading/">trading<span>1</span></a></li>
-		
 			<li><a href="/tags/coding-rules/">coding_rules<span>3</span></a></li>
 		
-			<li><a href="/tags/python/">python<span>2</span></a></li>
+			<li><a href="/tags/dev/">dev<span>1</span></a></li>
+		
+			<li><a href="/tags/boost/">boost<span>7</span></a></li>
+		
+			<li><a href="/tags/java/">java<span>1</span></a></li>
+		
+			<li><a href="/tags/stl/">stl<span>3</span></a></li>
+		
+			<li><a href="/tags/epoll/">epoll<span>1</span></a></li>
+		
+			<li><a href="/tags/socket/">socket<span>1</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span>26</span></a></li>

@@ -108,8 +108,13 @@
 		 </div> <!-- alert -->
 	  		
 
-	  <p>有同行老早就在实践这个库了.<br>毫无疑问, 本文是继 protobuffer 之后, 又要花大力气讲解的一个(FB的)库(而且绝对是值得你花一个晚上自习看看的库). 不过可惜的是, 实际开发中它并不如pb应用广泛, 可能很大一个原因是因为太重了, 而且代码还依赖了外部库boost, libevent等, 相比之下, RESTful的做法就会简单很多.(我不得不说, 花了很多时间在踩开源的坑…最终结论, 于开源来说, Thrift可能不是最好的选择)</p>
-<p>本篇也作为跨语言编程实践的最后一篇, 后期可能会有更新.<br><a id="more"></a></p>
+	  <p>有同行老早就在实践这个库了.毫无疑问, 本文是继 protobuffer 之后, 又要花大力气讲解的一个(FB的)库(而且绝对是值得你花一个晚上自习看看的库). 不过可惜的是, 实际开发中它并不如pb应用广泛, 可能很大一个原因是因为太重了, 而且代码还依赖了外部库boost, libevent等, 相比之下, RESTful的做法就会简单很多.(我不得不说, 花了很多时间在踩开源的坑…最终结论, 于开源来说, Thrift可能不是最好的选择) </p>
+<p>还是强调一些最基本的概念吧:</p>
+<blockquote>
+<p>框架的协议是指传输时候的编码方式(而不是网络协议); 框架的传输方式包括文件, 缓存buffer, 压缩二进制或者文本, 以及其他需要服务器端同步阻塞或者非阻塞操作,多线程或者异步IO支持的方式(因为可能传输方式使用了一些同步或者异步的IO), 传输方式也会(包括)指定传输的网络协议. 服务器类型是指服务器的工作模式, 是同步阻塞处理请求还是非阻塞操作(轮询检查IO-fd), 是否支持多线程模型, 还是异步多路IO.</p>
+</blockquote>
+<p>本篇也作为 <code>跨语言编程实践</code> 的最后一篇, 后期可能会有更新(主要是补充 <code>源码分析</code> 部分).</p>
+<a id="more"></a>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>From Wikipedia, the free encyclopedia:</p>
 <blockquote>
 <p>Thrift is an interface definition language and binary communication protocol that is used to define and create services for numerous languages.</p>
@@ -172,6 +177,10 @@
 <p>可以看到, thrift实际跨了两层: 应用层和传输层; 也就是我们再网络编程中最长需要打交道的. 并且<code>read/write</code>以下的部分, 即TProtocol, TTransport属于thrift框架的传输体系, 如果不是研究源码, 可以暂时不关注(使用的时候具体选择以下使用哪种类型的传输协议). 我们真正需要处理的也就是<code>Input code</code>部分和<code>Service Client</code>.</p>
 <p>实际上<code>TProtocol</code>定义了传输协议规范, <code>TTransport</code>定义了传输数据标准(以及服务器类型, 当然服务器类型不仅仅包含IO类型). </p>
 <p>(有些博文非要把它的那个颜色认为是不同的层, 我也就无话可说了)</p>
+<p>强调一些最基本的概念.</p>
+<blockquote>
+<p>框架的协议是指编码方式; 框架的传输方式包括文件,缓存buffer, 压缩或者需要服务器端同步异步工作支持的IO类型(因为传输方式使用了一些同步或者异步的IO), 传输方式也会指定传输协议. 服务器类型是指服务器的工作模式, 是同步阻塞处理请求还是非阻塞操作, 是否支持多线程模型, 还是异步多路IO.</p>
+</blockquote>
 <h3 id="协议规范"><a href="#协议规范" class="headerlink" title="协议规范"></a>协议规范</h3><p>Thrift可以让用户选择客户端与服务端之间传输通信协议的类别，在传输协议上总体划分为文本(text)和二进制(binary)传输协议，为节约带宽，提高传输效率，一般情况下使用二进制类型的传输协议为多数，有时还会使用基于文本类型的协议，这需要根据项目/产品中的实际需求.<br>常用协议有以下几种: </p>
 <ul>
 <li>BinaryProtocol: 二进制编码格式进行数据传输使</li>
@@ -184,27 +193,94 @@
 <li>TDenseProtocol(类似TCompactProtocol, 但不包含 meta info)</li>
 <li>TSimpleJSONProtocol(drops metadata using JSON, 所以只用于只读解析).</li>
 </ul>
-<h3 id="传输标准"><a href="#传输标准" class="headerlink" title="传输标准"></a>传输标准</h3><p>这里的传输标准通俗说, 就是同步异步, 阻塞和非阻塞IO. 由于一些语言有限制,或者标准不同, thrift定义的标准在具体语言中可能处理情况不一样.</p>
+<h3 id="传输标准"><a href="#传输标准" class="headerlink" title="传输标准"></a>传输标准</h3><p>这里的传输标准通俗说就是读写方式, 可能有一些方式需要服务器以同步或者异步的工作形式支持, 也可能有些形式仅用于服务端或者客户端等, 比如下面名字中带有Server字样的, 仅用于服务器端. (不强调Server字样的, 一般既可以用于服务器端也可以用于客户端)</p>
+<p>由于一些语言有限制,或者标准不同, thrift定义的标准在具体语言中可能处理情况不一样.</p>
 <ul>
-<li>TSocket : 使用阻塞式 I/O 进行传输，是最常见的模式</li>
+<li>TSocket : 使用阻塞式 I/O 进行传输，是最常见的模式(就是简单的阻塞IO: read, write)</li>
+<li>TServerSocket：非阻塞型 socket 传输, 轮询的时候, 没有IO读写就直接返回, 但一旦 accecpt 到, 还是阻塞读写, 即TSocket(即阻塞型 socket).</li>
 </ul>
-<p>wiki里面也谈到了其他种类:</p>
+<p>wiki里面也谈到了其他种类:(可能不太常用)</p>
 <ul>
-<li>TFileTransport - This transport writes to a file.</li>
-<li>TFramedTransport -  以帧的形式传输(要求使用非阻塞IO, 可能因为帧指定了长度)</li>
-<li>TMemoryTransport - 这个使用内存做IO</li>
+<li>TFDTransport 是非常简单地写数据到文件和从文件读数据，它的 write 和 read 函数都是直接调用系统函数 write 和 read 进行写和读文件</li>
+<li>TSimpleFileTransport 直接继承 TFDTransport，没有添加任何成员函数和成员变量, 算是对TFDTransport的轻量扩展</li>
+<li>TFileTransport - (一些写线程, 一个读线程)以文件的方式传输, 主线程负责将事件入列，写线程将事件入列，并将事件里的数据写入磁盘.(继承自TTransport)</li>
+<li>TBufferedTransport - 带缓存的传输形式(需要使用non-blocking IO)</li>
+<li>TFramedTransport -  带缓存(以帧的)形式传输(要求使用非阻塞IO, 可能因为帧指定了长度; 头4个字节指定了长度; int32_t)</li>
+<li>TMemoryTransport - 这个使用内存做IO(用于程序内部通信用，不涉及任何网络I/O)<ul>
+<li>OBSERVE模式，不可写数据到缓存</li>
+<li>TAKE_OWNERSHIP模式，需负责释放缓存</li>
+<li>COPY模式, 拷贝外面的内存块到TMemoryBuffer</li>
+</ul>
+</li>
 <li>TZlibTransport - 压缩传输需要配合其他传输协议一起.</li>
 </ul>
-<h3 id="服务端类型"><a href="#服务端类型" class="headerlink" title="服务端类型"></a>服务端类型</h3><p>根据传输标准的不同, 并发程度的要求, 也有多种不同类型的服务器, 并且生成不同语言代码时, 实现也不一样, 比如说非阻塞IO, Java使用NIO, 而C++借助Lievent库.</p>
+<p>(一般用于缓存读写的方式是TMemoryTransport, 没有调用flush方法之前, 不涉及网络)</p>
+<p>还有2个比较特殊的:</p>
+<ul>
+<li>TSSLSocket 继承 TSocket,阻塞型 socket, 用于<code>客户端</code>. (采用 openssl 的接口进行读写数据)<br>checkHandshake()函数调用 SSL_set_fd 将 fd 和 ssl 绑定在一起，之后就可以通过 ssl 的 SSL_read和SSL_write 接口进行读写网络数据</li>
+<li>TSSLServerSocket 继承 TServerSocket, 非阻塞型 socket, 用于<code>服务器端</code>. accecpt 到的 socket 类型都是 TSSLSocket 类型.</li>
+</ul>
+<p>当然, 也提供了基于 <code>HTTP协议</code> 的传输类型: (继承 THttpTransport, 基于Http1.1)</p>
+<ul>
+<li>THttpClient 用于客户端</li>
+<li>THttpServer 用于服务器端<br>两者都调用下一层 <code>TTransport</code> 类进行读写操作, 均用到 TMemoryBuffer 作为读写缓存, 只有调用 flush() 函数才会将真正调用网络 I/O 接口发送数据; 并且这里的TTransport为上层提供的类似多态的方法, 通过TTransport接口可以调用其子类的不同实现. (TTransport 是所有 Transport 类的父类; 而THttpTransport是Transport的子类)</li>
+</ul>
+<h3 id="服务端类型"><a href="#服务端类型" class="headerlink" title="服务端类型"></a>服务端类型</h3><p>根据传输标准的不同, 并发程度的要求, 也有多种不同类型的服务器(也就是服务端的工作模式), 并且生成不同语言代码时, 实现也不一样, 比如说非阻塞IO, Java使用NIO, 而C++借助Lievent库. 根据不同场合选择不同的server类型, 需要对网络模型非常熟悉.</p>
+<p>下面是主要的服务端类型:(源码剖析的时候会再说)</p>
 <ul>
 <li>TSimpleServer : 单线程服务器端使用标准的阻塞式 I/O</li>
 <li>TThreadPoolServer : 多线程池服务器端使用标准的阻塞式 I/O</li>
 <li>TNonblockingServer : 多线程非阻塞IO</li>
 </ul>
-<p>当然还有其他类型的:</p>
-<h2 id="详细说明"><a href="#详细说明" class="headerlink" title="详细说明"></a>详细说明</h2><p>这一部分是阅读其官网文档的总结.</p>
-<h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><p>框架本身有很多精华, 我抽取其中我熟悉的进行分析.</p>
-<h3 id="调用流程"><a href="#调用流程" class="headerlink" title="调用流程"></a>调用流程</h3><p>这个要结合源码起来看, 不同源码版本可能不一样.</p>
+<p>如何选?<br>TODO</p>
+<h2 id="详细说明"><a href="#详细说明" class="headerlink" title="详细说明"></a>详细说明</h2><p>这一部分是阅读其官网文档的总结, 你可以把它看做使用手册.</p>
+<h3 id="传输框架"><a href="#传输框架" class="headerlink" title="传输框架"></a>传输框架</h3><p>该部分请 <code>参考架构部分</code>. (上面)</p>
+<p>主要是协议protocol, transport方式, 以及server类型即可. 协议部分我们在pb里面以及涉及到编码规则内容了,没有必要详细深挖; 主要值得研究的是在 <code>传输方式</code>和<code>服务器类型</code>上, 不同的方式有不同的实现细节, 以及后端思想; 并且效率也可能相差很多.</p>
+<blockquote>
+<p>后期有时间, 可以像Libevent一样, 把TSocket等传输方式, 以及TSimpleServer等服务器类型; 源码剖析一下.</p>
+</blockquote>
+<p>(见下面 <code>源码分析</code> 部分)</p>
+<h3 id="名字空间"><a href="#名字空间" class="headerlink" title="名字空间"></a>名字空间</h3><p>越来越多的语言使用package作为代码控制机制, 到具体的语言可能是模块(Python), 包(Java), 或者namespace(Cpp)</p>
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><p>thrift定义了几大数据类型, 在不同环境中翻译成不同语言时候mapping关系也不大一样; 幸运的是, 这一层抽象被thrift框架处理了, 我们只用关心thrift数据类型即可.</p>
+<p>类型主要包括: 基本类型、结构体和异常类型(都是用关键字struct)、容器类型、服务(service)类型;</p>
+<p>基本类型:</p>
+<ul>
+<li>bool：布尔值 (true or false), 1 字节</li>
+<li>byte：有符号字节</li>
+<li>i16：16位有符号整型</li>
+<li>i32：32位有符号整型</li>
+<li>i64：64位有符号整型</li>
+<li>double：64位浮点型</li>
+<li>string：未知编码或者二进制的字符串</li>
+</ul>
+<p>结构体和异常类型:<br>例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">struct UserDemo &#123;</div><div class="line">　　1: i32 id;</div><div class="line">　　2: string name;</div><div class="line">　　3: i32 age = 25;</div><div class="line">　　4： string phone;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>必须注意:</p>
+<ul>
+<li>struct 不能继承，但是可以嵌套别人，不能嵌套自己</li>
+<li>其成员都是有明确类型</li>
+<li>成员是被正整数编号过的，其中的编号使不能重复的，这个是为了在传输过程中编码是用(和pb一样)</li>
+<li>成员分割符可以是逗号或是分号, 而且可以混用(建议使用分号, C语言习惯)</li>
+<li>字段会有optional和required之分(和pb一样)</li>
+<li>每个字段可以设置默认值(和pb一样)</li>
+<li>同一文件可以定义多个struct; 可以用include包含别的文件的struct定义</li>
+</ul>
+<p>补充说明:</p>
+<ul>
+<li>编码值, 不要随便编; </li>
+<li>字段类型required或者optional(没有赋值则不进行序列化), 不指定则默认是会被序列化的(基本和required相同, 但required会被框架提示)</li>
+</ul>
+<p>容器类型:<br>主要使用编程语言无关的数据结构作为容器, 一般就三个:</p>
+<ul>
+<li>list<t>: 有序表, 允许元素重复</t></li>
+<li>set<t>: 无序表, 不容许元素重复</t></li>
+<li>map<t,t>: 键类型为t, 值类型为t的kv对, 键不容许重复</t,t></li>
+</ul>
+<p>生成的代码中, 不同语言对应的数据结构可能有一些差异, 但是不影响其功能.</p>
+<p>服务类型:<br>就是trift文件中的service, 代码中等价于类或者接口集合(代码中支持继承, 但如果继承这个类, 其方法必须实现), 但接口里面定义的方法不支持重载.<br>由上面的实践来看, 参数一般是const类型, 并且最终生成的代码和你定义的service函数原型可能不一样, 可能会根据具体的语言进行调整(具体规则, 需要参考它的gen代码生成器).</p>
+<p>下面开始重头戏.</p>
+<hr>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>框架本身有很多精华, 我抽取其中我熟悉的进行分析.</p>
+<h3 id="调用流程"><a href="#调用流程" class="headerlink" title="调用流程"></a>调用流程</h3><p>该部分其实是解释thrift框架如何工作的, 形式上是c-s一次通信的过程; 这个要结合源码起来看(下面图片请在新窗口中打开观看), 不同源码版本可能不一样.</p>
 <p>服务端主要流程如下:</p>
 <blockquote>
 <p>TThreadPoolServer 的 serve() 方法后，server 进入阻塞监听状态，其阻塞在 TServerSocket 的 accept()方法上。当接收到来自客户端的消息后，服务器发起一个新线程处理这个消息请求，原线程再次进入阻塞状态。在新线程中，服务器通过 TBinaryProtocol 协议读取消息内容，调用 HelloServiceImpl 的 helloVoid() 方法，并将结果写入 helloVoid_result 中传回客户端。</p>
@@ -216,13 +292,24 @@
 <p>程序调用了 Hello.Client 的 helloVoid() 方法，在 helloVoid() 方法中，通过 send_helloVoid() 方法发送对服务的调用请求，通过 recv_helloVoid() 方法接收服务处理请求后返回的结果。远程rpc调用过程,以及网络传输过程, 全部被封装在框架里了.</p>
 </blockquote>
 <p><img src="http://omotkhw3y.bkt.clouddn.com/thrift_call_2.png" alt="client"></p>
+<h3 id="Server工作模式"><a href="#Server工作模式" class="headerlink" title="Server工作模式"></a>Server工作模式</h3><p>但凡后端人员接触这个库, 我觉得最感兴趣的, 一定是server的类型, 即服务器的工作模式. 当然网络编程玩烂的后端人员真正剖析的识货, 也就是见怪不怪了. (不知道我说啥的同学, 可以补一下 apue的9种网络模式或者参考unp 卷1)</p>
+<p>下面主要剖析一下(权做复习):</p>
+<ul>
+<li>TSimpleServer</li>
+<li>TNonblockingServer</li>
+<li>THsHaServer(半同步半异步)</li>
+<li>TThreadPoolServer(主线程阻塞)</li>
+<li>TThreadedSelectorServer(有点儿异步IO的意思了) —这个属于高级模式</li>
+</ul>
 <h3 id="连接池实现"><a href="#连接池实现" class="headerlink" title="连接池实现"></a>连接池实现</h3><h2 id="对比protobuffer"><a href="#对比protobuffer" class="headerlink" title="对比protobuffer"></a>对比protobuffer</h2><p>通过IDL, 即thrft秒数文件, 对其中定义的<code>数据结构</code>,如struct等, 以及传输业务逻辑, 根据不同的运行环境构建相应的代码. 至于内部序列化, 压缩, 文本交互, 并发, 这个在其框架内部已经解决.</p>
-<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>综合一圈玩下来, 这个库, 坑太多, 目前还不适合; 并且由于其框架太重, 所以可能学习成本会稍高.</p>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>综合一圈玩下来, 这个库太棒了, 把我从学习网络以来的绝大部分工作全部整合成流程了, 而且效率也不差(参考网友的评测).</p>
+<p>但是就是坑太多! 如果你没有把它大部分源码吃透, 目前还不适合用于实际工程项目; 并且由于其框架太重, 所以可能学习成本会稍高.</p>
 <p>墨镜王(王家卫导演啦)东邪西毒里有一句话,<br>“</p>
 <blockquote>
 <p>男人看见一座山总想翻过去, 看看山的那一边是什么, 等真正翻过去了, 也没发现有什么好, 说不定山的这一边儿反而更好.”</p>
 </blockquote>
-<p>以后等它成熟了再来.</p>
+<p>以后等它成熟了再来, 目前libevent + 手写代码(或者pb), 挺好的.</p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
 <li><a href="http://thrift.apache.org/" target="_blank" rel="external">http://thrift.apache.org/</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Apache_Thrift" target="_blank" rel="external">https://en.wikipedia.org/wiki/Apache_Thrift</a></li>
@@ -307,7 +394,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#开发流程"><span class="toc-article-text">开发流程</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#案例"><span class="toc-article-text">案例</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#rpc"><span class="toc-article-text">rpc</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#数据传递"><span class="toc-article-text">数据传递</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#架构"><span class="toc-article-text">架构</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#协议规范"><span class="toc-article-text">协议规范</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#传输标准"><span class="toc-article-text">传输标准</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#服务端类型"><span class="toc-article-text">服务端类型</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#详细说明"><span class="toc-article-text">详细说明</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#代码分析"><span class="toc-article-text">代码分析</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#调用流程"><span class="toc-article-text">调用流程</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#连接池实现"><span class="toc-article-text">连接池实现</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#对比protobuffer"><span class="toc-article-text">对比protobuffer</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#开发流程"><span class="toc-article-text">开发流程</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#案例"><span class="toc-article-text">案例</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#rpc"><span class="toc-article-text">rpc</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#数据传递"><span class="toc-article-text">数据传递</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#架构"><span class="toc-article-text">架构</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#协议规范"><span class="toc-article-text">协议规范</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#传输标准"><span class="toc-article-text">传输标准</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#服务端类型"><span class="toc-article-text">服务端类型</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#详细说明"><span class="toc-article-text">详细说明</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#传输框架"><span class="toc-article-text">传输框架</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#名字空间"><span class="toc-article-text">名字空间</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#数据类型"><span class="toc-article-text">数据类型</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#源码分析"><span class="toc-article-text">源码分析</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#调用流程"><span class="toc-article-text">调用流程</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Server工作模式"><span class="toc-article-text">Server工作模式</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#连接池实现"><span class="toc-article-text">连接池实现</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#对比protobuffer"><span class="toc-article-text">对比protobuffer</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
