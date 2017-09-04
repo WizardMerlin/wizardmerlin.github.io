@@ -230,11 +230,32 @@
 <ul>
 <li>TSimpleServer : 单线程服务器端使用标准的阻塞式 I/O</li>
 <li>TNonblockingServer : 单线程异步IO(多路轮询, 处理读写的时候还是阻塞IO)</li>
-<li>TThreadPoolServer : 多线程池服务器端使用标准的阻塞式 I/O</li>
+<li>THsHaServer : select轮询 + 线程池工作线程处理读任务, 写任务阻塞. (半同步半异步)</li>
+<li>TThreadPoolServer : 线程池+标准的阻塞式 I/O</li>
+<li>TThreadedSelectorServer : AcceptThread + SelectorThread + SelectorThreadLoadBalancer(调度器) + ExecutorService(工作线程池)</li>
 </ul>
+<p>(如果看源码, 我局的最后这一种高级方式, 值得一看)</p>
 <p>TSimpleServer 接受一个连接，处理连接请求，直到客户端关闭了连接，它才回去接受一个新的连接。正因为它只在一个单独的线程中以阻塞 I/O 的方式完成这些工作，所以它只能服务一个客户端连接，其他所有客户端在被服务器端接受之前都只能等待. 可以看到TSimpleServer基本只能用于测试.</p>
 <p>TThreadPoolServer 如果有连接请求来了, 那么从线程池中拿一个工作线程来应对网络IO事件, 主线程是非阻塞的, worker线程则是使用阻塞IO. (但是吞吐量是原来的N倍, N为work线程的个数)</p>
-<p>TNonblockingServer 这种模式对应linux网络编程中的select模型; 所以socket都注册到select, 然后一个线程中通过seletor循环监控所有的socket，每次selector结束时，处理所有的处于就绪状态的socket，对于有数据到来的socket进行数据读取操作，对于有数据发送的socket则进行数据发送，对于监听socket则产生一个新业务socket并将其注册到selector中. (如果没有则进行下一次轮询, 如果有, 就必须处理完相关的socket IO才能进行下一次轮询) 该模式比TSimpleServer好的地方在于, 原来是单线程阻塞, 即一旦连接上了, 非要你IO完毕, 我服务端才处理下一个请求. (该模型是, 我都处理, 你都连接吧, 但是真正有IO读写的, select才去调用阻塞IO去处理读写任务)</p>
+<p>TNonblockingServer 这种模式对应linux网络编程中的select模型; 所以socket都注册到select, 然后一个线程中通过seletor循环监控所有的socket，每次selector结束时，处理所有的处于就绪状态的socket，对于有数据到来的socket进行数据读取操作，对于有数据发送的socket则进行数据发送，对于监听socket则产生一个新业务socket并将其注册到selector中. (如果没有则进行下一次轮询, 如果有, 就必须处理完相关的socket IO才能进行下一次轮询) 该模式比TSimpleServer好的地方在于, 原来是单线程阻塞, 即一旦连接上了, 非要你IO完毕, 我服务端才处理下一个请求. (该模型是, 我都(监听)处理, 你都来吧, 但是真正有IO读写的, select才去调用阻塞IO去处理读写任务)监听的多, 但是真正处理起来还是一个一个顺序执行, 一旦有耗时任务, 效率就不高了.</p>
+<p>THsHaServer类是TNonblockingServer类的子类, 是TThreadPoolServer单线程的部分解决方(引入了一个线程池做优化), 专门进行读业务处理. 也就是原来selector的主线程主要负责写任务, 之后进入下一次轮询(主线程也处理就绪需要accept的socket); 但是读任务全部交给线程池中的工作线程, 不阻塞主线程. 只能说部分优化了, 当并发请求数较大时，且发送数据量较多时，监听socket上新连接请求不能被及时接受(毕竟主线程还是会被写任务阻塞住)。</p>
+<p>TThreadPoolServer模式, 这种模式没有使用select这类异步操作, 而是同步的去判断是否由socket就绪(accept), 对仅仅是处理accept, 没有的话阻塞整个进程在那儿等待, 然后一旦有连接, 不管有没有IO任务, 它都会启动一个专门的线程去处理这个连接上的所有任务(方式是把socket封装成一个新任务交给线程池, 之后工作线程才去从socket拿出请求, 完成具体调用返还客户客户端), 这样得以把主线程空出来继续阻塞等待别的连接请求. 这个缺点就很明显了, 受限于线程池中线程的数量(并发量大于线程池数量时, 能扩展线程数最好, 不能的话, 那么只能进入队列等待了), 并发量不大. (最好你知道有多少个, 最多有多少个客户端会连接的情况)</p>
+<p>TThreadedSelectorServer : 这种模型, 把网络中的任务细致划分. 可谓足够精细, 多个部分协作工作. 如果说上面的都是个人&amp;两三个人, 这个模型就是一个小团队, 请直接看图.<br><img src="http://omotkhw3y.bkt.clouddn.com/thrift_thread_selector.jpg" alt=""></p>
+<p>稍微解释一下, 普通的网络编程中成功用例是这么工作的: (服务端)</p>
+<blockquote>
+<p>接受连接请求 –&gt; 检测是否有IO就绪 —&gt; 处理真正的IO操作</p>
+</blockquote>
+<p>但是引入线程池之后, 这个模型变成了:(流程自上而下)</p>
+<ul>
+<li>线程AcceptThread阻塞(或者非阻塞)等待是否由心的连接  (这个是<code>销售顾问</code>, 拿到订单)</li>
+<li>有新的连接就把它交给SelectorThread以检测socket是否就绪(是否由IO读写请求)  (这个是<code>项目经理</code>, 负责拿到的订单项目)</li>
+<li>被accept的连接,需要SelectorThreadLoadBalancer来调度,以免某个SelectorThread压力过大(这个是<code>研发经理</code>, 分派任务)</li>
+<li>SelectorThread读取具体的请求, 但是实际完成耗时IO(或者具体调用)的却是ExecutorService. (这个就是<code>高级工程师</code>)</li>
+</ul>
+<blockquote>
+<p>如果你的场景不需要某种支持高并发的姿态, 就不要浪费资源选择高级模式; 够用就好. 但是还有一句, 如果几种模型的优缺点你不知道, 那么选择最好的总不会错, 直接上TThreadedSelectorServer也没事儿.</p>
+</blockquote>
+<hr>
 <h2 id="详细说明"><a href="#详细说明" class="headerlink" title="详细说明"></a>详细说明</h2><p>这一部分是阅读其官网文档的总结, 你可以把它看做使用手册.</p>
 <h3 id="传输框架"><a href="#传输框架" class="headerlink" title="传输框架"></a>传输框架</h3><p>该部分请 <code>参考架构部分</code>. (上面)</p>
 <p>主要是协议protocol, transport方式, 以及server类型即可. 协议部分我们在pb里面以及涉及到编码规则内容了,没有必要详细深挖; 主要值得研究的是在 <code>传输方式</code>和<code>服务器类型</code>上, 不同的方式有不同的实现细节, 以及后端思想; 并且效率也可能相差很多.</p>
@@ -299,9 +320,9 @@
 <ul>
 <li>TSimpleServer</li>
 <li>TNonblockingServer</li>
-<li>THsHaServer(半同步半异步)</li>
-<li>TThreadPoolServer(主线程阻塞)</li>
-<li>TThreadedSelectorServer(有点儿异步IO的意思了) —这个属于高级模式</li>
+<li>THsHaServer</li>
+<li>TThreadPoolServer</li>
+<li>TThreadedSelectorServer—优先剖析</li>
 </ul>
 <h3 id="连接池实现"><a href="#连接池实现" class="headerlink" title="连接池实现"></a>连接池实现</h3><h2 id="对比protobuffer"><a href="#对比protobuffer" class="headerlink" title="对比protobuffer"></a>对比protobuffer</h2><p>通过IDL, 即thrft秒数文件, 对其中定义的<code>数据结构</code>,如struct等, 以及传输业务逻辑, 根据不同的运行环境构建相应的代码. 至于内部序列化, 压缩, 文本交互, 并发, 这个在其框架内部已经解决.</p>
 <hr>
@@ -319,7 +340,8 @@
 <li><a href="http://thrift.apache.org/static/files/thrift-20070401.pdf" target="_blank" rel="external">http://thrift.apache.org/static/files/thrift-20070401.pdf</a></li>
 <li><a href="https://wiki.apache.org/thrift/ThriftInstallation" target="_blank" rel="external">https://wiki.apache.org/thrift/ThriftInstallation</a></li>
 <li><a href="https://wiki.apache.org/thrift/FrontPage" target="_blank" rel="external">https://wiki.apache.org/thrift/FrontPage</a></li>
-<li><a href="http://www.cnblogs.com/cyfonly/p/6059374.html" target="_blank" rel="external">http://www.cnblogs.com/cyfonly/p/6059374.html</a></li>
+<li><a href="http://www.cnblogs.com/cyfonly/p/6059374.html" target="_blank" rel="external">和 Thrift 的一场美丽邂逅</a> 文章有一些地方讲述错误</li>
+<li><a href="http://blog.csdn.net/houjixin/article/details/42779915" target="_blank" rel="external">http://blog.csdn.net/houjixin/article/details/42779915</a></li>
 </ol>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
