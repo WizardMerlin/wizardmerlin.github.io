@@ -143,6 +143,7 @@
 <li>根据需求, 修改生成的代码(主要是Server端骨架代码), 编写实际的业务逻辑</li>
 <li>编译, 集成</li>
 </ul>
+<p>通过IDL, 即thrft描述文件, 对其中定义的<code>数据结构</code>, 如struct等, 以及传输业务逻辑, 根据不同的运行环境构建相应的代码. 至于内部序列化, 压缩, 文本交互, 并发, 这个在其框架内部已经解决, 描述起来就是下图:<br><img src="http://omotkhw3y.bkt.clouddn.com/thrift_sequence.jpg" alt=""></p>
 <p>整个过程非常清晰, 只是中间有一些小细节需要注意一下, 比如说thrift文件怎么写才规范, 怎么生成代码, 运行生成的代码加入实际业务逻辑等. 下面给出一个案例.(我习惯用cpp语言, 当然别的语言也有案例, 暂时小的案例用cpp)</p>
 <h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h3 id="rpc"><a href="#rpc" class="headerlink" title="rpc"></a>rpc</h3><p>按照上面讲的流程, 先跑起来; 为了简单, 我先不管目录结构. 下面的例子, 演示一下rpc.</p>
 <p>先创建必要的目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ mkdir thrift_test</div><div class="line">$ cd thrift_test</div><div class="line">$ touch ping.thrift</div></pre></td></tr></table></figure></p>
@@ -174,9 +175,15 @@
 <p>这个例子就这样了, 当然官网还有一个类似的, 稍稍复杂的 <a href="https://thrift.apache.org/tutorial/cpp" target="_blank" rel="external">例子</a> , 就不再多说了.</p>
 <h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p>本段内容是对 <a href="https://en.wikipedia.org/wiki/Apache_Thrift" target="_blank" rel="external">thrift-wiki</a> 架构部分的剖析.</p>
 <p>总体的架构图如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/Apache_Thrift_architecture.png" alt="架构"></p>
-<p>可以看到, thrift实际跨了两层: 应用层和传输层; 也就是我们再网络编程中最长需要打交道的. 并且<code>read/write</code>以下的部分, 即TProtocol, TTransport属于thrift框架的传输体系, 如果不是研究源码, 可以暂时不关注(使用的时候具体选择以下使用哪种类型的传输协议). 我们真正需要处理的也就是<code>Input code</code>部分和<code>Service Client</code>.</p>
-<p>实际上<code>TProtocol</code>定义了传输协议规范, <code>TTransport</code>定义了传输数据标准(以及服务器类型, 当然服务器类型不仅仅包含IO类型). </p>
-<p>(有些博文非要把它的那个颜色认为是不同的层, 我也就无话可说了)</p>
+<p>可以看到, thrift实际跨了两层: 应用层和传输层(有些博文非要把它的那个颜色认为是不同的层, 我也就无话可说了), 也就是我们再网络编程中最长需要打交道的, 并且<code>read/write</code>以下的部分, 即TProtocol, TTransport属于thrift框架的传输体系, 如果不是研究源码, 可以暂时不关注(使用的时候具体选择以下使用哪种类型的传输协议).  实际上研究源码, 发现也就是我们通常需要手工完成的: </p>
+<ul>
+<li>编码封装 (TProtocol)</li>
+<li>字节流转换 (TTransport)</li>
+<li>底层IO (socket/file/zip)</li>
+</ul>
+<p>我们真正需要处理(修改)的也就是<code>Input code</code>部分和<code>Service Client</code>.</p>
+<p>如下图:(详细架构)<br><img src="http://omotkhw3y.bkt.clouddn.com/thrift_real.jpg" alt=""></p>
+<p>准确说 <code>TProtocol</code>定义了传输协议规范(编码规范), <code>TTransport</code>定义了传输数据标准(根据不同的方式把说句做转换), 以及服务器类型, 当然服务器类型不仅仅包含IO类型. </p>
 <p>强调一些最基本的概念.</p>
 <blockquote>
 <p>框架的协议是指编码方式; 框架的传输方式包括文件,缓存buffer, 压缩或者需要服务器端同步异步工作支持的IO类型(因为传输方式使用了一些同步或者异步的IO), 传输方式也会指定传输协议. 服务器类型是指服务器的工作模式, 是同步阻塞处理请求还是非阻塞操作, 是否支持多线程模型, 还是异步多路IO.</p>
@@ -265,7 +272,7 @@
 <p>(见下面 <code>源码分析</code> 部分)</p>
 <h3 id="名字空间"><a href="#名字空间" class="headerlink" title="名字空间"></a>名字空间</h3><p>越来越多的语言使用package作为代码控制机制, 到具体的语言可能是模块(Python), 包(Java), 或者namespace(Cpp)</p>
 <h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><p>thrift定义了几大数据类型, 在不同环境中翻译成不同语言时候mapping关系也不大一样; 幸运的是, 这一层抽象被thrift框架处理了, 我们只用关心thrift数据类型即可.</p>
-<p>类型主要包括: 基本类型、结构体和异常类型(都是用关键字struct)、容器类型、服务(service)类型;</p>
+<p>类型主要包括: 基本类型、结构体和异常类型(异常使用关键字exception)、容器类型、服务(service)类型;</p>
 <p>基本类型:</p>
 <ul>
 <li>bool：布尔值 (true or false), 1 字节</li>
@@ -276,7 +283,7 @@
 <li>double：64位浮点型</li>
 <li>string：未知编码或者二进制的字符串</li>
 </ul>
-<p>结构体和异常类型:<br>例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">struct UserDemo &#123;</div><div class="line">　　1: i32 id;</div><div class="line">　　2: string name;</div><div class="line">　　3: i32 age = 25;</div><div class="line">　　4： string phone;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结构体:<br>例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">struct UserDemo &#123;</div><div class="line">　　1: i32 id;</div><div class="line">　　2: string name;</div><div class="line">　　3: i32 age = 25;</div><div class="line">　　4： string phone;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>必须注意:</p>
 <ul>
 <li>struct 不能继承，但是可以嵌套别人，不能嵌套自己</li>
@@ -324,7 +331,8 @@
 <li>TThreadPoolServer</li>
 <li>TThreadedSelectorServer—优先剖析</li>
 </ul>
-<h3 id="连接池实现"><a href="#连接池实现" class="headerlink" title="连接池实现"></a>连接池实现</h3><h2 id="对比protobuffer"><a href="#对比protobuffer" class="headerlink" title="对比protobuffer"></a>对比protobuffer</h2><p>通过IDL, 即thrft秒数文件, 对其中定义的<code>数据结构</code>,如struct等, 以及传输业务逻辑, 根据不同的运行环境构建相应的代码. 至于内部序列化, 压缩, 文本交互, 并发, 这个在其框架内部已经解决.</p>
+<h3 id="连接池实现"><a href="#连接池实现" class="headerlink" title="连接池实现"></a>连接池实现</h3><h2 id="对比其他框架"><a href="#对比其他框架" class="headerlink" title="对比其他框架."></a>对比其他框架.</h2><p>看到的RPC框架, 或者有RPC功能的框架已经算比较多的了, protobuffer, soap, grpc, 甚至libevent也说自己是rpc框架.</p>
+<p>但是从目前的使用状况来说, thrift算是比较完整的体系(内嵌完整的RPC层次), 省去了很多手工编码的机会, 但是正是由于其庞大的体系, 所以排查错误相对来说难度会高一点儿. 但是无论有多少缺点, 你都不能否认它取代了soap那种XML编码的方式的优点, 并且跨越&amp;支持多种语言, 支持数据类型也比较多. </p>
 <hr>
 <h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>综合一圈玩下来, 这个库太棒了, 把我从学习网络以来的绝大部分工作全部整合成流程了, 而且效率也不差(参考网友的评测).</p>
 <p>但是就是坑太多! 如果你没有把它大部分源码吃透, 目前还不适合用于实际工程项目; 并且由于其框架太重, 所以可能学习成本会稍高.</p>
@@ -418,7 +426,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#开发流程"><span class="toc-article-text">开发流程</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#案例"><span class="toc-article-text">案例</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#rpc"><span class="toc-article-text">rpc</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#数据传递"><span class="toc-article-text">数据传递</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#架构"><span class="toc-article-text">架构</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#协议规范"><span class="toc-article-text">协议规范</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#传输标准"><span class="toc-article-text">传输标准</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#服务端类型"><span class="toc-article-text">服务端类型</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#详细说明"><span class="toc-article-text">详细说明</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#传输框架"><span class="toc-article-text">传输框架</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#名字空间"><span class="toc-article-text">名字空间</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#数据类型"><span class="toc-article-text">数据类型</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#源码分析"><span class="toc-article-text">源码分析</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#调用流程"><span class="toc-article-text">调用流程</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Server工作模式"><span class="toc-article-text">Server工作模式</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#连接池实现"><span class="toc-article-text">连接池实现</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#对比protobuffer"><span class="toc-article-text">对比protobuffer</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#开发流程"><span class="toc-article-text">开发流程</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#案例"><span class="toc-article-text">案例</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#rpc"><span class="toc-article-text">rpc</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#数据传递"><span class="toc-article-text">数据传递</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#架构"><span class="toc-article-text">架构</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#协议规范"><span class="toc-article-text">协议规范</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#传输标准"><span class="toc-article-text">传输标准</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#服务端类型"><span class="toc-article-text">服务端类型</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#详细说明"><span class="toc-article-text">详细说明</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#传输框架"><span class="toc-article-text">传输框架</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#名字空间"><span class="toc-article-text">名字空间</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#数据类型"><span class="toc-article-text">数据类型</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#源码分析"><span class="toc-article-text">源码分析</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#调用流程"><span class="toc-article-text">调用流程</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Server工作模式"><span class="toc-article-text">Server工作模式</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#连接池实现"><span class="toc-article-text">连接池实现</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#对比其他框架"><span class="toc-article-text">对比其他框架.</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
