@@ -108,7 +108,10 @@
 		 </div> <!-- alert -->
 	  		
 
-	  <p>本篇不会像 protocol-buffer 那样花很大的力气去讲解, 这里就是关于 Cpp对于解析XML的处理(序列化, 反序列化). 比较 SlimXml, TinyXml, RapidXml 发现, <a href="http://rapidxml.sourceforge.net/" target="_blank" rel="external">Rapid-Xml</a> 这个库性能优势明显.<br>(但是开源都是有坑的, 最好能自己填坑, 详细内容见文内; RapidXml并不如TinyXml那么稳定, 但谁叫它是Modern C++写的呢)</p>
+	  <p>本篇不会像 protocol-buffer 那样花很大的力气去讲解, 这里就是关于 Cpp对于解析XML的处理(序列化, 反序列化). 比较 SlimXml, TinyXml, RapidXml 发现, <a href="http://rapidxml.sourceforge.net/" target="_blank" rel="external">Rapid-Xml</a> 这个库性能优势明显.</p>
+<blockquote>
+<p>开源都是有坑的, 最好能自己填坑, 详细内容见文内; RapidXml并不如TinyXml那么稳定, 但谁叫它是Modern C++写的呢</p>
+</blockquote>
 <p>本文是对 Rapid-Xml 实践的讲解和总结.</p>
 <a id="more"></a>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>官网上的简介如下:<br>RapidXml is an attempt to create the fastest XML parser possible, while retaining useability, portability and reasonable W3C compatibility. It is an in-situ parser written in modern C++, with parsing speed approaching that of <code>strlen</code> function executed on the same data.</p>
