@@ -110,20 +110,32 @@
 
 	  <p>这里主要记载我的emacs配置文件, 以及配置方法. 先给一个图吧.</p>
 <p><img src="http://omotkhw3y.bkt.clouddn.com/emacs_ecb.png" alt=""></p>
+<p>(中间可能有一些复杂，但是按照从简单到复杂的步骤其实还好)</p>
 <a id="more"></a>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>每当别人像我展示它的 <code>vim</code> 的时候, 我都是不屑的.</p>
 <p><img src="http://omotkhw3y.bkt.clouddn.com/vim.png" alt=""></p>
 <p>但是渐渐的, 如果有初学者问我要不要深入emacs, 我都会建议它: 最好不要, vistual studio code, qtcreator等都是不错的选择. 因为这东西会让你投入大量的时间折腾, 而且一旦习惯了快捷键操作, 效率是很高, 不过换一种没有配置的环境, 就会感觉很不习惯的.</p>
 <p>闲话不多说, 马上来正文. 效率Up Up Up!</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="明确用途"><a href="#明确用途" class="headerlink" title="明确用途"></a>明确用途</h2><p>我使用emacs, 主要是在远程shell到服务器以及linux环境下做开发的(但不是所有的内容, 什么看网页啊, 看视频啊, 写邮件啊则不是), 归纳起来如下:</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>根据自己的用途，一步步配置环境，下面按照顺序叙述：</p>
+<ul>
+<li>配置基本faces和主题</li>
+<li>配置cedet</li>
+<li>配置ecb</li>
+<li>配置Cscope或者ctags</li>
+<li>配置ID Utils</li>
+<li>配置COGRE(Graphviz Dot integration)</li>
+</ul>
+<h2 id="明确用途"><a href="#明确用途" class="headerlink" title="明确用途"></a>明确用途</h2><p>我使用emacs, 主要是在远程shell到服务器以及linux环境下做开发的(但不是所有的内容, 什么看网页啊, 看视频啊, 写邮件啊则不是), 归纳起来如下:</p>
 <ul>
 <li>linux下的终端操作, 即shell中命令操作(所有命令)</li>
 <li>c/c++开发, 包括代码的编写(各种补全, 提示等), 测试用例的编写, 调试, 日志输出, doc输出</li>
 <li>研究源码, 这个需求和上面有一定的区别, 研究源码的时候更加关注架构层次, 模型, 甚至详细的调用关系</li>
 <li>linux下的shell脚本编写, 可能包括一部分python脚本</li>
+<li>org-mode 文档的编写</li>
+<li>git 日志查看以及提交(可能会结合gitk)</li>
 </ul>
 <p>(我写 Java 和 Python 应用程序统统使用IDE, JetBrain的开发环境; 一般不写QT代码, 界面无感)</p>
-<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 	  
 	</div>
@@ -198,7 +210,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#明确用途"><span class="toc-article-text">明确用途</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#明确用途"><span class="toc-article-text">明确用途</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#配置"><span class="toc-article-text">配置</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li></ol>
 		</div>
 	
 	</div>
