@@ -1251,12 +1251,21 @@
   <div class="row">
 	
 	
-		<p>自动资源回收机制 <code>Resource Acquisition Is Initialization</code>, 说白了不值得一提.<br>但是我是想借助此说明, 资源回收的另外一种方式, 以及抛弃 <code>auto_ptr</code>的理由.</p>
-<p>第二次修订, 补充以下主题</p>
-<blockquote>
-<p>异常 , pimpl, 数据一致性 swap</p>
+		<blockquote>
+<p>在 smart-pointers-again 一文里面我谈 auto_ptr 时略带说过 RAII, 本文细讲.</p>
 </blockquote>
-<p>有不正确的地方, 希望您能发邮件帮忙指正一下, 谢谢.</p>
+<p>每次谈到 <code>资源管理</code> 大概都会说Gc, Raii, PIMPL, 智能指针, 健壮指针, 数据的一致性, 泄露等问题, 本文也想探讨一下, 但是以 RAII 为主.</p>
+<p>关于只能指针, 可以参考我前面的两篇文章:</p>
+<ul>
+<li><a href="http://www.merlinblog.site/2017/07/01/smart-pointers.html">smart-pointers</a></li>
+<li><a href="http://www.merlinblog.site/2017/07/01/smart-pointers-again.html">smart-pointers-again</a></li>
+</ul>
+<p>第二次修订, 补充以下主题</p>
+<ul>
+<li>异常</li>
+<li>PIMPL</li>
+</ul>
+<p>因为 PIMPL, RAII, 异常貌似和资源管理分不开.</p>
 	
 	</div>
   <a type="button" href="/2017/07/02/raii-technique-in-cpp.html#more" class="btn btn-default more">Read More</a>
@@ -2594,45 +2603,45 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/stl/">stl<span>3</span></a></li>
-		
-			<li><a href="/tags/udp/">udp<span>1</span></a></li>
+			<li><a href="/tags/thinking/">thinking<span>16</span></a></li>
 		
 			<li><a href="/tags/regex/">regex<span>4</span></a></li>
 		
-			<li><a href="/tags/java/">java<span>1</span></a></li>
+			<li><a href="/tags/http/">http<span>1</span></a></li>
 		
-			<li><a href="/tags/c/">c<span>1</span></a></li>
+			<li><a href="/tags/musings/">musings<span>1</span></a></li>
 		
-			<li><a href="/tags/boost/">boost<span>7</span></a></li>
+			<li><a href="/tags/tcp/">tcp<span>2</span></a></li>
 		
-			<li><a href="/tags/piano/">piano<span>1</span></a></li>
-		
-			<li><a href="/tags/network/">network<span>15</span></a></li>
-		
-			<li><a href="/tags/epoll/">epoll<span>1</span></a></li>
-		
-			<li><a href="/tags/trading/">trading<span>1</span></a></li>
-		
-			<li><a href="/tags/algorithm/">algorithm<span>1</span></a></li>
+			<li><a href="/tags/ip/">ip<span>1</span></a></li>
 		
 			<li><a href="/tags/shell/">shell<span>2</span></a></li>
 		
-			<li><a href="/tags/thread/">thread<span>7</span></a></li>
+			<li><a href="/tags/c/">c<span>1</span></a></li>
 		
-			<li><a href="/tags/design-pattern/">design-pattern<span>1</span></a></li>
-		
-			<li><a href="/tags/cpp/">cpp<span>22</span></a></li>
+			<li><a href="/tags/java/">java<span>1</span></a></li>
 		
 			<li><a href="/tags/dev/">dev<span>1</span></a></li>
 		
-			<li><a href="/tags/python/">python<span>2</span></a></li>
+			<li><a href="/tags/trading/">trading<span>1</span></a></li>
+		
+			<li><a href="/tags/c/">c++<span>12</span></a></li>
+		
+			<li><a href="/tags/piano/">piano<span>1</span></a></li>
 		
 			<li><a href="/tags/mysql/">mysql<span>1</span></a></li>
 		
-			<li><a href="/tags/socket/">socket<span>1</span></a></li>
+			<li><a href="/tags/design-pattern/">design-pattern<span>1</span></a></li>
 		
-			<li><a href="/tags/tcp/">tcp<span>2</span></a></li>
+			<li><a href="/tags/epoll/">epoll<span>1</span></a></li>
+		
+			<li><a href="/tags/network/">network<span>15</span></a></li>
+		
+			<li><a href="/tags/boost/">boost<span>7</span></a></li>
+		
+			<li><a href="/tags/thread/">thread<span>7</span></a></li>
+		
+			<li><a href="/tags/cpp/">cpp<span>22</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span>27</span></a></li>
