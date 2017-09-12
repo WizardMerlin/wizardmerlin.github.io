@@ -6,15 +6,15 @@
   <meta http-equiv="cache-control" content="no-cache">
   <meta http-equiv="expires" content="0">
   
-  <title>Asio | Merlin&#39;s Blog</title>
+  <title>心好累的资源管理 | Merlin&#39;s Blog</title>
   <meta name="author" content="MerlinYu">
   
-  <meta name="description" content="Boost库的异步网络编程">
+  <meta name="description" content="白话一下资源管理">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Asio"/>
+  <meta property="og:title" content="心好累的资源管理"/>
   <meta property="og:site_name" content="Merlin&#39;s Blog"/>
 
   
@@ -87,7 +87,7 @@
 
 	
 		<div class="page-header">
-			<h1> Asio</h1>
+			<h1> 心好累的资源管理</h1>
 		</div>
 	
 
@@ -104,11 +104,22 @@
 	<div class="mypage">		
 	  
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> Boost库的异步网络编程
+			<i class="fa fa-info-circle"></i> 白话一下资源管理
 		 </div> <!-- alert -->
 	  		
 
-	  <p>以前在说epoll和libevent的时候, 就谈到了异步IO的封装, 现在专门说说异步网络编程.</p>
+	  <p>C++中谈资源管理, 已经不是一天两天的事儿了, 感觉心好累. 看看大佬们为了资源管理(偷懒), 都做哪些事儿.</p>
+<p>由于以前已经写了好多篇了, 这里算作汇总吧:</p>
+<ul>
+<li>RAII</li>
+<li>PIMPL</li>
+<li>智能指针(引用计数,标记擦除)</li>
+<li>GC</li>
+<li>malloc/free</li>
+<li>new/delete</li>
+<li>分配器</li>
+<li>内存池</li>
+</ul>
 <a id="more"></a>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
@@ -121,13 +132,12 @@
 
     
     
-    <a href="/2017/08/12/network-in-cpp.html" type="button" class="btn btn-default"><i
-                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a href="/2017/07/30/what-u-want.html" type="button" class="btn btn-default ">Next<i
+    <a href="/2017/09/05/lessons-history.html" type="button" class="btn btn-default ">Next<i
                 class="fa fa-arrow-circle-o-right"></i></a>
     
 
@@ -150,7 +160,7 @@
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2017-08-11 
+	2017-09-12 
 	</div>
 	
 
@@ -174,7 +184,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/network/">network<span>15</span></a></li> <li><a href="/tags/boost/">boost<span>7</span></a></li>
+  <li><a href="/tags/cpp/">cpp<span>22</span></a></li>
     </ul>
 	</div>
 		
