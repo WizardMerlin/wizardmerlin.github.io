@@ -108,18 +108,49 @@
 		 </div> <!-- alert -->
 	  		
 
-	  <p>以前有专门说过 <a href="http://www.merlinblog.site/2017/03/19/linux-pthread.html" target="_blank" rel="external">posix-thread</a>, linux平台下非常不错的库.<br>这里总结一下c++中常用的thread库, 主要是c++11提供的, 从原来boost移植过来的 <code>boost::thread</code> (现在已经被纳入标准了).</p>
-<p>c++语言自己支持的线程语法.<br>同时可以参考以前的一篇文章: <a href="http://www.merlinblog.site/2017/06/21/boost.html" target="_blank" rel="external">Boost总结</a> .</p>
+	  <p>以前有专门说过 <a href="http://www.merlinblog.site/2017/03/19/linux-pthread.html" target="_blank" rel="external">posix-thread</a>, linux平台下非常不错的库.<br>这里总结一下c++中常用的thread库, 主要是c++11提供的<code>标准</code>, 从原来boost移植过来的 <code>boost::thread</code> (现在已经被纳入标准了).</p>
+<p>c++语言自己支持的线程语法, API调用. 同时可以参考以前的一篇文章: <a href="http://www.merlinblog.site/2017/06/21/boost.html" target="_blank" rel="external">Boost总结</a> .</p>
+<blockquote>
+<p>本文会花非常大的力气总结C++11并发库</p>
+</blockquote>
 <a id="more"></a>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>C+11中的实现基本和Boost一直, 只不过命名空间不一样, 以及涉及的头文件不一样:</p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>C+11中的实现基本和Boost一致, 只不过命名空间不一样以及涉及的头文件不一样:</p>
 <ul>
 <li>atomic</li>
 <li>mutex</li>
 <li>thread</li>
 <li>condition_variable</li>
+<li>future</li>
 </ul>
-<p>并且相关效率也不一样, 一般认为: lock, atomic, spinlock三者的效率相当, 但是mutex效率低.</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<p>并且相关效率也不一样, 一般认为: lock, atomic, spinlock三者的效率相当, 但是mutex效率低. (这也是你看到为啥和libevent相比, 不管是asio还是多线程框架, 基本讨不到偏移, 可能就是因为mutex的关系).</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>《C++ Concurrency In Action》 非常推荐, 如果没有时间看完一本书, 那么直接看我说精华, 也不错.</p>
+<p>首先c++, 或者boost 为了我们方便的使用线程, 做了很多封装, 什么gud之类的, 反而影响了我们对于线程范畴内最本质内容的理解:</p>
+<ul>
+<li>线程的控制(创建，销毁/分离)</li>
+<li>线程的同步(信号量(PV)，互斥量，竞争/冒险条件，文件锁，屏障)</li>
+<li>线程的属性</li>
+<li>线程的调试(多线程其实是不好调试的)</li>
+</ul>
+<hr>
+<p>根据 <a href="http://en.cppreference.com/w/cpp/thread" target="_blank" rel="external">Cppreference</a> 的说法, C++11并发库包含以下内容:</p>
+<ul>
+<li>atomic<br>该头文主要声明了两个类, std::atomic 和 std::atomic_flag，另外还声明了一套 C 风格的原子类型和与 C 兼容的原子操作的函数.<br>这个和boost是一致的, 不适用锁就能同步的原子操作</li>
+<li>thread<br>该头文件主要声明了 std::thread 类, 另外 <code>std::this_thread</code> 命名空间也在该头文件中.</li>
+<li>mutex<br>该头文件主要声明了与互斥量(mutex)相关的类，包括 std::mutex 系列类，std::lock_guard, std::unique_lock, 以及其他的类型和函数</li>
+<li>condition_variable<br>该头文件主要声明了与条件变量相关的类，包括 std::condition_variable 和 std::condition_variable_any</li>
+<li>future<br>该头文件主要声明了 <code>std::promise</code>, <code>std::package_task</code> 两个 Provider 类，以及 <code>std::future</code> 和 <code>std::shared_future</code> 两个 Future 类<br>另外还有一些与之相关的类型和函数，<code>std::async()</code> 函数就声明在此头文件中</li>
+</ul>
+<p>其中最后一个future由于涉及到了异步任务, 相当于对于线程的封装. 异步任务可以参考我的文章 <a href="http://www.merlinblog.site/2017/08/11/Asio.html" target="_blank" rel="external">Asio</a></p>
+<p>讲真, 从pthread切换过来, 没有感觉到幸福可能是因为pthread api用熟悉了, 但是不得不说c++并发库, 使得并发编程变得简单了.</p>
+<p>直接上手一个demo:<br><img src="http://omotkhw3y.bkt.clouddn.com/cpp_thread.jpg" alt=""></p>
+<p>可以看到老奸巨猾的c++11, 还是只给出了标准, 具体的实现, 要依赖系统平台的库.</p>
+<p>也就是说, linux平台, 我们完全可以认为, c++ 并发库给出了统一的操作API, 实际上是封装了pthread操作(具体封装过程可以参考具体的头文件, 比如创建线程这个, 其实就是根据_type参数判断对应pthread_create()的哪种调用).</p>
+<p>虽然只是封装, 但是, 确实精简了太多! 例如我要给线程执行函数传参, 看看下面是不是够简单的:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> n1 = <span class="number">500</span>;</div><div class="line">    <span class="keyword">int</span> n2 = <span class="number">600</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="function">thread <span class="title">t</span><span class="params">([&amp;](<span class="keyword">int</span> addNum)</span></span>&#123;</div><div class="line">        n1 += addNum;</div><div class="line">        n2 += addNum;</div><div class="line">    &#125;,<span class="number">500</span>);</div><div class="line">    t.join();</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; n1 &lt;&lt; <span class="string">' '</span> &lt;&lt; n2 &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面开始细说</p>
+<hr>
+<p>整理&amp;上传 ING.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
 <li><a href="">《C++并发编程实战》</a> </li>
 <li><a href="http://www.merlinblog.site/2017/06/21/boost.html" target="_blank" rel="external">Boost总结</a></li>
 </ol>
@@ -198,7 +229,7 @@
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
 		   <span class="toc-title">Contents</span>
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#引子"><span class="toc-article-text">引子</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#简介"><span class="toc-article-text">简介</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#尾巴"><span class="toc-article-text">尾巴</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
