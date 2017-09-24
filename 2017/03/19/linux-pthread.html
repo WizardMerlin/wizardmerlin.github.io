@@ -14,7 +14,7 @@
 <meta name="keywords" content="linux,线程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深挖Linux之线程">
-<meta property="og:url" content="localhost:4000/2017/03/19/linux-pthread.html">
+<meta property="og:url" content="www.merlinblog.site/2017/03/19/linux-pthread.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
 <meta property="og:description" content="这篇文章我前前后后写了几个月, 可谓是, 好累(笑). 线程还有其他文章, 本篇研究pthread">
 <meta property="og:locale" content="zh-Hans">
@@ -232,7 +232,7 @@ function tmpfobid()
 
 
         <div class="content" style="overflow: auto; align:center;">
-            <p>个人觉得对于线程的把控，难度要小于进程，进程的通信方式多到能写一本书，并且每种方式还有其各自的适用范围以及注意事项，真正玩起来还是有点儿多。甚至对于内核而言，它都不区分进程和线程。<br>但是线程就不一样，只是Linux下面的话，线程当前的模型就一种：<code>内核支持的NPTL</code>(Native POSIX Thread Library), 但是如果你读过<a href="http://www.merlinblog.site/2017/07/06/seven-concurrency-models.html" target="_blank" rel="external">《7周7并发模型》</a>的话就会知道并发问题远不止这么点儿东西。<br>本文从实战的角度展开主要涉及4个方面:</p>
+            <p>个人觉得对于线程的把控，难度要小于进程，进程的通信方式多到能写一本书，并且每种方式还有其各自的适用范围以及注意事项，真正玩起来还是有点儿多。甚至对于内核而言，它都不区分进程和线程。<br>但是线程就不一样，只是Linux下面的话，线程当前的模型就一种：<code>内核支持的NPTL</code>(Native POSIX Thread Library), 但是如果你读过<a href="http://www.merlinblog.site/2017/07/06/seven-concurrency-models.html">《7周7并发模型》</a>的话就会知道并发问题远不止这么点儿东西。<br>本文从实战的角度展开主要涉及4个方面:</p>
 <ul>
 <li>Thread management - creating, joining threads etc.</li>
 <li>Mutexes</li>
@@ -1525,7 +1525,7 @@ int main(void)
     extern __thread int t_val = 0; //初始化必须用编译期常量, 且不能调用构造函数
 </code></pre>
 <p>具体不展开, 有兴趣自己去查一下吧, 我还是建议使用 “不那么高效”的 <code>pthread_key_t</code></p>
-<h2 id="线程的调试"><a href="#线程的调试" class="headerlink" title="线程的调试"></a>线程的调试</h2><p>详细信息可以参看 <a href="http://www.merlinblog.site/2017/08/11/debug-multi-thread.html" target="_blank" rel="external">多线程-进程的调试</a> .</p>
+<h2 id="线程的调试"><a href="#线程的调试" class="headerlink" title="线程的调试"></a>线程的调试</h2><p>详细信息可以参看 <a href="http://www.merlinblog.site/2017/08/11/debug-multi-thread.html">多线程-进程的调试</a> .</p>
 <h2 id="其他注意事项"><a href="#其他注意事项" class="headerlink" title="其他注意事项"></a>其他注意事项</h2><p>线程的诸多好处, 貌似总是相对于进程的, 比如通信, 共享等都比进程方便; 但是线程也有不方便的:</p>
 <ol>
 <li>gdb调试困难</li>
@@ -1564,8 +1564,9 @@ int main(void)
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：<a href="" target="_blank" title="深挖Linux之线程">深挖Linux之线程</a></span><br/>
-	<span><b>本文链接</b>：<a href="" target="_blank" title="深挖Linux之线程">localhost:4000</a></span>
+	<span><b>本文标题</b>：<a href="2017/03/19/linux-pthread.html" target="_blank" title="深挖Linux之线程">深挖Linux之线程</a></span><br/>
+	<span><b>本文链接</b>：<a href="2017/03/19/linux-pthread.html" target="_blank" title="深挖Linux之线程">www.merlinblog.site/2017/03/19/linux-pthread.html</a></span>
+
   </blockquote>
 </div>
 

@@ -14,7 +14,7 @@
 <meta name="keywords" content="cpp,线程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深挖、挖线程模型(C+11并发库和Posix Pthread)">
-<meta property="og:url" content="localhost:4000/2017/07/04/deep-in-thread.html">
+<meta property="og:url" content="www.merlinblog.site/2017/07/04/deep-in-thread.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
 <meta property="og:description" content="在前面两篇文章的基础上, 进行深挖!">
 <meta property="og:locale" content="zh-Hans">
@@ -230,12 +230,12 @@ function tmpfobid()
         <div class="content" style="overflow: auto; align:center;">
             <p>前面已经有两篇 <code>非常详细</code> 的文章说过了 <code>pthread</code> 和 <code>c++并发库</code>, 这里再次对其进行深入探究.<br>如果对c/c++线程库不太熟悉, 可以参考我以前写的总结:</p>
 <ul>
-<li><a href="http://www.merlinblog.site/2017/03/19/linux-pthread.html" target="_blank" rel="external">linux-pthread</a></li>
-<li><a href="http://www.merlinblog.site/2017/06/29/thread-again.html" target="_blank" rel="external">c++线程库</a></li>
+<li><a href="http://www.merlinblog.site/2017/03/19/linux-pthread.html">linux-pthread</a></li>
+<li><a href="http://www.merlinblog.site/2017/06/29/thread-again.html">c++线程库</a></li>
 </ul>
 <p>当然你对进程有非常深入的理解那最好了, 因为本文是基于 <code>linux平台</code> 写的.</p>
 <ul>
-<li><a href="http://www.merlinblog.site/2017/03/12/linux-process.html" target="_blank" rel="external">linux-process</a> </li>
+<li><a href="http://www.merlinblog.site/2017/03/12/linux-process.html">linux-process</a> </li>
 </ul>
 <p><img src="http://omotkhw3y.bkt.clouddn.com/wawawa.jpg" alt="post-cover"></p>
 <a id="more"></a>
@@ -446,7 +446,7 @@ int main(void)
 }
 </code></pre>
 <p>还是要强调一下, 只有线程退出的时候, 采取主动调用那个<code>pthread_key_create()</code> 指定的清理函数.</p>
-<h3 id="同步，pthread-detach"><a href="#同步，pthread-detach" class="headerlink" title="同步，pthread_detach"></a>同步，pthread_detach</h3><p>同步里面 mutex 和 condition 用的最多, 其次是稍稍强大的 sem 信号量, 读写锁则是特别情况才用. 同步的内容比较多, 还是参考我的博客 <a href="http://www.merlinblog.site/2017/03/19/linux-pthread.html" target="_blank" rel="external">posix-thread</a> 吧.</p>
+<h3 id="同步，pthread-detach"><a href="#同步，pthread-detach" class="headerlink" title="同步，pthread_detach"></a>同步，pthread_detach</h3><p>同步里面 mutex 和 condition 用的最多, 其次是稍稍强大的 sem 信号量, 读写锁则是特别情况才用. 同步的内容比较多, 还是参考我的博客 <a href="http://www.merlinblog.site/2017/03/19/linux-pthread.html">posix-thread</a> 吧.</p>
 <p>(主要弄熟 posix thread 中的 mutex, detach)</p>
 <h2 id="回顾C-11并发库"><a href="#回顾C-11并发库" class="headerlink" title="回顾C++11并发库"></a>回顾C++11并发库</h2><h2 id="技术细节探讨"><a href="#技术细节探讨" class="headerlink" title="技术细节探讨"></a>技术细节探讨</h2><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
@@ -465,8 +465,9 @@ int main(void)
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：<a href="" target="_blank" title="深挖、挖线程模型(C+11并发库和Posix Pthread)">深挖、挖线程模型(C+11并发库和Posix Pthread)</a></span><br/>
-	<span><b>本文链接</b>：<a href="" target="_blank" title="深挖、挖线程模型(C+11并发库和Posix Pthread)">localhost:4000</a></span>
+	<span><b>本文标题</b>：<a href="2017/07/04/deep-in-thread.html" target="_blank" title="深挖、挖线程模型(C+11并发库和Posix Pthread)">深挖、挖线程模型(C+11并发库和Posix Pthread)</a></span><br/>
+	<span><b>本文链接</b>：<a href="2017/07/04/deep-in-thread.html" target="_blank" title="深挖、挖线程模型(C+11并发库和Posix Pthread)">www.merlinblog.site/2017/07/04/deep-in-thread.html</a></span>
+
   </blockquote>
 </div>
 

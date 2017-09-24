@@ -11,10 +11,10 @@
   <title>Boost Boost Boost | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="C++必备啊, Boost还能说啥?">
-<meta name="keywords" content="cpp,boost">
+<meta name="keywords" content="boost,cpp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Boost Boost Boost">
-<meta property="og:url" content="localhost:4000/2017/06/21/boost.html">
+<meta property="og:url" content="www.merlinblog.site/2017/06/21/boost.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
 <meta property="og:description" content="C++必备啊, Boost还能说啥?">
 <meta property="og:locale" content="zh-Hans">
@@ -217,9 +217,9 @@ function tmpfobid()
             
                 <div>
                     
-                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
-                    
                          <a style="margin-right:5px" class="tag is-post-tag" href="/tags/boost/">boost</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
                     
                 </div>
             
@@ -413,11 +413,11 @@ int main()
   return 0;
 }
 </code></pre><p>小结: 当在某些情况下需要拷贝对象参数时, 如果该对象无法进行拷贝或者拷贝代价过高, 这时候就可以选择ref.</p>
-<p>btw: 当然上面讲解的时候, 非常潦草, 也没有概括它更多的用法, 详细请参考 std::ref, 或者我的博文 <a href="http://www.merlinblog.site/2017/07/03/ref-in-cpp.html" target="_blank" rel="external">ref-in-cpp</a> .</p>
+<p>btw: 当然上面讲解的时候, 非常潦草, 也没有概括它更多的用法, 详细请参考 std::ref, 或者我的博文 <a href="http://www.merlinblog.site/2017/07/03/ref-in-cpp.html">ref-in-cpp</a> .</p>
 <h2 id="Bind"><a href="#Bind" class="headerlink" title="Bind"></a>Bind</h2><h2 id="Function"><a href="#Function" class="headerlink" title="Function"></a>Function</h2><h2 id="Thread库"><a href="#Thread库" class="headerlink" title="Thread库"></a>Thread库</h2><p>Boost并发领域有3个主要的库, Atomic, Thread, Asio, 它们达到并发的手段有一定的区别, 当然也有最佳适用场景了, 这里先谈线程(但是并发不仅仅只有多线程一种手段).</p>
 <p>该库有多个头文件, 最常用的是 <code>boost/thread.hpp</code>, 其他还有<code>boost/atomic.hpp</code>. 相比传统的 <code>pthread</code> 线程库, 新的线程库是为了简化线程的开发工作(提供了很多方便的封装, 并且同一种性质的机制, 提供了多个选择, 例如mutex, 还有shared_mutex等)(并发操作在这个真多核时代越来越重要). 如果你有 <code>pthread</code> 相关基础, 这里接受起来会非常爽, 非常快, 话不多说, 我就叙述一下.</p>
 <p>(仅仅一个 boost/thread 内容就不少)</p>
-<p>该部分内容, 大部分已经移植到标准库, 这里还有一本专门的书去讲解 <a href="">《C++并发编程实战》</a>, 我的另一篇文章 <a href="http://www.merlinblog.site/2017/06/29/thread-again.html" target="_blank" rel="external">thread-again</a> 会有详细的讲解.</p>
+<p>该部分内容, 大部分已经移植到标准库, 这里还有一本专门的书去讲解 <a href="">《C++并发编程实战》</a>, 我的另一篇文章 <a href="http://www.merlinblog.site/2017/06/29/thread-again.html">thread-again</a> 会有详细的讲解.</p>
 <h3 id="线程管理"><a href="#线程管理" class="headerlink" title="线程管理"></a>线程管理</h3><p>一个非常简单的demo:</p>
 <pre><code class="c++">#include &lt;iostream&gt;
 #include &lt;boost/config.hpp&gt;
@@ -560,7 +560,7 @@ int main() {
   // Write...
 }
 </code></pre>
-<h2 id="Asio"><a href="#Asio" class="headerlink" title="Asio"></a>Asio</h2><p>该部分属于网络编程部分, 也有很多封装API, 但是目前没有移植到标准库, 详细请参考我的另一篇文章 <a href="http://www.merlinblog.site/2017/08/11/Asio.html" target="_blank" rel="external">Asio</a> .</p>
+<h2 id="Asio"><a href="#Asio" class="headerlink" title="Asio"></a>Asio</h2><p>该部分属于网络编程部分, 也有很多封装API, 但是目前没有移植到标准库, 详细请参考我的另一篇文章 <a href="http://www.merlinblog.site/2017/08/11/Asio.html">Asio</a> .</p>
 <h2 id="Atomic"><a href="#Atomic" class="headerlink" title="Atomic"></a>Atomic</h2><p>这个库对于常用类型的原子操作做了底层封装, 可以不用加锁就让多个线程间可以同步的操作一个共享变量. 可担当计数器或者标志位的角色, 该原子操作不可打断.<br>一般 <code>bool</code>, <code>int</code> 类型的封装用的比较多, 特别是 <code>Boost::atomic&lt;int&gt;</code> (其typedef的 <code>Boost::atomic_int</code> ), 简单的案例如下:</p>
 <pre><code class="c++">#include&lt;boost/atomic.hpp&gt; 
 
@@ -596,7 +596,7 @@ int main()
 <li><a href="http://zh.highscore.de/cpp/boost/" target="_blank" rel="external">《Boost中文手册》</a>    (非常推荐给初学者, 但是写的非常简陋, 还有一些错误)</li>
 <li>《深入实践Boost:94个秘技》 机械工业出版社  (非常不错的一本, 推荐; 但不推荐初学者)</li>
 <li>《Boost程序完全开发指南 3e》 罗剑锋电子工业出版社  (作者水平好, 讲的也不错, 就是讲的比较啰嗦, 不推荐)</li>
-<li><a href="http://www.merlinblog.site/2017/08/11/Asio.html" target="_blank" rel="external">我的文章asio</a>  专门讲网络编程(同步IO和异步IO)</li>
+<li><a href="http://www.merlinblog.site/2017/08/11/Asio.html">我的文章asio</a>  专门讲网络编程(同步IO和异步IO)</li>
 </ol>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
@@ -615,8 +615,9 @@ int main()
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：<a href="" target="_blank" title="Boost Boost Boost">Boost Boost Boost</a></span><br/>
-	<span><b>本文链接</b>：<a href="" target="_blank" title="Boost Boost Boost">localhost:4000</a></span>
+	<span><b>本文标题</b>：<a href="2017/06/21/boost.html" target="_blank" title="Boost Boost Boost">Boost Boost Boost</a></span><br/>
+	<span><b>本文链接</b>：<a href="2017/06/21/boost.html" target="_blank" title="Boost Boost Boost">www.merlinblog.site/2017/06/21/boost.html</a></span>
+
   </blockquote>
 </div>
 
