@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>C++实现线程池模型 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="summary of thread pool base on c++">
+<meta name="keywords" content="线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++实现线程池模型">
+<meta property="og:url" content="localhost:4000/2017/06/19/thread-pool-model.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="summary of thread pool base on c++">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/thread_poll.jpg">
+<meta property="og:updated_time" content="2017-09-24T03:11:28.619Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++实现线程池模型">
+<meta name="twitter:description" content="summary of thread pool base on c++">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/thread_poll.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">2.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-number">2.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>C++实现线程池模型</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-06-19</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/线程/">线程</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>今天肯定是写兴奋了, 接着说说线程池的实现吧.</p>
+<blockquote>
+<p>线程池是 <code>池</code>技术的一种, 最初都是由 <code>对象池</code>引出,  包括 线程池, 连接池, 内存池等. 线程池维护线程数量, 使之处在一个稳定的水平, 连接池, 内存池也类似(可以参考的就是STL).</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/thread_poll.jpg" alt="post-cover"><br><a id="more"></a></p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>多线程模型中讲过, 当主线程 <code>accept</code> 之后, 立马开新线程处理该客户端的请求, 处理完毕关闭(结束)该线程; 下次再来请求, 再开新线程…<br>然而频繁地开辟与销毁线程极大地占用了系统的资源, 为了减小和缓和相关的开销, 这里引入了线程池模型.</p>
+<p>(写完之后发现实现一个线程池不是一件容易的事儿)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>在传统服务器结构中, 经常有一个总的监听线程监听有没有新的用户连接服务器, 每当有一个新的用户进入, 服务器就开启一个新的线程用户处理这个用户的数据包.<br>这个线程只服务于这个用户, 当用户与服务器端关闭连接以后, 服务器端销毁这个线程.</p>
+<p>大量用户的情况下, 系统为了开辟和销毁线程将浪费大量的时间和资源.</p>
+<p>线程池提供了一个解决外部大量用户与服务器有限资源的矛盾, 线程池和传统的一个用户对应一个线程的处理方法不同, 它的基本思想就是在程序开始时就在内存中开辟一些线程, 线程的数目是固定的, 他们独自形成一个类, 屏蔽了对外的操作, 而服务器只需要将数据包交给线程池就可以了.</p>
+<p>当有新的客户请求到达时, 不是新创建一个线程为其服务, 而是从“池子”中选择一个空闲的线程为新的客户请求服务, 服务完毕后, 线程进入空闲线程池中. 如果没有线程空闲的话, 就将数据包暂时积累, 等待线程池内有线程空闲以后再进行处理, 也就是说这里会有一个任务队列; 当有了新空闲线程才会拿走任务.</p>
+<p>通过重用已经存在的线程对象, 降低了对线程对象创建和销毁的开销. 当客户请求时, 线程对象已经存在, 可以提高请求的响应时间, 从而整体地提高了系统服务的表现.</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>大致理论清楚了, 也不一定就能把握好该模型, 因为每个人的编码水平不一样, 对细节上的处理不一样, 使用技巧的能力不一样.</p>
+<p>这个其实是个简单的模型, 很多细节都没有处理.(只看他的 <code>线程池结构体</code> 就能看出来)</p>
+<hr>
+<p>当然我也写了(见下面), 后续如果有高手的代码, 我也会详细参考和学习(后续博客再说).</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;assert.h&gt;
+
+
+/* task/job list*/
+typedef struct worker
+{
+  /*回调函数，任务运行时会调用此函数，注意也可声明成其它形式*/
+  void *(*process) (void *arg);
+  void *arg;/*回调函数的参数*/
+  struct worker *next;
+} CThread_worker;
+
+
+
+/*thread pool struct*/
+typedef struct
+{
+  pthread_mutex_t queue_lock;
+  pthread_cond_t queue_ready; 
+
+  /*链表结构，线程池中所有等待任务*/
+  CThread_worker *queue_head;
+
+  /*是否销毁线程池, 启用*/
+  int shutdown;
+
+  /*线程池中所有活着的线程*/
+  pthread_t *threadid;
+
+  /*线程池中允许的活动线程数目*/
+  int max_thread_num;
+
+  /*当前等待队列的任务数目*/
+  int cur_queue_size;
+} CThread_pool;
+
+/*往任务链表里添加任务*/
+int pool_add_worker (void *(*process) (void *arg), void *arg);
+
+/*线程回调函数*/
+void *thread_routine (void *arg);
+
+/*线程池对象*/
+static CThread_pool *pool = NULL;
+
+/*创建线程池*/
+void pool_init (int max_thread_num)
+{
+  pool = (CThread_pool *) malloc (sizeof (CThread_pool));
+
+  pthread_mutex_init (&amp;(pool-&gt;queue_lock), NULL);
+  pthread_cond_init (&amp;(pool-&gt;queue_ready), NULL);
+
+  pool-&gt;queue_head = NULL;
+  pool-&gt;max_thread_num = max_thread_num;
+  pool-&gt;cur_queue_size = 0;
+  pool-&gt;shutdown = 0;
+  pool-&gt;threadid =(pthread_t *) malloc (max_thread_num * sizeof (pthread_t));
+  int i = 0;
+
+  for (i = 0; i &lt; max_thread_num; i++) { 
+      pthread_create (&amp;(pool-&gt;threadid[i]), NULL, thread_routine,NULL);
+  }
+}
+
+/*向任务队列中加入任务*/
+int pool_add_worker (void *(*process) (void *arg), void *arg) 
+{
+
+  /*构造一个新任务*/
+  CThread_worker *newworker =
+    (CThread_worker *) malloc (sizeof (CThread_worker));
+
+  newworker-&gt;process = process;
+  newworker-&gt;arg = arg;
+  newworker-&gt;next = NULL;/*别忘置空*/
+
+  pthread_mutex_lock (&amp;(pool-&gt;queue_lock));
+
+  /*将任务加入到等待链表尾部*/
+  CThread_worker *member = pool-&gt;queue_head;
+  if (member != NULL) {
+      while (member-&gt;next != NULL)
+    member = member-&gt;next;
+      member-&gt;next = newworker;
+  } else {
+      pool-&gt;queue_head = newworker;
+  }
+
+  assert (pool-&gt;queue_head != NULL);
+  pool-&gt;cur_queue_size++;
+  pthread_mutex_unlock (&amp;(pool-&gt;queue_lock));
+
+  /*好了，等待队列中有任务了，唤醒一个等待线程*/
+
+  pthread_cond_signal (&amp;(pool-&gt;queue_ready));
+
+  return 0;
+}
+
+/*销毁线程池，等待队列中的任务不会再被执行，
+ 但是正在运行的线程会一直把任务运行完后再退出*/
+int pool_destroy ()
+{
+
+ if (pool-&gt;shutdown) {
+     return -1;
+ }
+ pool-&gt;shutdown = 1;
+
+ /*唤醒所有等待线程，线程池要销毁了*/
+ pthread_cond_broadcast (&amp;(pool-&gt;queue_ready));
+
+ /*阻塞等待线程退出，否则就成僵尸了*/
+ int i;
+ for (i = 0; i &lt; pool-&gt;max_thread_num; i++) {
+    pthread_join (pool-&gt;threadid[i], NULL);
+ }
+
+ free (pool-&gt;threadid);
+
+ /*销毁等待队列*/
+ CThread_worker *head = NULL;
+
+ while (pool-&gt;queue_head != NULL) {
+     head = pool-&gt;queue_head;
+     pool-&gt;queue_head = pool-&gt;queue_head-&gt;next;
+     free (head);
+ }
+
+ pthread_mutex_destroy(&amp;(pool-&gt;queue_lock));
+ pthread_cond_destroy(&amp;(pool-&gt;queue_ready));
+
+ free (pool);
+ pool=NULL;
+
+ return 0;
+}
+
+
+/*线程取走任务*/
+void* thread_routine (void *arg)
+{
+
+  printf (&quot;starting thread 0x%x\n&quot;, pthread_self ());
+
+  while (1) {
+      pthread_mutex_lock (&amp;(pool-&gt;queue_lock));
+      /*如果等待队列为0并且不销毁线程池，则处于阻塞状态; 注意
+      pthread_cond_wait是一个原子操作，等待前会解锁，唤醒后会加锁*/
+
+      while (pool-&gt;cur_queue_size == 0 &amp;&amp; !pool-&gt;shutdown) {
+      printf (&quot;thread 0x%x is waiting\n&quot;, pthread_self ());
+      pthread_cond_wait (&amp;(pool-&gt;queue_ready), &amp;(pool-&gt;queue_lock));
+      }
+
+      /*线程池要销毁了*/
+      if (pool-&gt;shutdown) {
+      /*遇到break,continue,return等跳转语句，千万不要忘记先解锁*/
+      pthread_mutex_unlock (&amp;(pool-&gt;queue_lock));
+      printf (&quot;thread 0x%x will exit\n&quot;, pthread_self ());
+      pthread_exit (NULL);
+      }
+
+      printf (&quot;thread 0x%x is starting to work\n&quot;, pthread_self ());
+
+      /*assert是调试的好帮手*/
+      assert (pool-&gt;cur_queue_size != 0);
+      assert (pool-&gt;queue_head != NULL);
+
+      /*等待队列长度减去1，并取出链表中的头元素*/
+      pool-&gt;cur_queue_size--;
+
+      CThread_worker *worker = pool-&gt;queue_head;
+      pool-&gt;queue_head = worker-&gt;next;
+
+      pthread_mutex_unlock (&amp;(pool-&gt;queue_lock));
+
+      /*调用回调函数，执行任务*/
+      (*(worker-&gt;process)) (worker-&gt;arg);
+      free (worker);
+
+      worker = NULL;
+    }
+
+  /*这一句应该是不可达的*/
+  pthread_exit (NULL);
+}
+
+
+/*模拟执行任务*/
+void* myprocess (void *arg)
+{
+  printf (&quot;threadid is 0x%x, working on task %d\n&quot;, 
+               pthread_self (),*(int *) arg);
+  sleep (1);/*休息一秒，延长任务的执行时间*/
+  return NULL;
+}
+
+
+
+int main (void)
+{
+
+  pool_init (3);/*线程池中最多三个活动线程*/
+
+  /*连续向池中投入10个任务*/
+  int *workingnum = (int *) malloc (sizeof (int) * 10);
+
+  int i;
+  for (i = 0; i &lt; 10; i++) {
+      workingnum[i] = i;
+      pool_add_worker (myprocess, &amp;workingnum[i]);
+  }
+
+  /*等待所有任务完成*/
+  sleep (5);
+  /*销毁线程池*/
+  pool_destroy ();
+
+  free (workingnum);
+  return 0;
+}
+</code></pre>
+<p>上面的实现, 有很多不足:</p>
+<ul>
+<li>该实现, 没有去考虑按需扩充线程池大小, 删减线程等问题.</li>
+<li>对于任务队列的操作, ready只考虑了为空, 没有考虑任务队列满的情况(特别是添加任务的时候).</li>
+<li>线程取走任务应该还有一个队列为空的条件变量, 不仅仅只是加锁操作那么简单.</li>
+</ul>
+<p>网上一个前辈写的(作为改进, 比我写的好), 总共 200 多行, 精炼:<br>头文件 tiny-threadpool.h</p>
+<pre><code class="c++">#ifndef TINY_THREADPOOL_H
+#define TINY_THREADPOOL_H
+
+#include &lt;pthread.h&gt;
+
+typedef struct _tthreadpool_s tthreadpool_t;
+typedef struct _tthread_s tthread_t;
+typedef struct _tjob_s tjob_t;
+
+struct _tthreadpool_s {
+    tthread_t *threads;
+    tjob_t *jobs;
+    int num_jobs;
+    int num_threads;
+
+    pthread_mutex_t jobs_mutex;
+    pthread_mutex_t num_jobs_mutex;
+    pthread_cond_t jobs_not_empty_cond;
+    pthread_cond_t jobs_not_full_cond;
+};
+
+struct _tthread_s {
+    pthread_t thread_id;
+    tthreadpool_t *pool;
+    tthread_t *prev;
+    tthread_t *next;
+    int killed;
+};
+
+struct _tjob_s {
+    void (*job_function)(tjob_t *job);
+    void *user_data;
+    tjob_t *prev;
+    tjob_t *next;
+};
+
+extern int
+tthreadpool_init(tthreadpool_t *pool, int numWorkers);
+
+extern void
+tthreadpool_shutdown(tthreadpool_t *pool);
+
+extern void
+tthreadpool_add_job(tthreadpool_t *pool, tjob_t *job);
+
+extern void
+tthreadpool_add_job_ex(tthreadpool_t *pool, tjob_t *job);
+
+extern void
+tthreadpool_wait(tthreadpool_t *pool);
+
+#endif // TINY_THREADPOOL_H
+</code></pre>
+<p>以及实现文件 tiny-threadpool.c</p>
+<pre><code class="c++">#include &lt;assert.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+#include &quot;tiny-threadpool.h&quot;
+
+#define ADD_THREAD(item, list) { \
+    item-&gt;prev = NULL; \
+    item-&gt;next = list; \
+    list = item; \
+}
+
+#define REMOVE_JOB(item, list) { \
+    if (item-&gt;prev != NULL) item-&gt;prev-&gt;next = item-&gt;next; \
+    if (item-&gt;next != NULL) item-&gt;next-&gt;prev = item-&gt;prev; \
+    if (list == item) list = item-&gt;next; \
+    item-&gt;prev = item-&gt;next = NULL; \
+}
+
+static void *thread_function(void *ptr) {
+    tthread_t *thread = (tthread_t *)ptr;
+    tjob_t *job;
+
+    while (1) {
+        pthread_mutex_lock(&amp;thread-&gt;pool-&gt;num_jobs_mutex);
+        pthread_mutex_lock(&amp;thread-&gt;pool-&gt;jobs_mutex);
+        while (thread-&gt;pool-&gt;jobs == NULL) {
+            pthread_cond_wait(&amp;thread-&gt;pool-&gt;jobs_not_empty_cond, 
+                          &amp;thread-&gt;pool-&gt;jobs_mutex);
+        }
+        job = thread-&gt;pool-&gt;jobs;
+        if (job != NULL) {
+            REMOVE_JOB(job, thread-&gt;pool-&gt;jobs);
+            thread-&gt;pool-&gt;num_jobs--;
+            pthread_cond_signal(&amp;thread-&gt;pool-&gt;jobs_not_full_cond);
+
+        }
+        pthread_mutex_unlock(&amp;thread-&gt;pool-&gt;jobs_mutex);
+        pthread_mutex_unlock(&amp;thread-&gt;pool-&gt;num_jobs_mutex);
+        if (thread-&gt;killed) break;
+        if (job == NULL) continue;
+        job-&gt;job_function(job);
+    }
+    free(thread);
+    pthread_exit(NULL);
+}
+
+int tthreadpool_init(tthreadpool_t *pool, int num_threads) {
+    int i = 0;
+    tthread_t *thread;
+    pthread_cond_t blank_cond = PTHREAD_COND_INITIALIZER;
+    pthread_mutex_t blank_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+    if (num_threads &lt; 1) num_threads = 1;
+    memset(pool, 0, sizeof(*pool));
+    memcpy(&amp;pool-&gt;jobs_mutex, &amp;blank_mutex, sizeof(pool-&gt;jobs_mutex));
+    memcpy(&amp;pool-&gt;num_jobs_mutex, &amp;blank_mutex, sizeof(pool-&gt;num_jobs_mutex));
+    memcpy(&amp;pool-&gt;jobs_not_empty_cond, &amp;blank_cond, sizeof(pool-&gt;jobs_not_empty_cond));
+    memcpy(&amp;pool-&gt;jobs_not_full_cond, &amp;blank_cond, sizeof(pool-&gt;jobs_not_full_cond));
+    pool-&gt;num_threads = num_threads;
+    pool-&gt;num_jobs = 0;
+
+    for (i = 0; i &lt; num_threads; i++) {
+        if ((thread = malloc(sizeof(tthread_t))) == NULL) {
+            fprintf(stderr, &quot;Failed to allocate threads&quot;);
+            return -1;
+        }
+        memset(thread, 0, sizeof(tthread_t));
+        thread-&gt;pool = pool;
+        if (pthread_create(&amp;thread-&gt;thread_id, NULL, 
+                thread_function, (void *)thread)) {
+            fprintf(stderr, &quot;Failed to start all threads&quot;);
+            free(thread);
+            return -1;
+        }
+        ADD_THREAD(thread, thread-&gt;pool-&gt;threads);
+    }
+
+    return 0;
+}
+
+void tthreadpool_shutdown(tthreadpool_t *pool) {
+    tthread_t *thread = NULL;
+
+    for (thread = pool-&gt;threads; thread != NULL; thread = thread-&gt;next) {
+        thread-&gt;killed = 1;
+    }
+
+    pthread_mutex_lock(&amp;pool-&gt;jobs_mutex);
+    pool-&gt;threads = NULL;
+    pool-&gt;jobs = NULL;
+    pthread_cond_broadcast(&amp;pool-&gt;jobs_not_empty_cond);
+    pthread_mutex_unlock(&amp;pool-&gt;jobs_mutex);
+}
+
+void tthreadpool_add_job(tthreadpool_t *pool, tjob_t *job) {
+    pthread_mutex_lock(&amp;pool-&gt;jobs_mutex);
+    ADD_THREAD(job, pool-&gt;jobs);
+    pthread_cond_signal(&amp;pool-&gt;jobs_not_empty_cond);
+    pthread_mutex_unlock(&amp;pool-&gt;jobs_mutex);
+}
+
+void tthreadpool_add_job_ex(tthreadpool_t *pool, tjob_t *job) {
+    pthread_mutex_lock(&amp;pool-&gt;jobs_mutex);
+
+    while(pool-&gt;num_jobs == 2 * pool-&gt;num_threads) {
+        pthread_cond_wait(&amp;pool-&gt;jobs_not_full_cond, &amp;pool-&gt;jobs_mutex);
+    }
+
+    ADD_THREAD(job, pool-&gt;jobs);
+    pool-&gt;num_jobs++;
+    pthread_cond_signal(&amp;pool-&gt;jobs_not_empty_cond);
+    pthread_mutex_unlock(&amp;pool-&gt;jobs_mutex);
+}
+
+void tthreadpool_wait(tthreadpool_t *pool) {
+    tthread_t *thread = NULL;
+    for (thread = pool-&gt;threads; thread != NULL; thread = thread-&gt;next) {
+        pthread_join(thread-&gt;thread_id, NULL);
+    }
+}
+</code></pre>
+<p>该模型的执行就比我的严谨, 还通过宏函数, 把重复逻辑抽取出来了, 非常不错.<br>参考网址是: <a href="http://www.cnblogs.com/haippy/archive/2012/09/28/2707668.html" target="_blank" rel="external">如何在Linux下实现你的线程池</a></p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>总的来说, 我写的还是不能用的, 要想写好, 至少考虑:</p>
+<ul>
+<li>工作资源的操作除了加锁操作之外, 还要考虑条件变量(为空为满)</li>
+<li>需要一个监管线程处理Live, Busy线程的动态调度问题(饱和因子)</li>
+</ul>
+<p>就这样吧, 个人编码能力有限(工作年限, 经验也有限), 后续有高手的实现, 我们再说.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="C++实现线程池模型">C++实现线程池模型</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="C++实现线程池模型">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

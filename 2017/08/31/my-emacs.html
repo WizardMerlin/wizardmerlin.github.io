@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Merlin&#39;s Emacs | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="刚好换新的环境,顺便把emacs环境重新修正一下">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Merlin&#39;s Emacs">
+<meta property="og:url" content="localhost:4000/2017/08/31/my-emacs.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="刚好换新的环境,顺便把emacs环境重新修正一下">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/emacs_ecb.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/vim.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/emacs_tmp.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/emacs-done.jpg">
+<meta property="og:updated_time" content="2017-09-24T07:31:45.671Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Merlin&#39;s Emacs">
+<meta name="twitter:description" content="刚好换新的环境,顺便把emacs环境重新修正一下">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/emacs_ecb.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#明确用途"><span class="toc-number">2.1.</span> <span class="toc-text">明确用途</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">2.2.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考gihub"><span class="toc-number">2.2.1.</span> <span class="toc-text">参考gihub</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#补充配置"><span class="toc-number">2.3.</span> <span class="toc-text">补充配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#备忘"><span class="toc-number">2.4.</span> <span class="toc-text">备忘</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#启动参数"><span class="toc-number">2.4.1.</span> <span class="toc-text">启动参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#手册"><span class="toc-number">2.4.2.</span> <span class="toc-text">手册</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#man"><span class="toc-number">2.4.3.</span> <span class="toc-text">man</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本按键"><span class="toc-number">2.4.4.</span> <span class="toc-text">基本按键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#窗口操作"><span class="toc-number">2.4.5.</span> <span class="toc-text">窗口操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模式"><span class="toc-number">2.4.6.</span> <span class="toc-text">模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#矩阵操作"><span class="toc-number">2.4.7.</span> <span class="toc-text">矩阵操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#寄存器"><span class="toc-number">2.4.8.</span> <span class="toc-text">寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#书签"><span class="toc-number">2.4.9.</span> <span class="toc-text">书签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cscope"><span class="toc-number">2.4.10.</span> <span class="toc-text">cscope</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#搜索和替换"><span class="toc-number">2.4.11.</span> <span class="toc-text">搜索和替换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模式-1"><span class="toc-number">2.4.12.</span> <span class="toc-text">模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件编码"><span class="toc-number">2.4.13.</span> <span class="toc-text">文件编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tabbar"><span class="toc-number">2.4.14.</span> <span class="toc-text">tabbar</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gdb"><span class="toc-number">2.4.15.</span> <span class="toc-text">gdb</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Autocomplete"><span class="toc-number">2.4.16.</span> <span class="toc-text">Autocomplete</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#magit"><span class="toc-number">2.4.17.</span> <span class="toc-text">magit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#speedbar"><span class="toc-number">2.4.18.</span> <span class="toc-text">speedbar</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ediff"><span class="toc-number">2.4.19.</span> <span class="toc-text">ediff</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dired"><span class="toc-number">2.4.20.</span> <span class="toc-text">dired</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#游戏"><span class="toc-number">2.4.21.</span> <span class="toc-text">游戏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hideshow"><span class="toc-number">2.4.22.</span> <span class="toc-text">hideshow</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#窗口恢复"><span class="toc-number">2.4.23.</span> <span class="toc-text">窗口恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#doxygen"><span class="toc-number">2.4.24.</span> <span class="toc-text">doxygen</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cedet"><span class="toc-number">2.4.25.</span> <span class="toc-text">cedet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ecb"><span class="toc-number">2.4.26.</span> <span class="toc-text">ecb</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文档"><span class="toc-number">2.5.</span> <span class="toc-text">文档</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Merlin's Emacs</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-08-31</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/linux/">linux</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>最开始(刚开始工作的时候)接触的 IDE 其实是 SourceInsight . 那时候很多 android 框架的源码要看, 要分析, 也一度想要购买正版 SI. 后来机缘巧合单位的老前辈推荐我用 emacs, 从此踏上一条不归路.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/emacs_ecb.png" alt=""></p>
+<p>本文主要记载我的emacs配置文件, 以及配置方法. 先给一个图吧. 中间可能有一些复杂，但是按照从简单到复杂的步骤其实还好; 想要省心省力, 不折腾的同学, 可以去购买一些商业的IDE, 节省了配置的时间.</p>
+<p>(效率上取决于对于IDE的熟悉情况, 个人以为emacs没有上限)</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>每当别人像我展示它的 <code>vim</code> 的时候, 我都是不屑的.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/vim.png" alt=""></p>
+<p>但是渐渐的, 如果有初学者问我要不要深入emacs, 我都会建议它: 最好不要, vistual studio code, qtcreator等都是不错的选择. 因为这东西会让你投入大量的时间折腾, 而且一旦习惯了快捷键操作, 效率是很高, 不过换一种没有配置的环境, 就会感觉很不习惯的.</p>
+<blockquote>
+<p>Emacs 就是一个坑, 一个永远挖不完坑, 会上瘾的.</p>
+</blockquote>
+<p>闲话不多说, 马上来正文. 效率Up Up Up!</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>根据自己的用途，一步步配置环境，下面按照顺序叙述：</p>
+<ul>
+<li>配置基本faces和主题</li>
+<li>配置按键</li>
+<li>配置语言支持</li>
+<li>配置hightlight</li>
+<li>配置ibuffer</li>
+<li>配置dropdownlist</li>
+<li>配置gdb</li>
+<li>配置autosave</li>
+<li>配置session</li>
+<li>配置showhide</li>
+<li>配置tabbar</li>
+<li>配置symbol-overlay (f8,f9)</li>
+<li>配置cscode</li>
+<li>配置autocomplete和yasippet</li>
+<li>配置cedet</li>
+<li>配置ecb</li>
+</ul>
+<blockquote>
+<p>中途还有一些个人使用习惯，不过多解释，只贴代码</p>
+</blockquote>
+<h2 id="明确用途"><a href="#明确用途" class="headerlink" title="明确用途"></a>明确用途</h2><p>我使用emacs, 主要是在远程shell到服务器以及linux环境下做开发的(但不是所有的内容, 什么看网页啊, 看视频啊, 写邮件啊则不是), 归纳起来如下:</p>
+<ul>
+<li>linux下的终端操作, 即shell中命令操作(所有命令)</li>
+<li>c/c++开发, 包括代码的编写(各种补全, 提示等), 测试用例的编写, 调试, 日志输出, doc输出</li>
+<li>研究源码, 这个需求和上面有一定的区别, 研究源码的时候更加关注架构层次, 模型, 甚至详细的调用关系</li>
+<li>linux下的shell脚本编写, 可能包括一部分python脚本</li>
+<li>org-mode 文档的编写</li>
+<li>git 日志查看以及提交(可能会结合gitk)</li>
+</ul>
+<p>(我写 Java 和 Python 应用程序统统使用IDE, JetBrain的开发环境; 一般不写QT代码, 界面无感)</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>中途的半成品<br><img src="http://omotkhw3y.bkt.clouddn.com/emacs_tmp.jpg" alt=""> </p>
+<p>最终配置差不多就是这个样子:<br><img src="http://omotkhw3y.bkt.clouddn.com/emacs-done.jpg" alt=""></p>
+<pre><code class="lisp">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;From Merlin deepin15.4;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; File name: ` ~/.emacs &#39;    
+;;; ---------------------
+;;;
+;;; If you need your own personal ~/.emacs
+;;; please make a copy of this file
+;;; an placein your changes and/or extension.
+;;;
+;;; Copyright (c) 2017 deepin 15.4.1
+;;;
+;;; Author: Merlin Yu, &lt;wizardmerlin945@gmail.com&gt; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 配置上, 除了基本配置外， 插件包可以采用自动管理；不过我还是采用 手动方式
+;; (具体的版本&amp;加强包可能自动下载不到)
+
+;;(load-file &quot;/home/merlin/.emacs.d/lisp/cedet/cedet-1.1/common/cedet.el&quot;)
+
+
+;;自动包管理
+;;(require &#39;merlin-init-autopackage)
+
+
+;;;;; 手动方式(即下面自动递归添加~/.emacs.d/lisp内的包)
+;;(add-to-list &#39;load-path &quot;~/.emacs.d/lisp&quot;)
+(defun add-subdirs-to-load-path (dir)
+  &quot;Recursive add directories to &#39;load-path&#39;.&quot;
+  (let ((default-directory (file-name-as-directory dir)))
+    (add-to-list &#39;load-path dir)
+   (normal-top-level-add-subdirs-to-load-path)))
+(add-subdirs-to-load-path &quot;~/.emacs.d/lisp&quot;)
+
+
+;;;;;;;;;;;;;;;;;;;;基本配置;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;配置基本的facet和主题
+(load &quot;merlin-init-ui&quot;)
+
+
+;;配置基本并且常用的设置
+(load &quot;merlin-init-base&quot;)
+
+
+;;配置高效的快捷键(这个要在相关的扩展插件之后)
+;;也包括开发语言相关的
+(load &quot;merlin-init-key&quot;)
+
+
+;; 配置语言模式
+(load &quot;merlin-init-language-mode&quot;)
+
+;;;;;;;;;;;;;;;;;;;手动配置的各种插件;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;更好的自动保存插件
+(load &quot;merlin-init-autosave&quot;)
+
+
+;;配置高亮当前行
+(load &quot;merlin-init-hl-line&quot;)
+
+
+;; 配置高亮查找
+(load &quot;merlin-init-symbol-overlay&quot;)
+
+;;配置自动补全
+(load &quot;merlin-init-autocomplete&quot;)
+
+
+;; 代码折叠(本来希望依靠cedet的, 结果它不靠谱)
+(load &quot;merlin-init-showhide&quot;)
+
+
+;;配置tab栏(注意只有图形化界面可以使用)
+;;(load &quot;merlin-init-tabbar&quot;)
+;;不要配置tabbar了, 给ecb腾出快捷键(terminal使用场景偏多)
+
+;;配置shell
+(load &quot;merlin-init-shell&quot;)
+
+
+;;配置gdb
+(load &quot;merlin-init-gdb&quot;)
+
+
+;;配置书签 (我一般不使用书签, 寄存器)
+;;(load &quot;merlin-init-bookmark&quot;)
+
+
+;;配置 cscope
+(load &quot;merlin-init-cscope&quot;)
+
+
+;;配置git
+;;(load &quot;merlin-init-git&quot;)
+
+
+;;配置cedet
+(load &quot;merlin-init-cedet&quot;)
+
+;;;配置ecb
+(load &quot;merlin-init-ecb&quot;);
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;not yet---begin::::::::::
+
+;;;ediff
+;;;dried
+;;;doxygen
+;;compile
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;not yet---end::::::::::
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;配置浏览器
+(load &quot;merlin-init-browser&quot;)
+
+
+;;ibuffer
+;;不同于系统自带的buffer, 它会单独打开一个buffer, 作为buffer的管理页面
+(load &quot;merlin-init-ibuffer&quot;)
+
+;;保存session（下次启动的时候会在最近打开的菜单栏中显示）
+;;(load &quot;merlin-init-session&quot;)
+
+;;配置desktop.el(每次启动的时候自动加载上次没有关闭的)
+;;这个东西必须放在最后， 确保其可以正确辨别文件所需要的模式
+(load &quot;merlin-init-desktop&quot;)
+</code></pre>
+<h3 id="参考gihub"><a href="#参考gihub" class="headerlink" title="参考gihub"></a>参考gihub</h3><p>代码太多了， 我直接上传了 <a href="">github</a></p>
+<h2 id="补充配置"><a href="#补充配置" class="headerlink" title="补充配置"></a>补充配置</h2><p>一些有用的，但是我个人又没有配置的</p>
+<p>在配置yasnippet的时候，注意到了他的已经知道的模板</p>
+<pre><code>yasnippet:
+
+高效设置:
+C++ mode
+(c++独有的)
+acl            cni          delete              ffo              gnn     ita              mrg         operator[]        psc     rpl      std_colon   tfm
+acm            cnt          delete[]            fil              gnr     iterator         msm         operator+         pst     rtc      sth         this
+ajf            const_[]     doc                 fin              gtest   ltr              mxe         operator+=        ptc     rte      sti         throw
+alo            constructor  d_operator          fixture          ignore  lwr              namespace   operator_istream  ptn     rvc      sto         trm
+ano            cout         d_operator[]        fln              ihp     lxc              nno         operator_ostream  public  rvr      str         try
+assert         cpb          d_operator[]_const  fnd              ihu     map              ns          ostream           rci     shf      sts         tryw
+beginend       cpi          d_operator_istream  fne              inline  member_function  nth         pack              rmc     spt      stv         ucp
+boost_require  cpn          d_operator_ostream  fni              io      mkh              nxp         phh               rmf     srh      swr         upr
+cerr           cpp          dynamic_casting     fori             ipr     mme              oit         ppt               rmi     srn      template    uqe
+cin            cpy          enum                fre              ipt     mne              operator=   private           rmv     srt      test case   using
+class          cstd         eql                 friend           iss     module           operator==  protected         rpc     sstream  test_main   vector
+class11        d+=          erm                 fun_declaration  isu     mpb              operator!=  prp               rpi     std      test_suite
+
+
+
+
+C mode 
+(主要是添加一些头文件)
+assert  compile  define  malloc  packed  printf  stdio  stdlib  string  union  unistd
+
+
+cc mode
+(c,c++共有的)
+case  else              fopen  for_n                 if     inc    main  member_description  printf  switch   typedef
+do    file_description  for    function_description  ifdef  inc.1  math  once                struct  ternary  while
+</code></pre><h2 id="备忘"><a href="#备忘" class="headerlink" title="备忘"></a>备忘</h2><p>这里记录一下，算是一个我自己的备忘吧.</p>
+<p>Emacs中的按键不计其数，也可以自行设定，因为按键表示相应的lisp函数的快捷方式. 改坏了怎么办?, 把.meacs文件删除就好了.</p>
+<h3 id="启动参数"><a href="#启动参数" class="headerlink" title="启动参数"></a>启动参数</h3><p>emacs的启动参数:</p>
+<pre><code>emacs -q   (安静启动, 不执行.emacs文件)
+emacs -u joe  (使用joe用户的.emacs启动)
+emacs --debug-init (调试模式启动)
+emacs -nw  (terminal 中启动)
+emacs practice.b --insert myfile  (启动practice.b文件, 并把myfile插入到打开的buffer中)
+emacs --insert myfile (把myfile插入到临时的buffer中)
+emacs +15 practice.b (打开文件,并定位到15行; 注意, 如果是输入的数字长于文件的总长度, 那么就会定位到文件结尾)
+</code></pre><h3 id="手册"><a href="#手册" class="headerlink" title="手册"></a>手册</h3><p><code>C-h t</code> 查看教程, 该教程看完, 用熟悉;  初次之外可以查看 info 手册:</p>
+<p><code>C-h i</code> , 之后使用m+关键词查看, d返回, 回车是选中, 还可以使用u和l:翻页和返回上次浏览的地方)</p>
+<h3 id="man"><a href="#man" class="headerlink" title="man"></a>man</h3><p>使用man手册</p>
+<ul>
+<li><code>M-x woman</code></li>
+<li><code>M-x man</code></li>
+<li>然后输入相关的关键字</li>
+</ul>
+<p>我一般使用 <code>M-x man</code>.<br>对于man手册的支持, emacs的woman还要去解析man文件(<code>/usr/share/man</code>), 感觉比较坑爹; </p>
+<h3 id="基本按键"><a href="#基本按键" class="headerlink" title="基本按键"></a>基本按键</h3><ol>
+<li>C-x i  插入文件(在已打开的文件内插入文件)</li>
+<li>C-x, C-w 另存为</li>
+<li>C-x u 撤销(C-/)</li>
+<li>C-x h 全部选中 (这个后面详细说)</li>
+<li>C-% 查找替换(C-s以及C-r是查找)</li>
+<li>C-x b 选中命名的buffer</li>
+<li>C-x, C-b 列出所有buffer</li>
+<li>M-x, kill-buffer  杀死buffer, 快捷键 C-x k</li>
+<li>C-v 向下翻页 (C-u 8 C-v 向下翻8页)</li>
+<li>M-v 向上翻页</li>
+<li>C-k 删除一行</li>
+<li>C-h m 查看当前模式(terminal可能)</li>
+<li>C-x C-q 设置或者取消只读模式</li>
+<li>格式代码(缩进)<br>C-x h TAB 格式化选中的代码<br>C-c,C-q 对整个函数进行缩进 (光标应该在函数内, 并且需要再源码mode以内)<br>选中区域,  M-x untabify, 将 TAB 字符转换为空格<br>选中区域, M-x indent-region, 对齐文本块</li>
+<li>注释:<br><code>M-;</code> 在该行的末尾添加注释符号(当然选中块之后也就可以注释整个block)<br><code>C-c C-c</code> 对一块代码进行注释;<br>取消注释用命令 <code>uncomment-region</code> (其实用undo也可以)</li>
+<li>折叠代码(我个人设置的是 <code>M+,</code>)</li>
+<li>标记和调整(我个人设置的是<code>C-c m</code>, <code>C-c j</code>)</li>
+<li>括号间跳转：(括号和函数间跳转)<br>括号之间来回跳转的时 候按 C-M-f 和 C-M-b.<br><code>C-M-a</code>   移动到当前函数的开始(如果和系统的快捷键冲突, 那么就多加一个shift键盘)<br><code>C-M-e</code>   移动到当前函数的结尾<br>(注意可以把C-M-a, C-M-e合并到C-M-f和C-M-b中, 我通常采取的策略是使用%进行跳转)</li>
+<li>标记移动和全选:<br>标记整个页面 <code>c-x,c-p</code> (实际上这里多是整个buffer, 而不是整个frame)<br>标记整个缓冲区 c-x h (常用)<br>标记整个段落 m-h (通常没有用-而是用c-m-h)<br><code>c-space</code> 设置标记(如果冲突就多加一个shift 或者使用 c-@) 然后移动光标, 就会从标记的位置选中移动选中区域<br><code>c-x c-x</code> 快速返回移动前的光标位置(互换插入点和文本标记的位置)<br><code>c-m-h</code> 快速选中一个函数 (如何按键有冲突, 可以多加一个shift)</li>
+<li>大小写转换(默认是被禁止)–注意是C-x开始<br>downcase-region (<code>C-x C-l</code>) ;; 选定区域全部改为小写<br>upcase-region (<code>C-x C-u</code>)   ;; 选定区域全部改为大写<br>可以直接在.emacs文件中设置:<pre><code>(put &#39;downcase-region &#39;disabled nil)
+(put &#39;upcase-region &#39;disabled nil)
+</code></pre>只是转换一个单词的话, 可以用 <code>M-u</code> 和 <code>M-l</code>, 它会把从光标开始的后面一个单词变成大写或者小写.</li>
+</ol>
+<h3 id="窗口操作"><a href="#窗口操作" class="headerlink" title="窗口操作"></a>窗口操作</h3><p>frame, 缓冲区, 窗口的关系:<br>整个窗口在Emacs中叫做frame, 图形界面下的Emacs可以打开多个frame. 每个frame从上到下分成3部分，分别是缓冲区,状态栏和回显区(一般工具栏隐藏) 缓冲区是编辑的主区域, 但是在这里操作的还不是真正的文件, 而是文件的一个缓存(buffer)。只有执行写入操作时，才会将buffer的内容写入到文件. 缓冲区可以分成多个区域, 缓冲不同的内容. 这些区域在Emacs中成为”窗口”.</p>
+<ol>
+<li>C-x 1 只保留当前窗格</li>
+<li>C-x 0 关闭当前窗格</li>
+<li>C-x 2 切割为等宽半高的两个窗格</li>
+<li>C-x o 切换到另一个窗格   (窗口相关的可以参考, 参考ibuffer.el扩展)</li>
+</ol>
+<p>缓冲区之下是状态栏，显示当前的一些状态信息，比如图中从左至右依次为:</p>
+<pre><code>-UU-:----F1  tmp            Bot L31    (Fundamental) -------
+</code></pre><p>解释:</p>
+<ul>
+<li><code>UU</code>: 当前的文件编码是UTF-8, 如果是GBK会显示c</li>
+<li><code>**</code>: 文件状态，**表示未保存，–表示可写，%%表示只读(C-x, C-q)</li>
+<li><code>tmp</code>: 是当前编辑的文件的名称</li>
+<li>All: 表示当前缓冲区已经显示文件的所有内容(Bot,表示处于文件的末尾处)</li>
+<li>L31: 当前光标所在的行数</li>
+<li>fundamental: 当前的模式</li>
+</ul>
+<h3 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h3><p>模式:</p>
+<ul>
+<li>主要模式: 当前主要模式只有一种<br>fundamental-mode: 缺省的 Emacs 模式，拥有最少设置和绑定<br>text-mode：编辑文本的基本模式<br>c-mode：用于编辑程序源代码 (以及其他源码模式)<br>lisp-interaction-mode:用于编辑和编译 Lisp 代码<br>ptex-mode：用于编辑 TeX 文档</li>
+<li>次要模式 : 可以组合到主要模式中(次要模式可以有多种), 如果输入的模式包含在当前模式中, 对于主要模式, 会清空所有的次要模式<br>abbrev-mode：用于生成和使用缩写<br>auto-fill-mode：用于自动文字回绕、填充较长的行和段落<br>line-number-mode：显示当前行号(默认在状态栏上显示的就是)<br>overwrite-mode：覆盖模式, 代替默认的插入模式<br>以及其他插件模式</li>
+</ul>
+<h3 id="矩阵操作"><a href="#矩阵操作" class="headerlink" title="矩阵操作"></a>矩阵操作</h3><p>(C-x r 开头; 和寄存器, 书签有重合)</p>
+<p>这里可以补充一个矩形操作:(矩阵操作, 其实就是列模式)<br>其实我并没有觉得矩形剪切和复制时多么棒的东西, 平时用到的标记剪切其实也不错.</p>
+<p>主要就是下面几个命令:(先用C-space或者C-@设一个mark, 移动光标到另一点; 剪切的其实是对角线围成的矩形)</p>
+<pre><code>C-x r k 剪切一个矩形块
+C-x r y 粘贴一个矩形块  
+C-x r d 删除一个矩阵块
+
+
+C-x r c 清除一个矩形块(使其变成空白) 
+C-x r o 插入一个矩形块(打开当前的矩形区块，使用空白字符填充整个区域，并将该矩形区块的所有文本移动到右边)
+C-x r t 在选定区域的所有列前插入样的字符
+</code></pre><p>(没有复制啊? 我说你傻啊, 先剪切, 然后undo, 然后粘贴)</p>
+<p>Keystrokes             Command name                                             Action<br>C-x r  k                kill-rectangle                                  Delete a rectangle and store it.<br>C-x r  d                delete-rectangle                                Delete a rectangle and do not store it.<br>C-x r  y                yank-rectangle                                  Insert the last rectangle killed<br>C-x r c                 clear-rectangle                                 Using spaces, blank out the area marked as a rectangle and do not store it.<br>C-x r o                 open-rectangle                                  Insert a blank rectangle in the area marked.<br>C-x r r r               copy-rectangle-to-register                  Copy rectangle to register r (where r is any character) .<br>C-x r i r               insert-register                                 Insert rectangle from register r (where r is any character).<br>（none)                 delete-whitespace-rectangle             if a rectangle includes initial whitespace, deletes it, narrowing rectangle.<br>C-x r t string          Enter string-rectangle                      Change contents of marked rectangle to string (if string is narrower<br>                                                                    or wider than rectangle, dimensions change accordingly).<br>(none)                  string-insert-rectangle                     Prompts for string and inserts rectangle.</p>
+<hr>
+<p>不满意的话, 还可以使用 <code>cua-mode</code> . (我个人不用)</p>
+<p>除了emacs本身支持的列模式外，emacs还可以通过cua-mode支持一种可视化的列模式。在cua-mode下，按[C-return]会进入 cua rectangle模式。<br>在这个模式下可以通过鼠标点击确认起点，然后通过光标键来选中一个rect范围，这个rect会用另外的颜色显示出来。 直接输入字符: 在每行前(或后)都插入这个字符.</p>
+<pre><code>[M-a]: 将rect中的文字左对齐  
+[M-b]: 用空格(tabs或者spaces)替换所有rect中的字符  
+[M-c]: 去掉所有行左侧的空格  
+[M-f]: 用单个字符替换所有rect中的字符(提示输入一个字符)  
+[M-i]: 对每行中第一个找到的数字进行加1操作(自动把0x开头的当作十六进制数字)  
+[M-k]: 剪切rect  
+[M-l]: 把rect中的内容全部转换为小写  
+[M-m]: 拷贝rect  
+[M-n]: 用一串自增的数字替换rect中的每一行(这个功能可以用来给每行编号)  ### 非常好用的功能  
+[M-o]: rect的内容右移，选中的rect用空格填充  
+[M-r]: 用字符串替换符满足正则表达式的字符串  
+[M-R]: 上下反转  
+[M-s]: 把rect中的每一行替换为一个字符串(提示输入)  
+[M-t]: 把rect整个替换为一个字符串(提示输入)  
+[M-u]: 把rect中的内容全部转换为大写  
+[M-|]: 对rect执行一个shell命令
+</code></pre><p>我个人一般最多用到矩阵模式.</p>
+<h3 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h3><p>(这里的命令注意和矩阵相区别一下)<br>在多个文件中逛的时候，我们常常需要快速切换到先前访问的某个位置. 因此, 我们需要把文件及其光标位置暂时存放在某个地方. (一般我们都会根据register进行一定封装, 从而进行来回的跳转) 简单说, 这里的寄存器(register), 就是保存一些位置信息(光标位置, 文件信息等)</p>
+<p>最基本的用法(和我定义的C-c,m以及C-c,j比起来作用弱一点儿)<br>将当前光标所在位置保存入一个register中:<br><code>C-x r SPACE + register名</code> (一个字符, 比如a吧), 然后我们就可以到处瞎逛，若要回到保存的register a位置，我们可以输入: <code>C-x r j a</code></p>
+<p>当然你可以定义好多个寄存器名字(位置)</p>
+<pre><code>M-x view-register    查看某一个register
+M-x list-registers   查看所有的register
+</code></pre><p>在进行矩阵操作的时候, 中间有两个命令: 保存到寄存器, 并存寄存器中恢复</p>
+<pre><code>C-x s X                 copy-to-register                          将选定区域保存到寄存器 X
+C-x r r r               copy-rectangle-to-register                Copy rectangle to register r (where r is any character) .
+C-x r i r               insert-register                           Insert rectangle from register r (where r is any character).
+</code></pre><p>通常来说, 我个人不会使用这么原始的方式(偶尔可能会用), 一般使用其他更加高级的标记方式,比如我自己定义的 <code>C-.</code>以及 <code>C-,</code> .<br>比如ctags, etags, gtags, 或者csope等都是比较好的选择.   (我个人一般使用csope)</p>
+<p>比如说 etags:<br>在代码目录中运行 <code>etags -R</code><br>如果要向现有tags表中添加，则运行 <code>etags -a</code><br>访问tag文件的话: <code>M-x visit-tags-table</code> , 常用的快捷键如下:</p>
+<pre><code>M-.       访问tag 
+C-u M-.   访问下一个tag 
+M-*       返回
+</code></pre><h3 id="书签"><a href="#书签" class="headerlink" title="书签"></a>书签</h3><p>保存缓冲区中位置的另一种工具(注意一下和矩阵操作的快捷键)<br>这些 Emacs 书签 的工作方式与寄存器相同，但是它们的标签可以超过一个字符长，而且它们比寄存器更为持久：如果保存了书签，那么您可以在两个不同的会话之间使用它们。它们将一直保留下来，直到您删除它们。正如它们的名称所表示的，对于保存您在缓冲区中的位置，以便您稍后可以返回到该位置（通常是在以后的 Emacs 会话期间），使用书签是非常方便的。</p>
+<p>不过多介绍了:</p>
+<pre><code>C-x r m Bookmark               bookmark-set              设置一个名为 Bookmark 的书签
+C-x r l                           bookmarks-bmenu-list        列出所有已保存的书签
+C-x r b Bookmark                      bookmark-jump              跳转至名为 Bookmark 的书签中所设置的位置(实际上是恢复书签)
+未定义                          bookmark-delete                  删除一个书签
+未定义                                         bookmark-save            将所有的书签保存到书签文件中(这样下次启动就可以跨越session了)
+</code></pre><p>注意, 自从emacs24, 退出的时候 书签是自动保存在相关文件中的:</p>
+<ul>
+<li>In emacs 24.x, bookmark file is at ~/.emacs.d/bookmarks.</li>
+<li>In emacs 23.x, bookmark file is at ~/.emacs.bmk.<br>你也可以自己设置:<pre><code>(setq bookmark-save-flag 1) ; everytime bookmark is changed, automatically save it
+(setq bookmark-save-flag t) ; save bookmark when emacs quits
+(setq bookmark-save-flag nil) ; never auto save.
+</code></pre></li>
+</ul>
+<p>当然你可以设置在每次启动的时候, 自动载入书签:</p>
+<pre><code>(require &#39;bookmark)
+(bookmark-bmenu-list)
+(switch-to-buffer &quot;*Bookmark List*&quot;)
+</code></pre><p>(我个人使用desktop插件, 所以不写该句)</p>
+<p>当然你可以进行设置一些快捷键:</p>
+<pre><code>(global-set-key [(f9)] &#39;list-bookmarks)
+(global-set-key [(f10)] &#39;bookmark-set)
+</code></pre><p>在list bookmark之后(相当于打开了bookmark文件), 可以使用下列命令在列表中操作:</p>
+<p>Type d to mark the current item for remove.<br>Type x to remove all D marked ones. (执行)<br>Type r to rename current item’s title.<br>Type s to save the change.</p>
+<p>现在有了 desktop, 书签显得比较鸡肋.</p>
+<h3 id="cscope"><a href="#cscope" class="headerlink" title="cscope"></a>cscope</h3><p>下面说说我cscope的配置: (cscope和ecb功能上有一定重合)<br>GNU Emacs默认自带etags的支持, 但是不如cscope强大, cscope本身是一个独立软件, (建立索引之后)而且非常强大.</p>
+<p>可以独立安装:</p>
+<pre><code>$ which cscope
+/usr/local/bin/cscope
+
+$ file cscope/contrib/xcscope/cscope-indexer 
+cscope/contrib/xcscope/cscope-indexer: POSIX shell script, ASCII text executable
+</code></pre><p>在外部使用:</p>
+<p>要使用 cscope, 先建索引, 假设所有的头文件和h都在src下面</p>
+<pre><code>find src/ -type f -iname &quot;*.h&quot; &gt;  cscope.files (这里创建)
+find src/ -type f -iname &quot;*.cpp&quot; &gt;&gt; cscope.files （这里是&gt;&gt;追加）
+</code></pre><p>(把所有符号都追加到一个文件可以加快建立索引文件的速度, 但是不利于之后展开文件)</p>
+<pre><code>#!/bin/sh
+
+find . -name &quot;*.h&quot; -o -name &quot;*.c&quot; -o -name &quot;*.cc&quot; &gt; cscope.files
+cscope  -Rbkq -i cscope.files
+</code></pre><p>其他选项解释:</p>
+<ul>
+<li>-R: 在生成索引文件时, 搜索子目录树中的代码</li>
+<li>-b: 只生成索引文件, 不进入cscope的界面</li>
+<li>-q: 生成cscope.in.out和cscope.po.out文件，加快cscope的索引速度</li>
+<li>-k: 在生成索引文件时, 不搜索/usr/include目录</li>
+<li>-i: 如果保存文件列表的文件名不是cscope.files时，需要加此选项告诉cscope到哪儿去找源文件列表。可以使用“-”，表示由标准输入获得文件列表</li>
+<li>-I dir: 在-I选项指出的目录中查找头文件</li>
+<li>-u: 扫描所有文件, 重新生成交叉索引文件</li>
+<li>-C: 在搜索时忽略大小写</li>
+<li>-P path: 在以相对路径表示的文件前加上的path, 这样你不用切换到你数据库文件所在的目录也可以使用它了</li>
+</ul>
+<p>使用命令 <code>cscope -Rbkq</code>,  产生文件如下:</p>
+<pre><code>cscope.in.out
+cscope.out  //基本的符号索引
+cscope.po.out
+</code></pre><p>注意一下, k在生成索引文件时, 不搜索/usr/include目录;  此时初始化和建立索引已经完成了, 之后就可以利用命令进行查找了.</p>
+<p>在emacs里面使用:<br>当然在emacs程序里, 也可以进行初始化和建立索引(如果所有的源代码以及子目录都是在同一个目录下面的). </p>
+<pre><code>;; C-c s a 初始化目录( 设定初始化的目录，一般是你代码的根目录)
+;; C-c s I 对目录中的文件建立列表索引(生成 Cscope 的数据库)(cscope-set-initial-directory) 这一步最重要
+</code></pre><p>一般使用 <code>C-c s I</code> 就可以了, 对应 <code>cscope-set-initial-directory</code> . 如果源代码全部处于同一个目录下面，现在就可以使用了. (个人习惯还是喜欢再外部使用cscope -bkqR)</p>
+<p>注意:</p>
+<p>如果源代码有多层目录，或者其他地方还有附加的源代码，则需要 <code>cscope-indexer</code> 脚本. 把那个脚本拷贝到系统 PATH 里面去(如 /usr/bin/).</p>
+<pre><code>$ sudo chmod u+x cscope-indexer
+
+export PATH=$PATH:~/.emacs.d/lisp/cscope/contrib/xcscope
+</code></pre><p>然后在根目录, 建立索引</p>
+<pre><code>$ cscope-indexer -r
+</code></pre><p>只要执行 C-c s I(cscope-index-files), 即`` 就可以生成 Cscope 的数据库, 接下来就可以使用了.<br>xcscope默认的快捷键都是绑定到 C-c s 的前缀上面, 更详细的使用说明请参见 xcscope.el 文件头部的注释.</p>
+<p>我个人使用的是默认绑定: (必须要建立完索引)</p>
+<ul>
+<li>C-c s s         Find symbol. 寻找符号(查找C语言符号，即查找函数名、宏、枚举值等出现的地方)</li>
+<li>C-c s d         Find global definition. 寻找全局定义—一般用这个来查找具体的定义</li>
+<li>C-c s g         Find global definition (alternate binding). 寻找符号, 变量的定义</li>
+<li>C-c s G         Find global definition without prompting.</li>
+<li>C-c s c         Find functions calling a function. 看看指定函数被哪些函数所调用</li>
+<li>C-c s C         Find called functions (list functions called<pre><code>          from a function).  看看指定函数调用了哪些函数
+</code></pre></li>
+<li>C-c s t         Find text string.  查找字符串</li>
+<li>C-c s e         Find egrep pattern. 正则表达式查找</li>
+<li>C-c s f         Find a file. 寻找文件</li>
+<li>C-c s i         Find files #including a file.  看看指定的文件被哪些文件include<br>```</li>
+</ul>
+<p>下面是在搜索到的结果之间切换用的快捷键:(一般不用, 直接跳转到窗口)</p>
+<pre><code>C-c s b         Display *cscope* buffer.
+C-c s B         Auto display *cscope* buffer toggle.
+C-c s n         Next symbol.
+C-c s N         Next file.
+C-c s p         Previous symbol.
+C-c s P         Previous file.
+C-c s u         Pop mark.
+</code></pre><p>将光标停在函数名上, 按C-c s d, 回车, 即可以查询相关的定义.<br> xcscope.el 原来定义如下: </p>
+<pre><code>;; * Keybindings:
+;;
+;; All keybindings use the &quot;C-c s&quot; prefix, but are usable only while
+;; editing a source file, or in the cscope results buffer:
+;;
+;;      C-c s s         Find symbol.
+;;      C-c s d         Find global definition.
+;;      C-c s g         Find global definition (alternate binding).
+;;      C-c s G         Find global definition without prompting.
+;;      C-c s c         Find functions calling a function.
+;;      C-c s C         Find called functions (list functions called
+;;                      from a function).
+;;      C-c s t         Find text string.
+;;      C-c s e         Find egrep pattern.
+;;      C-c s f         Find a file.
+;;      C-c s i         Find files #including a file.
+;;
+;; These pertain to navigation through the search results:
+;;
+;;      C-c s b         Display *cscope* buffer.
+;;      C-c s B         Auto display *cscope* buffer toggle.
+;;      C-c s n         Next symbol.
+;;      C-c s N         Next file.
+;;      C-c s p         Previous symbol.
+;;      C-c s P         Previous file.
+;;      C-c s u         Pop mark.
+;;
+;; These pertain to setting and unsetting the variable,
+;; `cscope-initial-directory&#39;, (location searched for the cscope database
+;;  directory):
+;;
+;;      C-c s a         Set initial directory.
+;;      C-c s A         Unset initial directory.
+;;
+;; These pertain to cscope database maintenance:
+;;
+;;      C-c s L         Create list of files to index.
+;;      C-c s I         Create list and index.
+;;      C-c s E         Edit list of files to index.
+;;      C-c s W         Locate this buffer&#39;s cscope directory
+;;                      (&quot;W&quot; --&gt; &quot;where&quot;).
+;;      C-c s S         Locate this buffer&#39;s cscope directory.
+;;                      (alternate binding: &quot;S&quot; --&gt; &quot;show&quot;).
+;;      C-c s T         Locate this buffer&#39;s cscope directory.
+;;                      (alternate binding: &quot;T&quot; --&gt; &quot;tell&quot;).
+;;      C-c s D         Dired this buffer&#39;s directory.
+</code></pre><p>如果你喜欢自定议案件的话, 提供自定义按键参考:</p>
+<pre><code>(define-key global-map [(control f3)]  &#39;cscope-set-initial-directory)
+(define-key global-map [(control f4)]  &#39;cscope-unset-initial-directory)
+(define-key global-map [(control f5)]  &#39;cscope-find-this-symbol)
+(define-key global-map [(control f6)]  &#39;cscope-find-global-definition)
+(define-key global-map [(control f7)]  &#39;cscope-find-global-definition-no-prompting)
+(define-key global-map [(control f8)]  &#39;cscope-pop-mark)
+(define-key global-map [(control f9)]  &#39;cscope-next-symbol)
+(define-key global-map [(control f10)] &#39;cscope-next-file)
+(define-key global-map [(control f11)] &#39;cscope-prev-symbol)
+(define-key global-map [(control f12)] &#39;cscope-prev-file)
+(define-key global-map [(meta f9)]     &#39;cscope-display-buffer)
+(define-key global-map [(meta f10)]    &#39;cscope-display-buffer-toggle)
+</code></pre><h3 id="搜索和替换"><a href="#搜索和替换" class="headerlink" title="搜索和替换"></a>搜索和替换</h3><p>由于我使用了插件 symbol-overlay, 所以一般是借助f8标记和操作标记， 和 <code>M-r</code>重命名, <code>M-s</code>切换到isearch.</p>
+<p>下面是可能涉及到的查找:<br><code>C-%</code> 查找替换<br><code>C-s</code> 以及 <code>C-r</code>是递归查找<br><code>M-x grep-find</code>, 已经设置快捷键为f3<br> <code>find . -type f -exec grep --color -nH -e &quot;content&quot; {} +</code></p>
+<p>下面可以详细说一下技巧， 因为查找&amp;替换实在用的太多了:</p>
+<p>Emacs中的搜索包括增量搜索和一般搜索。增加搜索是每次在前一次搜索的结果基础上继续搜索。在增量搜索时，如果上一次搜索之后进行了其他操作，则需要连续按两次快捷键才能召回关键词. 可以选中区块后在区块内进行搜索.</p>
+<p>增量查找:<br>C - s向下查找<br>C - r向上查找<br>按下C - s后输入要搜索的词，emacs会即时显示当前光标后第一个搜索到的结果，按C - s会跳到下一个结果，按C - r会跳到上一个结果.<br>按Enter结束查找或按C - g取消查找回到原来的地方。<br>按下C - s 或 C - r后, 按M - p显示上一个搜索词, M - n显示下一个搜索词。类似C - p是上一行，C - n下一行.<br>按下C - s或 C - r后, 输入要查找的词的头几个字, 然后按C - w 会补全当前位置的单词.</p>
+<p>查找替换:<br>按M - %启动查找替换，输入要被替换的词，回车，然后输入要替换的词，再回车。<br>被替换的词会高亮起来，这时，</p>
+<ul>
+<li>输入y替换并跳到下一个</li>
+<li>^ 返回上一个替换点</li>
+<li>输入n忽略并跳到下一个</li>
+<li>输入q结束，输入！替换剩下的全部</li>
+</ul>
+<p>C - r 进入修改<br>(我一般重构的时候， 使用插件， M-r进行全部改名, M-s回归递归查找)</p>
+<p>取消搜索<br>C-g 取消搜索，光标返回搜索前的位置<br>RET结束搜索，光标停留在当前位置。</p>
+<p>Ocuur模式<br>有时候想列出匹配的全面模式，而不是在文档中浏览，这个可以使用occur这个函数。<br>例子：M - x occur RET 关键词 RET<br>这时emacs会新开一个窗口来列出匹配的行<br>(实际上再 M-s之后, 案件M-s o即可达到同样的效果)</p>
+<h3 id="模式-1"><a href="#模式-1" class="headerlink" title="模式"></a>模式</h3><p>写代码的cc-mode(cc-mode 可以用来写 C/C++/Java/Obj-C)</p>
+<p>使用cc-mode:<br><code>M-x c-set-style</code>, 然后选择cc-mode</p>
+<pre><code>M-x customize 定制界面等
+M-x customize-themes 定制主题等
+</code></pre><h3 id="文件编码"><a href="#文件编码" class="headerlink" title="文件编码"></a>文件编码</h3><p>文件编码方面, 一般linux下都采用utf-8即可, 或者设置 <code>(prefer-coding-system &#39;utf-8)</code> .</p>
+<p>但是如你在gbk环境下, 比如你的windows7设置的是gdk, 那么此时应该设置gbk环境编码(否则读入文件时的解释编码和系统编码不一致, 肯定乱码了)</p>
+<pre><code>(setq file-name-coding-system &#39;gbk)
+(set-terminal-coding-system &#39;gbk)
+(set-keyboard-coding-system &#39;gbk)
+(setq locale-coding-system &#39;gbk)
+(set-selection-coding-system &#39;gbk)
+(set-clipboard-coding-system &#39;ctext)
+(set-clipboard-coding-system &#39;gbk)
+(set-terminal-coding-system &#39;gbk)
+(set-buffer-file-coding-system &#39;gbk)
+(modify-coding-system-alist &#39;process &quot;.&quot; &#39;gbk)
+(setq default-process-coding-system &#39;(gbk . gbk))
+</code></pre><h3 id="tabbar"><a href="#tabbar" class="headerlink" title="tabbar"></a>tabbar</h3><p>关于 tabbar 的再一次调整:</p>
+<p>要达到的效果是什么呢?<br>是要在一个 buffer 里面移动, 而不会切换到被的分组.<br>键位的设定时我特意改用了tabbar-backward-tab和tabbar-forward-tab 代替tabbar-backward和tabber-forward.<br>效果是使用M-left/right的时候移动不会跨组, 也就是只能在当前分组内移动, 这样好很多.<br>中间一段设置把标签栏左边的那些按钮都取消掉了.</p>
+<p>原来是不分组, 最后发现还是要根据主模式分组比较好.(即下面的代码全部作废)</p>
+<pre><code>(require &#39;tabbar)  
+
+(tabbar-mode)  
+
+(global-set-key (kbd &quot;&lt;M-up&gt;&quot;)    &#39;tabbar-backward-group)  
+(global-set-key (kbd &quot;&lt;M-down&gt;&quot;)  &#39;tabbar-forward-group)  
+(global-set-key (kbd &quot;&lt;M-left&gt;&quot;)  &#39;tabbar-backward-tab)  
+(global-set-key (kbd &quot;&lt;M-right&gt;&quot;) &#39;tabbar-forward-tab)  
+
+(setq  
+ tabbar-scroll-left-help-function nil   ;don&#39;t show help information  
+ tabbar-scroll-right-help-function nil  
+ tabbar-help-on-tab-function nil  
+ tabbar-home-help-function nil  
+ tabbar-buffer-home-button (quote ((&quot;&quot;) &quot;&quot;)) ;don&#39;t show tabbar button  
+ tabbar-scroll-left-button (quote ((&quot;&quot;) &quot;&quot;))  
+ tabbar-scroll-right-button (quote ((&quot;&quot;) &quot;&quot;)))  
+
+
+(defun my-tabbar-buffer-groups ()  
+  &quot;Return the list of group names the current buffer belongs to.  
+Return a list of one element based on major mode.&quot;  
+  (list  
+   (cond  
+    ((or (get-buffer-process (current-buffer))  
+         ;; Check if the major mode derives from `comint-mode&#39; or  
+         ;; `compilation-mode&#39;.  
+         (tabbar-buffer-mode-derived-p  
+          major-mode &#39;(comint-mode compilation-mode)))  
+     &quot;Process&quot;  
+     )  
+    ((string-equal &quot;*&quot; (substring (buffer-name) 0 1))  
+     &quot;Emacs Buffer&quot;  
+     )  
+    ((eq major-mode &#39;dired-mode)  
+     &quot;Dired&quot;  
+     )  
+    (t  
+     &quot;User Buffer&quot;  
+     ))))  
+
+(setq tabbar-buffer-groups-function &#39;my-tabbar-buffer-groups)
+</code></pre><h3 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h3><p>一般都是激活多窗口调试模式:</p>
+<pre><code>+----------------------------------------------------------------------+
+|                               GDB Toolbar                            |
++-----------------------------------+----------------------------------+
+| GUD buffer (I/O of GDB)           | Locals buffer                    |
+|                                   |                                  |
+|                                   |                                  |
+|                                   |                                  |
++-----------------------------------+----------------------------------+
+| Source buffer                     | I/O buffer (of debugged program) |
+|                                   | (comint-mode)                    |
+|                                   |                                  |
+|                                   |                                  |
+|                                   |                                  |
+|                                   |                                  |
+|                                   |                                  |
+|                                   |                                  |
++-----------------------------------+----------------------------------+
+| Stack buffer                      | Breakpoints buffer               |
+| RET      gdb-frames-select        | SPC    gdb-toggle-breakpoint     |
+|                                   | RET    gdb-goto-breakpoint       |
+|                                   | D      gdb-delete-breakpoint     |
++-----------------------------------+----------------------------------+
+</code></pre><p>窗口说明:</p>
+<ul>
+<li>GDB Toolbar        - GDB 操作Toolbar</li>
+<li>GUD buffer         - 执行操作的buffer</li>
+<li>Locals buffer      - 本地变量名和值的表示buffer</li>
+<li>Source buffer      - 表示sourcecode的buffer</li>
+<li>IO/ buffer         - 表示程序的输入输出的buffer</li>
+<li>Stack buffer       - 运行停止的时候，调用关系的表示buffer</li>
+<li>Breakpoints buffer - breakpoints断点的表示buffer</li>
+<li>buffer崩溃的时候、通过’M-x gdb-restore-windows’返回原状态</li>
+</ul>
+<p>当然你可以尝试关闭某些窗口.</p>
+<pre><code>(setq gdb-use-separate-io-buffer t) ; 不需要&quot;IO buffer&quot;时，则设为nil
+</code></pre><p>一般会把 <code>gdb-many-windows</code> 设置为激活状态, 实际上也可以用 <code>gdb-restore-windows</code> 恢复单个布局.</p>
+<p>我个人的习惯是, 把所有的其他窗口只是作为观察窗口, 其实还是依赖主窗口, 设置相关命令, 一方面, 这个可以减少快捷键的记忆; 另外一方面, 不和单独在terminal中使用产生冲突, 其实也不错. (gud是主窗口)</p>
+<p>快捷键命令</p>
+<ul>
+<li>添加断点    gud-break    C-x C-a C-b 或 C-x <spc></spc></li>
+<li>删除断点    gud-remove    C-x C-a C-d</li>
+<li>运行/继续程序    gud-go        无</li>
+<li>单步执行，无视函数        gud-next    C-x C-a C-n</li>
+<li>单步执行，进入函数        gud-step    C-x C-a C-s</li>
+<li>跳出当前函数            gud-finish    C-x C-a C-f</li>
+<li>运行到光标所在语句        gud-until    C-x C-a C-u</li>
+<li>继续运行程序            gud-cont    C-x C-a C-r</li>
+</ul>
+<h3 id="Autocomplete"><a href="#Autocomplete" class="headerlink" title="Autocomplete"></a>Autocomplete</h3><p>自动补全的拆建有很多, 但是真正能够TAB键玩的溜的只有 Auotocomplete .</p>
+<p>autocomplete在使用上, 不用刻意去按键M-/, 而是在你写代码的时候, 就可以完成提示, 并且选择的话, 一直TAB就行, 之后就可以直接在后面接着写其他的代码. (按回车可以选中所选的)</p>
+<p>具体的快捷键:</p>
+<ul>
+<li>TAB, C-i    ac-expand    Completion by TAB</li>
+<li>RET, C-m    ac-complete    Completion by RET</li>
+<li>down, M-n    ac-next        Select next candidate</li>
+<li>up, M-p       ac-previous    Select previous candidate</li>
+<li>C-?, f1    ac-help            Show buffer help</li>
+</ul>
+<p>To stop completion, simply use C-g.</p>
+<h3 id="magit"><a href="#magit" class="headerlink" title="magit"></a>magit</h3><p>emacs中使用git虽然很好, 但是, 无疑来说, 又会增加许多负担, 当前还是使用terminal或者gitk吧. 具体可以考虑使用 magit 插件.</p>
+<h3 id="speedbar"><a href="#speedbar" class="headerlink" title="speedbar"></a>speedbar</h3><p>就是一个文件列表， 一般再ecb中有集成.</p>
+<p>M-x speedbar 就可以启动它(相关于一个文件目录, 可以在多个文件中切换), 我个人设置的快捷键是 f4 .</p>
+<h3 id="ediff"><a href="#ediff" class="headerlink" title="ediff"></a>ediff</h3><p>一个相当于beyond compare的组件: <code>M-x ediff</code>. </p>
+<h3 id="dired"><a href="#dired" class="headerlink" title="dired"></a>dired</h3><p>emacs下一个强大的文件管理器, 大多数切换到 shell 的场景被它取代: <code>M-x dired</code>.</p>
+<h3 id="游戏"><a href="#游戏" class="headerlink" title="游戏"></a>游戏</h3><p><code>M-x tetris</code>, 俄罗斯方块.</p>
+<h3 id="hideshow"><a href="#hideshow" class="headerlink" title="hideshow"></a>hideshow</h3><p>代码折叠与展开, 这个插件有用, 不过要进行一定的调整.</p>
+<pre><code>;;配置代码折叠
+;(load-library &quot;hideshow&quot;)  
+;(add-hook &#39;java-mode-hook &#39;hs-minor-mode)  
+;(add-hook &#39;perl-mode-hook &#39;hs-minor-mode)  
+;;(add-hook &#39;php-mode-hook &#39;hs-minor-mode)  
+;(add-hook &#39;emacs-lisp-mode-hook &#39;hs-minor-mode)  
+
+(add-to-list &#39;hs-special-modes-alist
+             &#39;(c-mode &quot;[\n\t ]*{&quot; &quot;}&quot; &quot;/[*/]&quot; nil hs-c-like-adjust-block-beginning))
+(add-to-list &#39;hs-special-modes-alist
+             &#39;(c++-mode &quot;[\n\t ]*{&quot; &quot;}&quot; &quot;/[*/]&quot; nil hs-c-like-adjust-block-beginning))
+
+(define-key global-map (kbd &quot;M-,&quot;) &#39;hs-toggle-hiding)
+</code></pre><p>我一般设置的是 <code>M-,</code> 用于折叠和展开.</p>
+<h3 id="窗口恢复"><a href="#窗口恢复" class="headerlink" title="窗口恢复"></a>窗口恢复</h3><p>原生没有设置案件对窗口误操作的undo, 所以我设置了一下按键:</p>
+<pre><code>C-x 4 u 窗口undo
+C-x 4 r 窗口redo
+</code></pre><h3 id="doxygen"><a href="#doxygen" class="headerlink" title="doxygen"></a>doxygen</h3><p>这个设置起来不太麻烦, 但是我还是喜欢在shell中使用, 毕竟它可以生产图, shell操作更加方便.</p>
+<h3 id="cedet"><a href="#cedet" class="headerlink" title="cedet"></a>cedet</h3><p>给Emacs安装CEDET是最烦恼的过程之一, 由于这个插件太大了, 所以出错的几率也比较打.</p>
+<p>CEDET包含以下几个部分: </p>
+<ul>
+<li>Semantic - Parser Infrastructure for Emacs</li>
+<li>EDE -      File manager/ Makefile generator</li>
+<li>SRecode -  Template manager/ code generator</li>
+<li>COGRE -    Connected Graph Editor</li>
+</ul>
+<p>emacs自带的cedet为1.0版本, 不能与ecb配合使用, 所以要下载并安装它的最新版本(LAST) <code>cedet1.1</code> . 安装的时候, 请仔细阅读源码目录的 <code>INSTALL</code> 文件, 我直接下载的解压缩后的文件.</p>
+<pre><code>$ git clone https://github.com/emacs-pkg-mirrors/cedet.git
+</code></pre><p>根据它<a href="http://cedet.sourceforge.net/setup.shtml" target="_blank" rel="external">官网</a>的步骤, 一点儿不靠谱. 请仔细阅读源码目录的 <code>INSTALL</code> 文件!!!</p>
+<ul>
+<li>Step 1 : Download CEDET from the Sourceforge downloads page. </li>
+<li>Step 2 : unpack CEDET</li>
+<li>Step 3 : make EMACS=emacs</li>
+<li>Step 4 : Configure CEDET in your .emacs file by adding code like this.</li>
+</ul>
+<p>主要代码</p>
+<pre><code>-----------
+;; Load CEDET.
+;; See cedet/common/cedet.info for configuration details.
+;; IMPORTANT: For Emacs &gt;= 23.2, you must place this *before* any
+;; CEDET component (including EIEIO) gets activated by another 
+;; package (Gnus, auth-source, ...).
+(load-file &quot;~/cedet-VERSION/common/cedet.el&quot;)
+
+;; Enable EDE (Project Management) features
+(global-ede-mode 1)
+
+;; Enable EDE for a pre-existing C++ project
+;; (ede-cpp-root-project &quot;NAME&quot; :file &quot;~/myproject/Makefile&quot;)
+
+
+;; Enabling Semantic (code-parsing, smart completion) features
+;; Select one of the following:
+
+;; * This enables the database and idle reparse engines
+(semantic-load-enable-minimum-features)
+
+;; * This enables some tools useful for coding, such as summary mode,
+;;   imenu support, and the semantic navigator
+(semantic-load-enable-code-helpers)
+
+;; * This enables even more coding tools such as intellisense mode,
+;;   decoration mode, and stickyfunc mode (plus regular code helpers)
+;; (semantic-load-enable-gaudy-code-helpers)
+
+;; * This enables the use of Exuberant ctags if you have it installed.
+;;   If you use C++ templates or boost, you should NOT enable it.
+;; (semantic-load-enable-all-exuberent-ctags-support)
+;;   Or, use one of these two types of support.
+;;   Add support for new languages only via ctags.
+;; (semantic-load-enable-primary-exuberent-ctags-support)
+;;   Add support for using ctags as a backup parser.
+;; (semantic-load-enable-secondary-exuberent-ctags-support)
+
+;; Enable SRecode (Template management) minor-mode.
+;; (global-srecode-minor-mode 1)
+</code></pre><p>编译时遇到的问题:</p>
+<p>`makeinfo is missing on your systeme, 即makeinfo未找到命令, 此时有两种方案:</p>
+<ul>
+<li>make EMACS=emacs MAKEINFO=echo  即不编译doc</li>
+<li>make MAKEINFO=/usr/bin/makeinfo</li>
+</ul>
+<p>安装 <code>makeinfo</code>, 它包含再<code>texinfo</code>包中</p>
+<pre><code>$ search apt-file
+apt-file - search for files within Debian packages (command-line interface)
+cabal-debian - Create a debianization for a cabal package
+
+#利用apt-file查看某个文件属于哪个包, 再安装包
+$ add apt-file
+$ sudo apt-updateapt
+$ apt-file search bin/makeinfo
+texinfo: /usr/bin/makeinfo
+$ search exinfo
+texinfo - Documentation system for on-line information and printed output
+
+$ add texinfo
+$ add install-info
+</code></pre><p>在 <a href="http://sourceforge.net/projects/cedet/" target="_blank" rel="external">http://sourceforge.net/projects/cedet/</a>  下载 cedet1.1 .</p>
+<pre><code>In end of data:
+semantic-tag-file.el:207:1:Warning: the function ‘ede-toplevel’ is not known
+    to be defined.
+Eager macro-expansion failure: (invalid-function class-p)
+Eager macro-expansion failure: (invalid-function class-p)
+Eager macro-expansion failure: (invalid-function class-p)
+Eager macro-expansion failure: (invalid-function class-p)
+Eager macro-expansion failure: (invalid-function class-p)
+Eager macro-expansion failure: (invalid-function class-p)
+Eager macro-expansion failure: (invalid-function class-p)
+Eager macro-expansion failure: (invalid-function class-p)
+
+In toplevel form:
+semantic-idle.el:42:1:Error: Invalid function: class-p
+
+In semantic-tag-customize:
+semantic-custom.el:210:22:Warning: ‘toggle-read-only’ is an obsolete
+    function (as of 24.3); use ‘read-only-mode’ instead.
+Makefile:61: recipe for target &#39;semantic&#39; failed
+</code></pre><p>总之编译的时候, 就是会遇到各种各样的问题. 一定要简单安装cedet, 它真的太复杂了(我安装它也只是为了安装ecb).</p>
+<h3 id="ecb"><a href="#ecb" class="headerlink" title="ecb"></a>ecb</h3><p>这个代码浏览器, 比较实用. 配置好了普通编写代码, 跑测试用例的界面大概是这样的:</p>
+<pre><code>
+   ------------------------------------------------------------------
+   |              |                                                 |
+   |  Directories |                                                 |
+   |              |                                                 |
+   |--------------|                                                 |
+   |              |                                                 |
+   |  Sources     |                                                 |
+   |              |                                                 |
+   |--------------|                   Edit-area                     |
+   |              |   (can be splitted in several edit-windows)     |
+   |  Methods     |                                                 |
+   |              |                                                 |
+   |--------------|                                                 |
+   |              |                                                 |
+   |  History     |                                                 |
+   |              |                                                 |
+   ------------------------------------------------------------------
+   |                                                                |
+   |            Persistent Compilation-window (optional)            |
+   |                                                                |
+   ------------------------------------------------------------------
+</code></pre><p>我一般设置如下快捷键：</p>
+<ul>
+<li>f5 启用ecb</li>
+<li>f6 禁用ecb</li>
+<li>control + f5 显示ecb窗口</li>
+<li>control + f6 隐藏ecb窗口</li>
+<li>C-c 0-4 分别是还原，以及最大化某个窗口</li>
+<li>M-方向键, 切换到某个窗口</li>
+<li>选定某个窗口的某个展开标记(即加号减号) 方向键左代表折叠, 方向键右代表展开.</li>
+</ul>
+<h2 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h2><p>学些emacs, 手册中遇到的(可能)生词:</p>
+<ul>
+<li>overlap 交叠 </li>
+<li>likewise 相似的</li>
+<li>opposite 相反的 </li>
+<li>interspersed 穿插 </li>
+<li>parallel 并行 </li>
+<li>repeated 重复</li>
+<li>paraphrase 释义 </li>
+<li>terminal终端 </li>
+<li>get rid of 摆脱</li>
+<li>contiguous 邻近的 </li>
+<li>incremental 增量  </li>
+<li>for reference 仅供参考 </li>
+<li>sufficient 足够</li>
+<li>command               命令</li>
+<li>scrolling             滚动</li>
+<li>numeric argument      数字参数</li>
+<li>yank                  召回,剪切</li>
+<li>echo area             回显区</li>
+<li>mode line             状态栏</li>
+<li>incremental search    渐进式搜索</li>
+</ul>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>有些插件真坑爹…编译安装都烦, 莫名其妙的问题, 浪费了好长时间.</p>
+<p>首先 emacs 还是很强大的, 然而不得不说, 由于平台的严谨, 以及开后和后续支持的缺乏, 对于emacs的兼容性造成了很大的调整. 如果和visual studio code相比, 其兼容性明显不好. 而且这种情况如果没有更多的人参与和带动, 不说emacs会死, 至少可以说, 能玩的起来的都是神了.</p>
+<p>唯一的希望是, emacs的兼容性可以好起来(各种插件的稳定性慢慢变好一些).</p>
+<hr>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/guide-zh.org" target="_blank" rel="external">一年成为 Emacs 高手</a></li>
+<li><a href="http://www.gnu.org/software/emacs/tour/" target="_blank" rel="external">A Guided Tour of Emacs</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/26068894" target="_blank" rel="external">emacs按键绑定方式介绍</a></li>
+<li><a href="https://github.com/wolray/symbol-overlay" target="_blank" rel="external">emacs高亮插件推荐</a></li>
+<li><a href="http://www.cnblogs.com/logicbaby/archive/2011/10/19/2217253.html" target="_blank" rel="external">emacs项目路径设置</a></li>
+<li><a href="http://blog.csdn.net/lujun9972/article/details/46002881" target="_blank" rel="external">woman参考</a></li>
+<li><a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Query-Replace.html" target="_blank" rel="external">查找替换参考</a></li>
+<li><a href="http://emacser.com/ann77/Emacs/EmacsSearch.html" target="_blank" rel="external">查找汇总</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/education/aix/au-emacs4/index.html" target="_blank" rel="external">书签和寄存器</a><br>(文中有一处错误:删除书签的命令是 M-x bookmark-delete而不是C-x bookmark delete)</li>
+<li><a href="http://emacser.com/emacs-gdb.htm" target="_blank" rel="external">gdb参考</a></li>
+<li><a href="https://github.com/auto-complete/auto-complete/blob/master/doc/manual.md" target="_blank" rel="external">autocomplete参考</a></li>
+<li><a href="https://magit.vc/" target="_blank" rel="external">magit参考</a></li>
+<li><a href="http://www.emacswiki.org/cgi-bin/wiki/HideShow" target="_blank" rel="external">hideshow</a></li>
+</ol>
+<p>这一些列文档差不多一共有7篇, 讲的比较啰嗦, 可以自行参考一下:</p>
+<ul>
+<li><a href="https://www.ibm.com/developerworks/cn/education/aix/emacs1/index.html" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/education/aix/emacs1/index.html</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/education/aix/emacs2/index.html" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/education/aix/emacs2/index.html</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/education/aix/au-emacs3/index.html" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/education/aix/au-emacs3/index.html</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/education/aix/au-emacs4/index.html" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/education/aix/au-emacs4/index.html</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/education/aix/au-emacs5/index.html" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/education/aix/au-emacs5/index.html</a></li>
+</ul>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Merlin&#39;s Emacs">Merlin&#39;s Emacs</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Merlin&#39;s Emacs">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

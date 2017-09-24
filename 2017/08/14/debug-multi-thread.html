@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>多线程进程调试问题 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="summary of server side network programming model">
+<meta name="keywords" content="linux,线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多线程进程调试问题">
+<meta property="og:url" content="localhost:4000/2017/08/14/debug-multi-thread.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="summary of server side network programming model">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/threadmap.jpg">
+<meta property="og:updated_time" content="2017-09-24T07:14:19.171Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="多线程进程调试问题">
+<meta name="twitter:description" content="summary of server side network programming model">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/threadmap.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#调试多线程"><span class="toc-number">2.1.</span> <span class="toc-text">调试多线程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调试多进程"><span class="toc-number">2.2.</span> <span class="toc-text">调试多进程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>多线程进程调试问题</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-08-14</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/linux/">linux</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/线程/">线程</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>调试多线程不一定用 <code>gdb</code> , 也可以用mdb(modular debugger)等其他工具(<a href="http://nptltracetool.sourceforge.net" target="_blank" rel="external">nptl trace tools</a> 也是不错的工具) 当然我看到的高手调试, 不用工具, 直接加打印语句, 跑程序, 甚至面码. (不得不说, 高手其实是懒得学习使用别人的工具的…)</p>
+<p>这里就单独拎出来总结一下 <code>多线程</code>, <code>多进程</code>的调试问题.</p>
+<p>注: modula-3 supports user-space thread breakpoints.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/threadmap.jpg" alt="post-cover"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>最常见的用GDB的方式, 莫过于:</p>
+<ul>
+<li>All-Stop Mode:    All threads stop when GDB takes control</li>
+<li>Non-Stop Mode:    Other threads continue to execute</li>
+<li>Background Execution:         Running your program asynchronously</li>
+<li>Thread-Specific Breakpoints:      Controlling breakpoints</li>
+<li>Interrupted System Calls:    GDB may interfere with system calls</li>
+<li>Observer Mode:    GDB does not alter program behavior</li>
+</ul>
+<p>其他gdb的调试问题, 可以参考我的文章 <a href="http://www.merlinblog.site/2017/06/24/three-major-tools-of-linux.html" target="_blank" rel="external">linux下3大件儿</a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="调试多线程"><a href="#调试多线程" class="headerlink" title="调试多线程"></a>调试多线程</h2><p>如果你程序是多线程的话，你可以定义你的断点是否在所有的线程上，或是在某个特定的线程。<br>GDB很容易帮你完成这一工作:</p>
+<pre><code>break &lt;linespec&gt; thread &lt;threadno&gt;  
+break &lt;linespec&gt; thread &lt;threadno&gt; if ...
+</code></pre><p>说明:</p>
+<ul>
+<li>linespec指定了断点设置在的源程序的行号。</li>
+<li>threadno指定了线程的ID，注意，这个ID是GDB分配的，你可以通过“info threads”命令来查看正在运行程序中的线程信息。如果你不指定thread <threadno>则表示你的断点设在所有线程上面。</threadno></li>
+<li>if表示你还可以为某线程指定断点条件, 例如: (gdb) break frik.c:13 thread 28 if bartab &gt; lim</li>
+</ul>
+<p>当你的程序被GDB停住时，所有的运行线程都会被停住。这方便你你查看运行程序的总体情况。而在你恢复程序运行时，所有的线程也会被恢复运行(哪怕主进程是被在单步调试)。</p>
+<p>thread命令介绍:</p>
+<ul>
+<li>info threads   显示当前可调试的所有线程，GDB为其分配的ID，后面操作线程的时候会用到这个ID (前面有*的是当前调试的线程)</li>
+<li>thread ID   切换当前调试的线程为指定ID的线程</li>
+<li>thread apply ID1 ID2 command   让一个或者多个线程执行GDB命令command</li>
+<li>thread apply all command   让所有被调试线程执行GDB命令command</li>
+<li>set scheduler-locking off|on|step 估计是实际使用过多线程调试的人都可以发现，在使用step或者continue命令调试当前被调试线程的时候，其他线程也是同时执行的，怎么只让被调试程序执行呢？通过这个命令就可以实现这个需求。<ul>
+<li>off 不锁定任何线程，也就是所有线程都执行，这是默认值</li>
+<li>on 只有当前被调试程序会执行</li>
+<li>step 在单步的时候，除了next过一个函数的情况以外，只有当前线程会执行<br>*</li>
+</ul>
+</li>
+</ul>
+<p>注意next其实也是借助break和continue实现的行为.</p>
+<p>(GDB关于线程的实现思路要结合源码看, 需要一定技术水平, 我就不说了)</p>
+<p>最后介绍一下我最近遇见的一个多线程调试和解决:</p>
+<p>调试多线程程序不正常, info threads看不到多线程的信息.  用命令 <code>maintenance print target-stack</code> 看一下target的装载情况, 发现target “multi-thread”没有被装载, 用gdb对gdb程序调试发现在函数 <code>check_for_thread_db</code> 在调用 libthread_db中的函数 “td_ta_new” 的时候, 返回了TD_NOLIBTHREAD, 所以没有装载target “multi-thread”.<br>也就是说, libpthread可能有问题, 检查一下环境发现 libpthread是被strip过的(影响了td_ta_new函数对于libpthread符号信息的获取). 改换一个包含富含信息的(比如debug版本的)libpthread库到lib目录下, 问题解决了.</p>
+<h2 id="调试多进程"><a href="#调试多进程" class="headerlink" title="调试多进程"></a>调试多进程</h2><p>最先想到的就是 attach. attach: 用gdb调试一个正在运行中的进程 <code>gdb &lt;program&gt; PID</code> .</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="多线程进程调试问题">多线程进程调试问题</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="多线程进程调试问题">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

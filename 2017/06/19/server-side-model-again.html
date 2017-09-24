@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>服务端网络模型 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="summary of server side network programming model again">
+<meta name="keywords" content="网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="服务端网络模型">
+<meta property="og:url" content="localhost:4000/2017/06/19/server-side-model-again.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="summary of server side network programming model again">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/server.jpg">
+<meta property="og:updated_time" content="2017-09-24T03:03:08.931Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="服务端网络模型">
+<meta name="twitter:description" content="summary of server side network programming model again">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/server.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#非并发"><span class="toc-number">2.1.</span> <span class="toc-text">非并发:</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#upd类型"><span class="toc-number">2.1.1.</span> <span class="toc-text">upd类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tcp类型"><span class="toc-number">2.1.2.</span> <span class="toc-text">tcp类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并发类型"><span class="toc-number">2.2.</span> <span class="toc-text">并发类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#多进程模型"><span class="toc-number">2.2.1.</span> <span class="toc-text">多进程模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多线程模型"><span class="toc-number">2.2.2.</span> <span class="toc-text">多线程模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#事件驱动"><span class="toc-number">2.2.3.</span> <span class="toc-text">事件驱动</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>服务端网络模型</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-06-19</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/网络/">网络</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>上次我在<a href="https://wizardmerlin.github.io/2017/06/04/network-io.html" target="_blank" rel="external">networking io</a>中把服务器从 “阻塞模型” 到 “IO复用”以及 “异步IO” ,<br>最后到 “Libevent核心实现” 全给说了一遍. </p>
+<p>但是上次全是大白话, 没有一点儿代码, 本次就把相关代码补充一下包括<code>多线程/多进程</code>, <code>select</code>等.</p>
+<blockquote>
+<p>但是!! 我不得不说的是, 服务端&amp;后台编码工作, 绝对不像某些新手想的那样容易(也比客户端开发辛苦, 狠多)</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/server.jpg" alt="server"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>集中服务器模型以及其编程实现思路, 本文给出的都是核心逻辑代码, 有待进一步完善和相关实际代码佐证.</p>
+<p>(本文谈到的许多并发模型, 都有相关demo代码, 可以在本github中找到)</p>
+<p>(网络及网络应用程序的编程思想)</p>
+<p>在网络程序里面, 一般的来说都是许多客户机对应一个服务器. 为了处理客户机的请求, 对服务端的程序就提出了特殊的要求.</p>
+<p>服务端总体分为2大类:</p>
+<ul>
+<li>并发服务器: 在同一个时刻可以响应多个客户端的请求</li>
+<li>非并发服务器: 在同一个时刻只可以响应一个客户端的请求(过时, 或者应用规模非常小)</li>
+</ul>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="非并发"><a href="#非并发" class="headerlink" title="非并发:"></a>非并发:</h2><h3 id="upd类型"><a href="#upd类型" class="headerlink" title="upd类型"></a>upd类型</h3><p>UDP 服务器每次从套接字上读取一个客户端的请求, 处理, 然后将结果返回给客户机.</p>
+<pre><code class="c++">  socket(...);
+  bind(...); //不需要listen()
+  while(1)
+  {
+    recvfrom(...);
+    process(...);
+    sendto(...);
+  }
+</code></pre>
+<p>因为 UDP 是非面向连接的(不需要Listen),没有一个客户端可以老是占住服务端.<br>只要处理过程不是死循环, 服务器对于每一个客户机的请求总是能够满足. </p>
+<h3 id="tcp类型"><a href="#tcp类型" class="headerlink" title="tcp类型"></a>tcp类型</h3><p>就是常见的socket编程的那一套</p>
+<pre><code class="c++">  socket(...);
+  bind(...);
+  listen(...);
+  while(1)
+  {
+    accept(...);
+    while(1)
+      {
+    read(...);
+    process(...);
+    write(...);
+      }
+    close(...);
+  }
+</code></pre>
+<p>TCP服务器一次只能处理一个客户端的请求.只有在这个客户的所有请求都满足后,服务器才可以继续后面的请求.<br>这样如果有一个客户端占住服务器不放时, 其它的客户机都不能工作了. 因此, TCP 服务器一般很少用该阻塞模型的.<br>(你把socket fd设置为异步的, 只能是算是一个很小的改进, 因为真正读写的时候还是阻塞的, 只是么有客户端请求时可以立即返回)</p>
+<h2 id="并发类型"><a href="#并发类型" class="headerlink" title="并发类型"></a>并发类型</h2><p>并发服务器的思想是每一个客户机的请求并不由服务器直接处理, 而是服务器创建一个子进程(线程)来处理, 避免阻塞接收请求的进程/线程.<br>我把事件IO, 也算在其内了.</p>
+<hr>
+<p>TCP类型<br>多线程(进程)模型; </p>
+<h3 id="多进程模型"><a href="#多进程模型" class="headerlink" title="多进程模型"></a>多进程模型</h3><pre><code class="c++">  socket(...);
+  bind(...);
+  listen(...);
+  while(1)
+  {
+    accept(...);
+    pid = fork();
+    if(pid==0)//子进程中进行处理
+    {
+        close(listen_fd); //不要让子进程再去监听
+        while(1)
+      {
+            read(...);
+            process(...);
+            write(...);
+      }
+        close(...); //close connfd
+        exit(...);
+    }else if (pid&gt;0){ //parent close connfd
+        close(connfd);
+    }
+  }//end of while(1)
+  close(...); //close listenfd
+</code></pre>
+<p>TCP 并发服务器可以解决 TCP 循环服务器客户机独占服务器的情况. </p>
+<p>不过也同时带来了一个不小的问题. 为了响应客户机的请求, 服务器要创建子进程来处理, 而创建子进程是一种非常消耗资源的操作.<br>换句话说, 服务器所能创建的子进程是有限的, 取决于硬件资源.</p>
+<p>具体的例子:</p>
+<pre><code class="c++">#define MY_PORT 8888
+
+  int main(int argc ,char **argv)
+  {
+    int listen_fd, accept_fd;
+    struct sockaddr_in server_addr;
+
+    int n;
+    if( (listen_fd=socket(AF_INET,SOCK_STREAM,0)) &lt;0) {
+      printf(&quot;Socket Error:%s\n\a&quot;,strerror(errno));  
+      exit(1);
+    }
+
+    bzero(&amp;server_addr,sizeof(struct sockaddr_in));
+    server_addr.sin_family=AF_INET;
+    server_addr.sin_port=htons(MY_PORT);
+    server_addr.sin_addr.s_addr=htonl(INADDR_ANY);
+
+    n=1;
+    /* 如果服务器终止后, 服务器可以第二次快速启动而不用等待一段时间 */
+    setsockopt(listen_fd,SOL_SOCKET,SO_REUSEADDR,&amp;n,sizeof(int));
+
+    if(bind(listen_fd, (struct sockaddr *)&amp;server_addr, sizeof(server_addr)) &lt;0 ) {
+      printf(&quot;Bind Error:%s\n\a&quot;,strerror(errno));
+      exit(-1);
+    }
+
+    listen(listen_fd, 5);
+
+    while(1) {
+      accept_fd = accept(listen_fd,NULL,NULL); //不关心客户端是谁
+      if( (accept_fd&lt;0) &amp;&amp; (errno==EINTR) ) {
+    continue;
+      } else if(accept_fd&lt;0) {
+    printf(&quot;Accept Error:%s\n\a&quot;,strerror(errno));
+    continue;
+      }
+
+      /* 子进程处理客户端的连接 */
+      if( (n=fork()) == 0 ) {
+    char buffer[1024];
+
+    close(listen_fd); //不要让子进程再去监听
+
+    n = read(accept_fd, buffer, 1024);
+    write(accept_fd, buffer, n);
+    close(accept_fd);
+    exit(0);
+      } else if ( n&lt;0 ) {
+    printf(&quot;Fork Error:%s\n\a&quot;,strerror(errno));
+    close(accept_fd);
+      }else {
+           close(accept_fd);
+      }
+    } //end of while(1)
+    close(listen_fd)
+
+  }//end of main()
+</code></pre>
+<h3 id="多线程模型"><a href="#多线程模型" class="headerlink" title="多线程模型"></a>多线程模型</h3><p>和多进程类似, 也是accept之后pthread_create(), 然后在线程的回调函数中进行读写处理.</p>
+<p>参考代码:<br>server.cpp </p>
+<pre><code class="c++">/* server.c */
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;pthread.h&gt;
+
+#define MAXLINE 80
+#define SERV_PORT 6666
+
+struct s_info {
+  struct sockaddr_in cliaddr;
+  int connfd;
+};
+
+void *do_work(void *arg)
+{
+  int n,i;
+  struct s_info *ts = (struct s_info*)arg;
+  char buf[MAXLINE];
+  char str[INET_ADDRSTRLEN];
+
+  //or u can set the thread attribute
+  pthread_detach(pthread_self()); 
+
+  while (1) {
+    n = Read(ts-&gt;connfd, buf, MAXLINE);
+    if (n == 0) {
+      printf(&quot;the other side has been closed.\n&quot;);
+      break;
+    }
+    printf(&quot;received from %s at PORT %d\n&quot;,
+       inet_ntop(AF_INET, &amp;(*ts).cliaddr.sin_addr, str, sizeof(str)),
+       ntohs((*ts).cliaddr.sin_port));
+
+    for (i = 0; i &lt; n; i++) {
+      buf[i] = toupper(buf[i]);
+    }
+    Write(ts-&gt;connfd, buf, n);
+  }
+
+  Close(ts-&gt;connfd);
+}
+
+
+
+int main(void)
+{
+  struct sockaddr_in servaddr, cliaddr;
+  socklen_t cliaddr_len;
+  int listenfd, connfd;
+  int i = 0;
+  pthread_t tid;
+  struct s_info ts[256];
+
+  listenfd = Socket(AF_INET, SOCK_STREAM, 0);
+
+  bzero(&amp;servaddr, sizeof(servaddr));
+  servaddr.sin_family = AF_INET;
+  servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+  servaddr.sin_port = htons(SERV_PORT);
+
+  Bind(listenfd, (struct sockaddr *)&amp;servaddr, sizeof(servaddr));
+  Listen(listenfd, 20);
+
+  printf(&quot;Accepting connections ...\n&quot;);
+
+  while (1) {
+    cliaddr_len = sizeof(cliaddr);
+    connfd = Accept(listenfd, (struct sockaddr *)&amp;cliaddr, &amp;cliaddr_len);
+    //不管是多进程还是多线程, 都是先accept再处理分裂
+    ts[i].cliaddr = cliaddr;
+    ts[i].connfd = connfd;
+    /* 达到线程最大数时, pthread_create 出错处理, 增加服务器稳定性 */
+    pthread_create(&amp;tid, NULL, do_work, (void*)&amp;ts[i]);
+    i++;
+  }
+
+  return 0;
+}
+</code></pre>
+<h3 id="事件驱动"><a href="#事件驱动" class="headerlink" title="事件驱动"></a>事件驱动</h3><p>又称为IO复用, 多路复用I/O.</p>
+<p>主要涉及select, pselect, poll, epoll相关的函数(思想上select,poll类似, epoll是2.6之后的改进版本, epoll已经单独说过了).</p>
+<p>以select为例</p>
+<ul>
+<li>比如说服务器要从缓冲区(用户态进程内存)中读取数据, 但是远端client还没有向内核中发送数据(更不要谈把数据从内核往用户内存拷贝), 那么处理该请求的服务器进程就只有等待咯;</li>
+<li>如果外部有一个大管家, 比如select, 它来管理所有的请求, 通知用户进程(即服务器)哪些是可读的(有IO操作的), 可读的时候再来读写(cpu几乎都交给大管家select了, 你可以说程序大部分时间阻塞在select这里)</li>
+</ul>
+<p>在我们调用 select 时进程会一直阻塞直到以下的一种情况发生:</p>
+<ul>
+<li>有文件可以读</li>
+<li>有文件可以写</li>
+<li>超时所设置的时间到</li>
+</ul>
+<p>下面对函数原型进行了细致讲解:</p>
+<pre><code class="c++">/* According to POSIX.1-2001 */
+#include &lt;sys/select.h&gt;   /*一般使用这个头文件足够了*/
+
+/* According to earlier standards */
+#include &lt;sys/time.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+
+
+/*
+函数参数解释如下:
+
+* readfds 所有要读的文件文件描述符的集合
+* writefds 所有要的写文件文件描述符的集合
+* exceptfds 其他要向我们通知的文件描述符集合(错误输出集合)
+* timeout 超时设置.
+* nfds 所有我们监控的文件描述符中最大的那一个加 1
+*/
+
+int select(int nfds, fd_set *readfds, fd_set *writefds,
+          fd_set *exceptfds, struct timeval *timeout); 
+
+//为了设置文件描述符我们要使用几个宏
+void FD_SET(int fd, fd_set *set);   //将 fd 加入到 fdset
+void FD_CLR(int fd, fd_set *set);   //将 fd 从 fdset 里面清除
+int  FD_ISSET(int fd, fd_set *set); //判断 fd 是否在 fdset 集合中
+void FD_ZERO(fd_set *set);          //从 fdset 中清除所有的文件描述符
+
+
+/* 当然还有一个升级版, 多了一个参数 const sigset_t *sigmask*/
+/*一看就知道是用来屏蔽信号的咯*/
+#include &lt;sys/select.h&gt;
+int pselect(int nfds, fd_set *readfds, fd_set *writefds,
+        fd_set *exceptfds, const struct timespec *timeout,
+        const sigset_t *sigmask);
+</code></pre>
+<p>使用select的代码大致如下:</p>
+<pre><code class="c++">/*param:  int readfd[fd_size] */
+int select_read(int *readfd, int fd_size)
+{
+  fd_set my_readfd;
+  int maxfd, i;
+
+  //1. find maxfd
+  maxfd = readfd[0];
+  for(i=0; i&lt;fd_size; ++i){
+    if(readfd[i]&gt;maxfd) {
+      maxfd = readfd[i];
+    }
+  }
+
+  while(1) {
+    /*put all the fd into my_readfd fd_set,  
+      which is a copy of origin readfd set*/
+    FD_ZERO(&amp;my_readfd);
+    for(i=0; i&lt;fd_size; ++i) {
+      FD_SET(readfd[i], &amp;my_readfd); 
+    }
+
+    /*now select take charge of all the process*/
+    select(maxfd+1, &amp;my_readfd, NULL, NULL, NULL);
+
+    /*once select return, there must some readfds ok, find which  could read*/
+    for(i=0;i&lt;fd_size;++i){
+      if(FD_ISSET(readfd[i], &amp;my_readfd)) {
+    /*read now*/
+    common_read_code(readfd[i]); 
+      }
+    }
+  }//end of while(1)                                                                                                                                                      
+}//end of func
+</code></pre>
+<p>int readfd[fd_size]通常用来描述已经连接的, 并且之火select返回后还是从该集合中查找活跃的.</p>
+<p>此时服务器模型变成:</p>
+<pre><code class="c++">
+初始话(socket,bind,listen);  //一些列动作
+while(1)
+  {
+    设置监听读写文件描述符(FD_*);
+    调用 select; 
+
+    (遍历监听队列)如果是监听套接字就绪,说明一个新的连接请求建立
+      {
+        建立连接(accept);
+        加入到监听文件描述符中去;   
+      }
+    否则说明是一个已经连接过的描述符
+      {
+        进行操作(read 或者 write);
+      }
+  }
+</code></pre>
+<p>(其他的就不在演示了; select/poll, epoll会单独文档仔细说)</p>
+<hr>
+<p>UDP类型</p>
+<p>和并发的 TCP 服务器模型一样是创建一个子进程来处理的 算法和并发的 TCP 模型一样,<br>除非服务器在处理客户端的请求所用的时间比较长以外(此时需要单独开一个进程), 人们实际上很少用这种模型.</p>
+<p>并且udp类型, 在服务端一般不会调用 <code>connect</code> 绑定对端, 所以本身就可以面向多个客户.<br>udp一般用于广播, 组播, 其实本身就支持并发操作了.</p>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>本文对于上次network io一文进行了补充, 给出了服务端应用程序的编码思路.<br>但是并没有事无巨细的说, 毕竟现在一般公司都有自己的封装或者开源框架.</p>
+<p>就这样吧.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="服务端网络模型">服务端网络模型</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="服务端网络模型">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

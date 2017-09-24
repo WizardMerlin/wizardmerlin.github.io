@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Linux后台开发经验分享(里程碑) | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一些列工作经验的分享,干货">
+<meta name="keywords" content="里程碑">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux后台开发经验分享(里程碑)">
+<meta property="og:url" content="localhost:4000/2017/08/30/milestone1.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="一些列工作经验的分享,干货">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/new_era_1.png">
+<meta property="og:updated_time" content="2017-09-24T08:04:14.523Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux后台开发经验分享(里程碑)">
+<meta name="twitter:description" content="一些列工作经验的分享,干货">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/new_era_1.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#个人观点"><span class="toc-number">2.1.</span> <span class="toc-text">个人观点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RESTful相关"><span class="toc-number">2.2.</span> <span class="toc-text">RESTful相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#restful简介"><span class="toc-number">2.2.1.</span> <span class="toc-text">restful简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#api返回值经验"><span class="toc-number">2.2.2.</span> <span class="toc-text">api返回值经验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#语言类"><span class="toc-number">2.3.</span> <span class="toc-text">语言类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#window移植"><span class="toc-number">2.3.1.</span> <span class="toc-text">window移植</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#宽字符问题"><span class="toc-number">2.3.2.</span> <span class="toc-text">宽字符问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#操作大文件"><span class="toc-number">2.3.3.</span> <span class="toc-text">操作大文件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undef-LARGEFILE64-SOURCE"><span class="toc-number">3.</span> <span class="toc-text">undef     _LARGEFILE64_SOURCE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#define-LARGEFILE64-SOURCE-1"><span class="toc-number">4.</span> <span class="toc-text">define _LARGEFILE64_SOURCE    1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#define-USE-LARGEFILE-1"><span class="toc-number">5.</span> <span class="toc-text">define __USE_LARGEFILE    1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#define-USE-LARGEFILE64-1"><span class="toc-number">6.</span> <span class="toc-text">define __USE_LARGEFILE64    1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#define-USE-FILE-OFFSET64-1"><span class="toc-number">7.</span> <span class="toc-text">define __USE_FILE_OFFSET64    1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#C-标准库的坑"><span class="toc-number">7.1.</span> <span class="toc-text">C++标准库的坑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#变量初始化"><span class="toc-number">7.1.1.</span> <span class="toc-text">变量初始化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">8.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">9.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Linux后台开发经验分享(里程碑)</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-08-30</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/里程碑/">里程碑</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>本文总结了我的个人经验, 包括我自己亲身经历的, 后台同学一起讨论的, 网络曾经看到的等等. 写这一篇不同于以往的 <code>经验分享</code> (可能文中的内容不会太详细, 但尽量说清楚).</p>
+<blockquote>
+<p>身边人对于你的影响可能比你的努力更重要</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>如果你把你学到的知识, 而不是思考问题的方式, 细心&amp;耐心的能力, 健康的身体, 银行的存款, 结交的人缘作为核心竞争力; 那么分享自己所学可能对你有点儿困难.(虽然最初的时候我写博客也只是完全为了记录我成长的过程, 不过渐渐目的已经转变了)</p>
+<blockquote>
+<p><code>谢谢过去那个努力的我</code>  – 大巨变100天(100 days from New Era)</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/new_era_1.png" alt="里程碑"></p>
+<p>下文中的所有内容, 均已成为历史, 这一篇就做一个 <code>里程碑</code> 吧.</p>
+<hr>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="个人观点"><a href="#个人观点" class="headerlink" title="个人观点"></a>个人观点</h2><p>下面是一些基于当前工作经验, 年限的认识:</p>
+<ul>
+<li>对于c++, go这类稍微偏底层, 并且常用的语言, 一定要了解细节, 深知见底.</li>
+<li>对于python, shell这类脚本或者模型语言, 用好为主</li>
+<li>对于数据结构和算法: 数据结构深入, 算法了解.</li>
+<li>对于操作系统, 如果决心做高级工程师, 业内技术专家linux一定要深入到内核(具体的是内核哪个模块?所有.)</li>
+<li>对于网络编程, 根据工作的不同, 有人工作在应用层,有人工作在传输层和网络层, 甚至是链路层(但是不管这么说, 应用层和网络层是要知道的)</li>
+<li>对于项目管理和人员管理等管理问题, 请入行的第3年再去涉及.</li>
+<li>对于金钱, 抱歉我看到的身边的人30W一大把, 50W是一个坎大多人突破不过去. (自己实力稍弱的时候, 不要 太看重钱)</li>
+<li></li>
+</ul>
+<h2 id="RESTful相关"><a href="#RESTful相关" class="headerlink" title="RESTful相关"></a>RESTful相关</h2><p>本段属于上层协议内容, 感谢土哥的经验交流.</p>
+<h3 id="restful简介"><a href="#restful简介" class="headerlink" title="restful简介"></a>restful简介</h3><p>RESTful 架构, 由于其以资源中心, 依赖http协议和uri, 虽然也会涉及c-s模型, 不过其更多的是强调对于相关资源的crud操作, 并且提供了统一的API形式:</p>
+<ul>
+<li>看Url就知道要什么</li>
+<li>看http method就知道干什么</li>
+<li>看http status  code就知道结果如何</li>
+</ul>
+<p>举几个例子就会发现它非常规范:</p>
+<pre><code>https://api.qzone.com/user/getUserFeedList?from=web 
+https://api.qzone.com?m=user&amp;c=getUserFeedList?from=web 
+https://qzone.com/api/user/getUserFeedList?from=web 
+https://qzone.com?m=api&amp;c=user&amp;a=getUserFeedList?from=web
+</code></pre><p>HTTP协议形式例如:</p>
+<pre><code>GET /posts HTTP/1.1
+Accept: application/atom+xml
+
+响应：
+HTTP/1.1 200 OK
+Content-Type: application/atom+xml
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;feed xmlns=&quot;http://www.w3.org/2005/Atom&quot;&gt;
+    &lt;title&gt;Posts&lt;/title&gt;
+    &lt;link href=&quot;http://example.org/posts&quot; rel=&quot;self&quot; /&gt;
+    &lt;link href=&quot;http://example.org/posts?pn=2&quot; rel=&quot;next&quot; /&gt;
+
+    &lt;id&gt;urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6&lt;/id&gt;
+    &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
+    &lt;entry&gt;
+        &lt;title&gt;Post XXX&lt;/title&gt;
+        &lt;link href=&quot;http://example.org/post-xxx&quot; /&gt;
+        &lt;id&gt;urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a&lt;/id&gt;
+        &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
+        &lt;content type=&quot;xhtml&quot;&gt;
+            &lt;div xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+                &lt;p&gt;This is the post content.&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/content&gt;
+    &lt;/entry&gt;
+    &lt;entry&gt;...&lt;/entry&gt;
+&lt;/feed&gt;
+</code></pre><h3 id="api返回值经验"><a href="#api返回值经验" class="headerlink" title="api返回值经验"></a>api返回值经验</h3><blockquote>
+<p>针对JSON型API的返回结果设计, 总结下自己的经验</p>
+</blockquote>
+<p>一般的返回结果是怎么样的?</p>
+<pre><code>{
+    data : { // 请求数据
+        user_id: 123,
+        user_name: &quot;tutuge&quot;,
+        ...
+    },
+    msg : &quot;done&quot;, // 请求状态描述，调试用
+    code: 1001, // 业务自定义状态码
+    extra : { // 全局附加数据(optional字段)
+        type: 1,
+        desc: &quot;秒数信息&quot;
+    }
+}
+</code></pre><p>下面详细解释:</p>
+<ul>
+<li>data字段<br>本次请求结果的数据 data 字段, 其值为对象(字典)或数组(列表)均可以, 根据业务而定. 例如:<pre><code>data: [
+  {user_id: 123, user_name: &quot;tutuge&quot;},
+  {user_id: 321, user_name: &quot;zekunyan&quot;},
+  ...
+]
+</code></pre>当然数组, 对象还可以嵌套, 怎么灵活怎么用.(不用担心现有库对于字段的解析问题)</li>
+<li>msg字段<br>该字段是本次请求的业务&amp;状态描述信息, 主要用于调试、测试等, 例如 “done”, “测试缺少参数”. 根据相关开发人员协商即可. </li>
+<li>code字段<br>这是比较有争议的一个字段, 因为Http请求本身已经有了完备的状态码，再定义一套状态码直观上感受却是不对劲。但是实际开发中，确实发现 <code>自定义业务状态码</code> 的必要性，如一次成功的Http status 200的请求，可能由于用户未登录、登录过期而有不同的返回结果和处理方式，所以还是保留了; 权当http协议的详细说明.<br>定义规范根据业务来, 例如按照用户相关、授权相关、各种业务，做简单的分类:<pre><code>// Code 业务自定义状态码定义示例
+// 授权相关
+1001: 无权限访问
+1002: access_token过期
+1003: unique_token无效
+...
+// 用户相关
+2001: 未登录
+2002: 用户信息错误
+2003: 用户不存在
+// 业务1
+3001: 业务1XXX
+3002: 业务1XXX
+// ...
+</code></pre>最好定义为常量, 当然能够动态解析最好.</li>
+<li><p>extra字段<br>这个纯粹是附加字段(全局的附加数据), 为的是灵活扩展, 比如升级啊, 需求变化等. 由服务端的规则决定并且客户端要及时向用户展示变化, 所以加上了extra字段. 例如:</p>
+<pre><code>// 升级
+type: 1,
+show_msg: &quot;恭喜您升级到XXX&quot;
+
+// 完成任务
+type: 2,
+task_desc: &quot;达成XXX成就&quot;
+</code></pre></li>
+</ul>
+<p>其实最终还是要看客户端和服务端人员的协商; 服务端人员切不可以为添加一个字段简单没有什么, 就随口答应, 一切都要走流程, 并且避免乱用. 这不仅仅是为了规范, 而是为了让项目不会再将来出现意想不到的 <code>惊喜</code> .</p>
+<p>补充经验:</p>
+<ul>
+<li>命名, 和C语言保持一致就可以了(字段统一小写加下划线)<br>例如:<pre><code>// 字符串
+user_name, task_desc, date_str, article_title, feed_content 等
+// 数字
+user_id, users_count, task_num, xxx_offset 等
+// 日期
+login_at, create_date, logout_time 等
+// 布尔
+is_done, is_vip, protected, can_read 等
+// URL
+user_avatar_url, thumb_url 等
+// 数组
+users, profiles, thumb_imgs 等
+</code></pre></li>
+<li>设置默认值(空值)<ul>
+<li>数字就是 <code>0</code></li>
+<li>字符串就是空字符串<code>&quot;&quot;</code></li>
+<li>数组就是空数组<code>[]</code></li>
+<li>对象就是空对象{}</li>
+</ul>
+</li>
+<li>bool值, 统一成0和1.<br>由于多种语言不统一, 所以一开始就要做好限定, 而不是<code>true</code>, <code>True</code>, <code>1</code>漫天乱飞.. 在客户端和服务端统一设置常量、宏定义，定义布尔的类型，所有的参数、结果的布尔字段全部做强制约束</li>
+<li>时间处理, 统一使用Unix时间戳, 即GMT/UTC时间戳, 可以用<code>date +%s</code>命令查看, 然后各自客户端根据自己的时区, 显示做转换.<br>例如:<pre><code>// 从服务器接收的时间数据
+login_at: 1462068610
+// 根据时区、显示要求转换，如北京时间
+显示：2016年5月1日下午1点、1天前等
+</code></pre>(如果用字符串,可以参考<code>YYYY-MM-DDThh:mm:ssTZD</code>格式,保留了时区)</li>
+<li>字符串常量 请用常量文档约束.<pre><code>// 如登录类型，QQ、微信、微博等
+login_type: &quot;qq&quot;,
+login_type: &quot;wechat&quot;,
+login_type: &quot;sina_weibo&quot;,
+</code></pre></li>
+<li>使用完整的url, 指明网络协议(scheme).</li>
+</ul>
+<h2 id="语言类"><a href="#语言类" class="headerlink" title="语言类"></a>语言类</h2><h3 id="window移植"><a href="#window移植" class="headerlink" title="window移植"></a>window移植</h3><p>windows迁移问题, 自己遇到的, 记录一下:</p>
+<ul>
+<li>缺少最后一行空行, 多余的\r回车符<br><code>dos2unix &lt;file&gt; fromdos &lt;file&gt;</code></li>
+<li>中文注释乱码<br><code>iconv –f gbk –t utf8</code></li>
+<li>不能忍的头文件<br><code>windows.h</code></li>
+<li>不兼容的宏, 库函数<br><code>snprintf()</code>,<code>__FUNCTION__</code>, <code>__FILE__</code>, <code>__LINE__</code></li>
+<li>特殊的宏<br><code>#ifdef WIN_32  #define …  #endif</code></li>
+</ul>
+<h3 id="宽字符问题"><a href="#宽字符问题" class="headerlink" title="宽字符问题"></a>宽字符问题</h3><h3 id="操作大文件"><a href="#操作大文件" class="headerlink" title="操作大文件"></a>操作大文件</h3><p>1、包含所有头文件以前，先定义这些宏：</p>
+<pre><code>#ifndef __USE_FILE_OFFSET64
+#define __USE_FILE_OFFSET64
+#endif
+
+#ifndef __USE_LARGEFILE64
+#define __USE_LARGEFILE64
+#endif
+
+#ifndef _LARGEFILE64_SOURCE
+#define _LARGEFILE64_SOURCE
+#endif
+</code></pre><p>一般用 /usr/include/features.h 重定义的:</p>
+<p>32位LINUX使用超过2G的大文件，需要定义很多宏，与文件操作API相关的宏都有这样一些：<br>_FILE_OFFSET_BITS<br>_LARGEFILE_SOURCE<br>_LARGEFILE64_SOURCE<br><strong>USE_FILE_OFFSET64
+</strong>USE_LARGEFILE<br>__USE_LARGEFILE64</p>
+<p>那么，它们之间的关系究竟是怎么样的呢？<br>终于在linux的头文件 /usr/include/features.h中找到了定义。</p>
+<p>//原来这个文件就是专门让用户定义各种特性的：<br>/*These are defined by the user (or the compiler)<br>to specify the desired environment</p>
+<p>其中几个供用户配置的宏的注释为：<br>_LARGEFILE_SOURCE    Some more functions for correct standard I/O.<br>_LARGEFILE64_SOURCE    Additional functionality from LFS for large files.<br>_FILE_OFFSET_BITS=N    Select default filesystem interface.<br>_GNU_SOURCE        All of the above, plus GNU extensions.<br><strong>USE_LARGEFILE    Define correct standard I/O things.
+</strong>USE_LARGEFILE64    Define LFS things with separate names.<br>__USE_FILE_OFFSET64    Define 64bit interface as default.<br>*/</p>
+<p>// use前缀的宏定义都先取消掉，说明这些宏不是直接供用户使用的，而是由其他宏的定义衍生这些宏</p>
+<p>#undef    __USE_LARGEFILE</p>
+<p>#undef    __USE_LARGEFILE64</p>
+<p>#undef    __USE_FILE_OFFSET64</p>
+<p>//   _GNU_SOURCE是一张很大的通行证，定义了这个，很多相关的开关都会打开<br>/<em> If _GNU_SOURCE was defined by the user, turn on all the other features.  </em>/</p>
+<p>#ifdef _GNU_SOURCE</p>
+<h1 id="undef-LARGEFILE64-SOURCE"><a href="#undef-LARGEFILE64-SOURCE" class="headerlink" title="undef     _LARGEFILE64_SOURCE"></a>undef     _LARGEFILE64_SOURCE</h1><h1 id="define-LARGEFILE64-SOURCE-1"><a href="#define-LARGEFILE64-SOURCE-1" class="headerlink" title="define _LARGEFILE64_SOURCE    1"></a>define _LARGEFILE64_SOURCE    1</h1><p>#endif</p>
+<p>// 下面是打开各个USE宏的位置</p>
+<p>#ifdef _LARGEFILE_SOURCE</p>
+<h1 id="define-USE-LARGEFILE-1"><a href="#define-USE-LARGEFILE-1" class="headerlink" title="define __USE_LARGEFILE    1"></a>define __USE_LARGEFILE    1</h1><p>#endif</p>
+<p>#ifdef _LARGEFILE64_SOURCE</p>
+<h1 id="define-USE-LARGEFILE64-1"><a href="#define-USE-LARGEFILE64-1" class="headerlink" title="define __USE_LARGEFILE64    1"></a>define __USE_LARGEFILE64    1</h1><p>#endif</p>
+<p>#if defined _FILE_OFFSET_BITS &amp;&amp; _FILE_OFFSET_BITS == 64</p>
+<h1 id="define-USE-FILE-OFFSET64-1"><a href="#define-USE-FILE-OFFSET64-1" class="headerlink" title="define __USE_FILE_OFFSET64    1"></a>define __USE_FILE_OFFSET64    1</h1><p>#endif</p>
+<p>总结：<br>使用64位大文件，定义_LARGEFILE64_SOURCE和_FILE_OFFSET_BITS=64这两个宏即可</p>
+<p>2、使用open打开文件的时候，加上O_LARGEFILE标志：<br>int fd = open(“test.dat”, O_RDWR|O_APPEND|O_CREAT|O_LARGEFILE, 0666);<br>read(), write()等与一般的用法一致，无变化。</p>
+<p>3、注意lseek()函数，文件未超过2G的时候，一切工作良好；<br>文件超过2G后，调用返回-1，errno为EOVERFLOW (errno=75, msg=Value too large for defined data type)<br>需要使用lseek64()代替lseek()。很奇怪，定义了宏以后，并未自动将lseek变成lseek64。（知道原因的朋友可以教教我）</p>
+<p>4、注意stat()函数，传入的文件如果在2G内，工作良好；<br>传入的文件如果超过2G，返回-1, errno为EOVERFLOW (errno=75, msg=Value too large for defined data type)<br>应该这样使用：struct stat64 st; stat64(“file”, &amp;st);</p>
+<p>5、为了保险，建议所有操作文件的函数都是用支持64位大文件的。否则当文件超过2G后，难免会出现什么未知的异常</p>
+<h2 id="C-标准库的坑"><a href="#C-标准库的坑" class="headerlink" title="C++标准库的坑"></a>C++标准库的坑</h2><h3 id="变量初始化"><a href="#变量初始化" class="headerlink" title="变量初始化"></a>变量初始化</h3><pre><code>https://segmentfault.com/a/1190000004933446
+</code></pre><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="https://www.zhihu.com/question/28557115" target="_blank" rel="external">知乎大神们对restful的看法</a></li>
+<li><a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes" target="_blank" rel="external">http状态码大全</a></li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Linux后台开发经验分享(里程碑)">Linux后台开发经验分享(里程碑)</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Linux后台开发经验分享(里程碑)">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>using-regex-in-cpp | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="主要书写Boost.Regex和C++11对于正则表达式的支持">
+<meta name="keywords" content="cpp,正则表达式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="using-regex-in-cpp">
+<meta property="og:url" content="localhost:4000/2017/05/10/using-regex-in-cpp.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="主要书写Boost.Regex和C++11对于正则表达式的支持">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/reg.jpg">
+<meta property="og:updated_time" content="2017-09-24T00:53:03.411Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="using-regex-in-cpp">
+<meta name="twitter:description" content="主要书写Boost.Regex和C++11对于正则表达式的支持">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/reg.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#详细讲解"><span class="toc-number">2.1.</span> <span class="toc-text">详细讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#boost-regex"><span class="toc-number">2.1.1.</span> <span class="toc-text">boost::regex</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#boost-regex-match"><span class="toc-number">2.1.2.</span> <span class="toc-text">boost::regex_match</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#boost-regex-research"><span class="toc-number">2.1.3.</span> <span class="toc-text">boost::regex_research</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#boost-regex-replace"><span class="toc-number">2.1.4.</span> <span class="toc-text">boost::regex_replace</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#规范代码"><span class="toc-number">2.2.</span> <span class="toc-text">规范代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#boost-regex-match-1"><span class="toc-number">2.2.1.</span> <span class="toc-text">boost::regex_match</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#boost-regex-replace-1"><span class="toc-number">2.2.2.</span> <span class="toc-text">boost::regex_replace</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>using-regex-in-cpp</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-05-10</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/正则表达式/">正则表达式</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>C++11包含了几乎所有的Boost.Regex类和标志, 只要包含<regex>就是可以在std::下找到它们.<br>不过我还是喜欢/习惯于使用boost库(<boost regex.hpp="">), 本文了演示多个例子.</boost></regex></p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/reg.jpg" alt=""></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>boost库提供了对正则表达式的支持(libboost_regex), 并且支持三种:</p>
+<pre><code>1. perl正则表达式(默认不忽略大小写)
+2. posix基本正则表达式(默认不区分大小写)
+3. posix扩展正则表达式(默认不区分大小写)
+</code></pre><p>根据<code>boost::regex::flag_type</code>参数的不同, 选择不同的种类.</p>
+<p>每次使用正则表达式, 都要先构造一个对象<code>boost::regex</code>, 之后根据需求进行匹配<code>boost::regex_match(string, boost::regex)</code>或者其他一些<code>boost::regex_*</code>函数.</p>
+<p>即主要涉及两个类:</p>
+<pre><code>1. boost::regex   //用于定义一个正则表达式对象
+2. boost::smatch  //用于保存匹配的结果(全串或者子串的结果)
+</code></pre><p>具体可以参考一下文档下列的书籍:<br>1.<a href="http://" target="_blank" rel="external">《Beyond the C++ Standard Library: An Introduction to Boost》</a><br>2.<a href="http://" target="_blank" rel="external">《Boost C++ Application Development Cookbook》</a><br>3.<a href="http://" target="_blank" rel="external">《boost_1_56_pdf》regex部分</a></p>
+<p>btw: 下面所有代码编译的时候记得链接boost_regex库(-lboost_regex).</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="详细讲解"><a href="#详细讲解" class="headerlink" title="详细讲解"></a>详细讲解</h2><h3 id="boost-regex"><a href="#boost-regex" class="headerlink" title="boost::regex"></a>boost::regex</h3><p>这就是代表正则表达式对象的类, 用来存储你写的正则表达式(如果你写的正则表达式不符合规范的话,可能会报错).<br>(但是又不会像posix c中对于正则表达式的支持, 需要先编译regcomp(), 之后才能进行匹配regexec())</p>
+<p>创建了一个存储正则表达式的对象:(一般要加上const修饰)</p>
+<pre><code>1. boost::regex e(string_pattern, flag);
+2. boost::regex e(string_pattern);
+</code></pre><p>其中flag取不同的值, 可以设置不同的种类.</p>
+<pre><code>1. boost::regex::perl
+2. boost::regex::perl | boost::regex::icase
+3. boost::regex::extended
+4. boost::regex::extended | boost::regex::icase
+5. boost::regex::basic
+6. boost::regex::basic | boost::regex::icase
+</code></pre><p>还有一个取值, <code>boost::regex::no_exception</code>, 当string_pattern不符合正则表达式语法时,一般创建会失败,默认抛出异常.<br>但是如果你设置了上面的标志, 可以依赖”boost::regex.status()”进行判断.<br>    boost::regex e(string_pattern, flag);<br>    if(e.status){<br>        //error happened<br>    }</p>
+<h3 id="boost-regex-match"><a href="#boost-regex-match" class="headerlink" title="boost::regex_match"></a>boost::regex_match</h3><pre><code>boost::regex e(string_pattern);
+bool matched = boost::regex_match(target_string, e);
+</code></pre><p>相对完整的demo:</p>
+<pre><code class="c++">#include &lt;boost/regex.hpp&gt;
+#include &lt;locale&gt;
+#include &lt;iostream&gt;
+
+int main(void)
+{
+  std::locale::global(std::locale(&quot;German&quot;));
+  std::string s = &quot;Boris Schaling&quot;;
+  boost::regex expr(&quot;\\w+\\s\\w+&quot;);
+  std::cout &lt;&lt; boost::regex_match(s, expr) &lt;&lt; std::endl;
+
+  return 0;
+}
+</code></pre>
+<h3 id="boost-regex-research"><a href="#boost-regex-research" class="headerlink" title="boost::regex_research"></a>boost::regex_research</h3><pre><code class="c++">#include &lt;boost/regex.hpp&gt;
+#include &lt;locale&gt;
+#include &lt;iostream&gt;
+
+int main()
+{
+  std::locale::global(std::locale(&quot;German&quot;));
+  std::string s = &quot;Boris Schaling&quot;;
+  boost::regex expr(&quot;(\\w+)\\s(\\w+)&quot;);
+  boost::smatch what;
+  if (boost::regex_search(s, what, expr)){
+    std::cout &lt;&lt; what[0] &lt;&lt; std::endl;
+    std::cout &lt;&lt; what[1] &lt;&lt; &quot;-----&quot; &lt;&lt; what[2] &lt;&lt; std::endl;
+  }
+}
+</code></pre>
+<h3 id="boost-regex-replace"><a href="#boost-regex-replace" class="headerlink" title="boost::regex_replace"></a>boost::regex_replace</h3><pre><code class="c++">#include &lt;boost/regex.hpp&gt;
+#include &lt;locale&gt;
+#include &lt;iostream&gt;
+
+int main()
+{
+  std::locale::global(std::locale(&quot;German&quot;));
+  std::string s = &quot; Boris Schaling &quot;;
+  boost::regex expr(&quot;\\s&quot;);
+  std::string fmt(&quot;_&quot;);
+  std::cout &lt;&lt; boost::regex_replace(s, expr, fmt) &lt;&lt; std::endl;
+}
+</code></pre>
+<p>以及</p>
+<pre><code class="c++">#include &lt;boost/regex.hpp&gt;
+#include &lt;locale&gt;
+#include &lt;iostream&gt;
+
+int main()
+{
+  std::locale::global(std::locale(&quot;German&quot;));
+  std::string s = &quot;Boris Schaling&quot;;
+  boost::regex expr(&quot;(\\w+)\\s(\\w+)&quot;);
+  std::string fmt(&quot;\\2 \\1&quot;);
+  std::cout &lt;&lt; boost::regex_replace(s, expr, fmt) &lt;&lt; std::endl;
+}
+</code></pre>
+<pre><code class="c++">#include &lt;boost/regex.hpp&gt;
+#include &lt;locale&gt;
+#include &lt;iostream&gt;
+
+int main(void)
+{
+  std::locale::global(std::locale(&quot;German&quot;));
+  std::string s = &quot;Boris Schaling&quot;;
+  boost::regex expr(&quot;(\\w+)\\s(\\w+)&quot;);
+  std::string fmt(&quot;\\2 \\1&quot;);
+  std::cout &lt;&lt; boost::regex_replace(s, expr, fmt, 
+              boost::regex_constants::format_literal) &lt;&lt; std::endl;
+  return 0;
+}
+</code></pre>
+<h2 id="规范代码"><a href="#规范代码" class="headerlink" title="规范代码"></a>规范代码</h2><h3 id="boost-regex-match-1"><a href="#boost-regex-match-1" class="headerlink" title="boost::regex_match"></a>boost::regex_match</h3><pre><code class="c++">#include &lt;boost/regex.hpp&gt;
+#include &lt;iostream&gt;
+
+int main(void) {
+    std::cout 
+        &lt;&lt; &quot;Available regex syntaxes:\n&quot;
+        &lt;&lt; &quot;\t[0] Perl\n&quot;
+        &lt;&lt; &quot;\t[1] Perl case insensitive\n&quot;
+        &lt;&lt; &quot;\t[2] POSIX extended\n&quot;
+        &lt;&lt; &quot;\t[3] POSIX extended case insensitive\n&quot;
+        &lt;&lt; &quot;\t[4] POSIX basic\n&quot;
+        &lt;&lt; &quot;\t[5] POSIX basic case insensitive\n&quot;
+        &lt;&lt; &quot;Choose regex syntax: &quot;;
+
+    boost::regex::flag_type flag;
+    switch (std::cin.get()) {
+    case &#39;0&#39;: flag = boost::regex::perl;
+        break;
+
+    case &#39;1&#39;: flag = boost::regex::perl|boost::regex::icase;
+        break;
+
+    case &#39;2&#39;: flag = boost::regex::extended;
+        break;
+
+    case &#39;3&#39;: flag = boost::regex::extended|boost::regex::icase;
+        break;
+
+    case &#39;4&#39;: flag = boost::regex::basic;
+        break;
+
+    case &#39;5&#39;: flag = boost::regex::basic|boost::regex::icase;
+        break;
+    default:
+        std::cout &lt;&lt; &quot;Inccorect number of regex syntax. Exiting... \n&quot;;
+        return -1;
+    } 
+    // Disabling exceptions
+    flag |= boost::regex::no_except;
+
+    // Restoring std::cin
+    std::cin.ignore();
+    std::cin.clear();
+
+    std::string regex, str;
+    do {
+        std::cout &lt;&lt; &quot;Input regex: &quot;;
+        if (!std::getline(std::cin, regex) || regex.empty()) {
+            return 0;
+        }
+
+        // Without `boost::regex::no_except`flag this 
+        // constructor may throw
+        const boost::regex e(regex, flag);
+        if (e.status()) {
+            std::cout &lt;&lt; &quot;Incorrect regex pattern!\n&quot;;
+            continue;
+        }
+
+        std::cout &lt;&lt; &quot;String to match: &quot;;
+        while (std::getline(std::cin, str) &amp;&amp; !str.empty()) {
+            bool matched = boost::regex_match(str, e);
+            std::cout &lt;&lt; (matched ? &quot;MATCH\n&quot; : &quot;DOES NOT MATCH\n&quot;);
+            std::cout &lt;&lt; &quot;String to match: &quot;;
+        } // end of `while (std::getline(std::cin, str))`
+
+        std::cout &lt;&lt; &#39;\n&#39;;
+
+        // Restoring std::cin
+        std::cin.ignore();
+        std::cin.clear();
+    } while (1);
+} // int main()
+</code></pre>
+<h3 id="boost-regex-replace-1"><a href="#boost-regex-replace-1" class="headerlink" title="boost::regex_replace"></a>boost::regex_replace</h3><pre><code class="c++">#include &lt;boost/regex.hpp&gt;
+#include &lt;iostream&gt;
+
+int main(void) {
+  std::cout 
+    &lt;&lt; &quot;Available regex syntaxes:\n&quot;
+    &lt;&lt; &quot;\t[0] Perl\n&quot;
+    &lt;&lt; &quot;\t[1] Perl case insensitive\n&quot;
+    &lt;&lt; &quot;\t[2] POSIX extended\n&quot;
+    &lt;&lt; &quot;\t[3] POSIX extended case insensitive\n&quot;
+    &lt;&lt; &quot;\t[4] POSIX basic\n&quot;
+    &lt;&lt; &quot;\t[5] POSIX basic case insensitive\n&quot;
+    &lt;&lt; &quot;Choose regex syntax: &quot;;
+
+  boost::regex::flag_type flag;
+  switch (std::cin.get()) {
+  case &#39;0&#39;: flag = boost::regex::perl;
+    break;
+
+  case &#39;1&#39;: flag = boost::regex::perl|boost::regex::icase;
+    break;
+
+  case &#39;2&#39;: flag = boost::regex::extended;
+    break;
+
+  case &#39;3&#39;: flag = boost::regex::extended|boost::regex::icase;
+    break;
+
+  case &#39;4&#39;: flag = boost::regex::basic;
+    break;
+
+  case &#39;5&#39;: flag = boost::regex::basic|boost::regex::icase;
+    break;
+  default:
+    std::cout &lt;&lt; &quot;Inccorect number of regex syntax. Exiting... \n&quot;;
+    return -1;
+  } 
+  // Disabling exceptions
+  flag |= boost::regex::no_except;
+
+  // Restoring std::cin
+  std::cin.ignore();
+  std::cin.clear();
+
+  std::string regex, str, replace_string;
+  do {
+    std::cout &lt;&lt; &quot;\nInput regex: &quot;;
+    if (!std::getline(std::cin, regex)) {
+      return 0;
+    }
+
+    // Without `boost::regex::no_except`flag this 
+    // constructor may throw
+    const boost::regex e(regex, flag);
+    if (e.status()) {
+      std::cout &lt;&lt; &quot;Incorrect regex pattern!\n&quot;;
+      continue;
+    }
+
+    std::cout &lt;&lt; &quot;String to match: &quot;;
+    while (std::getline(std::cin, str) &amp;&amp; !str.empty()) {
+      boost::smatch results;
+      bool matched = regex_search(str, results, e);
+      if (matched) {
+    std::cout &lt;&lt; &quot;MATCH: &quot;;
+    std::copy(
+          results.begin() + 1, 
+          results.end(), 
+          std::ostream_iterator&lt;std::string&gt;( std::cout, &quot;, &quot;)
+          );
+
+    std::cout &lt;&lt; &quot;\nReplace pattern: &quot;;
+    if (
+        std::getline(std::cin, replace_string)
+        &amp;&amp; !replace_string.empty())
+      {
+        // std::cout &lt;&lt; &quot;RESULT: &quot; 
+            //           &lt;&lt; boost::regex_replace(str, e, replace_string); 
+        std::cout &lt;&lt; &quot;RESULT: &quot; &lt;&lt; results.format(replace_string); 
+      } else {
+      // Restoring std::cin
+      std::cin.ignore();
+      std::cin.clear();
+    }
+      } else { // `if (matched) `
+    std::cout &lt;&lt; &quot;DOES NOT MATCH&quot;;
+      }
+
+      std::cout &lt;&lt; &quot;\nString to match: &quot;;
+    } // end of `while (std::getline(std::cin, str))`
+
+    std::cout &lt;&lt; &#39;\n&#39;;
+
+    // Restoring std::cin
+    std::cin.ignore();
+    std::cin.clear();
+  } while (1);
+
+  return 0;
+
+} // int main()
+</code></pre>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>看到啦, 上面用起来还是挺舒服的.<br>当然如果想要兼容c和c++, 可以使用posix c提供的那一套, 如果只是C++, 建议用boost这一套.<br>并且c++11已经兼容了这一套, 直接引入<regex>头文件, 在<code>std::</code>下就可以用了.</regex></p>
+<p>c++11之前, 还是要引用boost库.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="using-regex-in-cpp">using-regex-in-cpp</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="using-regex-in-cpp">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

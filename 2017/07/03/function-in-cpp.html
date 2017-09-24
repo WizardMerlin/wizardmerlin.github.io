@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>function-in-cpp | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Boost库以及标准库中的function库">
+<meta name="keywords" content="cpp,boost">
+<meta property="og:type" content="article">
+<meta property="og:title" content="function-in-cpp">
+<meta property="og:url" content="localhost:4000/2017/07/03/function-in-cpp.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="Boost库以及标准库中的function库">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/functions.jpg">
+<meta property="og:updated_time" content="2017-09-24T05:27:27.739Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="function-in-cpp">
+<meta name="twitter:description" content="Boost库以及标准库中的function库">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/functions.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#function声明"><span class="toc-number">2.1.</span> <span class="toc-text">function声明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类摘要"><span class="toc-number">2.2.</span> <span class="toc-text">类摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#function作用"><span class="toc-number">2.3.</span> <span class="toc-text">function作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#包装成员函数"><span class="toc-number">2.4.</span> <span class="toc-text">包装成员函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用案例"><span class="toc-number">2.5.</span> <span class="toc-text">使用案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#auto问题"><span class="toc-number">2.6.</span> <span class="toc-text">auto问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>function-in-cpp</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-03</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/boost/">boost</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>如果说 bind 是适配器(现有的可调用对象不适用时), ref是引用封装, 那么 function 就相应与对于各种各种可调用对象(普通函数、Lambda表达式、函数指针、以及其它函数对象等)的包装或者容器. 实际上深究一下, 它应该说成 “智能函数指针” .</p>
+<p>从 boost 库 ‘boost/function.hpp’ 中, 引入标准库, function 完成了可调用对象的统一约束.</p>
+<p>本文从其 <code>实现</code> 和 <code>使用</code>, 以及和 auto, bind等关系, 上单独说一说 function .</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/functions.jpg" alt="post-cover"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>既然是可调用对象, 那么指定参数类型和返回值是肯定的, 例如:</p>
+<pre><code class="c++">#include &lt;functional&gt;
+std::function&lt; int(int)&gt; Functional;
+
+//不进行初始化(空指针初始化), 直接调用的话会报异常
+//bad_function_call
+</code></pre>
+<p>实际上, 有具体的两条规则:</p>
+<ul>
+<li>转换后的std::function对象的参数能转换为可调用实体的参数</li>
+<li>可调用实体的返回值能转换为std::function对象的返回值</li>
+</ul>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="function声明"><a href="#function声明" class="headerlink" title="function声明"></a>function声明</h2><p>对于一个函数, 在声明时, 是一定要指定返回值类型和参数的(function类模板内部有 typedef 定义返回值和参数类型).</p>
+<p>可能有的编译器可以递归推倒, 例如:</p>
+<pre><code class="c++">#include &lt;functional&gt;
+int func(double) { return 0; }
+int main() {
+  std::function f{func}; // guide #1 deduces function&lt;int(double)&gt;
+  int i = 5;
+  std::function g = [&amp;](double) { return i; }; // guide #2 deduces function&lt;int(double)&gt;
+}
+</code></pre>
+<p>不过我还是劝你声明清楚, 或者使用 <code>decltype</code> 也行啊, 例如:</p>
+<pre><code class="c++">#include &lt;functional&gt;
+int func(double) { return 0; }
+
+std::function&lt;int(double)&gt; f = func;
+std::function&lt;std::decltype(func)&gt; f = func;
+</code></pre>
+<p>不要写成 std::decltype(&amp;func) , 这样推倒出来的是函数指针类型(而非函数类型).</p>
+<h2 id="类摘要"><a href="#类摘要" class="headerlink" title="类摘要"></a>类摘要</h2><p>function是一些列重载类模板(参数不同), 但是一般使用一个更加通用的类function.</p>
+<pre><code class="c++">emplate&lt; class R, class... Args &gt;
+class function&lt;R(Args...)&gt;; //R means return_type
+</code></pre>
+<p>类实现, 也就是封装了可调用函数对象签名的封装体(本质上还是一个functor), 具体略.</p>
+<p>相关 <code>成员函数</code> 的作用:</p>
+<ul>
+<li>empty(): 检测 function 的有效性(是否有初始化) —boost only</li>
+<li>operator!() : 作用和empty()一样, 检验function是否为空(用法就是直接用function对象做谓词判断) —boost only</li>
+<li>clear() : 效果和 operator=()赋值为0一样, 置空函数对象 —boost only</li>
+<li>target(): 返回内部持有的可调用functor的指针(注意检查一下是否为nullptr) </li>
+<li>contains(): 检查function是否持有funtor对象 —boost only</li>
+<li>operator(): 相当于调用内部函数对象</li>
+</ul>
+<p>也就是说, std中, 你判断谓词, 一般要使用 <code>static_cast&lt;bool&gt;(function对象)</code><br>(std::function相对于, boost::function 阉割了太多功能)<br>最好不要比较两个function, 因为内部的语义不是太清楚, 以及function本身有bool谓词判断语义.</p>
+<p>上面函数的使用案例:</p>
+<pre><code class="c++">#include &lt;functional&gt;
+int f(int a, int b) {  return a+b; }
+
+int main(void) 
+{
+    function&lt;int(int,int)&gt; func;
+    assert(!func); //true, 因为此时还没有初始化
+
+    func = f;
+    assert(func.contains(f));
+
+    if (!func) {
+       func(10,20);
+       //( *( func.target() ) )(10,20);
+    }
+    func = 0;  //相当于clear()
+    assert(func.empty());
+}
+</code></pre>
+<h2 id="function作用"><a href="#function作用" class="headerlink" title="function作用"></a>function作用</h2><p>统一调用形式的作用?<br>我们知道, 函数指针可以用于回调, 函数对象可以用于回调, lambda表示也可以, 甚至是bind适配后的成员函数也可以, 那么在不确定的情况下, 有一种泛型机制统一表示它们就很方便, 例如以下场景:</p>
+<pre><code class="c++">class manager
+{
+  private: 
+     std::function&lt;void(int)&gt; _cb;
+
+  public:
+      void startWork() 
+      {
+         int i = 10;
+     if(_cb){
+         _cb(i);
+     }
+      }
+
+      void setCallback(std::function&lt;void(int)&gt; cb) 
+      {
+         _cb = cb;
+      }
+}
+</code></pre>
+<p>一旦调用</p>
+<pre><code class="c++">manager m;
+m.startWork();
+</code></pre>
+<p>这是就会调用你传入的回调函数, 根本不必考虑回调的函数的形式. (因为返回值, 参数已经约定了回调形式)</p>
+<p>(扩展就是, 你完全可以去写一个, 回调工厂, 包装各种类型的回调, 然后bind的时候绑定工厂类的成员方法, 即具体的回调)<br>Scott Meyers的Effective C++ 3rd ed.第35条款提到了以boost::function和boost:bind取代虚函数的做法</p>
+<h2 id="包装成员函数"><a href="#包装成员函数" class="headerlink" title="包装成员函数"></a>包装成员函数</h2><p>以前说bind的时候, 就说过, 如果该可调用对象是成员函数, 那么就一定需要该类实例的引用或者指针才能绑定, 例如:</p>
+<pre><code class="c++">std::function&lt;void(int)&gt; f_add_display3 = std::bind( &amp;Foo::print_add, &amp;foo, _1 );
+</code></pre>
+<p>当然, 你可以直接使用 <code>std::mem_fn</code> 去绑定成员函数.</p>
+<p>注意, 原来boost库中, 上面的语句, 在function声明的时候, 就要声明具体对象类型作为模板参数, 即</p>
+<pre><code class="c++">std::function&lt;void(&amp;Foo, int)&gt; f_add_display3 = std::bind( &amp;Foo::print_add, &amp;foo, _1 );
+
+//当然只写函数声明, bind的时候才传入地址指针也是可以的, 并且是推荐的.
+</code></pre>
+<h2 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h2><p>直接上代码</p>
+<pre><code class="c++">#include &lt;functional&gt;
+#include &lt;iostream&gt;
+using namespace std;
+
+std::function&lt; int(int)&gt; Functional;
+
+// 普通函数
+int TestFunc(int a)
+{
+    return a;
+}
+
+// Lambda表达式
+auto lambda = [](int a)-&gt;int{ return a; };
+
+// 仿函数(functor)
+class Functor
+{
+public:
+    int operator()(int a)
+    {
+        return a;
+    }
+};
+
+// 1.类成员函数
+// 2.类静态函数
+class TestClass
+{
+public:
+    int ClassMember(int a) { return a; }
+    static int StaticMember(int a) { return a; }
+};
+
+int main()
+{
+    // 普通函数
+    Functional = TestFunc;
+    int result = Functional(10);
+    cout &lt;&lt; &quot;普通函数：&quot;&lt;&lt; result &lt;&lt; endl;
+
+    // Lambda表达式
+    Functional = lambda;
+    result = Functional(20);
+    cout &lt;&lt; &quot;Lambda表达式：&quot;&lt;&lt; result &lt;&lt; endl;
+
+    // 仿函数
+    Functor testFunctor;
+    Functional = testFunctor;
+    result = Functional(30);
+    cout &lt;&lt; &quot;仿函数：&quot;&lt;&lt; result &lt;&lt; endl;
+
+    // 类成员函数
+    TestClass testObj;
+    Functional = std::bind(&amp;TestClass::ClassMember, testObj, std::placeholders::_1);
+    result = Functional(40);
+    cout &lt;&lt; &quot;类成员函数：&quot;&lt;&lt; result &lt;&lt; endl;
+
+    // 类静态函数
+    Functional = TestClass::StaticMember;
+    result = Functional(50);
+    cout &lt;&lt; &quot;类静态函数：&quot;&lt;&lt; result &lt;&lt; endl;
+
+    return 0;
+}
+</code></pre>
+<h2 id="auto问题"><a href="#auto问题" class="headerlink" title="auto问题"></a>auto问题</h2><p>function作为泛型函数指针的升级, 由于封装, 所以性能比起原始指针会有一定的损失(具体可以再测试看看), 而和auto则没有太多的可比性.</p>
+<p>因为 <code>auto</code> 提供的是编译时的类型推倒机制, 而function像一个容器, 或者包装器, 实现的是动态的推倒(处理运行时类型), 属于泛型编程的范畴; 这也就是说, auto没有运行时开销, 效率上要比function搞, 但是用于回调这种场景是不行的, 不具有灵活性.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>虽然比不上bind那么变态的适配能力, 但是 <code>function</code> 在一定程度上来说, 也差不多是万能适配了.</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li>《Effective C++ 3rd ed》 第35条consider alternatives to virtual functions 电子工业出版社 Page169</li>
+<li><a href="http://blog.csdn.net/Solstice/article/details/3066268" target="_blank" rel="external">陈硕博文</a></li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="function-in-cpp">function-in-cpp</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="function-in-cpp">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

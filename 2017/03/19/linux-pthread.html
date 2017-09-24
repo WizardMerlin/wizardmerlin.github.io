@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>深挖Linux之线程 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这篇文章我前前后后写了几个月, 可谓是, 好累(笑). 线程还有其他文章, 本篇研究pthread">
+<meta name="keywords" content="linux,线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深挖Linux之线程">
+<meta property="og:url" content="localhost:4000/2017/03/19/linux-pthread.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="这篇文章我前前后后写了几个月, 可谓是, 好累(笑). 线程还有其他文章, 本篇研究pthread">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/thread_model.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/pthread_control.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/pthread_sem.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/pthread_sem.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/pthread_ph.jpg">
+<meta property="og:updated_time" content="2017-09-23T08:23:42.526Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深挖Linux之线程">
+<meta name="twitter:description" content="这篇文章我前前后后写了几个月, 可谓是, 好累(笑). 线程还有其他文章, 本篇研究pthread">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/thread_model.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#线程的控制"><span class="toc-number">2.1.</span> <span class="toc-text">线程的控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程属性控制"><span class="toc-number">2.2.</span> <span class="toc-text">线程属性控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改线程属性的方法"><span class="toc-number">2.2.1.</span> <span class="toc-text">修改线程属性的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置取消"><span class="toc-number">2.2.2.</span> <span class="toc-text">设置取消</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置分离状态"><span class="toc-number">2.2.3.</span> <span class="toc-text">设置分离状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改栈大小"><span class="toc-number">2.2.4.</span> <span class="toc-text">修改栈大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置警戒区"><span class="toc-number">2.2.5.</span> <span class="toc-text">设置警戒区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他属性"><span class="toc-number">2.2.6.</span> <span class="toc-text">其他属性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程控制总结"><span class="toc-number">2.3.</span> <span class="toc-text">线程控制总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程的同步-重点"><span class="toc-number">2.4.</span> <span class="toc-text">线程的同步(重点)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#同步条件"><span class="toc-number">2.4.1.</span> <span class="toc-text">同步条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#互斥量"><span class="toc-number">2.4.2.</span> <span class="toc-text">互斥量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读写锁"><span class="toc-number">2.4.3.</span> <span class="toc-text">读写锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#条件变量"><span class="toc-number">2.4.4.</span> <span class="toc-text">条件变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#信号量"><span class="toc-number">2.4.5.</span> <span class="toc-text">信号量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#死锁"><span class="toc-number">2.4.6.</span> <span class="toc-text">死锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见模型"><span class="toc-number">2.4.7.</span> <span class="toc-text">常见模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程私有数据"><span class="toc-number">2.5.</span> <span class="toc-text">线程私有数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程的调试"><span class="toc-number">2.6.</span> <span class="toc-text">线程的调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他注意事项"><span class="toc-number">2.7.</span> <span class="toc-text">其他注意事项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>深挖Linux之线程</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-03-19</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/linux/">linux</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/线程/">线程</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>个人觉得对于线程的把控，难度要小于进程，进程的通信方式多到能写一本书，并且每种方式还有其各自的适用范围以及注意事项，真正玩起来还是有点儿多。甚至对于内核而言，它都不区分进程和线程。<br>但是线程就不一样，只是Linux下面的话，线程当前的模型就一种：<code>内核支持的NPTL</code>(Native POSIX Thread Library), 但是如果你读过<a href="http://www.merlinblog.site/2017/07/06/seven-concurrency-models.html" target="_blank" rel="external">《7周7并发模型》</a>的话就会知道并发问题远不止这么点儿东西。<br>本文从实战的角度展开主要涉及4个方面:</p>
+<ul>
+<li>Thread management - creating, joining threads etc.</li>
+<li>Mutexes</li>
+<li>Condition variables</li>
+<li>Synchronization between threads using read/write locks and barriers</li>
+</ul>
+<p>The POSIX semaphore API works with POSIX threads but is not part of threads standard.</p>
+<p>但是实际上就两大类: </p>
+<ul>
+<li>线程的控制原语(包括线程属性) </li>
+<li>线程的同步原语(信号量(PV)，互斥量，竞争/冒险条件，文件锁，屏障)</li>
+</ul>
+<p>贴个图:<br><img src="http://omotkhw3y.bkt.clouddn.com/thread_model.png" alt="pthread"><br>API偏多, 注意一下常用的使用场景以及一些注意事项即可, <code>深入理解线程</code> 请参考专业书籍, 后续再写.<br>(本文是详细总结, 所以细节偏多)</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><blockquote>
+<p>那么先问一个问题，一个Linux进程最多起多少个线程？</p>
+</blockquote>
+<p>本文涉及哪些内容, 见下图<br><img src="http://omotkhw3y.bkt.clouddn.com/pthread_control.jpg" alt="functions"></p>
+<ol>
+<li>线程控制函数<br>pthread_create(), pthread_exit(), pthread_join()</li>
+<li>线程的同步(控制线程同时执行 &amp;&amp; 访问代码临界区)<br>信号量： sem_<em>()<br>互斥量： pthread<em>mutex</em></em>()<br>条件变量: pthread<em>cond</em>*()<br>(线程与信号配合的并不好，所以不要这样相互使用)</li>
+<li>线程的属性(比较多，但是常用的不多，大概6个左右)<br>pthread<em>attr</em>*()<br>设置一些取消状态等</li>
+<li>其他</li>
+</ol>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="线程的控制"><a href="#线程的控制" class="headerlink" title="线程的控制"></a>线程的控制</h2><p>主要内容：(直接返回errno，而不是返回-1设置errno了)</p>
+<ol>
+<li>pthread_self()—–相当于getpid(); 但是注意pthread_t，虽然在linux下是%ul但是在别的系统下可能是结构体.(始终成功)</li>
+<li>pthread_create()—–相当于fork()，但是这个函数的参数比较多；一定注意，如果失败了，传入的pthread就不要再使用了</li>
+<li>pthread_exit()—–相当于exit(), 但是是退出单个线程, 并给出返回值</li>
+<li>pthread_join()—-相当于waitpid(), 阻塞等待某一个线程退出, 并拿到其返回值(注意指针的传参)</li>
+<li>pthread_detach()— 线程分离函数, 进程控制没有这个函数</li>
+<li>pthread_cancel()—-相当于进程的kill(), 表示杀死某个子线程</li>
+<li>pthread_equal()—-判断两个线程是否相同(主要是由于pthread_t定义在不同系统可能不一样, 所以用该函数判断)</li>
+</ol>
+<p>(return, exit, pthread_exit(), 推荐最后一个)</p>
+<p>下面给出一些demo:</p>
+<p>创建一个线程</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+void *my_func(void*arg){
+    //子线程
+    printf(&quot;in thread id = %lu\n&quot;, pthread_self());
+    return NULL;
+}
+
+
+
+int main(void)
+{
+    pthread_t tid;
+    int ret;
+
+    printf(&quot;in main id = %lu\n&quot;, pthread_self());//主控线程
+
+    ret = pthread_create(&amp;tid, NULL, my_func, NULL);
+    if( ret ){
+           //fprintf(stderr, &quot;pthread_create error: %s\n&quot;, strerror(ret));
+           printf(&quot;create thread failed, %s\n&quot;,strerror(ret));
+           exit(-1);
+    }
+
+    sleep(1); //让子线程有机会打印
+    //pthread_join(tid, NULL);
+
+    return 0;//退出进程地址空间
+}
+</code></pre>
+<p>其实核心代码也就:</p>
+<pre><code class="c++">  pthread_t mythread;
+
+  if ( pthread_create( &amp;mythread, NULL, thread_function, NULL) ) {
+    printf(&quot;error creating thread.&quot;);
+    abort();
+  }
+
+  if ( pthread_join ( mythread, NULL ) ) {
+    printf(&quot;error joining thread.&quot;);
+    abort();
+  }
+</code></pre>
+<p>但是可以看到，使用<code>ps -Lf &lt;pid&gt;</code>看到的LWP号码，要比这里pthread_self()拿到的要小的多。</p>
+<pre><code>ps -Lf
+UID        PID  PPID   LWP  C NLWP STIME TTY          TIME CMD
+merlin   20185 19023 20185  0    1 17:53 pts/1    00:00:00 -bash
+</code></pre><p>(pthread_self()拿到的数字非常大, 而LWP是linux内核分配cpu时间片的依据)</p>
+<p>循环创建多个线程</p>
+<pre><code class="c">for(i =0; i&lt; 10; ++i){
+  ret = pthread_create(&amp;tid[i], NULL, my_func, (void *)i); 
+  if(ret != 0 ){
+    fprintf(stderr, &quot;pthread_create thread %d error: %s\n&quot;, i+1, strerror(ret));
+    exit(-1);
+  }
+}
+</code></pre>
+<p>为什么传递值而不是传递地址, 因为当子线程真正解引用去拿值的时候main函数这个线程可能已经走到了别的位置，i的值已经在main中被改变了;所以这里只能用值传递。</p>
+<p>加上pthread_join和pthread_exit之后, 完整的创建多个线程的例子如下：(既然创建了, 就要负责回收—如果它不是detach线程的话)</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;pthread.h&gt;
+
+void *func(void *arg)
+{
+  /*不要让线程结束, 否则栈空间会被释放掉*/
+  while(1) {
+    sleep(1);
+  }
+
+  return NULL;
+}
+
+
+int main(void)
+{
+  pthread_t tid;
+  int ret;
+  unsigned long i=1;
+
+  for(;;) {
+    ret = pthread_create(&amp;tid, NULL, func, NULL/*(void*)i*/);
+    if(ret) {
+      fprintf(stderr, &quot;pthread_create error:%s\n&quot;, strerror(ret));
+      printf(&quot;now thread sum number = %lu\n&quot;, i+1); //include main thread
+      exit(-1);
+    }
+    i++;
+  }
+
+  return 0;
+}
+</code></pre>
+<p>运行结果</p>
+<pre><code>pthread_create error:Resource temporarily unavailable
+now thread sum number = 32756
+</code></pre><p>(大致可以看到, 一个进程能够创建多少个线程和线程栈空间大小, 以及物理内存多少有关)</p>
+<p>拿到线程的返回值</p>
+<pre><code class="c++">typedef struct
+{
+ int a;
+ int b;
+}exit_t;
+
+void *func(void *arg)
+{
+  exit_t *ret;
+  ret = malloc(sizeof(exit_t));
+
+  ret-&gt;a = 1;
+  ret-&gt;b = 2;
+
+  pthread_exit((void*)ret);
+}
+
+int main(void)
+{
+  pthread_t tid;
+  exit_t *ret;
+
+  if( pthread_create(&amp;tid, NULL, func, NULL) ){
+    fprintf(stderr, &quot;pthread_create  error&quot;);
+    exit(-1);
+  }
+
+  pthread_join(tid, (void **) &amp;ret);//注意这里传入的不是&amp;tid
+  printf(&quot;return value %d, %d&quot;, ret-&gt;a, ret-&gt;b);
+
+  free(ret);
+  ret = NULL;
+
+  return 0;
+}
+</code></pre>
+<p>(最好把ret作为传入参数传递给pthread_create, 之后申请和释放都在main函数中了)</p>
+<p>线程分离<br>好处是, 不需要再由其他线程等待回收, 在状态上可以避免僵尸线程(结束时自动把自己的pcb在内存中的残留资源清理掉), 但是进程没有该机制, 所以当进程死亡如果没有回收, 总会在内存中残留一些资源, 导致内核始终认为该进程还存在.</p>
+<pre><code class="c">int pthread_detach(pthread_t thread);
+</code></pre>
+<p>(也可以使用线程属性进行设置分离状态)<br>创建完毕即可以分离</p>
+<pre><code class="c">pthread_create(&amp;tid, NULL, func, NULL);
+pthread_detach(tid); //退出后自动释放资源
+</code></pre>
+<p>设置分离之后, 再用join去回收, 则失败, 即会返回错误号22(无效的参数invalid argument).<br>(没有分离的时候, 是阻塞等待回收; 一旦设置线程的分离状态, 那么join直接反馈传递的tid无效)</p>
+<p>杀死线程<br>kill发送信号, 杀死进程(相对实时); 而线程中, 不一定都能杀死, 要在一定的 “取消点” 才可以(非实时).</p>
+<pre><code class="c">pthread_cancel(tid);
+</code></pre>
+<p>线程的取消并不是实时的，而有一定的延时。需要等待线程到达某个取消点(检查点).取消点：是线程检查是否被取消，并按请求进行动作的一个位置。通常是一些系统调用 creat， open， pause，close， read， write….. 执行命令 man 7 pthreads 可以查看具备这些取消点的系统调用列表。也可参阅 APUE.12.7 取消选项小节。</p>
+<p>可以简单的认为, 陷入系统调用, 就进入了检查点; 如果没有检查点, 可以手动添加一个:</p>
+<pre><code class="c">pthread_testcancel();
+</code></pre>
+<p>被cancel杀死的线程, 如果在用join去回收, 则退出值是-1 (实际上是由 <code>PTHREAD_CANCELED</code> 宏决定的); 被取消的线程, 退出值定义在 Linux的 pthread 库中; 常数 PTHREAD_CANCELED 的值是-1. 可在头文件 pthread.h中找到它的定义: <code>#define PTHREAD_CANCELED ((void *) -1)</code>. 因此当我们对一个已经被取消的线程使用 pthread_join回收时, 得到的返回值为-1.</p>
+<p>补充: 清理函数(解决线程退出时资源释放问题, 特别是锁相关的资源)</p>
+<pre><code class="c">//push and pop thread cancel-lation clean-up handlers
+pthread_cleanup_pop()
+pthread_cleanup_push()
+pthread_cleanup_pop_restore_np() 
+pthread_cleanup_push_defer_np()
+</code></pre>
+<p>可以读读 <a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=pthread_cleanup_pop" target="_blank" rel="external">man手册</a>, 写的非常详细的三种情况:</p>
+<ul>
+<li>When    a thread is canceled (某检查点处被终止, 默认的线程属性可以被取消)</li>
+<li>When    a  thread  terminates by calling pthread_exit()</li>
+<li>When a thread calls pthread_cleanup_pop()  with  a  nonzero  execute argument</li>
+</ul>
+<p>判断相等</p>
+<pre><code>pthread_equal()
+</code></pre><p>为了防止, 将来pthread_t类型可能变成结构体类型, 所以最好还是用该函数进行判断.</p>
+<h2 id="线程属性控制"><a href="#线程属性控制" class="headerlink" title="线程属性控制"></a>线程属性控制</h2><p>进行线程属性设置, 也是 <code>线程控制</code> 的一部分.</p>
+<h3 id="修改线程属性的方法"><a href="#修改线程属性的方法" class="headerlink" title="修改线程属性的方法"></a>修改线程属性的方法</h3><pre><code class="c">int pthread_attr_init(pthread_attr_t *attr); //成功: 0; 失败:错误号
+int pthread_attr_destroy(pthread_attr_t *attr); //成功: 0; 失败:错误号
+</code></pre>
+<p>线程属性主要包括如下属性：作用域（scope）、栈尺寸（stack size）、栈地址（stack address）、优先级（priority）、分离的状态（detached state）、调度策略和参数（scheduling policy and parameters）。默认的属性为非绑定、非分离、缺省的堆栈、与父进程同样级别的优先级.</p>
+<ul>
+<li>detached state (joinable? Default: PTHREAD_CREATE_JOINABLE. Other option: PTHREAD_CREATE_DETACHED)</li>
+<li>scheduling policy (real-time? PTHREAD_INHERIT_SCHED,PTHREAD_EXPLICIT_SCHED,SCHED_OTHER)</li>
+<li>scheduling parameter</li>
+<li>inheritsched attribute (Default: PTHREAD_EXPLICIT_SCHED Inherit from parent thread: PTHREAD_INHERIT_SCHED)</li>
+<li>scope (Kernel threads: PTHREAD_SCOPE_SYSTEM User threads: PTHREAD_SCOPE_PROCESS Pick one or the other not both.)</li>
+<li>guard size</li>
+<li>stack address (See unistd.h and bits/posix_opt.h _POSIX_THREAD_ATTR_STACKADDR)</li>
+<li>stack size (default minimum PTHREAD_STACK_SIZE set in pthread.h),</li>
+</ul>
+<p>一般修改: (可以参考APUE 12.3)</p>
+<ul>
+<li>线程的分离状态</li>
+<li>能否被取消(默认PTHREAD_CANCEL_ENABLE)</li>
+<li>是否立即取消(默认PTHREAD_CANCEL_DERERRED, 到达取消点才取消)</li>
+<li>线程栈的大小</li>
+<li>线程栈末尾警戒区的大小</li>
+<li>调度策略(这个属于高级内容)</li>
+</ul>
+<pre><code>int pthread_attr_setscope (pthread_attr_t* attr, int scope);
+功能：设置线程绑定属性。
+attr：线程属性。
+scope：PTHREAD_SCOPE_SYSTEM(绑定)；PTHREAD_SCOPE_PROCESS(非绑定)
+函数返回值：成功：0，失败：-1
+
+int pthread_attr_setschedpolicy(pthread_attr_t* attr, int policy);
+功能：设置创建线程的调度策略。
+attr：线程属性；
+policy：线程调度策略：SCHED_FIFO、SCHED_RR和SCHED_OTHER。
+函数返回值：成功：0，失败：-1
+
+
+int pthread_attr_setschedparam (pthread_attr_t* attr, struct sched_param* param);
+功能：设置线程优先级。
+attr：线程属性。
+param：线程优先级。
+函数返回值：成功：0，失败：-1
+</code></pre><p>创建优先级为10的线程:</p>
+<pre><code class="c++">pthread_attr_t attr;
+struct sched_param param;
+pthread_attr_init(&amp;attr);
+pthread_attr_setscope (&amp;attr, PTHREAD_SCOPE_SYSTEM); //绑定
+pthread_attr_setdetachstate (&amp;attr, PTHREAD_CREATE_DETACHED); //分离
+pthread_attr_setschedpolicy(&amp;attr, SCHED_RR);
+param.sched_priority = 10;
+pthread_attr_setschedparam(&amp;attr, &amp;param);
+pthread_create(xxx, &amp;attr, xxx, xxx);
+pthread_attr_destroy(&amp;attr);
+</code></pre>
+<h3 id="设置取消"><a href="#设置取消" class="headerlink" title="设置取消"></a>设置取消</h3><pre><code class="c">pthread_attr_t attr;
+pthread_attr_init(&amp;attr);
+
+pthread_attr_setcancelstate(int new_state, int *old_state);
+pthread_attr_setcanceltype(int new, int *old);
+</code></pre>
+<p>如果线程的rountine函数执行比较长, 最好在其中设置为不能被主线程取消(此时主线程的取消操作仍旧是return 0, 即成功的), 之后相关操作完成后, 再设置为可以被主线程取消.</p>
+<p>(注意, 不管相关线程是否相应取消操作, 取消请求一直存在; 如果开始为不响应状态, 即未决, 那么即使之后设置为可以取消状态, 也不处理相关的取消请求)</p>
+<h3 id="设置分离状态"><a href="#设置分离状态" class="headerlink" title="设置分离状态"></a>设置分离状态</h3><pre><code class="c">pthread_attr_t attr;
+pthread_attr_init(&amp;attr);
+pthread_attr_setdetachstate(&amp;attr, PTHREAD_CREATE_DETACH);
+
+pthread_create(&amp;tid, &amp;attr, func, NULL);
+</code></pre>
+<p>用完attr记得销毁;<br>并且如果要创建的线程在pthread_create返回之前就运行完毕了, 这个时候pthread_create返回错误代码, 此时最好应该让子线程的运行逻辑里加上等待逻辑, 例如:</p>
+<pre><code class="c">pthread_cond_timewait()
+</code></pre>
+<h3 id="修改栈大小"><a href="#修改栈大小" class="headerlink" title="修改栈大小"></a>修改栈大小</h3><p>查看栈大小(线程均分进程栈空间)</p>
+<pre><code class="bash">ulimit -a | grep stack 
+#8192字节, 即8M; 一个进程栈大小8M
+</code></pre>
+<p>可以从堆中手动申请, 然后设置</p>
+<pre><code class="c">pthread_attr_t attr;
+pthread_attr_init(&amp;attr);
+
+pthread_attr_setstacksize(&amp;attr, 1024);
+
+/*
+int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize);
+int pthread_attr_getstacksize(pthread_attr_t *attr, size_t *stacksize);
+*/
+
+
+
+//或者不让内核指定位置, 即位置, 大小都由我们手动指定
+//可以把地址指定到堆空间上, 而不是栈空间上了
+//char *buffer = (char*)malloc(1024*sizeof(char));
+//pthread_attr_setstatck(&amp;attr, buffer, 1024);
+
+/*int pthread_attr_setstack(pthread_attr_t *attr,
+                                 void *stackaddr, size_t stacksize);
+int pthread_attr_getstack(pthread_attr_t *attr,
+                                 void **stackaddr, size_t *stacksize); */
+</code></pre>
+<p>(堆空间相对大一些, 再把stack size设置小一点, 那么每个进程可以创建的线程数量就会变多)</p>
+<h3 id="设置警戒区"><a href="#设置警戒区" class="headerlink" title="设置警戒区"></a>设置警戒区</h3><p>每个线程栈的末尾有一段警戒区, 用来防止线程和线程之间干扰或者栈溢出.</p>
+<p>用的不是太多, 略.</p>
+<h3 id="其他属性"><a href="#其他属性" class="headerlink" title="其他属性"></a>其他属性</h3><p>察看当前 pthread 库版本 <code>getconf GNU_LIBPTHREAD_VERSION</code> .</p>
+<p>(NPTL 实现机制(POSIX), Native POSIX Thread Library)</p>
+<h2 id="线程控制总结"><a href="#线程控制总结" class="headerlink" title="线程控制总结"></a>线程控制总结</h2><ul>
+<li>主线程退出其他线程不退出, 主线程应调用 pthread_exit</li>
+<li>避免僵尸线程 <code>pthread_join</code> , <code>pthread_detach</code> , <code>pthread_create</code>指定分离属性</li>
+<li>被 join 线程可能在 join 函数返回前就释放完自己的所有内存资源, 所以不应当返回被回收线程栈中的值(即临时变量);</li>
+<li>malloc 和 mmap 申请的内存可以被其他线程释放</li>
+<li>应避免在多线程模型中调用 fork ; 进程中只有调用 fork 的线程存在(该线程独占进程了), 其他线程在子进程中均 pthread_exit 自动退出.</li>
+<li>信号的复杂语义很难和多线程共存，应避免在多线程引入信号机制</li>
+</ul>
+<h2 id="线程的同步-重点"><a href="#线程的同步-重点" class="headerlink" title="线程的同步(重点)"></a>线程的同步(重点)</h2><p>(该部分内容非常多)<br>互斥是同步的工具<br>线程互斥和线程同步还有一定的距离</p>
+<h3 id="同步条件"><a href="#同步条件" class="headerlink" title="同步条件"></a>同步条件</h3><p>访问某一个共享资源有先后的次序, 具体说, 某一个线程访问某一个资源, 得到结果之前, 该调用不返回, 并且其他线程不可访问.<br>(多个线程需要访问某一个共享资源时, 需要同步处理)</p>
+<ul>
+<li>多个独立对象</li>
+<li>竞争访问</li>
+<li>统一资源(共享资源)</li>
+</ul>
+<p>同步的手段(并发编程): 加锁(多线程); 任务队列(actor) </p>
+<p>(锁是建议锁, 不具有强制性; 意思说, 你访问共享资源的时候, 线程不写拿锁逻辑, 直接访问也是可以的, 但这种方式就没有经过同步处理, 是不推荐的)</p>
+<p>一把锁, 对应一个需要操作的共享数据.</p>
+<h3 id="互斥量"><a href="#互斥量" class="headerlink" title="互斥量"></a>互斥量</h3><p>互斥锁, 也是一把建议锁&amp;协同锁, 不具有强制性; 涉及到的相关函数如下:<br>(apue上面称之为 <code>协同锁</code> )</p>
+<pre><code class="c++">pthread_mutex_init()
+pthread_mutex_destroy()
+
+pthread_mutex_lock() //相当于把mutex实例减1
+pthread_trylock() //如果能加锁成功, 则加锁成功;否则就返回
+pthread_mutex_unlock() //相当于把mutex实例加1
+</code></pre>
+<p>成功返回0, 失败返回错误码;</p>
+<p><code>pthread_mutex_t</code>是结构体, 使用时忽略细节(不需要关注该结构体的细节)可以简单认为是整型, 有两种取值0,1; 相当于一个把锁.<br><code>pthread_mutexattr_t</code>是指互斥锁的属性.</p>
+<p>下面给予一个简单的实例</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t mutex;
+
+void *func(void *arg)
+{
+
+  srand(time(NULL));
+
+  while(1) {
+    pthread_mutex_lock(&amp;mutex);
+    printf(&quot;small&quot;);
+    sleep(rand()%2);
+
+    printf(&quot;\n&quot;);
+    pthread_mutex_unlock(&amp;mutex);
+    sleep(rand()%2);
+  }
+
+  return NULL;
+}
+
+
+int main(void)
+{
+  pthread_t tid;
+  int ret;
+
+  srand(time(NULL));
+
+  if(pthread_mutex_init(&amp;mutex, NULL)) {//mutex == 1
+    fprintf(stderr, &quot;mutex init error&quot;);
+    exit(-1);
+  }
+
+  ret = pthread_create(&amp;tid, NULL, func, NULL/*(void*)i*/);
+  if(ret) {
+    fprintf(stderr, &quot;pthread_create error:%s\n&quot;, strerror(ret));
+    exit(-1);
+  }
+
+
+  while(1) {    
+    pthread_mutex_lock(&amp;mutex);
+    printf(&quot;BIG&quot;);
+    sleep(rand()%2);
+
+    printf(&quot;\n&quot;);
+    pthread_mutex_unlock(&amp;mutex);
+    sleep(rand()%2);
+
+  }
+
+  pthread_mutex_destroy(&amp;mutex);
+
+
+  return 0;
+}
+</code></pre>
+<p>(注意保证另外一个线程也能抢到cpu, 所以保证锁的粒度越小越好, 共享的标准输出一旦使用完毕, 立即解锁)</p>
+<h3 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h3><p>与互斥量类似, 但是读写锁运行 <code>更高的并发性</code> ; 写独占, 读共享; 共享独占锁, 适合读的情况比写的情况的场景. 拥有写锁的线程, 其他线程全部阻塞等待, 直到完成; 而读锁加锁成功时, 并且同时需要加锁的没有写锁(即之后的全是读锁), 那么其他线程仍可以加读锁, 但是一旦有写锁, 则大家一起等着(即读锁也不能加锁成功); 并且读写锁一起抢的时候, <code>写锁的优先级高</code>.<br>一把<code>rwlock</code>锁有3个状态:</p>
+<ul>
+<li>读模式下加锁(读锁)</li>
+<li>写模式下加锁(写锁)</li>
+<li>不加锁状态</li>
+</ul>
+<p>主要函数总结:</p>
+<pre><code class="c++">pthread_rwlock_init()
+pthread_rwlock_destroy()
+
+pthread_rwlock_rdlock() //读加锁
+pthread_rwlock_wrlock() //写加锁
+
+pthread_rwlock_tryrdlock() //尝试读加锁
+pthread_rwlock_trywrlock() //尝试写加锁
+
+pthread_rwlock_unlock() //解锁
+</code></pre>
+<p>成功返回0, 失败返回错误码; 关于解锁, 特别的情况是, 如果多个读锁锁定某个资源, 那么直到最后一个读锁解锁该资源才算真正解锁了.</p>
+<p><code>pthread_rwlock_t</code>定义了读写锁的类型; <code>pthread_rwlockattr_t</code> 读写锁的属性.</p>
+<p>写一个demo, 演示读写锁</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;pthread.h&gt;
+
+
+int counter = 0; //shared resource
+pthread_rwlock_t rwlock;
+
+
+void *thread_write(void *arg)
+{
+  int t;
+  int i = (int)arg;
+
+  while(1) {
+    t = counter;
+    usleep(1000);
+
+    pthread_rwlock_wrlock(&amp;rwlock); //write lock
+    printf(&quot;---write %d: %lu: counter=%d ++counter=%d\n&quot;, i, pthread_self(), t, ++counter);
+    pthread_rwlock_unlock(&amp;rwlock);
+    usleep(2000);
+  }
+
+  return NULL;
+}
+
+void *thread_read(void *arg)
+{
+  int i = (int)arg;
+
+  while(1) {
+
+    pthread_rwlock_rdlock(&amp;rwlock);
+    printf(&quot;--------------------read %d: %lu: %d\n&quot;, i, pthread_self(), counter);
+    pthread_rwlock_unlock(&amp;rwlock);
+
+    usleep(900);
+  }
+
+  return NULL;
+}
+
+int main(void) 
+{
+
+  int i;
+  pthread_t tid[8]; //3 write, 5 read
+
+  pthread_rwlock_init(&amp;rwlock, NULL);
+
+  for(int i = 0; i&lt;3; i++) {
+    pthread_create(&amp;tid[i], NULL, thread_write, (void*)i);
+  }
+
+  for(int i =0; i&lt;5; i++) {
+    pthread_create(&amp;tid[i+3], NULL, thread_read, (void*)i);
+  }
+
+  for(i = 0; i&lt;8; i++) {
+    pthread_join(tid[i], NULL);
+  }
+
+  pthread_rwlock_destroy(&amp;rwlock);
+
+  return 0;
+}
+</code></pre>
+<p>上面例子只是演示了最基本的用法. 总之对于加锁效率, 如果存在大量的读情况, 读写锁是非常不错的选择.</p>
+<h3 id="条件变量"><a href="#条件变量" class="headerlink" title="条件变量"></a>条件变量</h3><p>(<code>sudo apt-get install manpages-posix-dev</code>)<br>条件变量本身 <code>不是锁</code> , 一般用于谓词判断(判断一下条件), 可造成线程阻塞.</p>
+<p>通常要和互斥锁mutex配合在一起, 完成同步操作; </p>
+<p>(满足某个条件才阻塞或者得到cpu)</p>
+<p>主要函数有:</p>
+<pre><code class="c++">pthread_cond_init()
+pthread_cond_destroy()
+
+pthread_cond_wait() //核心
+pthread_cond_timedwait()// 时间到, 自动返回(而非永久阻塞)
+pthread_cond_signal() //唤醒其他线程, 至少一个(可以是具体的某个)
+pthread_cond_broadcast() //唤醒其他所有阻塞线程(不指定具体的某个)
+</code></pre>
+<p>其中 <code>pthread_cond_wait()</code> :</p>
+<pre><code class="c++">int pthread_cond_wait(pthread_cond_t *restrict cond,
+              pthread_mutex_t *restrict mutex);
+</code></pre>
+<ul>
+<li>该函数调用时, 阻塞等待条件变量, 并解锁互斥量(相当于unlock), 且是原子操作(放开锁让别的线程操作)</li>
+<li>阻塞等待一个条件变量(条件变量不满足则一直等待)—或者等其他线程唤醒本线程</li>
+<li>该函数返回时(其他线程唤醒该线程时), 重新申请获取互斥锁pthread_mutex_lock(&amp;mutex);//或者trylock; 本次拿不到就等下次, 不一定能拿到, 但是一旦拿到锁则阻塞解除, 可以开始操作数据了</li>
+</ul>
+<p>(什么时候条件变量满足? 别的线程调用signal, broadcast的时候自然会传入cond, 此时即表明条件变量已经满足, 有点儿像java的notify和notifyAll)</p>
+<p>具体的例子, 可以参考一下下面的 <code>生产者消费者模型</code><br>(生产队列中有没有产品, 就依靠条件变量做判断; 加锁依靠mutex)<br>(也就是大家伙都cond_wait着, 就依靠别人signal或者broadcast通知, 即当条件变量满足时通知等待的众人, 然后大家抢锁成功的操作共享资源, 没有成功的继续循环调用wait阻塞等待下一次通知)</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;pthread.h&gt;
+
+/*static init*/
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t has_product = PTHREAD_COND_INITIALIZER;
+
+struct msg{
+  int num;
+  struct msg *next;
+};
+
+struct msg *head = NULL;
+struct msg *tmp = NULL;
+
+void *productor(void *arg)
+{
+
+  for(;;) {
+    tmp = (struct msg*) malloc(sizeof(struct msg));
+
+    tmp-&gt;num = rand() % 100 + 1;
+    printf(&quot;---producer has produced %d \n&quot;, tmp-&gt;num);
+
+    pthread_mutex_lock(&amp;mutex);
+    tmp-&gt;next = head;
+    head = tmp;
+
+    //在解锁之前通知(特别注意)
+    pthread_cond_signal(&amp;has_product);
+    pthread_mutex_unlock(&amp;mutex);
+
+    usleep(rand()%1000); //给消费者机会
+
+  }
+
+  return NULL;
+}
+
+void *consumer(void *arg)
+{
+  for(;;) {
+
+    /*开始操作Msg队列*/
+    pthread_mutex_lock(&amp;mutex);
+
+    while(head==NULL) { //队列为空, 放弃锁, 阻塞, 等待下一波唤醒
+      pthread_cond_wait(&amp;has_product, &amp;mutex);
+    }
+
+    //有产品, 取走一个队头
+    tmp = head;
+    head = head-&gt;next;
+    pthread_mutex_unlock(&amp;mutex);
+
+    printf(&quot;consumer  has consumed %d \n&quot;, tmp-&gt;num);
+    free(tmp);
+    tmp = NULL;
+    usleep(rand()%1000); //给生产者机会    
+  }
+
+  return NULL;  
+}
+
+
+int main(void) 
+{
+  pthread_t ptid, ctid; //processer and consumer
+
+  /*remember checking return code*/
+  pthread_create(&amp;ptid, NULL, productor, NULL);
+  pthread_create(&amp;ctid, NULL, consumer, NULL);
+
+  pthread_join(ptid, NULL);
+  pthread_join(ctid, NULL);
+
+  return 0;
+}
+</code></pre>
+<p>至于 <code>pthread_cond_timewait</code> 注意一下时间的使用:<br>(指定阻塞时常, struct timespec具体定义可以参考 `man sem_timedwait)</p>
+<pre><code class="c++">/*
+       int pthread_cond_timedwait(pthread_cond_t *restrict cond,
+              pthread_mutex_t *restrict mutex,
+              const struct timespec *restrict abstime);
+*/
+
+time_t cur = time(NULL); //获取当前时间
+struct timespec t = {0, 0}; //绝对时间(可以直接在这里设置定时时间)
+t.tv_sec = cur + 10; //当前时间往后, 定时10秒(作为绝对时间)
+pthread_cond_timewait(&amp;cond, &amp;mutex, &amp;t);
+</code></pre>
+<p>该部分可以参考 APUE 11.6 章节.</p>
+<p>总结: 条件变量在达到同步阻塞的目的是, 更多的减少了不必要的竞争(例如多个抢锁的进程, 原来是直接抢锁, 现在是等到条件满足的时候才去抢锁).</p>
+<h3 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h3><p>信号量和信号完全两码事儿.<br>(semaphore可以用于线程, 进程间同步; mutex的增强版本)</p>
+<p>主要函数如下:</p>
+<pre><code class="c++">#include &lt;semaphore.h&gt;
+/*
+pshared控制信号量的类型，0表示这个信号量是当前进程的局部信号量，
+ 否则，这个信号量就可以在多个进程之间共享
+*/
+int sem_init(sem_t *sem, int pshared, unsigned int value); //value为的1时, 相当于互斥量mutex
+
+sem_destroy()
+sem_wait() //相当于加锁, 但不一定阻塞 value--, value减到0才会阻塞
+sem_trywait()
+sem_timedwait()
+sem_post()  //相当于 value++ 并signal通知唤醒阻塞的线程
+</code></pre>
+<p>具体可以查看man手册 <code>man sem_init</code> , 上述的加减操作对开发者隐藏; 并且可以看出, 上述初值value决定了同时占用的共享资源的个数.</p>
+<p>具体案例, 见下面 <code>消费者生产者模型</code> (不同于条件变量的实现, 这个思路比较简单, 实现多生产者, 多消费者)<br><img src="http://omotkhw3y.bkt.clouddn.com/pthread_sem.jpg" alt="信号量实现"><br>(定义两个信号量, 其中一个表示实际生产出来的产品数量, 另外一个信号量表示总共的产品 <code>(线性)队列</code> 空余容量)</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;semaphore.h&gt;
+
+
+#define NUM 5
+int queue[NUM]={0};  //全局队列
+
+sem_t blank_num, product_num; //空余容量, 已生产容量
+
+
+/*本案例中, 队列用的数组代替, 
+ 所以队列的移动等操作忽略(可能出现消费者消费产品为0的情况)*/
+void *produce(void *arg)
+{
+  int i = 0;
+  while (1) {
+    sem_wait(&amp;blank_num); //有空余才生产, 无空余则阻塞
+    queue[i] = rand() % 100 + 1; //产生一个产品
+    printf(&quot;----produced %d\n&quot;, queue[i]);   
+    sem_post(&amp;product_num);
+
+    i = (i+1) % NUM; //逻辑环
+    sleep(rand()%1); //给消费者机会
+
+  }
+}
+
+void *consume(void *arg){
+
+  int i = 0;
+  while (1) {
+    sem_wait(&amp;product_num); //有产品才消费, 没有产品则等待
+    //队列首部出队
+    printf(&quot;consume %d\n&quot;, queue[i]);
+    queue[i] = 0;
+    sem_post(&amp;blank_num);
+
+    i = (i+1) % NUM; //逻辑环
+    sleep(rand()%3); //给生产者机会多生产
+  }
+
+}
+
+
+int main(void)
+{
+  /*忽略rerurn code的检查*/
+  pthread_t pid, cid;
+  sem_init(&amp;blank_num, 0, NUM);
+  sem_init(&amp;product_num, 0, 0);
+
+  pthread_create(&amp;pid, NULL, produce, NULL);
+  pthread_create(&amp;cid, NULL, consume, NULL);
+
+  pthread_join(pid, NULL);
+  pthread_join(cid, NULL);
+
+  sem_destroy(&amp;blank_num);
+  sem_destroy(&amp;product_num);
+
+
+  return 0;
+}
+</code></pre>
+<h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><p>使用互斥量或者其他锁机制中出现的一种现象.<br>一般我遇到的情况:</p>
+<ul>
+<li>线程试图对互斥量A重复加锁</li>
+<li>线程1拥有A锁, 线程2拥有B锁; 两者互相请求对方的锁.</li>
+</ul>
+<p>解决方案, 一般是找到问题, 对症下药.</p>
+<ul>
+<li>加锁之前, 一定先检查一下之前是否加过同样的锁(及时解锁)</li>
+<li>(得不到资源的时候, 把已经占有的先释放)已经有一把锁, 再加锁另一把的时候可以使用try_lock逻辑(try_lock失败,就主动放弃已有的锁,让对方线程先运行)</li>
+</ul>
+<p>一个简单的demo, 看看下面这个死锁现象(注意执行步骤):</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;string.h&gt;
+
+
+pthread_mutex_t mutex_a;
+pthread_mutex_t mutex_b;
+
+
+void *func(void*)
+{
+  pthread_mutex_lock(&amp;mutex_a);
+  printf(&quot;sub thread, i have a lock,
+   quest for b lock; once i get b lock, i will unlock a\n&quot;);  
+
+  pthread_mutex_lock(&amp;mutex_b);
+  pthread_mutex_unlock(&amp;mutex_a);
+  pthread_mutex_unlock(&amp;mutex_b);
+
+  return NULL;
+}
+
+
+int main(void) 
+{
+  pthread_t tid;
+  //int ret;
+
+  /*check return code plz*/
+  pthread_mutex_init(&amp;mutex_a, NULL);
+  pthread_mutex_init(&amp;mutex_b, NULL);
+
+  pthread_create(&amp;tid, NULL, func, NULL);
+
+
+  pthread_mutex_lock(&amp;mutex_b);
+  printf(&quot;main thread, i have b lock, 
+       quest for a lock; once i get a lock, i will unlock b\n&quot;);  
+  sleep(1);// let sub thread lock a
+
+  pthread_mutex_lock(&amp;mutex_a);
+  pthread_mutex_unlock(&amp;mutex_b);
+  pthread_mutex_unlock(&amp;mutex_a);
+
+  pthread_mutex_destroy(&amp;mutex_a);
+  pthread_mutex_destroy(&amp;mutex_b);
+
+}
+</code></pre>
+<p>这种类型解法上面已经说了, “牺牲自己, 成全别人”: 使用trylock逻辑, 如果我拿不到别人的锁, 我先放弃自己已经占有的锁, 将来再去占锁.</p>
+<p>总结起来也就是这样:</p>
+<pre><code class="c++">pthread_mutex_lock(&amp;mutex_1);
+while ( pthread_mutex_trylock(&amp;mutex_2) )  /* Test if already locked   */
+{
+   pthread_mutex_unlock(&amp;mutex_1);  /* Free resource to avoid deadlock */
+   ...
+   /* stall here   */
+   ...
+   pthread_mutex_lock(&amp;mutex_1);
+}
+count++;
+pthread_mutex_unlock(&amp;mutex_2);
+pthread_mutex_unlock(&amp;mutex_1);
+</code></pre>
+<h3 id="常见模型"><a href="#常见模型" class="headerlink" title="常见模型"></a>常见模型</h3><ul>
+<li>生产者-消费者模型</li>
+</ul>
+<p>这里使用的是, 采用互斥量+条件变量一起使用的案例, 具体代码如下:</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;pthread.h&gt;
+
+/*static init*/
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t has_product = PTHREAD_COND_INITIALIZER;
+
+struct msg{
+  int num;
+  struct msg *next;
+};
+
+struct msg *head = NULL;
+struct msg *tmp = NULL;
+
+void *productor(void *arg)
+{
+
+  for(;;) {
+    tmp = (struct msg*) malloc(sizeof(struct msg));
+
+    tmp-&gt;num = rand() % 100 + 1;
+    printf(&quot;---producer has produced %d \n&quot;, tmp-&gt;num);
+
+    pthread_mutex_lock(&amp;mutex);
+    tmp-&gt;next = head;
+    head = tmp;
+
+    //在解锁之前通知
+    pthread_cond_signal(&amp;has_product);
+    pthread_mutex_unlock(&amp;mutex);
+
+    usleep(rand()%1000); //给消费者机会(否则一直生产内存耗尽)
+  }
+
+  return NULL;
+}
+
+void *consumer(void *arg)
+{
+  for(;;) {
+
+    /*开始操作Msg队列*/
+    pthread_mutex_lock(&amp;mutex);
+
+    while(head==NULL) { //队列为空, 放弃锁, 阻塞, 等待下一波唤醒
+      pthread_cond_wait(&amp;has_product, &amp;mutex);
+    }
+
+    //有产品, 取走一个队头
+    tmp = head;
+    head = head-&gt;next;
+    pthread_mutex_unlock(&amp;mutex);
+
+    printf(&quot;consumer  has consumed %d \n&quot;, tmp-&gt;num);
+    free(tmp);
+    tmp = NULL;
+    usleep(rand()%1000); //给生产者机会    
+  }
+
+  return NULL;  
+}
+
+
+int main(void) 
+{
+  pthread_t ptid, ctid; //processer and consumer
+
+  /*remember checking return code*/
+  pthread_create(&amp;ptid, NULL, productor, NULL);
+  pthread_create(&amp;ctid, NULL, consumer, NULL);
+
+  pthread_join(ptid, NULL);
+  pthread_join(ctid, NULL);
+
+  return 0;
+}
+</code></pre>
+<p>上面用一个简单的链表, 条件变量绑定mutex就实现了一个 “产品空” 的 <code>阻塞通知模型</code>.  </p>
+<p>上面的代码只是把意思表现出来了, 但是没有涵盖 “产品满” 的情况, 下面给出一个相对规范的代码写法:<br>(用具体的数组模拟环形队列, 从而控制产品数量)</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;pthread.h&gt;
+
+#define SIZE 3  //队列总大小(最多生产SIZE-1个)
+
+
+//封装产品队列条件结构体
+typedef struct cond_struct
+{
+  pthread_cond_t notfull;
+  pthread_cond_t notempty;
+
+  pthread_mutex_t lock; //绑定条件变量的Mutex
+
+  int buffer[SIZE]; //产品队列(数组)
+  int readpos; //消费位置
+  int writepos; //生产位置
+
+}cond_t;
+
+
+void init(cond_t*); //初始化 cond_t 条件&amp;产品队列结构体
+
+void put(cond_t *, int); //&quot;放入产品&quot;函数的封装(注意检测满的情况)
+int get(cond_t *); //&quot;取出产品&quot;函数的封装(注意检测空的情况)
+
+
+void *produce(void*);
+void *consume(void*);
+
+cond_t queue; //全局队列
+
+/*主函数(主线程负责回收)*/
+int main(void) 
+{
+  pthread_t producer, consumer;
+
+  init(&amp;queue);
+
+  pthread_create(&amp;producer, NULL, produce, NULL);
+  pthread_create(&amp;consumer, NULL, consume, NULL);
+
+  pthread_join(producer, NULL);
+  pthread_join(consumer, NULL);
+
+  return 0;
+}
+
+
+void init(cond_t *arg)
+{
+  pthread_mutex_init(&amp;(arg-&gt;lock), NULL);
+
+  pthread_cond_init(&amp;(arg-&gt;notempty), NULL);
+  pthread_cond_init(&amp;(arg-&gt;notfull), NULL);
+
+  arg-&gt;readpos = 0;
+  arg-&gt;writepos = 0;
+}
+
+
+/*放入和取出注意一下是存储结构是数组, 而不是链表*/
+void put(cond_t *queue, int data)
+{
+  pthread_mutex_lock(&amp;(queue-&gt;lock));
+
+  //生产之前判断不为满
+  while( (queue-&gt;writepos+1)%SIZE == queue-&gt;readpos ) {
+    //说明队列满了
+    printf(&quot;producer watting for the queue not full\n&quot;);
+    pthread_cond_wait(&amp;(queue-&gt;notfull), &amp;(queue-&gt;lock));
+  }
+
+  //队列没有满的情况, 直接生产
+  queue-&gt;buffer[queue-&gt;writepos] = data;
+  queue-&gt;writepos = (queue-&gt;writepos + 1) % SIZE;
+  printf(&quot;producer produce data = %d\n&quot;, data);
+
+  pthread_cond_signal(&amp;(queue-&gt;notempty));
+  pthread_mutex_unlock(&amp;(queue-&gt;lock));    
+}
+
+//出队一个产品
+int get(cond_t *queue)
+{
+  int data;
+  pthread_mutex_lock(&amp;(queue-&gt;lock));
+
+  while( queue-&gt;readpos == queue-&gt;writepos ) {
+    printf(&quot;consumer waitting for queue not empty.\n&quot;);
+    pthread_cond_wait(&amp;(queue-&gt;notempty), &amp;(queue-&gt;lock));
+  }
+
+  //不为空, 直接出队
+  data = queue-&gt;buffer[queue-&gt;readpos];
+  queue-&gt;readpos = (queue-&gt;readpos + 1) % SIZE;
+  printf(&quot;---consumer consume data = %d\n&quot;, data);
+
+  pthread_cond_signal(&amp;(queue-&gt;notfull));
+  pthread_mutex_unlock(&amp;(queue-&gt;lock));
+
+  return data;
+}
+
+
+void *produce(void *arg)
+{
+  srand(time(NULL));
+  /*可以控制生产速度, 用循环控制生产产品个数*/
+  //for(int i = 0; i &lt; n; ++)
+  while(1) {
+    put(&amp;queue, rand()%10);
+    sleep(1);  //1秒生产一个(让生产者稍快)
+  }
+
+  return NULL;
+}
+
+void *consume(void *arg) 
+{
+
+  while(1) {
+    get(&amp;queue);
+    sleep(2);
+  }
+
+  return NULL;
+}
+</code></pre>
+<p>条件变量如果想在判断的同时, 控制产品的个数, 则比较困难(当然你多加变量控制链表或者数组当然没有问题), 最多也就是告知是否有产品, 队列是否已满. 同样的逻辑信号量实现起来更加简单, 并且还能控制产品数量.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/pthread_sem.jpg" alt="信号量实现"><br>(定义两个信号量, 其中一个表示实际生产出来的产品数量, 另外一个信号量表示总共的产品 <code>(线性)队列</code> 空余容量)</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;semaphore.h&gt;
+
+
+#define NUM 5
+int queue[NUM]={0};  //全局队列
+
+sem_t blank_num, product_num; //空余容量, 已生产容量
+
+
+/*本案例中, 队列用的数组代替, 
+ 所以队列的移动等操作忽略(可能出现消费者消费产品为0的情况)*/
+void *produce(void *arg)
+{
+  int i = 0;
+  while (1) {
+    sem_wait(&amp;blank_num); //有空余才生产, 无空余则阻塞
+    queue[i] = rand() % 100 + 1; //产生一个产品
+    printf(&quot;----produced %d\n&quot;, queue[i]);   
+    sem_post(&amp;product_num);
+
+    i = (i+1) % NUM; //逻辑环
+    sleep(rand()%1); //给消费者机会
+
+  }
+}
+
+void *consume(void *arg){
+
+  int i = 0;
+  while (1) {
+    sem_wait(&amp;product_num); //有产品才消费, 没有产品则等待
+    //队列首部出队
+    printf(&quot;consume %d\n&quot;, queue[i]);
+    queue[i] = 0;
+    sem_post(&amp;blank_num);
+
+    i = (i+1) % NUM; //逻辑环
+    sleep(rand()%3); //给生产者机会多生产
+  }
+
+}
+
+
+int main(void)
+{
+  /*忽略rerurn code的检查*/
+  pthread_t pid, cid;
+  sem_init(&amp;blank_num, 0, NUM);
+  sem_init(&amp;product_num, 0, 0);
+
+  pthread_create(&amp;pid, NULL, produce, NULL);
+  pthread_create(&amp;cid, NULL, consume, NULL);
+
+  pthread_join(pid, NULL);
+  pthread_join(cid, NULL);
+
+  sem_destroy(&amp;blank_num);
+  sem_destroy(&amp;product_num);
+
+
+  return 0;
+}
+</code></pre>
+<ul>
+<li>哲学家问题</li>
+</ul>
+<p>这里有个很经典的分析过程, 具体略, 主要思想是:  要么能拿到2把锁, 开始就餐; 要么拿不到释放已经占有的锁(或者就餐完毕释放已经占有的两把锁)</p>
+<p>下面可以采用 <code>mutex数组</code> 或者 <code>信号量</code> 去实现(思想类似)5个哲学家就餐问题:<br><img src="http://omotkhw3y.bkt.clouddn.com/pthread_ph.jpg" alt=""></p>
+<pre><code class="c++">if (i == 4) {
+  left = i;
+  right = 0;
+} else {
+  left = i;
+  right = i+1;
+}
+/*或者用取模也可以*/
+left = i;
+right = (i+1)%5;
+</code></pre>
+<p>之后可以进行加锁操作:<br>左手加锁成功则尝试加右锁, 如果右锁加锁成功则就餐, 完毕释放资源(先释放右锁); 如果失败, 则释放左锁, 阻塞等待(再从加左锁开始).</p>
+<p>代码如下:</p>
+<pre><code class="c++">/*
+struct hands
+{
+  int left;
+  int right
+};
+*/
+
+//strut hands[5]; //假设已经初始化完毕
+pthread_mutex_t m[5]; //假设已经初始化完毕
+pthread_t t[5]; //假设已经初始化完毕并已经创建
+
+
+void *run(void *arg) 
+{
+  //通过传入参数得知自己是几号线程(哲学家)
+  int pthread_num = (int) arg; 
+  int left;
+  int right;
+
+  if (pthread_num == 4) {
+    left = pthread_num;
+    right = 0;
+  } else {
+    left = pthread_num;
+    right = pthread_num+1;
+  }
+
+  while(1) {
+    pthread_mutex_lock(&amp;m[left]);
+    if (pthread_mutex_trylock(&amp;m[right])) {
+      printf(&quot;thread[%d] lock right failed, relese left lock %d\n&quot;, pthread_num, left);
+    } else {
+      printf(&quot;thread[%d] start eating\n&quot;, pthread_num);
+      pthread_mutex_unlock(&amp;m[right]);
+    }
+    pthread_mutex_unlock(&amp;m[left]);
+    usleep(500); //休息500毫秒再抢
+  }
+  return NULL;
+}
+</code></pre>
+<p>完整的代码可以是:</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;pthread.h&gt;
+
+#define N 5
+
+struct hands
+{
+  //按照顺序前面N-1个哲学家线程抢left, 最后一个抢right
+  int left; 
+  int right;
+};
+
+pthread_t t[N]; //5个哲学家线程
+pthread_mutex_t m[N]; //5把锁
+struct hands h[N];//5个线程左右手对应锁的编号
+
+
+void * func(void *arg)
+{
+  int pthread_num = (int) arg;
+  int left = h[pthread_num].left;
+  int right = h[pthread_num].right;
+
+  while (1) {
+    pthread_mutex_lock(&amp;m[left]);
+    if (pthread_mutex_trylock(&amp;m[right])) {
+      printf(&quot;thread[%d] lock right failed, relese left lock %d\n&quot;, pthread_num, left);
+    } else {
+      printf(&quot;thread[%d] start eating\n&quot;, pthread_num);
+      pthread_mutex_unlock(&amp;m[right]);
+    }
+    pthread_mutex_unlock(&amp;m[left]);
+    //休息20纳秒再抢(不给别人机会很可能自己一直在loop)
+    //给别人机会越多, 大家不容易冲突; 睡的少, 容易不停放锁
+    usleep(20); 
+  }
+  return NULL;
+}
+
+
+int main(void)
+{
+
+
+  int i;
+
+  //初始化
+  for(i=0; i&lt;N; i++) {
+    //初始化锁
+    if (pthread_mutex_init(&amp;m[i], NULL) ) {
+      fprintf(stderr, &quot;mutex[%d] init error\n&quot;, i);
+      exit(-1);
+    }
+
+    //初始化哲学家线程应该抢的锁
+    h[i].left = i;
+    h[i].right = (i+1)%N;
+
+    //初始化线程
+    if ( pthread_create(&amp;t[i], NULL, func, (void*)i) ) {
+      fprintf(stderr, &quot;thread[%d] init error\n&quot;, i);
+      exit(-1);
+    }
+
+  }//end of for init
+
+
+  //join and destroy
+  for(i=0; i&lt;N; i++) {
+    pthread_join(t[i], NULL);
+  }
+
+  for(i=0; i&lt;N; i++) {
+    pthread_mutex_destroy(&amp;m[i]);
+  }
+
+  return 0;
+}
+</code></pre>
+<p>关于锁的选择, 其实可以使用信号量semophore.</p>
+<p>sem_t s[N]; //value 0或者1<br>然后使用sem_wait以及sem_trywait, sem_post进行主要逻辑, 其过程类似上面的mutex.</p>
+<p>(注意, 此处用的是信号量 <code>semaphore.h</code> 不建议使用信号 <code>sys/sem.h</code>, <code>sys/shm.h</code>, 多线程和信号兼容不好, 多进程问题可以使用信号 )</p>
+<p>总结: 让哲学家按一定顺序就餐, 得不到时即释放当前获得的锁. </p>
+<p>另外一种高效的方式是:<br> 引入一个对各个线程(进程)的调度者, 当哲学家饥饿时向该调度者申请用餐, 而调度者根据哲学家面前是否同时有两只筷子空闲来判断哲学家此时能否就餐, 能则占用这两只筷子并且让哲学家就餐, 不能则让哲学家继续等待. 引入一个调度者能很有效地管理进程资源的分配.  </p>
+<h2 id="线程私有数据"><a href="#线程私有数据" class="headerlink" title="线程私有数据"></a>线程私有数据</h2><p>很多人把它解释为 <code>线程局部存储</code> (Thread Local Storage), 简称 <code>TSL</code>, 不过Linux平台最好理解成 <code>TSD</code> , 即 Thread Specific Data. 即使各个线程都有一样的名字的变量, 但是它们是不同的变量(有不同的存储地点), 各个线程独占; 你可以把它理解成, <code>线程局部变量</code> . (就像Java中ThreadLocal)</p>
+<p>出现原因自然是, 多线程编程中, 全局变量被一个线程修改, 就会影响另外一个线程的使用; 所以最好有一个线程特有变量的机制, 或称线程局部变量, 或static memory local to a thread (线程局部静态变量).</p>
+<p>线程局部存储在不同的平台有不同的实现, 可移植性不太好. 幸好要实现线程局部存储并不难. “最简单的办法就是建立一个全局表”, 通过当前线程ID去查询相应的数据, 因为各个线程的ID不同, 查到的数据自然也不同了. (如果当初由你涉及全局表, 估计今天看到的是另外一种使用方式; 当然你可以完全不必关心相关的实现)</p>
+<p>并且Linux平台已经提供了相关的实现:</p>
+<pre><code class="c++">int pthread_key_create(pthread_key_t *key, 
+      void (*destructor)(void*)); //线程终止时才调用destructor清理存储
+
+int pthread_key_delete(pthread_key_t key); //删除,只是重置key的值为NULL, 并不清理资源.
+
+void *pthread_getspecific(pthread_key_t key); //拿到相关的值(get方法)
+
+int pthread_setspecific(pthread_key_t key, const void *value); //设置相关的值(set方法)
+</code></pre>
+<p>补充说明:</p>
+<ul>
+<li>当线程被创建时, 会将所有的线程局部存储变量初始化为NULL</li>
+<li>destructor() 被自动调用时机: 线程终止时且key关联的值不为NULL.</li>
+<li>pthread_key_delete()并不检查当前是否有线程正在使用该线程局部数据变量，也不会调用清理函数destructor.</li>
+<li>pthread_key_t的key数量使有限的, linux中可以通过 PTHREAD_KEY_MAX（定义于limits.h文件中）或者系统调用sysconf(_SC_THREAD_KEYS_MAX)来确定当前系统最多支持多少个键(默认1024), key太多, 请进行封装.</li>
+<li>pthread_key_create对应的key的 <code>const void *value</code> 可以是普通类型强制类型转换过去的, 此时destructor可以传入NULL</li>
+<li>pthread_setspecific()设置的value取出。在使用取出的值前最好是将void*转换成原始数据类型的指针, 再取值.</li>
+</ul>
+<p>(注: linux平台的实现是, 两张全局表, 进程一张, 线程各一张; 全局表的某个key:pthread_keys[index] 对应 线程表tsd[index]; 所以即使大家在 <code>进程领域</code> 都叫一样的名字, 但是 <code>线程表领域</code> 值是不一样的)</p>
+<p>我写个使用案例, 你就大概明白它的 <code>二级表</code> 实现了:</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;pthread.h&gt;
+
+
+pthread_key_t key;  //线程私有数据
+
+void destructor(void *t)
+{
+  int tmp = (int)t;
+  printf(&quot;destructor executed out of thread %lu, value:%d\n&quot;, pthread_self(), tmp);
+}
+
+
+void *func1(void *arg)
+{
+  int i = 10;
+  pthread_setspecific(key, (void*)i);
+  printf(&quot;thread %lu has set key to %d, address are %x\n&quot;, pthread_self(), i, &amp;i);
+  sleep(2); //让另外一个线程有机会修改
+  return NULL;
+}
+
+
+void *func2(void *arg)
+{
+  int i = 20;
+  sleep(1); //先让func1设置key
+  pthread_setspecific(key, (void*)i);
+  printf(&quot;thread %lu has set key to %d, address are %x\n&quot;, pthread_self(), i, &amp;i);
+
+  return NULL;
+}
+
+int main(void)
+{
+
+  pthread_t tid1, tid2;
+  pthread_key_create(&amp;key, destructor);
+
+  pthread_create(&amp;tid1, NULL, func1, NULL);
+  pthread_create(&amp;tid2, NULL, func2, NULL);
+
+  pthread_join(tid1, NULL);
+  pthread_join(tid2, NULL);
+
+  pthread_key_delete(key); 
+
+  return 0;
+}
+</code></pre>
+<p>当然GCC扩展的TSD实现 <code>__thread</code> 也不错, 只是移植性不好.</p>
+<pre><code>在Linux中还有一种更为高效的线程局部存储方法，就是使用关键字__thread来定义变量。__thread是GCC内置的线程局部存储设施（Thread-Local Storage），它的实现非常高效，与pthread_key_t向比较更为快速，其存储性能可以与全局变量相媲美，而且使用方式也更为简单。创建线程局部变量只需简单的在全局或者静态变量的声明中加入__thread说明即可。凡是带有__thread的变量，每个线程都拥有该变量的一份拷贝，且互不干扰。线程局部存储中的变量将一直存在，直至线程终止，当线程终止时会自动释放这一存储。__thread并不是所有数据类型都可以使用的，因为其只支持POD(Plain old data structure) 类型，不支持class类型——其不能自动调用构造函数和析构函数。同时__thread可以用于修饰全局变量、函数内的静态变量，但是不能用于修饰函数的局部变量或者class的普通成员变量。另外，__thread变量的初始化只能用编译期常量.
+</code></pre><pre><code class="c++">    //如果变量声明中使用量关键字static或者extern，那么关键字__thread必须紧随其后
+    //可以使用C语言取地址符(&amp;)来获取线程局部变量的地址
+    static __thread char t_buf[32] = {&#39;\0&#39;};
+    extern __thread int t_val = 0; //初始化必须用编译期常量, 且不能调用构造函数
+</code></pre>
+<p>具体不展开, 有兴趣自己去查一下吧, 我还是建议使用 “不那么高效”的 <code>pthread_key_t</code></p>
+<h2 id="线程的调试"><a href="#线程的调试" class="headerlink" title="线程的调试"></a>线程的调试</h2><p>详细信息可以参看 <a href="http://www.merlinblog.site/2017/08/11/debug-multi-thread.html" target="_blank" rel="external">多线程-进程的调试</a> .</p>
+<h2 id="其他注意事项"><a href="#其他注意事项" class="headerlink" title="其他注意事项"></a>其他注意事项</h2><p>线程的诸多好处, 貌似总是相对于进程的, 比如通信, 共享等都比进程方便; 但是线程也有不方便的:</p>
+<ol>
+<li>gdb调试困难</li>
+<li>线程对于 <code>信号</code> 的支持不好(有些函数在不同平台的意义未定义)</li>
+<li>保证使用的pthread版本一致, <code>getconf GNU_LIBPTHREAD_VERSION</code></li>
+<li>detach后的进程，不要去join，会得到invalid argument的运行时报错(人家自己已经处理完毕资源了，在Join函数之前)； </li>
+<li>被cancel的线程, 也需要回收，但是得到的返回值是-1</li>
+<li>malloc, mmap的堆空间会被其他线程共享(小心其他线程给你free掉)—-可重入中也说过，如果想要可重入，不要调用malloc和free</li>
+<li>多线程模型中最好不要调用fork, 除非立即exec*; 此时创建出来的子进程中只有调用fork调用的这个线程存在，其他线程全部pthread_exit()了—最好不要用fork.</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文几乎通篇都在介绍pthread API及其含义&amp;使用, 从线程的控制, 线程的属性, 以及线程的同步(mutex函数，条件变量函数，信号量，同步屏障函数，读写锁), 线程私有变量, 最后其他的一些uitl函数. 当然也还有没有涉及到了如 <code>pthread_once</code>.</p>
+<p>但是, 已经花费了很长时间, 几乎把pthread全部总结了一下.</p>
+<p>可以看到，玩下来，基本上操作&amp;弄懂API没有多大难度，难的是理解这么设计的理由是什么？以及设计并发流程，换句话说，到目前为了所有的练习全部是为了掌握并发编程的工具，真正的核心可能在于并发的模式或者算法上，而相关内容本文并没有深入设计，而这方面你只能参考业界相关领域的大牛，甚至是写相关库的本人的论述。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="https://www.ibm.com/developerworks/library/l-posix1/" target="_blank" rel="external"> POSIX threads explained</a>  –IBM的技术贴, 关键看它开头部分</li>
+<li><a href="">《Programming With POSIX Theads》</a> 作者: David R.Butenhof (市面上已经绝版)—强烈推荐</li>
+<li><a href="">《Unix Networking Programming Volume 1》</a> chapter 26–作者: W.Richard Stevens等</li>
+<li><a href="">《APUE》</a></li>
+<li><a href="">《linux高级程序设计》</a> 作者:杨宗德等—人民邮电出版社</li>
+<li><a href="">《pthread primer》</a> 这个数绝版了, 结合linux内核讲解线程, 比较不错</li>
+<li>[《多线程服务器的常用编程模型》] 陈硕大佬的网文</li>
+<li>[《Linux/UNIX系统编程手册（上）》] 线程私有数据</li>
+</ol>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="深挖Linux之线程">深挖Linux之线程</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="深挖Linux之线程">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

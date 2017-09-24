@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Futures | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="关于期货, 我的一些学习经历, 分享, 以及推荐书单.">
+<meta name="keywords" content="交易">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Futures">
+<meta property="og:url" content="localhost:4000/2017/07/22/futures.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="关于期货, 我的一些学习经历, 分享, 以及推荐书单.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/futures.jpg">
+<meta property="og:updated_time" content="2017-09-24T06:27:40.379Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Futures">
+<meta name="twitter:description" content="关于期货, 我的一些学习经历, 分享, 以及推荐书单.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/futures.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#核心点"><span class="toc-number">2.1.</span> <span class="toc-text">核心点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关键概念"><span class="toc-number">2.2.</span> <span class="toc-text">关键概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#交易分类"><span class="toc-number">2.3.</span> <span class="toc-text">交易分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#价值和用途"><span class="toc-number">2.4.</span> <span class="toc-text">价值和用途</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#风险"><span class="toc-number">2.5.</span> <span class="toc-text">风险</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#期货市场结构"><span class="toc-number">2.6.</span> <span class="toc-text">期货市场结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#交易所"><span class="toc-number">2.7.</span> <span class="toc-text">交易所</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#平仓"><span class="toc-number">2.8.</span> <span class="toc-text">平仓</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#熔断机制"><span class="toc-number">2.9.</span> <span class="toc-text">熔断机制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#书单"><span class="toc-number">4.</span> <span class="toc-text">书单</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Futures</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-22</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/交易/">交易</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>futures, 指的是<code>期货</code>, 本文也主要谈期货. 不会谈的很详细(详细请参考我给的 <code>推荐书单</code>), 只谈核心内容(全部都是干货).</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/futures.jpg" alt="post-cover"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>不管对于投资还是投机, 期货都是一个非常不错的选择; </p>
+<ul>
+<li>储蓄, 利率跑不过CPI</li>
+<li>股票, 风险比较大, 专业要求高</li>
+<li>投资网贷, 搞不好平台跑路了, 血本无归</li>
+<li>期货, ??</li>
+</ul>
+<p>本文就来主要说说, 期货.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>期货: 期,未来; 货,交易的商品或者指数; 交易双发支付保证金, 预定在未来某一时间进行交易的一种标准化合约; (其他概念可以查下wiki, 我下面总结关键点)</p>
+<h2 id="核心点"><a href="#核心点" class="headerlink" title="核心点"></a>核心点</h2><p>总结如下:</p>
+<ul>
+<li>保证金(初始金额): 不需要支付全部货款, 只需要支付交易金额相应比例(8%~10%)的保证金给交易所即可.</li>
+<li>双向: 低买高卖, 高买低卖, 只要你预判正确, 那么都是可以盈利的.</li>
+<li>T+0: 当日买日即可当日卖出, 不需要等到下一个交易日.</li>
+<li>当日结算: 每天收盘即结算盈亏, 盈收亏补, 账务不欠账, 违约分享小.</li>
+<li>合约: 期货合约的标准通常由期货交易所设计, 经国家监管机构审批上市; 期货合约的履行由交易所担保，不允许私下交易</li>
+<li>手续费: 不像股票那么多种费用, 期货交易仅仅只交手续费.</li>
+<li>杠杆: 小资金撬动大投资(如果想对上个交易日涨停3%, 而保证金为5%, 则资金利润高达3%/5%, 即60%的利润)</li>
+<li>零和市场: 期货是零和市场, 期货市场本身并不创造利润. (但是股票市场在萧条时市场资金可能出现负增长)</li>
+</ul>
+<h2 id="关键概念"><a href="#关键概念" class="headerlink" title="关键概念"></a>关键概念</h2><p>大致如下:</p>
+<ul>
+<li>初始保证金</li>
+<li>追加金</li>
+<li>每日结算</li>
+<li>交割</li>
+<li>合约内容<ul>
+<li>最小变动价位</li>
+<li>每日价格最大波动限制</li>
+<li>交割月份</li>
+<li>最后交易日</li>
+<li>交易单位手</li>
+<li>交易价格:开盘价格, 收盘价格, 结算价格</li>
+</ul>
+</li>
+</ul>
+<h2 id="交易分类"><a href="#交易分类" class="headerlink" title="交易分类"></a>交易分类</h2><p>大致上分为5类:</p>
+<ul>
+<li>商品期货<ul>
+<li>农产品期货</li>
+<li>金属期货</li>
+<li>能源期货</li>
+</ul>
+</li>
+<li>金融期货<ul>
+<li>股指期货: 如英国FTSE指数、德国DAX指数、东京日经平均指数、香港恒生指数、沪深300指数 </li>
+</ul>
+</li>
+<li>利率期货 (债券证券类期货合约, 躲避价格波动风险)</li>
+<li>外汇期货 (汇率期货合约, 躲避汇率风险)</li>
+<li>贵金属期货 (黄金白银)</li>
+</ul>
+<p>专门补充一下 <code>股指期货</code>.<br>股指期货交易是期货交易的一种，它与商品期货在运作机制和风险管理上是有共性的，如同样采用保证金制度，具有杠杆放大效应，每日无负债结算。但是，股指期货与商品期货相比，有其特殊性的一面，主要表现在:</p>
+<ul>
+<li>股指期货是股票现货市场的配套市场，为管理现货风险服务。而股票市场参与者众多，因此，股指期货影响面较大；</li>
+<li>参与股指期货交易的投资主体大大超过了参与商品期货的投资者主体，包括证券公司、基金公司、养老金、保险等机构在内的众多机构投资者；</li>
+<li>股指期货反映的是股票现货市场未来的变动情况，既受期货市场也受股指市场的各种因素影响，价格变动大，风险防范要求高。</li>
+<li>采用现金结算制度</li>
+</ul>
+<p>影响股指期货价格的因素:</p>
+<ul>
+<li>期货合约的多空供求关系。股指期货本身没有具体的实物资产相对应，因此，它的价格变化受期货市场合约供求关系的影响很大。当空头供大于求时，期货合约价格下跌；反之，当多头供大于求时，期货合约价格就上升。</li>
+<li>现货股票市场的走向直接影响股指期货的价格。尤其是股指期货标的指数中的大盘股的股价变化往往会对股票指数的涨跌影响很大，从而也带动股指期货价格的变化。股指期货投资者往往很关注股指中大盘股或者活跃板块股的股价变化趋势。</li>
+<li>投资者的心理因素也会影响股指期货的价格。通常人们所说的“人气”反映了交易者对市场的信心程度，或者说他们对未来股票市场的信心。当“人气”旺时，即使当时的股市指数不高，股指期货市场价格也会上涨；反过来说，如果“人气”衰，即使当时的股市指数很高，股指期货市场价格也会下跌。</li>
+<li>从整个股市的层面看，<code>股市经济周期</code> 影响着股指期货的价格。由于股指期货的价格是基于现货市场股市而形成的，而股市大盘变动又受经济周期的影响，因此，随着经济周期的变化，股指期货的价格也会出现上涨和下跌的行情。</li>
+<li>从政策层面上，政府制定的方针政策也会直接影响股票指数期货的价格。除此之外，很多宏观变量，如通货膨胀，汇率、利率变动均能从不同程度上影响股指期货合约的价格。</li>
+</ul>
+<h2 id="价值和用途"><a href="#价值和用途" class="headerlink" title="价值和用途"></a>价值和用途</h2><p>大致3种用途:</p>
+<ul>
+<li>价格发现<br><code>股指期货</code> 交易以集中搓合竞价方式能产生未来不同到期月份的股票指数期货合约价格，反映对股票市场未来走势的预期；同时，国外学者通过大量实证研究表明，股指期货价格一般领先于股票现货市场的价格，并有助于提高股票现货市场价格的信息含量。因此，<code>股指期货</code> 与 <code>现货市场股票指数</code> 一起可起到国家宏观经济景气晴雨表的作用。</li>
+<li>规避风险(hedge对冲, 套利交易), 大家说的”套值保期”属于其中一种.<br>股指期货能满足市场参与者对股市风险对冲工具的强烈需求，促进一级市场和二级市场的发展。具体表现在:<ul>
+<li>严格说来，个股的价格风险只能通过相应的股票期货进行风险对冲；但当股票市场出现系统性风险时，个股或股票组合投资就可通过股指期货合约进行套期保值。 </li>
+<li>股票承销商在包销股票的同时，为规避股市总体下跌的风险，可通过预先卖出相应数量的股指期货合约以对冲风险、锁定利润</li>
+<li>当上市公司股东、证券自营商、投资基金、其他投资者在持有股票时，可通过卖出股指期货合约对冲股市整体下跌的系统性价格风险，在继续享有相应股东权益的同时维持所持股票资产的原有价值；减轻集中性抛售对股票市场造成的恐慌性影响，促进股票二级市场的规范与发展</li>
+</ul>
+</li>
+<li>资产配置<br>股指期货具有资产配置的功能，具体表现在： <ul>
+<li>引进做空机制-做空机制使得投资者的投资策略从等待股票价格上升的单一模式转变为双向投资模式，使投资人的资金在行情下跌中也能有所作为而非被动闲置</li>
+<li>便于发展机构投资者，促进组合投资、加强风险管理</li>
+<li>增加市场流动性，提高资金使用效率，完善资本市场的功能等</li>
+</ul>
+</li>
+</ul>
+<p>解释一下套值保期:<br>在现货市场和期货市场对同一种类的商品同时进行数量相等但方向相反的买卖活动，即在买进或卖出实货的同时，在期货市场上卖出或买进同等数量的期货，经过一段时间，当价格变动使现货买卖上出现的盈亏时，可由期货交易上的亏盈得到抵消或弥补。从而在”现”与”期”之间、近和远之间建立一种对冲机制，以使价格风险降低到最低限度。</p>
+<h2 id="风险"><a href="#风险" class="headerlink" title="风险"></a>风险</h2><p>期货存在的风险:</p>
+<ul>
+<li>没人接盘, 强行交割(货品价格是保证金的数倍)</li>
+<li>杠杆放大资金, 也放大收益, 更放大风险</li>
+<li>强平和爆仓(期货公司在你保证金不足时采取的措施)</li>
+</ul>
+<h2 id="期货市场结构"><a href="#期货市场结构" class="headerlink" title="期货市场结构"></a>期货市场结构</h2><ul>
+<li>期货市场监管部门: 指国家指定的对期货市场进行监管的单位</li>
+<li>期货交易所: 指国家认定的以会员制为组织形式的进行标准化期货合约交易的有组织的场所，它是为会员提供服务的非营利性、自律管理的机构</li>
+<li>中国期货业协会</li>
+<li>交易所会员: 指拥有期货交易所的会员资格、可以在期货交易所内直接进行期货交易的单位。国内期货交易所分两类会员，一类是为自己进行套期保值或投机交易的期货自营会员，另一类则是专门从事期货经纪代理业务的期货经纪公司</li>
+<li>期货经纪公司: 专门受客户委托进行期货交易的专业公司</li>
+<li>期货交易者: 指为了规避风险而参与期货交易的套期保值者，或为获得投机利润的期货投机者。他们通过期货经纪公司（或自身就是期货交易所的自营会员）在期货交易所进行期货交易。</li>
+</ul>
+<h2 id="交易所"><a href="#交易所" class="headerlink" title="交易所"></a>交易所</h2><p>(Commodity Exchange)</p>
+<p>中国交易所简介:</p>
+<ul>
+<li>大连商品交易所DCE</li>
+<li>郑州商品交易所CZCE</li>
+<li>上海期货交易所(上海期货交易所上市交易的有黄金、铜、铝、锌、燃料油、天然橡胶、钢材等七种期货合约)</li>
+<li>中金所(中国金融期货交易所, 地点上海, 上市的期货品种为股指期货, 即沪深300股票指数期货)CFFE</li>
+</ul>
+<h2 id="平仓"><a href="#平仓" class="headerlink" title="平仓"></a>平仓</h2><p>(补充一个平仓概念)<br>期货交易的全过程可以概括为建仓、持仓、平仓或实物交割。建仓也叫开仓，是指交易者新买入或新卖出一定数量的期货合约。在期货市场上买入或卖出一份期货合约相当于签署了一份远期交割合同。如果交易者将这份期货合约保留到最后交易日结束他就必须通过实物交割或现金清算来了结这笔期货交易。然而，进行实物交割的是少数，大部分投机者和套期保值者一般都在最后交易日结束之前择机将买入的期货合约卖出，或将卖出的期货合约买回。即通过一笔数量相等、方向相反的期货交易来冲销原有的期货合约，以此了结期货交易，解除到期进行实物交割的义务。这种买回已卖出合约，或卖出已买入合约的行为就叫平仓。<br>平仓是指期货投资者买入或者卖出与其所持股指期货合约的品种、数量及交割月份相同但交易方向相反的股指期货合约，以了结股指期货交易的行为。也可理解为：平仓是指交易者了结持仓的交易行为，了结的方式是针对持仓方向作相反的对冲买卖。<br>期货交易中的平仓相当于股票交易中的卖出。由于期货交易具有双向交易机制，与开仓相对应，平仓也有买入平仓(对应于卖出开仓)和卖出平仓(对应于买入开仓)两种类型。</p>
+<h2 id="熔断机制"><a href="#熔断机制" class="headerlink" title="熔断机制"></a>熔断机制</h2><ul>
+<li>每日开市后，股指期货合约审报价触及熔断价格且持续 5 分钟的，该合约启动熔断机制</li>
+<li>熔断机制启动后的连续 5 分钟内，该合约买卖申报在熔断价格区间内断续撮合成交</li>
+<li>熔断机制启动后不足 5 分钟的，若第一节交易结束，则熔断机制终止，恢复交易后，涨跌停板幅度生效</li>
+<li>在收市前 30 分钟内不设熔断机制。熔断机制已经启动的，终止执行</li>
+<li>熔断机制每日只启动一次</li>
+</ul>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>可以看到上面全部都是理论基础知识, 具体的技术分析, 程序代码我都没有给出, 因为我觉得那些东西是不需要有共识的, 也不应该分享的, 每个人都应该独立思考属于自己的策略模型, 交易模型. </p>
+<p>btw: 我们永远不要脱离最开始的目的, 我们不是搞研究的, 研究期货的目的, 最开始也是实现盈利, 财务自由, 说通俗一点儿: 怎么拿期货赚钱.</p>
+<p>先这样.</p>
+<h1 id="书单"><a href="#书单" class="headerlink" title="书单"></a>书单</h1><ol>
+<li>《期权：基本概念与交易策略》<br>作者：郭晓利，郑学勤译  美国芝加哥期权交易所期权学院 编<br>本书由世界领先的期权教育机构编纂，由行业里领头的期权权威撰写。这部包涵广泛的著作回答了有关期权的多方面的问题，并且对最新的期权交易策略提供了许多真知灼见，包括：期权市场历史，基本概念，投资和交易策略，现实运用。</li>
+<li>《期权操作》<br>作者：魏振祥，左宏亮<br>《期权操作》主要讲述了做好参与期权交易的思想准备，从交易、结算、执行以及做市商的角度，对期权交易规则作了深入浅出的分析，为您进行期权交易做好规则准备。是一本值得参考的期权研究著作。</li>
+<li>《期权研究成果汇编》<br>作者：魏振祥，王学勤<br>本书是郑州商品交易所期权著述系列丛书的延续，不仅汇聚了2002-2011年郑商所各位期权研究人员的研究心得，也集中了国内外期权学者的研究智慧，很多研究成果皆属第一次公开出版，具有较高的研究价值和应用价值，是一部不可多得的期权研究著作。</li>
+<li>《商品期权》<br>作者：卡利·加纳, 保罗·布里廷  王成周 合著, 赵蓉 译<br>本书是一本关于期货期权市场操作实务的专业书籍，书中讲述了美国期货期权市场的运行机制和运作原理、股票期权交易和期货期权交易的本质区别、交易所如何进行限仓和控制风险等。作者运用实际操作的案例，介绍了交易者每天都在使用且有效的期货期权交易策略；分析了交易者使用这些期货期权交易策略时如何管理和控制风险，特别是如何控制卖出期权风险等业内人士经常探讨的问题。</li>
+<li>《中国期货期权产品创新及风险管理研究》<br>作者：刘少华<br>本书针对期货期权产品创新及其风险管理进行研究，旨在借鉴国际成熟经验并结合中国实际情况的基础上，科学设计期货期权合约，探索适合中国国情的期货期权风险管理，为中国未来开展期货期权交易提供前瞻性研究成果，丰富中国期货期权风险管理方面的研究。</li>
+<li>《期权投资》<br>作者：魏振祥<br>本书在写法的选择上充分考虑了中国投资者的情况，笔者对期权的认识及理解的难度出发，考虑到初学者的接受程度，尽可能以通俗的语言和简洁的图表表达书中内容，以增强读者的感性认识。在写作过程中，吸收所接触到的国内外期权书籍的优点，同时尽可能不用数学模型。本书前6章属于基础知识，是期权入门的必修课，掌握了这些知识，就可以顺利阅读后6章的有关内容。<br>7.《期货市场技术分析》<br>《期货市场技术分析》是讲商品期货技术分析的，主要内容有技术分析的理论基础、道氏理论、图表简介、趋势的基本概念、主要反转形态、持续形态、交易量和持仓兴趣、长期图表和商品指数、移动平均线、摆动指数和相反意见、日内点数图、三点转向和优化点数图、艾略特波浪理论、时间周期等。约翰·墨菲是著名美国市技术分析大师。他因为《期货市场技术分析》的影响而两度获得美国市场技术分析师协会的年度大奖，最近一次是2002年。</li>
+<li>《金融衍生品的发展与监管:金融野兽》<br>简介：《金融野兽》脱胎于1994年美国股票交易所银行评论获奖论文《野兽衍生品》。全书引人入胜地介绍了衍生品在世界经济发展中所起的作用,以及在未来金融市场的塑造中将要扮演的角色。作为有效的风险管理策略,衍生品交易在过去的20年中,尤其是在日益精细化的根据客户要求而生的场外产品交易领域中发展迅猛。但高速发展引发出对衍生品潜在危险—一个金融市场体系的崩溃可能会导致全球灾难性的多米诺骨牌效应—越来越强烈的关注。<br>作者阿尔弗雷德·施泰因赫尔博士是卢森堡欧洲投资银行总经理,负责银行风险管理和运用系统的开发以及风险规避系统的设计。他曾任比利时卢万天主教大学国际经济和金融学教授,并在华盛顿的多家银行和国际货币基金组织以及布鲁塞尔欧盟委员会任职。</li>
+<li>《伟大的博弈》<br>简介：这是一本关于华尔街历史的书，也是一本关于美国金融史和经济史的书。在过去的200多年中，华尔街推动了美国从一个原始而单一的经济体成长为一个强大而复杂的经济体。在美国经济发展的每一个阶段中，以华尔街为代表的美国资本市场都扮演着重要的角色。华尔街为美国经济的发展提供源源不断的资金，实现社会资源的优化配置，而华尔街本身也伴随着美国经济的发展而成长为全球金融体系的中心。美国经济的成功是资本市场和实体经济之间协同发展很好的例证。</li>
+<li>《营救华尔街——一群投机天才的崛起与落伍》<br>简介：本书详细介绍了美国著名的长期资产投资公司（Long-term Capital Investment）由盛极一时到倒闭破产的过程。该公司由大量学界精英，其中不乏诺贝尔经济学奖获得者及业内资深人士组成。他们设计的模型为公司带来过丰厚利润，但天才有时不得不面对残酷的现实，1998年的俄罗斯债券危机让这些精英们的努力在短时间内就化为乌有。其中的教训，应该引起每一位金融期货投资者的警惕。</li>
+<li>《股指期货投资指引》<br>简介：本书的定位是对股指期货不了解的股民朋友，是一本通俗易懂的大众读物。本书以轻松的笔调、活泼的形式，为你一一展示股指期货的基础知识、交易过程、合约规则、操作技巧、自我保护，以及最新出台的交易管理条例、交易规则。通过本书，你将看到最纯粹、最本质的股指期货，触摸最前沿、最时尚的金融发展趋势，掌握最具挑战性、最激动人心的投资方式。</li>
+<li>《证券分析》<br>简介：一部经典，这对于1934年版的《证券分析》来说毫不过分。 这部著作是华尔街的经典，也是奠定格雷厄姆声誉的里程碑。书中第一次阐述了寻找“物美价廉”的股票和债券的方法，这些方法在格雷厄姆去世后20年依然适用。</li>
+<li>《股票指数期货》<br>简介：股票指数期货是国际资本市场成熟的风险管理工具。我国资本市场近几年的长足发展，也对股票指数期货产生了巨大的需求。无论是证券公司、封闭式基金、开放式基金、社保基金，还是其他的机构投资者，都随着资本市场的发展而壮大。同时，随着股票市场系统性风险日益增大，如何回避系统性风险成为广泛关注的焦点。本书作者通过对相关的理论研究和国际国内证券、期货市场的实践相结合，经过较长时间的准备，推出这一股票指数期货方面的力作。</li>
+<li>《期货交易策略》<br>斯坦利·克罗是美国著名的期货专家，1960年进入全球金融中心华尔街。他在华尔街的33年之中，一直在期货市场上从事商品期货交易，积累了大量的经验。 在20世纪70年代初的商品期货暴涨行情中，用1.8万美元获利100万美元。岁月流逝，财富积累，斯坦利·克罗带着他在华尔街聚集的几百万美元，远离这一充满竞争的市场，漫游世界，独享人生。5年的游历中，斯坦利·克罗潜心研究经济理论及金融、投资理论，他最著名的两本专著是《期货交易策略》和《职业期货投资者》。</li>
+<li>《盘口解读技术》<br>本书共分为三篇，从成功交易者心态、盘势判读技巧到讨论最新的交易架构分析。投资人可以慢慢体会主力资金的接盘与出货行为，或是交易大众追逐行情导致的价量变化和差异。这些知识可以运用在你目前所采用的任何交易系统或方法，提升进出场策略的成功率，使你立于不败之地。</li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Futures">Futures</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Futures">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

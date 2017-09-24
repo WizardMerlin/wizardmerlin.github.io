@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Unix Domain Socket | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="UNIX / Linux 套接字家族中的一员，AF_UNIX是它的大名, 常用于 IPC">
+<meta name="keywords" content="网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unix Domain Socket">
+<meta property="og:url" content="localhost:4000/2017/06/20/ipc-unix-domain-socket.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="UNIX / Linux 套接字家族中的一员，AF_UNIX是它的大名, 常用于 IPC">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/%E6%9C%AC%E5%9C%B0%E5%A5%97%E6%8E%A5%E5%AD%971.jpg">
+<meta property="og:updated_time" content="2017-09-24T07:43:26.791Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Unix Domain Socket">
+<meta name="twitter:description" content="UNIX / Linux 套接字家族中的一员，AF_UNIX是它的大名, 常用于 IPC">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/%E6%9C%AC%E5%9C%B0%E5%A5%97%E6%8E%A5%E5%AD%971.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">2.1.</span> <span class="toc-text">简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#套接字定义"><span class="toc-number">2.1.1.</span> <span class="toc-text">套接字定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#offsetof宏"><span class="toc-number">2.1.2.</span> <span class="toc-text">offsetof宏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#本地套接字绑定"><span class="toc-number">2.1.3.</span> <span class="toc-text">本地套接字绑定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码示例"><span class="toc-number">2.2.</span> <span class="toc-text">代码示例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Unix Domain Socket</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-06-20</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/网络/">网络</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>脱离网络的套接字还是socket么? 我还是把它归类在network里面了, 但是它更多的是用在ipc方面.</p>
+<p>本文就只说unix domain socket用于ipc的优势, 以及编程思路.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/%E6%9C%AC%E5%9C%B0%E5%A5%97%E6%8E%A5%E5%AD%971.jpg" alt="post-cover"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>本地套接字, 在socket框架上衍生出来的, 网络套接字, 指定ip为loopback <code>127.0.1</code> 时, 也可以进行进程间通信; 不过进程间通信最好还是选用 unix-domain socket.</p>
+<p>ipc方式还有哪些?</p>
+<ul>
+<li>pipe和fifo (实现简单, fifo跨血缘)</li>
+<li>mmap共享内存 (非血缘关系)</li>
+<li>信号  (开销小, 携带数据小, 不可靠)</li>
+<li>消息队列 (不可重复读, 和管道一样)</li>
+</ul>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>两个进程的pcb块儿都指向了各自的打开的socket fd, 在网络中需要借助ip + port让这两个connfd进行通信, 但是同一机器的进程, 就不需要借助网络了.可以直接让这两个socket fd 进行通信.</p>
+<p>为什么?<br>因为内核区的文件描述符表时全局公用的, 即使socket fd不同, 但是大家是相互知道的.<br>所以这俩sockfd建立关系, 直接借助fd编号就可以了, 不需要ip, port, 并且这种方式建立的连接是全双工的通信方式(除了管道之外貌似全部都是双工).</p>
+<p>由于socket函数的设计, 还是可以传入SOCK_DGRAM或者SOCK_STREAM, 实际上没有使用.</p>
+<pre><code class="c++">socket(AF_UNIX, SOCK_STREAM, 0);
+</code></pre>
+<h3 id="套接字定义"><a href="#套接字定义" class="headerlink" title="套接字定义"></a>套接字定义</h3><p>并且socket结构体的定义也不一样.</p>
+<p>网络中套接字的结构体定义有3个成员:</p>
+<pre><code class="c++">struct sockaddr_in {
+       __kernel_sa_family_t sin_family; /* Address family */ 协议类型
+       __be16 sin_port; /* Port number */ 端口号
+       struct in_addr sin_addr; /* Internet address */ IP 地址
+};
+</code></pre>
+<p>本地套接字的定义是这样的:</p>
+<pre><code class="c++">struct sockaddr_un {
+       __kernel_sa_family_t sun_family; /* AF_UNIX */
+       char sun_path[UNIX_PATH_MAX]; /* pathname */
+};
+</code></pre>
+<ul>
+<li>第一个成员变量 <code>sun_family</code> 还是表示协议类型, 一般大小为16位, 即2字节.<br>(为了跨posix系统你还是使用offsetof宏计算一下)</li>
+<li>第二个成员变量 <code>sun_path</code> 表示文件路径名, 全长108字节(一般用不满)<br>将socket绑定到一个地址上(实际上就是一个文件, 运行时会生成这个文件; 但是这是个伪文件, 没有大小的, 不管通信双发传输了多少数据, 都不会有存留的)</li>
+</ul>
+<p>可以看到sockaddr_un实际全部大小110字节Bytes.</p>
+<h3 id="offsetof宏"><a href="#offsetof宏" class="headerlink" title="offsetof宏"></a>offsetof宏</h3><p>第一个成员 <code>sun_family</code>长度不同系统定义可能有些差别, 代码中一般借助宏函数 <code>offsetof</code> :</p>
+<pre><code class="c++">#define offsetof(type, member) ((int)&amp;((type *)0)-&gt;MEMBER)
+</code></pre>
+<p>注意 <code>-&gt;</code> 优先级比取地址&amp;高, 这个宏其实就是计算member成员在type结构体中的偏移, 如果type传入的是结构体的起始0位置, 那么偏移也就是长度.<br>(memeber距离0位置的偏移即长度)</p>
+<p>这个时候求sockaddr结构体的有效长度就不能再用sizeof(sockaddr_un), 而应该求有效长度.</p>
+<p>调用大致: (求整个结构体的有效长度: 结构体开始处到第二个成员的长度 + 套接字路径名长度) </p>
+<pre><code class="c++">//实际上应该是: 2Bytes + 文件名长度
+size = offsetof(struct sockaddr_un, sun_path) + strlen(un.sun_path);
+</code></pre>
+<h3 id="本地套接字绑定"><a href="#本地套接字绑定" class="headerlink" title="本地套接字绑定"></a>本地套接字绑定</h3><p>套接字结构体的第二个参数就是让套接字绑定到一个伪文件(client和server各自绑定一个), 并且server端 bind, client端connect之前bind, 都要把两边儿需要绑定的sock地址(文件)删除, 确保socket需要绑定的文件不存在. 如果已经存在, 会报错: Address alreay in use. </p>
+<p>最好代码上进行 <code>unlink(&quot;filename&quot;)</code> 一下:</p>
+<pre><code class="c++">unlink(un.sun_path);
+</code></pre>
+<h2 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h2><p>server.cpp</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;stddef.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;sys/un.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;errno.h&gt;
+
+#define QLEN 10
+/*
+ * Create a server endpoint of a connection.
+ * Returns fd if all OK, &lt;0 on error.
+ * name : file_name
+ */
+int serv_listen(const char *name)
+{
+  int fd, len, err, rval;
+  struct sockaddr_un un;
+  /* create a UNIX domain stream socket */
+  if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) &lt; 0)
+    return(-1);
+  /* in case it already exists */
+  unlink(name);
+  /* fill in socket address structure */
+  memset(&amp;un, 0, sizeof(un)); //bzero ok
+  un.sun_family = AF_UNIX;
+  strcpy(un.sun_path, name);
+  len = offsetof(struct sockaddr_un, sun_path) + strlen(name);
+  /* bind the name to the descriptor */
+  if (bind(fd, (struct sockaddr *)&amp;un, len) &lt; 0) {
+    rval = -2;
+    goto errout;
+  }
+  if (listen(fd, QLEN) &lt; 0) { /* tell kernel we&#39;re a server */
+    rval = -3;
+    goto errout;
+  }
+  return(fd);
+ errout:
+  err = errno; /*tmp store in case of close error*/
+  close(fd);
+  errno = err;
+  return(rval);
+}
+
+/*uidptr: in/out param which shows the caller*/
+int serv_accept(int listenfd, uid_t *uidptr)
+{
+  int clifd, len, err, rval;
+  time_t staletime;
+  struct sockaddr_un un;
+  struct stat statbuf;/*display file or file system status*/
+  len = sizeof(un); /*watch out here*/
+  if ((clifd = accept(listenfd, (struct sockaddr *)&amp;un, &amp;len)) &lt; 0)
+    return(-1); /* often errno=EINTR, if signal caught */
+  /* obtain the client&#39;s uid from its calling address */
+  len -= offsetof(struct sockaddr_un, sun_path); /* len of pathname */
+  un.sun_path[len] = 0; /* null terminate */
+
+  if (stat(un.sun_path, &amp;statbuf) &lt; 0) {
+    rval = -2;
+    goto errout;
+  }
+
+  if (S_ISSOCK(statbuf.st_mode) == 0) {
+    rval = -3; /* not a socket */
+    goto errout;
+  }
+
+  if (uidptr != NULL)
+    *uidptr = statbuf.st_uid; /* return uid of caller */
+  /* we&#39;re done with pathname now */
+  unlink(un.sun_path);
+  return(clifd);
+ errout:
+  err = errno;
+  close(clifd);
+  errno = err;
+  return(rval);
+}
+
+
+int main(void)
+{
+  int lfd, cfd, n, i;
+  uid_t cuid;
+  char buf[1024];
+
+  lfd = serv_listen(&quot;foo.socket&quot;);
+  if (lfd &lt; 0) {
+    switch (lfd) {
+    case -3:perror(&quot;listen&quot;); break;
+    case -2:perror(&quot;bind&quot;); break;
+    case -1:perror(&quot;socket&quot;); break;
+    }
+    exit(-1);
+  }
+
+  cfd = serv_accept(lfd, &amp;cuid);
+  if (cfd &lt; 0) {
+    switch (cfd) {
+    case -3:perror(&quot;not a socket&quot;); break;
+    case -2:perror(&quot;a bad filename&quot;); break;
+    case -1:perror(&quot;accept&quot;); break;
+    }
+    exit(-1);
+  }
+  //watch out we get the cuid
+  while (1) {
+  r_again:
+    n = read(cfd, buf, 1024);
+    if (n == -1) {
+      if (errno == EINTR)
+    goto r_again;
+    }
+    else if (n == 0) {
+      printf(&quot;the other side has been closed.\n&quot;);
+      break;
+    }
+    for (i = 0; i &lt; n; i++)
+      buf[i] = toupper(buf[i]);
+    write(cfd, buf, n);
+  }
+
+  close(cfd);
+  close(lfd);
+  return 0;
+}
+</code></pre>
+<p>client.cpp</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;stddef.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;sys/un.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;errno.h&gt;
+
+#define QLEN 10
+/*
+ * Create a server endpoint of a connection.
+ * Returns fd if all OK, &lt;0 on error.
+ * name : file_name
+ */
+int serv_listen(const char *name)
+{
+  int fd, len, err, rval;
+  struct sockaddr_un un;
+  /* create a UNIX domain stream socket */
+  if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) &lt; 0)
+    return(-1);
+  /* in case it already exists */
+  unlink(name);
+  /* fill in socket address structure */
+  memset(&amp;un, 0, sizeof(un)); //bzero ok
+  un.sun_family = AF_UNIX;
+  strcpy(un.sun_path, name);
+  len = offsetof(struct sockaddr_un, sun_path) + strlen(name);
+  /* bind the name to the descriptor */
+  if (bind(fd, (struct sockaddr *)&amp;un, len) &lt; 0) {
+    rval = -2;
+    goto errout;
+  }
+  if (listen(fd, QLEN) &lt; 0) { /* tell kernel we&#39;re a server */
+    rval = -3;
+    goto errout;
+  }
+  return(fd);
+ errout:
+  err = errno; /*tmp store in case of close error*/
+  close(fd);
+  errno = err;
+  return(rval);
+}
+
+/*uidptr: in/out param which shows the caller*/
+int serv_accept(int listenfd, uid_t *uidptr)
+{
+  int clifd, len, err, rval;
+  time_t staletime;
+  struct sockaddr_un un;
+  struct stat statbuf;/*display file or file system status*/
+  len = sizeof(un); /*watch out here*/
+  if ((clifd = accept(listenfd, (struct sockaddr *)&amp;un, &amp;len)) &lt; 0)
+    return(-1); /* often errno=EINTR, if signal caught */
+  /* obtain the client&#39;s uid from its calling address */
+  len -= offsetof(struct sockaddr_un, sun_path); /* len of pathname */
+  un.sun_path[len] = 0; /* null terminate */
+
+  if (stat(un.sun_path, &amp;statbuf) &lt; 0) {
+    rval = -2;
+    goto errout;
+  }
+
+  if (S_ISSOCK(statbuf.st_mode) == 0) {
+    rval = -3; /* not a socket */
+    goto errout;
+  }
+
+  if (uidptr != NULL)
+    *uidptr = statbuf.st_uid; /* return uid of caller */
+  /* we&#39;re done with pathname now */
+  unlink(un.sun_path);
+  return(clifd);
+ errout:
+  err = errno;
+  close(clifd);
+  errno = err;
+  return(rval);
+}
+
+
+int main(void)
+{
+  int lfd, cfd, n, i;
+  uid_t cuid;
+  char buf[1024];
+
+  lfd = serv_listen(&quot;foo.socket&quot;);
+  if (lfd &lt; 0) {
+    switch (lfd) {
+    case -3:perror(&quot;listen&quot;); break;
+    case -2:perror(&quot;bind&quot;); break;
+    case -1:perror(&quot;socket&quot;); break;
+    }
+    exit(-1);
+  }
+
+  cfd = serv_accept(lfd, &amp;cuid);
+  if (cfd &lt; 0) {
+    switch (cfd) {
+    case -3:perror(&quot;not a socket&quot;); break;
+    case -2:perror(&quot;a bad filename&quot;); break;
+    case -1:perror(&quot;accept&quot;); break;
+    }
+    exit(-1);
+  }
+  //watch out we get the cuid
+  while (1) {
+  r_again:
+    n = read(cfd, buf, 1024);
+    if (n == -1) {
+      if (errno == EINTR)
+      goto r_again;
+    }
+    else if (n == 0) {
+      printf(&quot;the other side has been closed.\n&quot;);
+      break;
+    }
+    for (i = 0; i &lt; n; i++)
+      buf[i] = toupper(buf[i]);
+    write(cfd, buf, n);
+  }
+
+  close(cfd);
+  close(lfd);
+  return 0;
+}
+</code></pre>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Unix Domain Socket">Unix Domain Socket</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Unix Domain Socket">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

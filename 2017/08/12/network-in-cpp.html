@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>C++网络库(轮子)大杂烩 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="谈一谈接触到的网络库及其特性, 都是轮子, 轮子.">
+<meta name="keywords" content="网络,cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++网络库(轮子)大杂烩">
+<meta property="og:url" content="localhost:4000/2017/08/12/network-in-cpp.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="谈一谈接触到的网络库及其特性, 都是轮子, 轮子.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/cppnetwork.jpg">
+<meta property="og:updated_time" content="2017-09-24T07:09:23.835Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++网络库(轮子)大杂烩">
+<meta name="twitter:description" content="谈一谈接触到的网络库及其特性, 都是轮子, 轮子.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/cppnetwork.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>C++网络库(轮子)大杂烩</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-08-12</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/网络/">网络</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>从最初的 <code>libevent</code> 及其升级版本 <code>libev</code> , 到昨天的 <code>Boost::asio</code> , C++中的网络库还真不少.</p>
+<p>当然像ACE那种大库, 我就不说了, 太大了, 也很复杂.</p>
+<p>本文基于过去的linux网络编程知识, 以及相应的库, 源码, 一个个说一说, 并且给出一个bench mark.</p>
+<p>(当然也会说到开发难度)<br><a id="more"></a></p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>先说说为啥标准库中没有网络库?</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/cppnetwork.jpg" alt=""></p>
+<p>libevent, libev, asio, IOCP, reactor, proactor等</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>ACE是一个大型的中间件产品，代码20万行左右，过于宏大，一堆的设计模式，架构了一层又一层，使用的时候， 要根据情况，看你从那一层来进行使用。支持跨平台。<br>Boost的ASIO是一个异步IO库，封装了对Socket的常用操作，简化了基于socket程序的开发。支持跨平台。</p>
+<p>libevent是一个C语言写的网络库， 官方主要支持的是类Linux 操作系统， 最新的版本添加了对windows的IOCP的支持。由于IOCP是异步IO，与linux下的POLL模型，EPOLL模型，还有freebsd的KQUEUE等这些同步模型在用法上完全不一致，所以使用方法也不一样，就好比ACE中的Reactor和Proactor模式一样， 使用起来需要转变思路。如果对性能没有特别的要求， 那么使用libevent中的select模型来实现跨平台的操作， select模型可以横跨windows， linux， unix，solaris等系统。<br>libev是一个c语言写的，只支持linux系统的库，我以前研究的时候只封装了EPOLL模型， 不知道现在的新版有没有改进。使用方法类似libevent， 但是非常简洁，代码量是最少的一个库，也就几千行代码。显然这样的代码跨平台肯定是无法支持的了， 如果你只需要在linux下面运行，那用这个库也是可以的。</p>
+<p>ACE网络库在使用中，一直对其中的内存管理搞得一头雾水，分配的内存需要在哪里释放都不知道，ACE不愧是一个做研究用的库， 可以说里面的封装把设计模式这本书中列出的模式都在代码里面实现了一番，用起来感觉是在用Java一样，如果你想使用ACE作为你的网络库， 千万不要仅仅把它当成一个网络库使用， 你要把它当成一个框架来使用，如果你只想用它的网络库， 那大可不必用ACE， 因为它太庞大了，学习起来太费劲。但是你把它当成一个框架来用，你会感觉用的还真爽，该有的东西都有，比如线程池，内存池，定时器，递归锁等，都很方便的。Boost的ASIO，在内存管理方面要直观的多。下面简单地与ACE做个比较。</p>
+<p>1.层次架构：<br>ACE底层是C风格的OS适配层，上一层基于C++的wrap类，再上一层是一些框架（Accpetor, Connector，Reactor，Proactor等），最上一层是框架上服务。<br>Boost.ASIO与之类似，底层是OS的适配层，上一层一些模板类，再上一层模板类的参数化（TCP/UDP），再上一层是服务，它只有一种框架为io_service。<br>livevent在不同的操作系统下，做了多路复用模型的抽象，可以选择使用不同的模型，通过事件函数提供服务。</p>
+<p>2.涉及范围：<br>ACE包含了日志，IPC，线程池，共享内存，配置服务，递归锁，定时器等。<br>ASIO只涉及到Socket，提供简单的线程操作。<br>libevent只提供了简单的网络API的封装， 线程池， 内存池， 递归锁等均需要自己实现。</p>
+<p>3.设计模式：<br>ACE主要应用了Reactor，Proactor等。<br>而ASIO主要应用了Proactor。<br>libevent为Reactor模式</p>
+<p>4.线程调度：<br>ACE的Reactor是单线程调度，Proactor支持多线程调度。<br>ASIO支持单线程与多线程调度。<br>libevent的线程调度需要自己来注册不同的事件句柄。</p>
+<p>5.事件分派处理：<br>ACE主要是注册handler类，当事件分派时，调用其handler的虚挂勾函数。实现ACE_Handler / ACE_Svc_Handler / ACE_Event_handler等类的虚函数。<br>ASIO是基于函数对象的hanlder事件分派。任何函数都可能成为hanlder，少了一堆虚表的维护，调度上优于ACE。<br>libevent基于注册的事件回调函数来实现事件分发。</p>
+<p>6.发布方式：<br>ACE是开源免费的，不依赖于第3方库， 一般应用使用它时，以动态链接的方式发布动态库。<br>ASIO是开源免费的，依赖Boost，应用使用时只要include头文件，不需动态库。<br>libevent为开源免费的，一般编译为静态库进行使用。</p>
+<p>7.可移植性：<br>ACE支持多种平台，可移植性不存在问题，据说socket编程在linux下有不少bugs。<br>ASIO支持多种平台，可移植性不存在问题。<br>libevent主要支持linux平台，freebsd平台， 其他平台下通过select模型进行支持， 效率不是太高。</p>
+<p>8.开发难度：<br>基于ACE开发应用，对程序员要求比较高，要用好它，必须非常了解其框架。在其框架下开发，往往new出一个对象，不知在什么地方释放好。<br>基于ASIO开发应用，要求程序员熟悉函数对象，函数指针，熟悉boost库中的boost::bind。内存管理控制方面。</p>
+<p>基于libevent开发应用，相对容易， 具体大家可以参考memcached这个开源的应用，里面使用了libevent这个库。</p>
+<p>其他参考: </p>
+<ul>
+<li><a href="http://blog.csdn.net/earbao/article/details/10934261" target="_blank" rel="external">http://blog.csdn.net/earbao/article/details/10934261</a></li>
+<li><a href="http://blog.csdn.net/csfreebird/article/details/49283743" target="_blank" rel="external">http://blog.csdn.net/csfreebird/article/details/49283743</a></li>
+</ul>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="C++网络库(轮子)大杂烩">C++网络库(轮子)大杂烩</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="C++网络库(轮子)大杂烩">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

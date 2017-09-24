@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>你还不会打谱呀? | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="music-all-start, (施坦威)钢琴弹起来, 笑">
+<meta name="keywords" content="piano">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你还不会打谱呀?">
+<meta property="og:url" content="localhost:4000/2017/07/04/music-all-start.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="music-all-start, (施坦威)钢琴弹起来, 笑">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/shitanwei.jpg">
+<meta property="og:updated_time" content="2017-09-24T05:47:32.655Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="你还不会打谱呀?">
+<meta name="twitter:description" content="music-all-start, (施坦威)钢琴弹起来, 笑">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/shitanwei.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#音"><span class="toc-number">2.1.</span> <span class="toc-text">音</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#和弦"><span class="toc-number">2.2.</span> <span class="toc-text">和弦</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#节奏"><span class="toc-number">2.3.</span> <span class="toc-text">节奏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#唱"><span class="toc-number">2.4.</span> <span class="toc-text">唱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#钢琴分节"><span class="toc-number">2.5.</span> <span class="toc-text">钢琴分节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调"><span class="toc-number">2.6.</span> <span class="toc-text">调</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#钢琴again"><span class="toc-number">2.7.</span> <span class="toc-text">钢琴again</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#过度的技巧"><span class="toc-number">2.7.1.</span> <span class="toc-text">过度的技巧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结尾的技巧"><span class="toc-number">2.7.2.</span> <span class="toc-text">结尾的技巧</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#还是钢琴"><span class="toc-number">2.8.</span> <span class="toc-text">还是钢琴</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#只讲踏板"><span class="toc-number">2.8.1.</span> <span class="toc-text">只讲踏板</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编曲"><span class="toc-number">2.9.</span> <span class="toc-text">编曲</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分节"><span class="toc-number">2.9.1.</span> <span class="toc-text">分节</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#谱曲"><span class="toc-number">2.10.</span> <span class="toc-text">谱曲</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分乐章"><span class="toc-number">2.10.1.</span> <span class="toc-text">分乐章</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>你还不会打谱呀?</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-04</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/piano/">piano</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>看到身边有许多人喜欢音乐, 也只是玩玩 <code>HIFI</code> , 淘淘耳机, 只有极少数些专业人士能够作曲和编曲. 加上我当前(以前)的工作又是 <code>Audio</code> 相关, 所以有资格和能力去帮助身边的人更加懂音乐.</p>
+<p>借着妹纸要学习 <code>打谱</code> 的契机, 可以写一些东西, 不指望有多大成效, 还是希望能有一些帮助.<br>当然我的初心是, 看了本系列都可以去作曲,编曲; 最不济, 乐谱看着总是没有问题的(笑).<br>(Long Term Support)</p>
+<blockquote>
+<p>写起来好累</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/shitanwei.jpg" alt=""></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>这里不会写太长, 作为爱好, 我想把该主题写的简单, 短, 方便理解.</p>
+<p>呵呵, 才怪.</p>
+<p>我这里会一口气把所有的 <code>基本乐理</code> 全部说完, 后面捡 <code>流行曲目</code> 来实战剖析乐理.<br>(也就是说, 这里是乐理, 后面才是实战剖析谱子才是重点)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>这里其实是目录, 有时间一点点写.</p>
+<h2 id="音"><a href="#音" class="headerlink" title="音"></a>音</h2><h2 id="和弦"><a href="#和弦" class="headerlink" title="和弦"></a>和弦</h2><h2 id="节奏"><a href="#节奏" class="headerlink" title="节奏"></a>节奏</h2><h2 id="唱"><a href="#唱" class="headerlink" title="唱"></a>唱</h2><h2 id="钢琴分节"><a href="#钢琴分节" class="headerlink" title="钢琴分节"></a>钢琴分节</h2><h2 id="调"><a href="#调" class="headerlink" title="调"></a>调</h2><h2 id="钢琴again"><a href="#钢琴again" class="headerlink" title="钢琴again"></a>钢琴again</h2><h3 id="过度的技巧"><a href="#过度的技巧" class="headerlink" title="过度的技巧"></a>过度的技巧</h3><h3 id="结尾的技巧"><a href="#结尾的技巧" class="headerlink" title="结尾的技巧"></a>结尾的技巧</h3><h2 id="还是钢琴"><a href="#还是钢琴" class="headerlink" title="还是钢琴"></a>还是钢琴</h2><h3 id="只讲踏板"><a href="#只讲踏板" class="headerlink" title="只讲踏板"></a>只讲踏板</h3><h2 id="编曲"><a href="#编曲" class="headerlink" title="编曲"></a>编曲</h2><h3 id="分节"><a href="#分节" class="headerlink" title="分节"></a>分节</h3><h2 id="谱曲"><a href="#谱曲" class="headerlink" title="谱曲"></a>谱曲</h2><h3 id="分乐章"><a href="#分乐章" class="headerlink" title="分乐章"></a>分乐章</h3><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>“hey, 我们缺一个键盘你要来么?” 每次听到这个话, 我就很烦; 谁说键盘非要用作伴奏?</p>
+<p>一曲solo弹给懂的人, 我要我的原创. (刚开始抄也没有关系, 起步难免的)</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="你还不会打谱呀?">你还不会打谱呀?</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="你还不会打谱呀?">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

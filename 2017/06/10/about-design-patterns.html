@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>设计模式C++实现 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="设计模式, 仅此一文.">
+<meta name="keywords" content="cpp,设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式C++实现">
+<meta property="og:url" content="localhost:4000/2017/06/10/about-design-patterns.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="设计模式, 仅此一文.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/design-pattern.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.jpg">
+<meta property="og:updated_time" content="2017-09-24T02:15:23.643Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="设计模式C++实现">
+<meta name="twitter:description" content="设计模式, 仅此一文.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/design-pattern.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建型模式"><span class="toc-number">2.1.</span> <span class="toc-text">创建型模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简单工厂"><span class="toc-number">2.1.1.</span> <span class="toc-text">简单工厂</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工厂方法-Factory-Method"><span class="toc-number">2.1.2.</span> <span class="toc-text">工厂方法(Factory Method)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#抽象工厂-Abstract-Factory"><span class="toc-number">2.1.3.</span> <span class="toc-text">抽象工厂(Abstract Factory)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#建造者-Builder"><span class="toc-number">2.1.4.</span> <span class="toc-text">建造者(Builder)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原型-Prototype"><span class="toc-number">2.1.5.</span> <span class="toc-text">原型(Prototype)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#单例-Singleton"><span class="toc-number">2.1.6.</span> <span class="toc-text">单例(Singleton)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结构型模式"><span class="toc-number">2.2.</span> <span class="toc-text">结构型模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#适配器-Adapter"><span class="toc-number">2.2.1.</span> <span class="toc-text">适配器(Adapter)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#桥接-Bridge"><span class="toc-number">2.2.2.</span> <span class="toc-text">桥接(Bridge)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组合-Composite"><span class="toc-number">2.2.3.</span> <span class="toc-text">组合(Composite)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#装饰-Decorator"><span class="toc-number">2.2.4.</span> <span class="toc-text">装饰(Decorator)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#外观-Facade"><span class="toc-number">2.2.5.</span> <span class="toc-text">外观(Facade)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#享元-Flyweight"><span class="toc-number">2.2.6.</span> <span class="toc-text">享元(Flyweight)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代理-Proxy"><span class="toc-number">2.2.7.</span> <span class="toc-text">代理(Proxy)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#行为模式"><span class="toc-number">2.3.</span> <span class="toc-text">行为模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#模板-Template-method"><span class="toc-number">2.3.1.</span> <span class="toc-text">模板(Template method)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令-Command"><span class="toc-number">2.3.2.</span> <span class="toc-text">命令(Command)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#职责链-Chain-of-Responsibility"><span class="toc-number">2.3.3.</span> <span class="toc-text">职责链(Chain of Responsibility)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#策略-Strategy"><span class="toc-number">2.3.4.</span> <span class="toc-text">策略(Strategy)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#中介者-Mediator"><span class="toc-number">2.3.5.</span> <span class="toc-text">中介者(Mediator)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#观察者-Observer-–订阅发布"><span class="toc-number">2.3.6.</span> <span class="toc-text">观察者(Observer)–订阅发布</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#备忘录-Memento"><span class="toc-number">2.3.7.</span> <span class="toc-text">备忘录(Memento)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#访问者-Visitor"><span class="toc-number">2.3.8.</span> <span class="toc-text">访问者(Visitor)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#状态-State"><span class="toc-number">2.3.9.</span> <span class="toc-text">状态(State)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解释器-Interpreter"><span class="toc-number">2.3.10.</span> <span class="toc-text">解释器(Interpreter)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#迭代器-Iterator"><span class="toc-number">2.3.11.</span> <span class="toc-text">迭代器(Iterator)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Boost库用到的"><span class="toc-number">2.4.</span> <span class="toc-text">Boost库用到的</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#空对象"><span class="toc-number">2.4.1.</span> <span class="toc-text">空对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#包装外观"><span class="toc-number">2.4.2.</span> <span class="toc-text">包装外观</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#前摄器模式-Proactor-—分角色的模式"><span class="toc-number">2.4.3.</span> <span class="toc-text">前摄器模式(Proactor)—分角色的模式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>设计模式C++实现</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-06-10</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/设计模式/">设计模式</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>没别的, 就是把设计模式过一遍, 最后还补充了Boost库中用到的几个设计模式.</p>
+<blockquote>
+<p>相关代码可以参考我的github库 <a href="https://github.com/WizardMerlin/design_pattern_life" target="_blank" rel="external">设计模式C++实现</a></p>
+</blockquote>
+</blockquote>
+<p>除了CTO之外, 技术领域的最高阶”架构师”的必修之术. 因为即使有机会, 我也不会去做”架构师”, 所以此篇是 <code>最终篇</code> , 博客以后再不说设计模式.</p>
+<p>(后续可能会有修订)</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/design-pattern.jpg" alt="post-cover"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>设计模式, 面试的时候常考, 但是实际上工作中用到的, 也就那么几种: 工厂方法, 观察者, 代理, 装饰者, 单例等.</p>
+<p>面向对象设计模式是一套被反复使用, 多数人知晓的代码设计经验总结. 一般分为: 创建型模式, 机构型模式, 行为模式.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.jpg" alt=""></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h2><p>解决如何创建对象的问题, 详细内容可以参考: <a href="https://github.com/WizardMerlin/design_pattern_life/blob/master/创建模型.md" target="_blank" rel="external">https://github.com/WizardMerlin/design_pattern_life/blob/master/创建模型.md</a></p>
+<h3 id="简单工厂"><a href="#简单工厂" class="headerlink" title="简单工厂"></a>简单工厂</h3><p>在工厂中集中相关的产品创建逻辑, 内部判断要创建那种具体的产品.</p>
+<h3 id="工厂方法-Factory-Method"><a href="#工厂方法-Factory-Method" class="headerlink" title="工厂方法(Factory Method)"></a>工厂方法(Factory Method)</h3><p>在简单工厂的基础上, 改善扩展性, 定义接口用于创建对象, 但是具体的实现创建逻辑推迟到具体的子类中.<br>(每种具体的产品需要一个对应的具体工厂)</p>
+<h3 id="抽象工厂-Abstract-Factory"><a href="#抽象工厂-Abstract-Factory" class="headerlink" title="抽象工厂(Abstract Factory)"></a>抽象工厂(Abstract Factory)</h3><p>在工厂方法的基础上(创建还是交给子类去实现), 提供更多统一的创建接口, 可以一下生产一个产品族, 即每次一个子类工厂可以生成多个具体的产品.</p>
+<h3 id="建造者-Builder"><a href="#建造者-Builder" class="headerlink" title="建造者(Builder)"></a>建造者(Builder)</h3><p>将复杂对象的构建(创建)与表示(组装)分离, 使得同样的构建过程可以创建不同的表示(不同的组合体).<br>先一个个的创建对象的每一个部件(builder里面不同的抽象方法来创建), 再统一组装成一个对象(从产品生成器中生成产品, 传入builder引用)</p>
+<h3 id="原型-Prototype"><a href="#原型-Prototype" class="headerlink" title="原型(Prototype)"></a>原型(Prototype)</h3><p>原型模式使用类的实例通过拷贝的方式创建对象, 具体的拷贝行为可以定制.<br>最常见的用法为类实现一个 <code>Clone()</code> 成员函数(或者拷贝构造函数), 这个函数创建一个与原型相同或者相似的新对象</p>
+<h3 id="单例-Singleton"><a href="#单例-Singleton" class="headerlink" title="单例(Singleton)"></a>单例(Singleton)</h3><p>运行时, 类有且仅有一个实例(避免产生多个实例对象), 但是注意线程同步问题.</p>
+<h2 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h2><p>如何组合类或者对象, 更而形成更大更有用的新对象; 减小耦合, 防止臃肿.</p>
+<p>详细解释可以参考 : <a href="https://github.com/WizardMerlin/design_pattern_life/blob/master/结构型模型.md" target="_blank" rel="external">https://github.com/WizardMerlin/design_pattern_life/blob/master/结构型模型.md</a></p>
+<h3 id="适配器-Adapter"><a href="#适配器-Adapter" class="headerlink" title="适配器(Adapter)"></a>适配器(Adapter)</h3><p>把一个类的接口转换成另一个接口, 在不改变原有代码的基础上复用原代码; 或者使原来不同共同工作的相关类可以兼容工作.<br>(注意原有代码, 这一点是前提)</p>
+<h3 id="桥接-Bridge"><a href="#桥接-Bridge" class="headerlink" title="桥接(Bridge)"></a>桥接(Bridge)</h3><p>将抽象部分与实现部分分离(多个变化部分就使用多个抽象, 继承或者成员对象), 使它们都可以独立的变化.<br>(有多少处变化就进行多少处抽离)</p>
+<h3 id="组合-Composite"><a href="#组合-Composite" class="headerlink" title="组合(Composite)"></a>组合(Composite)</h3><p>将小对象组合成树形结构.(它们往往都有相似的结构, 例如文件和目录)</p>
+<h3 id="装饰-Decorator"><a href="#装饰-Decorator" class="headerlink" title="装饰(Decorator)"></a>装饰(Decorator)</h3><p>运行时动态地给对象增加功能.</p>
+<h3 id="外观-Facade"><a href="#外观-Facade" class="headerlink" title="外观(Facade)"></a>外观(Facade)</h3><p>为系统中大量对象提供一个一致的对外接口, 简化系统使用.</p>
+<h3 id="享元-Flyweight"><a href="#享元-Flyweight" class="headerlink" title="享元(Flyweight)"></a>享元(Flyweight)</h3><p>使用共享的方式节约内存的使用(如果对象已经存在了, 那么直接重用该对象).</p>
+<h3 id="代理-Proxy"><a href="#代理-Proxy" class="headerlink" title="代理(Proxy)"></a>代理(Proxy)</h3><p>代理与被代理对象往往拥有相同的接口(可能继承同一个抽象类), client如果要调用相关动作, 就要通过代理接口, 而不能直接使用真实的动作类.<br>它的意图不是改变接口插入新系统(适配), 也不是为对象增加职责(装饰), 而是要控制对象.<br>智能指针库, 利用代理模式将原始指针包装，代理原始指针的职能.</p>
+<h2 id="行为模式"><a href="#行为模式" class="headerlink" title="行为模式"></a>行为模式</h2><p>解决对象之间的相互调用, 动态行为等问题, 详细内容可以参考: <a href="https://github.com/WizardMerlin/design_pattern_life/blob/master/行为型.md" target="_blank" rel="external">https://github.com/WizardMerlin/design_pattern_life/blob/master/行为型.md</a></p>
+<h3 id="模板-Template-method"><a href="#模板-Template-method" class="headerlink" title="模板(Template method)"></a>模板(Template method)</h3><p>模板方法模式准备一个抽象类, 将部分逻辑以具体方法及具体构造子类的形式实现, 然后声明一些抽象方法来迫使子类实现剩余的逻辑.<br>不同的子类可以以不同的方式实现这些抽象方法, 从而对剩余的逻辑有不同的实现. </p>
+<p>先构建一个顶级逻辑框架, 而将逻辑的细节留给具体的子类去实现.</p>
+<h3 id="命令-Command"><a href="#命令-Command" class="headerlink" title="命令(Command)"></a>命令(Command)</h3><p>将一个请求封装为一个对象, 从而使你可用不同的对象对客户进行参数化.<br>(通常客户端的调用包括:方法+参数)<br>Command 模式通过被称为Command 的类封装了对目标对象的调用行为以及调用参数(命令消息模式)</p>
+<h3 id="职责链-Chain-of-Responsibility"><a href="#职责链-Chain-of-Responsibility" class="headerlink" title="职责链(Chain of Responsibility)"></a>职责链(Chain of Responsibility)</h3><p>把对象连成一条链, 使链上的每个对象都有机会处理请求.<br>(当前处理者会保留一个引用指向下一个处理者)<br>一旦第一个责任处理者引发处理, 之后就开始不同的调用执行(直到停止).</p>
+<h3 id="策略-Strategy"><a href="#策略-Strategy" class="headerlink" title="策略(Strategy)"></a>策略(Strategy)</h3><p>封装不同的“算法”, 使它们可以在运行时相互替换.<br>为所有算法定义一个抽象的算法接口并通过继承该抽象算法接口对所有的算法加以封装和实现具体的算法选择交由客户端决定(策略), Strategy 模式主要用来平滑地处理算法的切换.<br>通常能实现同一接口的算法, 功能类似, 如加密中的AES, DES.</p>
+<h3 id="中介者-Mediator"><a href="#中介者-Mediator" class="headerlink" title="中介者(Mediator)"></a>中介者(Mediator)</h3><p>包装了一系列对象相互作用的方式, 使得这些对象不必相互明显作用, 从而使它们可以松散偶合.(避免了直接交互)<br>当某些对象之间的作用发生改变时, 不会立即影响其他的一些对象之间的作用, 保证这些作用可以彼此独立的变化.<br>(但是中介类必须知道交互双方的信息, 即保留两者的引用)</p>
+<h3 id="观察者-Observer-–订阅发布"><a href="#观察者-Observer-–订阅发布" class="headerlink" title="观察者(Observer)–订阅发布"></a>观察者(Observer)–订阅发布</h3><p>定义对象间一对多的联系, 当一个对象的状态发生变化时，所有与它有联系的观察者对象都会得到通知</p>
+<h3 id="备忘录-Memento"><a href="#备忘录-Memento" class="headerlink" title="备忘录(Memento)"></a>备忘录(Memento)</h3><p>备忘录对象是一个用来存储另外一个对象内部状态的快照的对象.<br>备忘录模式的用意是在不破坏封装的条件下, 将一个对象的状态捉住, 外部化, 存储起来; 从而可以在将来合适的时候把这个对象还原到存储起来的状态.</p>
+<h3 id="访问者-Visitor"><a href="#访问者-Visitor" class="headerlink" title="访问者(Visitor)"></a>访问者(Visitor)</h3><p>分离类的内部元素和访问它们的操作, 可以在不改变内部元素的情况下增加作用于它们的新操作.<br>(简单说, 原来类的成员方法, 全部封装到了一个单独的类Visitor中, 之后依靠accept(Visitor *)方法通过Vistor访问)<br>(因为访问还是在原来的类内部调用visitor对象, 所以可以给visitor传递this指针, 这样visitor就可以访问成员数据了)</p>
+<h3 id="状态-State"><a href="#状态-State" class="headerlink" title="状态(State)"></a>状态(State)</h3><p>允许对象在状态发生变化时, 行为也同时发生改变.(行为随着属性变化, 并且状态间可以内部流转)本质上是 <code>判断然后调用相关犯法</code> 逻辑的抽象.<br>(具体来说, 就是原来的类保留一个抽象State* state, 然后通过state对象进行调用; 由于state对象知道原来的类的内部状态, 所以可以做相关判断)</p>
+<h3 id="解释器-Interpreter"><a href="#解释器-Interpreter" class="headerlink" title="解释器(Interpreter)"></a>解释器(Interpreter)</h3><p>给定一个语言, 定义它的文法的一种表示, 并定义一个解释器, 该解释器使用该表示来解释语言中的句子.<br>(同样的语句, 经过不同解释器的解释, 可能得到的结果就不一样了)</p>
+<h3 id="迭代器-Iterator"><a href="#迭代器-Iterator" class="headerlink" title="迭代器(Iterator)"></a>迭代器(Iterator)</h3><p>提供一种方法顺序访问一个聚合对象中各个元素, 而又不需暴露该对象的内部表示.<br>(外部的iterator保留一个集合对象的引用, 然后内部记录索引, 进行对集合的访问)<br>(集合类只需要能够getIterator对象就可以了)</p>
+<h2 id="Boost库用到的"><a href="#Boost库用到的" class="headerlink" title="Boost库用到的"></a>Boost库用到的</h2><h3 id="空对象"><a href="#空对象" class="headerlink" title="空对象"></a>空对象</h3><p>用于返回无意义的对象时，它可以承担处理null的责任</p>
+<h3 id="包装外观"><a href="#包装外观" class="headerlink" title="包装外观"></a>包装外观</h3><p>通过外观的包装, 使应用程序只能看到外观对象，而不会看到具体的细节对象, 这样无疑会降低应用程序的复杂度, 并且提高了程序的可维护性.<br>不同于外观为大量对象或者说面向对象子系统提供一个统一的接口, 包装模式是为不同平台或者底层API提供一个统一的接口.</p>
+<h3 id="前摄器模式-Proactor-—分角色的模式"><a href="#前摄器模式-Proactor-—分角色的模式" class="headerlink" title="前摄器模式(Proactor)—分角色的模式"></a>前摄器模式(Proactor)—分角色的模式</h3><p>用于为异步事件多路分离和分派处理器的对象行为模式.<br>不使用线程就完成了异步操作(不考虑线程同步).</p>
+<p>组成部分如下： </p>
+<ul>
+<li>前设器： 1.创建完成处理器， 2.调用异步处理器， 3.调用异步多路分离器</li>
+<li>完成处理器： 用于异步任务完成后的回调</li>
+<li>异步操作处理器： 处理异步操作， 把完成的事件放入 完成队列</li>
+<li>异步事件多路分离器：从完成队列中取出事件， 分配“完成处理器”(让它处理相关回调或者后续操作)</li>
+<li>完成队列： 存放已经执行完毕的异步操作事件</li>
+</ul>
+<p>asio就是使用该模式.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="设计模式C++实现">设计模式C++实现</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="设计模式C++实现">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

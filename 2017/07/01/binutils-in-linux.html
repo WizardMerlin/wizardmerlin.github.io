@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Linux Bin Utils | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="上回说了gdb等三大件儿, 现在说linux下开发需要使用到的工具链 binutils">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux Bin Utils">
+<meta property="og:url" content="localhost:4000/2017/07/01/binutils-in-linux.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="上回说了gdb等三大件儿, 现在说linux下开发需要使用到的工具链 binutils">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/linuxbinutils2.jpg">
+<meta property="og:updated_time" content="2017-09-24T04:59:02.943Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux Bin Utils">
+<meta name="twitter:description" content="上回说了gdb等三大件儿, 现在说linux下开发需要使用到的工具链 binutils">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/linuxbinutils2.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ar"><span class="toc-number">2.1.</span> <span class="toc-text">ar</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ld"><span class="toc-number">2.2.</span> <span class="toc-text">ld</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nm"><span class="toc-number">2.3.</span> <span class="toc-text">nm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#objdump"><span class="toc-number">2.4.</span> <span class="toc-text">objdump</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#readelf"><span class="toc-number">2.5.</span> <span class="toc-text">readelf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ranlib"><span class="toc-number">2.6.</span> <span class="toc-text">ranlib</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#size"><span class="toc-number">2.7.</span> <span class="toc-text">size</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#strings"><span class="toc-number">2.8.</span> <span class="toc-text">strings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#strip"><span class="toc-number">2.9.</span> <span class="toc-text">strip</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Linux Bin Utils</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-01</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/linux/">linux</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>大致上有: ar, as, ld, nm, objcopy, objdump, ranlib, readelf, size, strings, strip</p>
+</blockquote>
+<p>注意这里说的是 <code>bin utils</code> 而不是 <code>core utils</code>, 所以只包含开发相关, 不包括运维相关.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/linuxbinutils2.jpg" alt="post-cover"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>binutils工具链: </p>
+<ul>
+<li>ar 静态库生成(打包)</li>
+<li>as 汇编器(略)</li>
+<li>ld 链接器和ldd配置器</li>
+<li>nm 查看目标文件中的符号</li>
+<li>objcopy 复制目标文件 (例如去除某些ELF目标文件)</li>
+<li>ranlib 为静态库创建索引, 相当于ar的s选项</li>
+<li>readelf 解读ELF文件头</li>
+<li>size 列出目标文件每一个断的大小和总的大小</li>
+<li>strings 列出目标文件中的字符串</li>
+<li>strip 去除目标文件中的所有符号(使目标文件尺寸减小)</li>
+</ul>
+<p>(比较常用的, ar, nm, objdump, ld, strip)<br>glibc linux下标准c库(包括linux系统库), 库就不说了.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="ar"><a href="#ar" class="headerlink" title="ar"></a>ar</h2><p>当你使用rapidjson, rapidxml, gtest等这类只有头文件的库时, 链接时直接指定库文件本身, 实际上就是在使用<code>.o</code>文件.</p>
+<p>ar静态链接器, 或者说一个<code>.o</code>文件的打包器, 就相当于把一些列.o追加到.a的末尾, 然后链接时写入可执行文件, 或者最终的object对象文件. </p>
+<p>总结一句话, 打包生成<code>.a</code>文件, 例如生成静态库的libmytest.a : </p>
+<pre><code class="bash">ar cqs libmytest.a myfun.o
+</code></pre>
+<p>具体解释:</p>
+<ul>
+<li>c 表示无提示模式创建文件包</li>
+<li>q 表示在文件包尾加入 myfun.o</li>
+<li>s 强制重新生成文件包的符号表</li>
+</ul>
+<p>其实代替 q 选项, 常用<code>r</code>选项, r表示在文件包中代替文件, 特别是你更新了.o文件时. 最常用的是<code>ar crs</code> 生成.a. </p>
+<p>注意区别一下 <code>gcc -static</code> 命令: 这个命令在链接的时候,不管你给的是静态库还是动态库, 统统的按照静态库的方式链接, 即把所有代码都编到可执行文件中.</p>
+<pre><code class="bash">$ gcc test_main.c -static -o test_main -lpthread
+</code></pre>
+<p>然后你nm一下可执行文件<code>test_main</code>, 发现超级大:</p>
+<pre><code>0000000000404fb0 T __pthread_cleanup_push
+0000000000404fb0 T _pthread_cleanup_push
+                 w _pthread_cleanup_push_defer
+                 w __pthread_cleanup_upto
+0000000000402fb0 W pthread_create
+0000000000402fb0 T __pthread_create_2_1
+0000000000405870 T __pthread_current_priority
+00000000006d6dd8 B __pthread_debug
+0000000000405060 T __pthread_disable_asynccancel
+0000000000405000 T __pthread_enable_asynccancel
+00000000006d6df0 B __pthread_force_elision
+0000000000405fe0 T __pthread_get_minstack
+0000000000404cf0 T __pthread_getspecific
+0000000000404cf0 T pthread_getspecific
+00000000006ceec0 D __pthread_init_array
+0000000000405cc0 T __pthread_initialize_minimal
+0000000000405cc0 T __pthread_initialize_minimal_internal
+0000000000402790 T __pthread_init_static_tls
+0000000000404070 T pthread_join
+0000000000404c50 T __pthread_key_create
+0000000000404c50 T pthread_key_create
+</code></pre><p>(gcc -shared请看下面的ld)</p>
+<h2 id="ld"><a href="#ld" class="headerlink" title="ld"></a>ld</h2><p>首先把ldd和ld区分以下:</p>
+<pre><code class="bash">$ which ldd
+/usr/bin/ldd
+
+$ which ld
+/usr/bin/ld
+
+$ file /usr/bin/ldd
+/usr/bin/ldd: Bourne-Again shell script, ASCII text executable
+
+$ file /usr/bin/ld
+/usr/bin/ld: symbolic link to `ld.bfd&#39;
+
+$ file /usr/bin/ld.bfd
+/usr/bin/ld.bfd: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), 
+dynamically linked (uses shared libs), for GNU/Linux 2.6.24, 
+BuildID[sha1]=0xc81e82fe3f0377d917c3fc91c24771ea786911f9, stripped
+</code></pre>
+<p><code>ld</code>是链接器(动态装入器), 一个可执行程序; 用gcc或者g++链接的时候自动调用, 链接语句比较复杂, 交给gcc处理吧:</p>
+<pre><code class="bash">#编译的时候还是要使用-fPIC, 链接的时候指定-shared, 不加shared的话, gcc也是优先链接动态库的
+$ gcc -shared –o libmyjob.so myjob.o
+</code></pre>
+<p>(当然还有一个工具, 用来专门生成库 libtool)</p>
+<p><code>ldd</code> 命令其实是依靠设置一些环境变量而实现的, 是一个shell脚本主要设置ld链接器的so库目录, 也就是说ldd的作用只是设置一些环境变量的值. 当然你也可以拿ldd看一个库是不是动态库: <code>ldd filename</code> , 例如:</p>
+<pre><code class="bash">$ ldd /bin/ln
+libc.so.6 =&gt; /lib/libc.so.6 (0x40021000)
+/lib/ld-linux.so.2 =&gt; /lib/ld-linux.so.2 (0x40000000)
+</code></pre>
+<p>或者查看它的版本:</p>
+<pre><code class="bash">$ ldd --version
+ldd (Ubuntu EGLIBC 2.15-0ubuntu10.18) 2.15
+Copyright (C) 2012 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Written by Roland McGrath and Ulrich Drepper.
+</code></pre>
+<p>ldd通过 <code>/etc/ld.so.conf</code> 文件指示链接时, ld需要链接的库:</p>
+<pre><code class="bash">$ cat /etc/ld.so.conf
+include /etc/ld.so.conf.d/*.conf
+
+/usr/local/ssl/lib
+</code></pre>
+<p>也就是是说 <code>/etc/ld.so.conf.d/*.conf</code> 里面的所有 <code>.conf</code>文件指示了目录:</p>
+<pre><code class="bash">$ cat /etc/ld.so.conf.d/*.conf
+# libc default configuration
+/usr/local/lib
+/usr/local/lib
+# Multiarch support
+/lib/x86_64-linux-gnu
+/usr/lib/x86_64-linux-gnu
+</code></pre>
+<p>这下全明白了. 当你更新 <code>/etc/ld.so.conf</code>相关的配置文件, 并不一定能引入新的链接路径, 因为还要依靠<code>ldconfig</code>命令把相关内容更新到<code>/etc/ld.so.cache</code>, 这时链接器ld才能在链接的时候进行装入.</p>
+<p>当然ldconfig不仅仅可以更新库路径, 还可以查看具体会链接到的库(当前在/etc/ld.so.cache中指定的), 例如:</p>
+<pre><code class="bash">$ ldconfig -p | less
+$ ldconfig -p | grep &quot;pthread&quot;
+</code></pre>
+<p>即便是链接的时候, 使用了 “gcc -L”以及”-l”选项, 运行的时候, 也不一定能运行(运行的时候会在指定的库地址找到相应代码实现), 除非你的库一直都在被相关的conf文件记录了, 也就是说运行的时候也要指定库路径. 此时可以使用”LD_LIBRARY_PATH”来添加临时的路径.</p>
+<pre><code class="bash"># export LD_LIBRARY_PATH=&quot;/usr/lib/old:/opt/lib&quot;
+</code></pre>
+<p>(当然, 您可以把这句写入您的<code>.bashrc</code>里面, 每次运行shell都会导入)而且<code>LD_LIBRARY_PATH</code>指定的路径优先查找;(这样可以在您本机的某些库比较旧, 不满足要求时, 优先链接比较新的, 您指定的库).</p>
+<p>下面nm, objdump, readelf 三个功能有重合, 我推荐的是用好简单的nm和最强大的readelf, 了解objdump.</p>
+<hr>
+<h2 id="nm"><a href="#nm" class="headerlink" title="nm"></a>nm</h2><p>nm 查看目标文件中的符号(display symbol table from an object file), 这个常和 <code>readelf</code> , <code>objdump</code>纠缠不清, 可以肯定的是, nm对于解读目标文件中的符号更专业, 而readelf则通用于解读elf头信息(Displays information about ELF format object files.), 而<code>objdump</code>这个相当于nm的超集.</p>
+<p>目标文件可以是是最终的可执行文件, 当然也可以是’.o’文件, 甚至是<code>.so</code>文件( 通常是库文件和可执行文件).<br><code>man nm</code>得到如下信息:<br>(man手册是写给懂的人看的)</p>
+<pre><code>nm [-a|--debug-syms]
+  [-g|--extern-only][--plugin name]
+  [-B] [-C|--demangle[=style]] [-D|--dynamic]
+  [-S|--print-size] [-s|--print-armap]
+  [-A|-o|--print-file-name][--special-syms]
+  [-n|-v|--numeric-sort] [-p|--no-sort]
+  [-r|--reverse-sort] [--size-sort] [-u|--undefined-only]
+  [-t radix|--radix=radix] [-P|--portability]
+  [--target=bfdname] [-fformat|--format=format]
+  [--defined-only] [-l|--line-numbers] [--no-demangle]
+  [-V|--version] [-X 32_64] [--help]  [objfile...]
+</code></pre><p>常用的选项如下:</p>
+<pre><code>-A: 每个符号前显示文件名
+-s: --print-armap
+-D: 显示动态符号 
+-g: 仅显示外部符号
+-r: 反序显示符号表
+</code></pre><p>-s和-D是相对的, 一个用于查看静态库, 一个用于查看动态库:</p>
+<ul>
+<li><code>[-s|--print-armap]</code>, When listing symbols from archive members, include the index: a mapping (stored in the archive by ar or ranlib) of which modules contain definitions for which names (当列出库中成员的符号时, 包含索引, 索引的内容包含:哪些模块包含哪些名字的映射)</li>
+<li><code>[-D|--dynamic]</code>显示动态符号, 该任选项仅对于动态目标(例如特定类型的共享库)有意义.</li>
+</ul>
+<p>无论如何 nm 都会列出其值(the symbol value), 类型(the symbol type)和其名字(the symbol name), 例如 <code>nm -s main</code> 得到:</p>
+<pre><code>00000000004060e0 T __libc_csu_fini
+0000000000406050 T __libc_csu_init
+                 U __libc_start_main@@GLIBC_2.2.5
+                 U __stack_chk_fail@@GLIBC_2.4
+00000000006090b0 A _edata
+00000000006091d8 A _end
+00000000004060e4 T _fini
+0000000000400b00 T _init
+0000000000400c60 T _start
+0000000000400c8c t call_gmon_start
+00000000006091d0 b completed.7516
+00000000006090a0 W data_start
+0000000000400cb0 t deregister_tm_clones
+0000000000400d50 t frame_dummy
+0000000000400d78 T main
+</code></pre><p>上面的值, 都是16进制的, 每个符号的值的具体含义依其类型而异, 并且其类型, 其值以及它们所属的section是密切相关的(可能是编译地址, 也可能是绝对值).</p>
+<p>下面列举了其类型的含义:</p>
+<pre><code>A 
+该符号的值是绝对的，在以后的链接过程中，不允许进行改变。
+这样的符号值，常常出现在中断向量表中，例如用符号来表示各个中断向量函数在中断向量表中的位置。
+
+B 
+该符号的值出现在非初始化数据段(bss)中
+例如，在一个文件中定义全局static int test。
+则该符号test的类型为B，位于bss section中
+其值表示该符号在bss段中的偏移.
+一般而言，bss段分配于RAM中
+
+C 
+该符号为common symbol, 未初始话数据段.
+只有在链接过程中才进行分配, 符号的值表示该符号需要的字节数。
+例如在一个c文件中，定义int test，并且该符号在别的地方会被引用，
+则该符号类型即为C, 否则其类型为B。
+
+D 
+该符号位于初始话数据段中。
+一般来说，分配到data section中。
+例如定义全局int baud_table[5] = {9600, 19200, 38400}，
+则会分配于初始化数据段中
+
+G 
+该符号也位于初始化数据段中
+主要用于small object提高访问small data object的一种方式
+
+I 
+该符号是对另一个符号的间接引用
+
+N 
+该符号是一个debugging符号
+
+R 
+该符号位于只读数据区。
+例如定义全局const int test[] = {123, 123};
+则test就是一个只读数据区的符号。
+
+一般而言，位于rodata section。
+值得注意的是，如果在一个函数中定义
+const char *test = “abc”, 
+const char test_int = 3。
+使用nm都不会得到符号信息，
+但是字符串“abc”分配于只读存储器中，
+test在rodata section中，大小为4。
+
+S 
+符号位于非初始化数据区，用于small object
+
+T 
+该符号位于代码区text section
+
+
+U 
+该符号在当前文件中是未定义的，即该符号的定义在别的文件中。
+例如，当前文件调用另一个文件中定义的函数，
+在这个被调用的函数在当前就是未定义的；
+但是在定义它的文件中类型是T, 但是对于全局变量来说，
+在定义它的文件中，其符号类型为C.
+
+V 
+该符号是一个weak object。
+
+W 
+The symbol is a weak symbol that has not been 
+specifically tagged as a weak object symbol.
+
+- 
+该符号是a.out格式文件中的stabs symbol
+
+? 
+该符号类型没有定义
+</code></pre><p>符号定义常用的也就是 U和T, 用来查看具体的定义或者调用关系.(这也就是你可能需要看符号表的原因吧, 我看看代码到底是调用到了哪里, 然后利用符号的值去相应的动态库或者其他obj中找到这些符号, 弄清楚调用关系; 或者查看某个值—这个的话一般用gdb调试), 简单总结如下:<br>(小写的, 表示对应的Local; 大写global)</p>
+<pre><code>A    Global absolute 绝对符号(a则表示 Local absolute 符号)
+     其他都是偏移符号
+B    bss 符号 (b表示局部)--未初始化
+C    动态分配的符号
+D    Global data 符号(d表示局部) --初始化
+f    源文件名称符号
+T    Global text 符号
+t    Local text 符号
+U    未定义符号(定期在别处, 此处只是使用)
+W    表示如果其他函数库中也有对这个符号的定义
+     则其他符号的定义可以覆盖这个定义
+</code></pre><p>(上面的符号表示, 在 objdump 和 readelf 命名里也适用)<br>使用nm前, 最好先用<code>file</code>查看对象文件所属处理器架构, 然后再用相应交叉版本的nm工具. 当然编译<code>.o</code>文件的时候一定要使用 <code>-g</code>参数, 否则没有符号信息.</p>
+<p>(个人认为: 论功能的强大上, readelf &gt; objdump &gt; nm)</p>
+<p>主推2个选项:</p>
+<ul>
+<li>-s: –print-armap</li>
+<li>-D: 显示动态符号(用-D的时候-g没啥用,反正都是外部链接的)</li>
+<li>-r: 反向详细调用关系</li>
+</ul>
+<h2 id="objdump"><a href="#objdump" class="headerlink" title="objdump"></a>objdump</h2><p>这个命令不要太强大啊, 能实现上述命令(ar,nm, readelf)的很多功能. 它主要是查看对象文件的内容信息(包括各个section段). 上面说 <code>nm -s</code>的时候, 提到了<code>objdump -t</code>, 查看符号表的入口信息, 通俗说也就是显示目标文件的符号信息(symbol table), 值, 类型, 名称等(比nm -s稍微详细一点; 但不包括显示动态库的内容, 即<code>nm -D</code>的内容).</p>
+<p>查看所有段的头部内容可以使用<code>objdump -h</code>.</p>
+<p>当然这个命令还可以用于反汇编查看, 不过最主要的记住<code>-t</code>和<code>-h</code>选项.</p>
+<h2 id="readelf"><a href="#readelf" class="headerlink" title="readelf"></a>readelf</h2><p>这个可以作为nm, objdump的升级版; 一般用好这个另外的可以不用.</p>
+<blockquote>
+<p>这个程序和objdump提供的功能类似，但是它显示的信息更为具体，并且它不依赖BFD库(BFD库是一个GNU项目，它的目标就是希望通过一种统一的接口来处理不同的目标文件)，所以即使BFD库有什么bug存在的话也不会影响到readelf程序。</p>
+</blockquote>
+<p>readelf命令用来显示一个或者多个elf格式的目标文件的信息. 可以支持32位, 64位的elf格式文件, 也支持包含elf文件的文档(这里一般指的是使用ar命令将一些elf文件打包之后生成的例如lib*.a之类的“静态库”文件)</p>
+<p>readelf包含3类文件:(通过elf头文件可以查看文件类型, readelf -h)</p>
+<ul>
+<li>.a文件或者其他中间文件.o (可重定relocatable文件)</li>
+<li>编译好的可以直接载入内存的可执行文件(最终可执行文件)</li>
+<li>共享目标文件(动态库DYN relocatable文件)</li>
+</ul>
+<p>可以看出来平常使用编译链接的文件都称为可执行文件, 它们的区别在于:</p>
+<ul>
+<li>如果用于编译和链接(可重定位文件)，则编译器和链接器将把elf文件看作是节头表描述的节的集合,程序头表可选</li>
+<li>如果用于加载执行(可执行文件)，则加载器则将把elf文件看作是程序头表描述的段的集合，一个段可能包含多个节，节头表可选(但一般都有, 多数程序运行还是需要定义变量数据等)</li>
+<li>如果是共享文件，则两者都含有</li>
+</ul>
+<p>区别<code>程序头表(program)</code>和<code>节(section, segment)头表</code>解释:</p>
+<ul>
+<li>程序头(也就是program)和程序运行, 载入内存映像相关, 所以一般用于可执行文件和动态库.<br>使用命令 <code>readelf -l</code></li>
+<li>节头(也就是各个section, segment; 一个section可能包含多个segment)和编译, 链接, 执行都相关相关, 所以一般用于.o文件和静态库, 动态库,以及可执行文件<br>使用命令 <code>readelf -S</code>, 注意区别于-s</li>
+</ul>
+<p>(program程序, section节, segment段)</p>
+<p>当然为了交叉编译(增加可移植性), 也会引入<code>elf</code>文件头, 声明文件类型信息, 硬件&amp;平台信息. </p>
+<p>用错类型也没有关系, 因为该命令会告诉你相关内容不存在. 你可以参考一下常用命令总结:</p>
+<pre><code class="bash"># 显示所有信息
+$ readelf -a file_name
+
+# 读取ELF文件头(elf文件的格式说明, 保证可移植性)
+$ readelf -h file_name
+
+# 读取程序头program头信息(目标文件没有该表, 仅用于可执行文件和动态库文件)
+$ readelf -l file_name
+
+# 读取section头信息, 几乎用于所有文件(可执行文件和so库文件不是必须)
+$ readelf -S file_name.o
+
+# 详细显示符号表(包括全局变量和函数; 即程序头里的详细内容和段节中的详细内容), 作为-S和-l的详细补充.
+$ readelf -s file_name  (相当于nm -s 和 objdump -t)
+</code></pre>
+<p>(用一用就知道, readelf -s显示最详细了; 根据实际经验一般是动态库调用问题,-l和-s用的比较多, 尤其-s比较清晰)</p>
+<p>详细的可以看看下面的参考:</p>
+<pre><code>$ readelf -h
+readelf: Warning: Nothing to do.
+Usage: readelf &lt;option(s)&gt; elf-file(s)
+ Display information about the contents of ELF format files
+ Options are:
+  -a --all               Equivalent to: -h -l -S -s -r -d -V -A -I
+  -h --file-header       Display the ELF file header
+  -l --program-headers   Display the program headers
+     --segments          An alias for --program-headers
+  -S --section-headers   Display the sections&#39; header
+     --sections          An alias for --section-headers
+  -g --section-groups    Display the section groups
+  -t --section-details   Display the section details
+  -e --headers           Equivalent to: -h -l -S
+  -s --syms              Display the symbol table
+     --symbols           An alias for --syms
+  --dyn-syms             Display the dynamic symbol table
+  -n --notes             Display the core notes (if present)
+  -r --relocs            Display the relocations (if present)
+  -u --unwind            Display the unwind info (if present)
+  -d --dynamic           Display the dynamic section (if present)
+  -V --version-info      Display the version sections (if present)
+  -A --arch-specific     Display architecture specific information (if any).
+  -c --archive-index     Display the symbol/file index in an archive
+  -D --use-dynamic       Use the dynamic section info when displaying symbols
+  -x --hex-dump=&lt;number|name&gt;
+                         Dump the contents of section &lt;number|name&gt; as bytes
+  -p --string-dump=&lt;number|name&gt;
+                         Dump the contents of section &lt;number|name&gt; as strings
+  -R --relocated-dump=&lt;number|name&gt;
+                         Dump the contents of section &lt;number|name&gt; as relocated bytes
+  -w[lLiaprmfFsoRt] or
+  --debug-dump[=rawline,=decodedline,=info,=abbrev,=pubnames,=aranges,=macro,=frames,
+               =frames-interp,=str,=loc,=Ranges,=pubtypes,
+               =gdb_index,=trace_info,=trace_abbrev,=trace_aranges]
+                         Display the contents of DWARF2 debug sections
+  --dwarf-depth=N        Do not display DIEs at depth N or greater
+  --dwarf-start=N        Display DIEs starting with N, at the same depth
+                         or deeper
+  -I --histogram         Display histogram of bucket list lengths
+  -W --wide              Allow output width to exceed 80 characters
+  @&lt;file&gt;                Read options from &lt;file&gt;
+  -H --help              Display this information
+  -v --version           Display the version number of readelf
+</code></pre><p>分清楚上面关系, 直接 -a 选项重定向到一个外部文件也是可以的, 不然就使用-l和-S选项. 下面有一个案例:(直接使用-a输出的)</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+
+int global_init = 1;
+int global_uninit;
+
+
+
+void print()
+{
+  printf(&quot;merlin.\n&quot;);
+}
+
+
+int main(void)
+{
+  int local_int;
+  print();
+
+  return 0;
+}
+</code></pre>
+<p>代码很简单, 编译, 然后把内容导入log</p>
+<pre><code>$ readelf -a &gt; log
+</code></pre><p>生成的log文件如下:</p>
+<pre><code>ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF64
+  Data:                              2&#39;s complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           Advanced Micro Devices X86-64
+  Version:                           0x1
+  Entry point address:               0x400410
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          6712 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               64 (bytes)
+  Size of program headers:           56 (bytes)
+  Number of program headers:         9
+  Size of section headers:           64 (bytes)
+  Number of section headers:         35
+  Section header string table index: 32
+
+Section Headers:
+  [Nr] Name              Type             Address           Offset
+       Size              EntSize          Flags  Link  Info  Align
+  [ 0]                   NULL             0000000000000000  00000000
+       0000000000000000  0000000000000000           0     0     0
+  [ 1] .interp           PROGBITS         0000000000400238  00000238
+       000000000000001c  0000000000000000   A       0     0     1
+  [ 2] .note.ABI-tag     NOTE             0000000000400254  00000254
+       0000000000000020  0000000000000000   A       0     0     4
+  [ 3] .note.gnu.build-i NOTE             0000000000400274  00000274
+       0000000000000024  0000000000000000   A       0     0     4
+  [ 4] .gnu.hash         GNU_HASH         0000000000400298  00000298
+       000000000000001c  0000000000000000   A       5     0     8
+  [ 5] .dynsym           DYNSYM           00000000004002b8  000002b8
+       0000000000000060  0000000000000018   A       6     1     8
+  [ 6] .dynstr           STRTAB           0000000000400318  00000318
+       000000000000003d  0000000000000000   A       0     0     1
+  [ 7] .gnu.version      VERSYM           0000000000400356  00000356
+       0000000000000008  0000000000000002   A       5     0     2
+  [ 8] .gnu.version_r    VERNEED          0000000000400360  00000360
+       0000000000000020  0000000000000000   A       6     1     8
+  [ 9] .rela.dyn         RELA             0000000000400380  00000380
+       0000000000000018  0000000000000018   A       5     0     8
+  [10] .rela.plt         RELA             0000000000400398  00000398
+       0000000000000030  0000000000000018   A       5    12     8
+  [11] .init             PROGBITS         00000000004003c8  000003c8
+       000000000000000e  0000000000000000  AX       0     0     4
+  [12] .plt              PROGBITS         00000000004003e0  000003e0
+       0000000000000030  0000000000000010  AX       0     0     16
+  [13] .text             PROGBITS         0000000000400410  00000410
+       00000000000001d4  0000000000000000  AX       0     0     16
+  [14] .fini             PROGBITS         00000000004005e4  000005e4
+       0000000000000009  0000000000000000  AX       0     0     4
+  [15] .rodata           PROGBITS         00000000004005f0  000005f0
+       000000000000000c  0000000000000000   A       0     0     4
+  [16] .eh_frame_hdr     PROGBITS         00000000004005fc  000005fc
+       0000000000000034  0000000000000000   A       0     0     4
+  [17] .eh_frame         PROGBITS         0000000000400630  00000630
+       00000000000000c4  0000000000000000   A       0     0     8
+  [18] .init_array       INIT_ARRAY       0000000000600df8  00000df8
+       0000000000000008  0000000000000000  WA       0     0     8
+  [19] .fini_array       FINI_ARRAY       0000000000600e00  00000e00
+       0000000000000008  0000000000000000  WA       0     0     8
+  [20] .jcr              PROGBITS         0000000000600e08  00000e08
+       0000000000000008  0000000000000000  WA       0     0     8
+  [21] .dynamic          DYNAMIC          0000000000600e10  00000e10
+       00000000000001d0  0000000000000010  WA       6     0     8
+  [22] .got              PROGBITS         0000000000600fe0  00000fe0
+       0000000000000008  0000000000000008  WA       0     0     8
+  [23] .got.plt          PROGBITS         0000000000600fe8  00000fe8
+       0000000000000028  0000000000000008  WA       0     0     8
+  [24] .data             PROGBITS         0000000000601010  00001010
+       0000000000000014  0000000000000000  WA       0     0     8
+  [25] .bss              NOBITS           0000000000601024  00001024
+       000000000000000c  0000000000000000  WA       0     0     4
+  [26] .comment          PROGBITS         0000000000000000  00001024
+       000000000000005d  0000000000000001  MS       0     0     1
+  [27] .debug_aranges    PROGBITS         0000000000000000  00001081
+       0000000000000030  0000000000000000           0     0     1
+  [28] .debug_info       PROGBITS         0000000000000000  000010b1
+       000000000000037e  0000000000000000           0     0     1
+  [29] .debug_abbrev     PROGBITS         0000000000000000  0000142f
+       0000000000000127  0000000000000000           0     0     1
+  [30] .debug_line       PROGBITS         0000000000000000  00001556
+       00000000000000d4  0000000000000000           0     0     1
+  [31] .debug_str        PROGBITS         0000000000000000  0000162a
+       00000000000002c3  0000000000000001  MS       0     0     1
+  [32] .shstrtab         STRTAB           0000000000000000  000018ed
+       0000000000000148  0000000000000000           0     0     1
+  [33] .symtab           SYMTAB           0000000000000000  000022f8
+       00000000000006d8  0000000000000018          34    50     8
+  [34] .strtab           STRTAB           0000000000000000  000029d0
+       0000000000000266  0000000000000000           0     0     1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), l (large)
+  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)
+  O (extra OS processing required) o (OS specific), p (processor specific)
+
+There are no section groups in this file.
+
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  PHDR           0x0000000000000040 0x0000000000400040 0x0000000000400040
+                 0x00000000000001f8 0x00000000000001f8  R E    8
+  INTERP         0x0000000000000238 0x0000000000400238 0x0000000000400238
+                 0x000000000000001c 0x000000000000001c  R      1
+      [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]
+  LOAD           0x0000000000000000 0x0000000000400000 0x0000000000400000
+                 0x00000000000006f4 0x00000000000006f4  R E    200000
+  LOAD           0x0000000000000df8 0x0000000000600df8 0x0000000000600df8
+                 0x000000000000022c 0x0000000000000238  RW     200000
+  DYNAMIC        0x0000000000000e10 0x0000000000600e10 0x0000000000600e10
+                 0x00000000000001d0 0x00000000000001d0  RW     8
+  NOTE           0x0000000000000254 0x0000000000400254 0x0000000000400254
+                 0x0000000000000044 0x0000000000000044  R      4
+  GNU_EH_FRAME   0x00000000000005fc 0x00000000004005fc 0x00000000004005fc
+                 0x0000000000000034 0x0000000000000034  R      4
+  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000  RW     8
+  GNU_RELRO      0x0000000000000df8 0x0000000000600df8 0x0000000000600df8
+                 0x0000000000000208 0x0000000000000208  R      1
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     
+   01     .interp 
+   02     .interp .note.ABI-tag .note.gnu.build-id .gnu.hash .dynsym .dynstr 
+          .gnu.version .gnu.version_r .rela.dyn .rela.plt .init .plt .text 
+          .fini .rodata .eh_frame_hdr .eh_frame 
+   03     .init_array .fini_array .jcr .dynamic .got .got.plt .data .bss 
+   04     .dynamic 
+   05     .note.ABI-tag .note.gnu.build-id 
+   06     .eh_frame_hdr 
+   07     
+   08     .init_array .fini_array .jcr .dynamic .got 
+
+Dynamic section at offset 0xe10 contains 24 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x000000000000000c (INIT)               0x4003c8
+ 0x000000000000000d (FINI)               0x4005e4
+ 0x0000000000000019 (INIT_ARRAY)         0x600df8
+ 0x000000000000001b (INIT_ARRAYSZ)       8 (bytes)
+ 0x000000000000001a (FINI_ARRAY)         0x600e00
+ 0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)
+ 0x000000006ffffef5 (GNU_HASH)           0x400298
+ 0x0000000000000005 (STRTAB)             0x400318
+ 0x0000000000000006 (SYMTAB)             0x4002b8
+ 0x000000000000000a (STRSZ)              61 (bytes)
+ 0x000000000000000b (SYMENT)             24 (bytes)
+ 0x0000000000000015 (DEBUG)              0x0
+ 0x0000000000000003 (PLTGOT)             0x600fe8
+ 0x0000000000000002 (PLTRELSZ)           48 (bytes)
+ 0x0000000000000014 (PLTREL)             RELA
+ 0x0000000000000017 (JMPREL)             0x400398
+ 0x0000000000000007 (RELA)               0x400380
+ 0x0000000000000008 (RELASZ)             24 (bytes)
+ 0x0000000000000009 (RELAENT)            24 (bytes)
+ 0x000000006ffffffe (VERNEED)            0x400360
+ 0x000000006fffffff (VERNEEDNUM)         1
+ 0x000000006ffffff0 (VERSYM)             0x400356
+ 0x0000000000000000 (NULL)               0x0
+
+Relocation section &#39;.rela.dyn&#39; at offset 0x380 contains 1 entries:
+  Offset          Info           Type           Sym. Value    Sym. Name + Addend
+000000600fe0  000300000006 R_X86_64_GLOB_DAT 0000000000000000 __gmon_start__ + 0
+
+Relocation section &#39;.rela.plt&#39; at offset 0x398 contains 2 entries:
+  Offset          Info           Type           Sym. Value    Sym. Name + Addend
+000000601000  000100000007 R_X86_64_JUMP_SLO 0000000000000000 puts + 0
+000000601008  000200000007 R_X86_64_JUMP_SLO 0000000000000000 __libc_start_main + 0
+
+There are no unwind sections in this file.
+
+Symbol table &#39;.dynsym&#39; contains 4 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND puts@GLIBC_2.2.5 (2)
+     2: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@GLIBC_2.2.5 (2)
+     3: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__
+
+Symbol table &#39;.symtab&#39; contains 73 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 0000000000400238     0 SECTION LOCAL  DEFAULT    1 
+     2: 0000000000400254     0 SECTION LOCAL  DEFAULT    2 
+     3: 0000000000400274     0 SECTION LOCAL  DEFAULT    3 
+     4: 0000000000400298     0 SECTION LOCAL  DEFAULT    4 
+     5: 00000000004002b8     0 SECTION LOCAL  DEFAULT    5 
+     6: 0000000000400318     0 SECTION LOCAL  DEFAULT    6 
+     7: 0000000000400356     0 SECTION LOCAL  DEFAULT    7 
+     8: 0000000000400360     0 SECTION LOCAL  DEFAULT    8 
+     9: 0000000000400380     0 SECTION LOCAL  DEFAULT    9 
+    10: 0000000000400398     0 SECTION LOCAL  DEFAULT   10 
+    11: 00000000004003c8     0 SECTION LOCAL  DEFAULT   11 
+    12: 00000000004003e0     0 SECTION LOCAL  DEFAULT   12 
+    13: 0000000000400410     0 SECTION LOCAL  DEFAULT   13 
+    14: 00000000004005e4     0 SECTION LOCAL  DEFAULT   14 
+    15: 00000000004005f0     0 SECTION LOCAL  DEFAULT   15 
+    16: 00000000004005fc     0 SECTION LOCAL  DEFAULT   16 
+    17: 0000000000400630     0 SECTION LOCAL  DEFAULT   17 
+    18: 0000000000600df8     0 SECTION LOCAL  DEFAULT   18 
+    19: 0000000000600e00     0 SECTION LOCAL  DEFAULT   19 
+    20: 0000000000600e08     0 SECTION LOCAL  DEFAULT   20 
+    21: 0000000000600e10     0 SECTION LOCAL  DEFAULT   21 
+    22: 0000000000600fe0     0 SECTION LOCAL  DEFAULT   22 
+    23: 0000000000600fe8     0 SECTION LOCAL  DEFAULT   23 
+    24: 0000000000601010     0 SECTION LOCAL  DEFAULT   24 
+    25: 0000000000601024     0 SECTION LOCAL  DEFAULT   25 
+    26: 0000000000000000     0 SECTION LOCAL  DEFAULT   26 
+    27: 0000000000000000     0 SECTION LOCAL  DEFAULT   27 
+    28: 0000000000000000     0 SECTION LOCAL  DEFAULT   28 
+    29: 0000000000000000     0 SECTION LOCAL  DEFAULT   29 
+    30: 0000000000000000     0 SECTION LOCAL  DEFAULT   30 
+    31: 0000000000000000     0 SECTION LOCAL  DEFAULT   31 
+    32: 000000000040043c     0 FUNC    LOCAL  DEFAULT   13 call_gmon_start
+    33: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS crtstuff.c
+    34: 0000000000600e08     0 OBJECT  LOCAL  DEFAULT   20 __JCR_LIST__
+    35: 0000000000400460     0 FUNC    LOCAL  DEFAULT   13 deregister_tm_clones
+    36: 00000000004004a0     0 FUNC    LOCAL  DEFAULT   13 register_tm_clones
+    37: 00000000004004e0     0 FUNC    LOCAL  DEFAULT   13 __do_global_dtors_aux
+    38: 0000000000601024     1 OBJECT  LOCAL  DEFAULT   25 completed.7516
+    39: 0000000000600e00     0 OBJECT  LOCAL  DEFAULT   19 __do_global_dtors_aux_fin
+    40: 0000000000400500     0 FUNC    LOCAL  DEFAULT   13 frame_dummy
+    41: 0000000000600df8     0 OBJECT  LOCAL  DEFAULT   18 __frame_dummy_init_array_
+    42: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS main.c
+    43: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS crtstuff.c
+    44: 00000000004006f0     0 OBJECT  LOCAL  DEFAULT   17 __FRAME_END__
+    45: 0000000000600e08     0 OBJECT  LOCAL  DEFAULT   20 __JCR_END__
+    46: 0000000000600e00     0 NOTYPE  LOCAL  DEFAULT   18 __init_array_end
+    47: 0000000000600e10     0 OBJECT  LOCAL  DEFAULT   21 _DYNAMIC
+    48: 0000000000600df8     0 NOTYPE  LOCAL  DEFAULT   18 __init_array_start
+    49: 0000000000600fe8     0 OBJECT  LOCAL  DEFAULT   23 _GLOBAL_OFFSET_TABLE_
+    50: 00000000004005e0     2 FUNC    GLOBAL DEFAULT   13 __libc_csu_fini
+    51: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_deregisterTMCloneTab
+    52: 0000000000601010     0 NOTYPE  WEAK   DEFAULT   24 data_start
+    53: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND puts@@GLIBC_2.2.5
+    54: 0000000000601028     4 OBJECT  GLOBAL DEFAULT   25 global_uninit
+    55: 0000000000601024     0 NOTYPE  GLOBAL DEFAULT  ABS _edata
+    56: 00000000004005e4     0 FUNC    GLOBAL DEFAULT   14 _fini
+    57: 0000000000601020     4 OBJECT  GLOBAL DEFAULT   24 global_init
+    58: 0000000000400528    17 FUNC    GLOBAL DEFAULT   13 print
+    59: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@@GLIBC_
+    60: 0000000000601010     0 NOTYPE  GLOBAL DEFAULT   24 __data_start
+    61: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__
+    62: 0000000000601018     0 OBJECT  GLOBAL HIDDEN    24 __dso_handle
+    63: 00000000004005f0     4 OBJECT  GLOBAL DEFAULT   15 _IO_stdin_used
+    64: 0000000000400550   137 FUNC    GLOBAL DEFAULT   13 __libc_csu_init
+    65: 0000000000601030     0 NOTYPE  GLOBAL DEFAULT  ABS _end
+    66: 0000000000400410     0 FUNC    GLOBAL DEFAULT   13 _start
+    67: 0000000000601024     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_start
+    68: 0000000000400539    21 FUNC    GLOBAL DEFAULT   13 main
+    69: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _Jv_RegisterClasses
+    70: 0000000000601028     0 OBJECT  GLOBAL HIDDEN    24 __TMC_END__
+    71: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_registerTMCloneTable
+    72: 00000000004003c8     0 FUNC    GLOBAL DEFAULT   11 _init
+
+Version symbols section &#39;.gnu.version&#39; contains 4 entries:
+ Addr: 0000000000400356  Offset: 0x000356  Link: 5 (.dynsym)
+  000:   0 (*local*)       2 (GLIBC_2.2.5)   2 (GLIBC_2.2.5)   0 (*local*)    
+
+Version needs section &#39;.gnu.version_r&#39; contains 1 entries:
+ Addr: 0x0000000000400360  Offset: 0x000360  Link: 6 (.dynstr)
+  000000: Version: 1  File: libc.so.6  Cnt: 1
+  0x0010:   Name: GLIBC_2.2.5  Flags: none  Version: 2
+
+Notes at offset 0x00000254 with length 0x00000020:
+  Owner                 Data size      Description
+  GNU                  0x00000010      NT_GNU_ABI_TAG (ABI version tag)
+    OS: Linux, ABI: 2.6.24
+
+Notes at offset 0x00000274 with length 0x00000024:
+  Owner                 Data size      Description
+  GNU                  0x00000014      NT_GNU_BUILD_ID (unique build ID bitstring)
+    Build ID: 5109749eee8bf3101f1f0cb4be9432d7385ce1bf
+</code></pre><p>其实还是比较详细的, 例如寻找全局变量, 可以查看<code>.symtab</code>的data部分</p>
+<pre><code>    52: 0000000000601010     0 NOTYPE  WEAK   DEFAULT   24 data_start
+    53: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND puts@@GLIBC_2.2.5
+    54: 0000000000601028     4 OBJECT  GLOBAL DEFAULT   25 global_uninit
+    55: 0000000000601024     0 NOTYPE  GLOBAL DEFAULT  ABS _edata
+    56: 00000000004005e4     0 FUNC    GLOBAL DEFAULT   14 _fini
+    57: 0000000000601020     4 OBJECT  GLOBAL DEFAULT   24 global_init
+    58: 0000000000400528    17 FUNC    GLOBAL DEFAULT   13 print
+</code></pre><p>解释一下 <code>-S</code>的段头信息:</p>
+<ul>
+<li>.text：已编译程序的机器代码</li>
+<li>.rodata：只读数据，比如printf语句中的格式串和开关（switch）语句的跳转表。</li>
+<li>.data：已初始化的全局C变量。局部C变量在运行时被保存在栈中，既不出现在.data中，也不出现在.bss节中。</li>
+<li>.bss：未初始化的全局变量. 在目标文件中这个节不占据实际的空间，它仅仅是一个占位符。目标文件格式区分初始化和未初始化变量是为了空间效率在：在目标文件中，未初始化变量不需要占据任何实际的磁盘空间。</li>
+<li>.symtab：一个符号表（symbol table），它存放在程序中被定义和引用的函数和<code>全局变量的信息</code>。一些程序员错误地认为必须通过-g选项来编译一个程序，得到符号表信息。实际上，每个可重定位目标文件在.symtab中都有一张符号表。然而，和编译器中的符号表不同，.symtab符号表不包含局部变量的表目</li>
+<li>.rel.text：rel代表relocate, 需要重定向. 当链接噐把这个目标文件和其他文件结合时，.text节中的许多位置都需要修改。一般而言，任何调用外部函数或者引用全局变量的指令都需要修改另一方面调用本地函数的指令则不需要修改. 注意可执行目标文件中并不需要重定位信息, 通常省略(不太显示这些信息), 除非使用者显式地指示链接器包含这些信息.</li>
+<li>.rel.data：被模块定义或引用的任何全局变量的信息。一般而言，任何已初始化全局变量的初始值是全局变量或者外部定义函数的地址都需要被修改</li>
+<li>.debug：一个调试符号表，其有些表目是程序中定义的局部变量和类型定义，有些表目是程序中定义和引用的全局变量, 有些是原始的C源文件. 只有以-g选项调用编译驱动程序时，才会得到这张表</li>
+<li>.line:原始C源程序中的行号和.text节中机器指令之间的映射。只有以-g选项调用编译驱动程序时，才会得到这张表</li>
+<li>.strtab: 一个字符串表，其内容包括.symtab和.debug节中的符号表以及节头部中的节名字, 字符串表就是以null结尾的字符串序列</li>
+</ul>
+<h2 id="ranlib"><a href="#ranlib" class="headerlink" title="ranlib"></a>ranlib</h2><p>参考上面的 <code>ar s</code>命令, 略.</p>
+<h2 id="size"><a href="#size" class="headerlink" title="size"></a>size</h2><p>列出目标文件每一个段(segment)的大小和总的大小, 例如:</p>
+<pre><code class="bash">$ size main
+   text       data        bss        dec        hex    filename
+   1192           556       12    1760     6e0    main
+</code></pre>
+<p>当然也可以指定格式 <code>--format=Berkeley</code>(默认) 或者 <code>--format=SysV</code> :</p>
+<pre><code>$ size --format=SysV main
+main  :
+section              size      addr
+.interp                28   4194872
+.note.ABI-tag          32   4194900
+.note.gnu.build-id     36   4194932
+.gnu.hash              28   4194968
+.dynsym                96   4195000
+.dynstr                61   4195096
+.gnu.version            8   4195158
+.gnu.version_r         32   4195168
+.rela.dyn              24   4195200
+.rela.plt              48   4195224
+.init                  14   4195272
+.plt                   48   4195296
+.text                 468   4195344
+.fini                   9   4195812
+.rodata                12   4195824
+.eh_frame_hdr          52   4195836
+.eh_frame             196   4195888
+.init_array             8   6295032
+.fini_array             8   6295040
+.jcr                    8   6295048
+.dynamic              464   6295056
+.got                    8   6295520
+.got.plt               40   6295528
+.data                  20   6295568
+.bss                   12   6295588
+.comment               93         0
+.debug_aranges         48         0
+.debug_info           894         0
+.debug_abbrev         295         0
+.debug_line           212         0
+.debug_str            707         0
+Total                4009
+</code></pre><h2 id="strings"><a href="#strings" class="headerlink" title="strings"></a>strings</h2><p>列出目标文件中的字符串或者可打印的内容, strings is mainly useful for determining the contents of non-text files.</p>
+<p>也就是说, 如果一个文件不是文本文件, 你想查看它的内容, 怎么搞? 那你就用strings大致看一下内容吧:</p>
+<pre><code class="bash">$ strings main.o
+$ strings main
+
+#### 例如 ####
+$ strings main.c
+#include &lt;stdio.h&gt;
+int global_init = 1;
+int global_uninit;
+void print()
+  printf(&quot;merlin.\n&quot;);
+int main(void)
+  int local_int;
+  print();
+  return 0;
+</code></pre>
+<p>个人一般不用这个命令.</p>
+<h2 id="strip"><a href="#strip" class="headerlink" title="strip"></a>strip</h2><p>去除目标文件中的所有符号(使目标文件尺寸减小), 但是你调试的时候最好别去除符号信息(你排错的时候, 调试信息和源码的行数很难知道对应关系了).</p>
+<p>例如你在调试线程文件的时候, 使用的是strip过的pthread库, 那么gdb在加载的时候, pthread.c内部就会报错, 如果你换一个没有strip的pthread库文件, 那么gdb加载该可执行文件才不会报错.</p>
+<p>举个案例吧:</p>
+<pre><code class="bash">$ ls -l main
+-rwxrwxr-x 1 merlin merlin 11318 Aug 30 20:56 main
+$ strip main
+$ ls -l main
+-rwxrwxr-x 1 merlin merlin 6272 Aug 30 21:12 main
+</code></pre>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>虽然binutils里的工具, 不如三大件儿 make, gcc, gdb那么强大, 但是日常用到的也不少, 特别是debug定位位置的时候.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Linux Bin Utils">Linux Bin Utils</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Linux Bin Utils">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

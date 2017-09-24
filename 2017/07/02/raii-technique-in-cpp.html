@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>raii-technique-in-cpp | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="说说RAII技术和auto_ptr">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="raii-technique-in-cpp">
+<meta property="og:url" content="localhost:4000/2017/07/02/raii-technique-in-cpp.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="说说RAII技术和auto_ptr">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/raiis.jpg">
+<meta property="og:updated_time" content="2017-09-24T05:19:48.267Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="raii-technique-in-cpp">
+<meta name="twitter:description" content="说说RAII技术和auto_ptr">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/raiis.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#PIMPL"><span class="toc-number">2.1.</span> <span class="toc-text">PIMPL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAII"><span class="toc-number">2.2.</span> <span class="toc-text">RAII</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>raii-technique-in-cpp</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-02</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>在 smart-pointers-again 一文里面我谈 auto_ptr 时略带说过 RAII, 本文细讲.</p>
+</blockquote>
+<p>每次谈到 <code>资源管理</code> 大概都会说Gc, Raii, PIMPL, 智能指针, 健壮指针, 数据的一致性, 泄露等问题, 本文也想探讨一下, 但是以 RAII 为主.</p>
+<p>关于只能指针, 可以参考我前面的两篇文章:</p>
+<ul>
+<li><a href="http://www.merlinblog.site/2017/07/01/smart-pointers.html" target="_blank" rel="external">smart-pointers</a></li>
+<li><a href="http://www.merlinblog.site/2017/07/01/smart-pointers-again.html" target="_blank" rel="external">smart-pointers-again</a></li>
+</ul>
+<p>第二次修订, 补充以下主题</p>
+<ul>
+<li>异常</li>
+<li>PIMPL</li>
+</ul>
+<p>因为 PIMPL, RAII, 异常貌似和资源管理分不开.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/raiis.jpg" alt="post-cover"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>自动资源回收机制 <code>Resource Acquisition Is Initialization</code>, 说白了不值得一提, 但是就面向对象的权威和完整性上来, 我要站出来为C++正名.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="PIMPL"><a href="#PIMPL" class="headerlink" title="PIMPL"></a>PIMPL</h2><p>之所以PIMPL会和RAII扯上关系, 可能是因为PIMPL这种设计风格, 就是在类的内部, 成员保留的是指针, 而不是实际成员. </p>
+<p>PIMPL 全称是 <code>Pointer to Implementation</code>, 形式上一般就是保留一个私有指针, 好比下面的代码:</p>
+<pre><code class="c++">class X;
+
+class C
+{
+public:
+    void Fun();
+private:
+    X *pImpl; //pimpl
+};
+</code></pre>
+<p>如果你直接保留 <code>X x</code>, 那么势必增加耦合程度, 并且编译的时候, 要知道X的实现(试想一下静态库和动态库的例子). 现在这么做, 可以把具体实现推迟到子类, 达成接口和实现分离的目的.</p>
+<p>总结一下, 这么做的好处:</p>
+<ul>
+<li>降低模块&amp;类之间的耦合程度</li>
+<li>提高编译速度(保留指针时, 编译时分配的大小总是不变的–平台不变的话)</li>
+<li>接口和实现分离, 提高了扩展性(对外部类隐藏了具体的实现)</li>
+</ul>
+<h2 id="RAII"><a href="#RAII" class="headerlink" title="RAII"></a>RAII</h2><p>你要说这个是C++语言的一个资源回收惯用手段, 我觉得应该说, 面向对象的语言都可以有该手段(当然如果有GC, 又封装了指针的话, 没有也不奇怪—我可没有点名说某一种JVM语言啊.笑).</p>
+<p><code>Resource Acquisition Is Initialization</code>, 资源获取就是初始化, 总感觉你去说它的全称或者英文, 比较奇怪. 直接说RAII就好了. 实际上, 我就看到只有Bjarne Stroustrup大佬说全称而已.</p>
+<p>RAII手法, 说白了就是依赖构造&amp;析构机制, 和异常交互作用的一种方法&amp;策略. 他还是建立在语言执行流程的机制上, 来完成资源的分配和回收. 计算机中的资源, 常见的: 文件, 内存, 网络套接字, 连接, 锁(mutex locks)等. 正式由于资源不是无线的, 所以一般都会有资源管理, 真正涉及到的流程无非就是:</p>
+<ul>
+<li>获取资源</li>
+<li>使用资源</li>
+<li>释放资源</li>
+</ul>
+<blockquote>
+<p>真正对于我们重要的是使用资源的部分, 无奈要操心获取和释放</p>
+</blockquote>
+<p>为了资源管理, 大佬们想了很多很多办法, 常见的就是 RAII, 智能指针, GC, 内存池, 分配器等等. 但是很多高层次的机制, 其实是建立在RAII手法之上的, 或者说是其构成因素之一. 关于资e源管理, 可以参考我的博文 <a href="http://www.merlinblog.site/2017/09/12/%E5%BF%83%E5%A5%BD%E7%B4%AF%E7%9A%84%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86.html" target="_blank" rel="external">心好累的资源管理</a>.</p>
+<p>回到<code>获取&amp;释放</code>上面来说, 一个常见的案例:</p>
+<pre><code>void UseFile(char const* fn)  
+{  
+  FILE* f = fopen(fn, &quot;r&quot;); // 获取资源  
+  // 使用资源  
+  if (!g()) return;                // 如果操作g失败！  
+  // ...  
+  if (!h()) return;                // 如果操作h失败！  
+  // ...  
+  fclose(f);                       // 释放资源  
+}
+</code></pre><p>显然, 在出错流程上面, 忘记做资源释放处理了, 应该是下面的代码:</p>
+<pre><code>void UseFile(char const* fn)  
+{  
+   FILE* f = fopen(fn, &quot;r&quot;);  // 获取资源  
+   // 使用资源  
+   if (!g()) { fclose(f); return; }  
+   // ...  
+   if (!h()) { fclose(f); return; }  
+   // ...  
+   fclose(f);                 // 释放资源  
+}
+</code></pre><p>但是你看到了, 有多少流程分支, <code>fclose(f)</code> 我们就要写多少遍. 更加糟糕的是, 我们还没有考虑加入异常处理, 如果加入异常处理, 你看看应该是这样:</p>
+<pre><code>void UseFile(char const* fn)  
+{  
+   FILE* f = fopen(fn, &quot;r&quot;);        // 获取资源  
+   // 使用资源  
+   try {  
+      if (!g()) { fclose(f); return; }  
+      // ...  
+      if (!h()) { fclose(f); return; }  
+      // ...   
+   }  
+   catch (...)   
+   {  
+      fclose(f);                      // 释放资源  
+      throw;  
+   }  
+   fclose(f);                      // 释放资源  
+}
+</code></pre><p>仅仅是一个资源, 代码就已经如此臃肿了, 编码效率也下降了, 当然现实中, 代码的可维护性也差极了. 于是大佬们就开始想一些<code>自动化</code>的办法, 在面向对象的基础上, 把所有资源全部封装在对象内部, 搞了一个RAII. (当然智能指针, GC啥的, 那是后话)</p>
+<p>想法都不是凭空的, 是按照原有的流程优化创新而来的, RAII其实是基于这样的使用流程:</p>
+<pre><code>void UseResources()  
+{  
+// 获取资源1  
+// ...  
+// 获取资源n  
+
+// 使用这些资源  
+
+// 释放资源n  
+// ...  
+// 释放资源1  
+}
+</code></pre><p>不难看出资源管理技术的关键在于：要保证资源的释放顺序与获取顺序严格相反。这自然使我们联想到局部对象的创建和销毁过程。在C++中，定义在栈空间上的局部对象称为自动存储（automatic memory）对象。管理局部对象的任务非常简单，因为它们的创建和销毁工作是由系统自动完成的。我们只需在某个作用域（scope）中定义局部对象（这时系统自动调用构造函数以创建对象），然后就可以放心大胆地使用之，而不必担心有关善后工作；当控制流程超出这个作用域的范围时，系统会自动调用析构函数，从而销毁该对象。</p>
+<blockquote>
+<p>也就是说 RAII  其实是借鉴了局部对象在指定的作用于内的自动创建, 自动销毁的特性. 将资源抽象为类, 用局部对象来表示资源, 把管理资源的任务转化为管理局部对象的任务.</p>
+</blockquote>
+<p>那么原来的文件管理, 锁管理完全可以交给对象, 例如:</p>
+<pre><code>class Widget  
+{  
+public:  
+    Widget(char const* myFile, 
+           char const* myLock) : file_(myFile),   // 获取文件myFile  
+                                 lock_(myLock)      // 获取互斥锁myLock  
+    {}
+    // ...
+
+private:  
+    FileHandle file_;  
+    LockHandle lock_;  
+};
+</code></pre><p>看到啦, 资源已经和具体的类(对象)绑定了. 实际上结合 PIMP应该是这样的:</p>
+<pre><code>class FileHandle  
+{  
+public:  
+    FileHandle(char const* n, char const* a) { p = fopen(n, a); }  
+    ~FileHandle() { fclose(p); }  
+private:  
+    // 禁止拷贝操作  
+    FileHandle(FileHandle const&amp;);  
+    FileHandle&amp; operator= (FileHandle const&amp;);  
+    FILE *p;  
+};
+</code></pre><blockquote>
+<p>RAII 的本质就可以概括了: 用对象代表资源, 把管理资源的任务转化为管理对象的任务. 将资源的获取和释放与对象的构造和析构对应起来，从而确保在对象的生存期内资源始终有效，对象销毁时资源必被释放.</p>
+</blockquote>
+<p>换句话说, 拥有对象, 就是拥有资源; 对象在, 则资源在. (但是实现起来语言细节和工程细节, 也有很多要注意的地方, 比如上面的拷贝赋值等问题)</p>
+<p>既然RAII是一种<code>局部对象管理资源技术</code>, 那么如果在使用资源中抛出了<code>异常</code>, 构造或者析构还能正常作用么? 其实是不必担心的, 因为c++的异常机制里面, 在调用栈不断向上寻找catch的时候系统保证调用所有已经创建了的局部对象的析构函数. (也就是说 栈解旋 的过程中, 是自动按顺序析构局部栈对象的)</p>
+<p>例如下面的例子:<br>``<br>void Foo()<br>{<br>   FileHandle file1(“n1.txt”, “r”);<br>   FileHandle file2(“n2.txt”, “w”);</p>
+<p>   Bar();       // 可能抛出异常</p>
+<p>   FileHandle file3(“n3.txt”, “rw”);<br>}<br>```<br>此时的已经分配的对象是file2, file1, 那么它们资源会随着异常的执行流程, 自动释放: file2-&gt;file1.  (file3还没有创建, 所以没它啥事儿)</p>
+<p>总结来说:</p>
+<ul>
+<li>RAII其实是解决了多个资源的获取和释放问题, 资源越多, 越能看出这种机制的优势, 局部对象自动管理优势.</li>
+</ul>
+<p>但是引入了一些严峻的问题, 异常处理问题:</p>
+<ul>
+<li>异常处理问题(我以前可以不写的异常代码, 现在可能为了对象在解旋过程中自动调用, 而必须要写异常处理)</li>
+<li>赋值和拷贝过程中资源的处理问题(move还是不move, 托管权转移了, 释放问题)</li>
+<li>对象封装资源的时候的手法, 是IMPL还是直接保存对象</li>
+<li>多个对象获取是, 是要么全部获取, 还是要么一个失败了,其他的都不要了 (一般是要么全获取, 要么全不获取; 保证对象存在的完整性)</li>
+</ul>
+<p>比较好的实现, 可以参考一下 <code>auto_ptr</code>, <code>unique_ptr</code> 源码, 参考我的博文 <a href="http://www.merlinblog.site/2017/07/01/smart-pointers-again.html" target="_blank" rel="external">smart-pointer-again</a></p>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>RAII 问题, 本身并不难理解, 但是由于RAII的实现, 所引发的问题, 比如赋值拷贝, 多资源事务性问题, 异常问题等, 才是需要关注的问题. 关于异常, 这个C++一直争论的没完了的问题 也可以参考我的文章 <a href="">再争异常</a>.</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="http://en.cppreference.com/w/cpp/language/raii" target="_blank" rel="external">cppreference参考</a></li>
+<li><a href="">《Exceptional C++》</a> 作者Herb Sutter, 主要谈了异常问题</li>
+<li><a href="">《C++程序设计语言（第3版）》</a> Bjarne Stroustrup, 讲资源管理的时候</li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="raii-technique-in-cpp">raii-technique-in-cpp</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="raii-technique-in-cpp">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Effective Cpp | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="不介绍了, 搞C++没读过《effective c++》的话, 呵呵">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Effective Cpp">
+<meta property="og:url" content="localhost:4000/2017/07/01/effective-cpp.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="不介绍了, 搞C++没读过《effective c++》的话, 呵呵">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/effectivecpp.jpg">
+<meta property="og:updated_time" content="2017-09-24T07:45:48.195Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Effective Cpp">
+<meta name="twitter:description" content="不介绍了, 搞C++没读过《effective c++》的话, 呵呵">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/effectivecpp.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">2.1.</span> <span class="toc-text">简介</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Effective Cpp</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-01</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>首先说这本书, 搞Cpp的, 必读(C++貌似和别的语言不一样, 在这么个 <code>狭小</code> 的领域有太多经典著作). 其次说, 第三版和网上免费的第二版差别有点儿大.<br>c++的确是一门需要适应的语言, 可能你用python搞出来好几个应用了, 妈的c++我语法还没有学完.(cpp primer 5e是一本语法概述比较全面也比较新的书, 但是你看完, 做完练习, 差不多2个多月过去了). 适应一方面是你自己练习, 另外一个方面就是借鉴前辈的工程实践经验, 就像这本书里记载的一样.</p>
+<p>正所谓, “干一辈子革命, 读一辈子C++的书”, 本文就说说这本书吧.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/effectivecpp.jpg" alt="post-cover"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>不同于 《cpp primer 5e》 这类教材书籍, 也不同于 《cpp编程思想》这类纯粹为了骗稿费, 把明明几句话能说完的东西, 硬是东拉西扯讲大堆的大部头, 更不同于inside object c++ model这种除非你在上学, 否则完全没有兴趣看到最后的书(冗繁的工程实现细节太多), effective cpp以及其兄弟 more effective c++ 都是非常值得推荐的, 条款和建议.<br>我最初刚开始工作的时候, cpp的老前辈(老东家的技术一把手, 受过最严格的训练)就推荐了两本, 一本是侯杰的<code>剖析STL</code>, 一本就是这个<code>effective cpp</code>.</p>
+<p>本文花了较长一段时间再写, 中间修订过几次, 试图用最本质, 最简短的语言概括住相关的内容.(可能有一些工程实践和书中不一样, 会单独说明)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>简单列举一下目录</p>
+<pre><code>改变旧有的c习惯（shifting from c to c++） 013
+条款1：尽量以 const 和 inline 取代 #define 013
+prefer const and inline to #define.
+条款2：尽量以 [iostream] 取代 [stdio.h] 017
+prefer [iostream] to [stdio.h].
+条款3：尽量以 new 和 delete 取代 malloc() 和 free() 019
+prefer new and delete to malloc and free.
+条款4：尽量使用 c++ 风格的注释形式 021
+prefer c++-style comments.
+
+内存管理（memory management） 022
+条款5：使用相同形式的 new 和 delete 023
+use the same form in corresponding uses of new and delete.
+条款6：记得在 destructor 中以delete 对付 pointer members 024
+use delete on pointer members in destructors.
+.条款7：为内存不足的状况预做准备 025
+be prepared for out-of-memory conditions.
+条款8：撰写 operator new 和 operator delete 时应遵行公约 033
+adhere to convention when writing operator new and operator delete.
+条款9：避免遮掩了 new 的正规形式 037
+avoid hiding the &quot;normal&quot; form of new.
+条款10：如果你写了一个operator new，
+请对应也写一个operator delete 039
+write operator delete if you write operator new.
+
+构造函数、析构函数和assignment 运算符 049
+constructors, destructors, and assignment operators
+条款11：如果classes内动态配置有内存，请为此 class 宣告
+一个 copy constructor 和一个 assignment 运算符 049
+declare a copy constructor and an assignment operator 
+for classes with dynamically allocated memory.
+条款12：在 constructor 中尽量以 initialization 取代 assignment 052
+prefer initialization to assignment in constructors.
+条款13：initialization list 中的 members 初始化排列次序应该 
+和其在 class 内的声明次序相同 057
+list members in an initialization list in the order 
+in which they are declared.
+条款14：总是让 base class 拥有 virtual destructor 059
+make sure base classes have virtual destructors.
+条款15：令 operator= 传回&quot;*this 的 reference&quot; 064
+have operator= return a reference to *this.
+条款16：在 operator= 中为所有的 data members 赋予内容 068
+assign to all data members in operator=.
+条款17：在 operator= 中检查是否&quot;自己赋值给自己&quot; 071
+check for assignment to self in operator=.
+
+类与函数之设计和声明 077
+classes and functions: design and declaration
+条款18：努力让接口完满且最小化 079
+strive for class interfaces that are complete and minimal.
+条款19：区分member functions, non-member functions和 
+friend functions三者 084
+differentiate among member functions, non-member functions, 
+and friend functions.
+条款20：避免将 data members 放在公开接口中 089
+avoid data members in the public interface.
+条款21：尽可能使用 const 091
+use const whenever possible.
+条款22：尽量使用 pass-by-reference（传址）， 
+少用 pass-by-value（传值） 098
+prefer pass-by-reference to pass-by-value.
+条款23：当你必须传回object 时，不要尝试传回 reference 101
+don’t try to return a reference when you must return an object.
+条款24：在函数重载（function overloading）和
+参数缺省化（parameter defaulting）之间，谨慎抉择 106
+choose carefully between function overloading 
+and parameter defaulting.
+条款25：避免对指针型别和数值型别进行重载 109
+avoid overloading on a pointer and a numerical type.
+条款26：防卫潜伏的 ambiguity（模棱两可）状态 113
+guard against potential ambiguity.
+条款27：如果不想使用编译器暗自产生的 member functions， 
+就应该明白拒绝它 116
+explicitly disallow use of implicitly generated member functions 
+you don’t want.
+条款28：尝试切割 global namespace（全域命名空间） 117
+partition the global namespace.
+
+类与函数之实现 123
+classes and functions: implementation
+条款29：避免传回内部数据的 handles 123
+avoid returning &quot;handles&quot; to internal data.
+条款30：避免写出member function，传回一个 non-const pointer 或 
+reference 并以之指向较低存取层级的 members 129
+avoid member functions that return non-const pointers or 
+references to members less accessible than themselves.
+条款31：千万不要传回&quot;函数内 local 对象的 reference&quot;， 
+或是&quot;函数内以 new 获得的指针所指的对象&quot; 131
+never return a reference to a local object or to 
+a dereferenced pointer initialized by new within the function.
+条款32：尽可能延缓变量定义式的出现 135
+postpone variable definitions as long as possible.
+条款33：明智地运用 inlining 137
+use inlining judiciously.
+条款34：将文件之间的编译依赖关系（compilation dependencies）
+降至最低 143
+minimize compilation dependencies between files.
+
+继承机制与面向对象设计 153
+inheritance and object-oriented design
+条款35：确定你的 public inheritance 模塑出 &quot;isa&quot; 的关系 154
+make sure public inheritance models &quot;isa.&quot;
+条款36：区分&quot;接口继承（interface inheritance）&quot;和
+&quot;实现继承（implementation inheritance）&quot; 161
+differentiate between inheritance of interface and 
+inheritance of implementation.
+条款37：绝对不要重新定义一个继承而来的非虚拟函数 169
+never redefine an inherited nonvirtual function.
+条款38：绝对不要重新定义一个继承而来的缺省参数值 171
+never redefine an inherited default parameter value.
+条款39：避免在继承体系中做 cast down（向下转型）的动作 173
+avoid casts down the inheritance hierarchy.
+条款40：通过 layering（分层技术）来模塑 has-a 或 
+is-implemented-in-terms-of 的关系 182
+model &quot;has-a&quot; or &quot;is-implemented-in-terms-of&quot; through layering.
+条款41：区分 inheritance 和 templates 185
+differentiate between inheritance and templates.
+条款42：明智地运用 private inheritance（私有继承） 189
+use private inheritance judiciously.
+条款43：明智地运用多继承（multiple inheritance，mi） 194
+use multiple inheritance judiciously.
+条款44：说出你的意思并了解你所说的每一句话 210
+say what you mean; understand what you’re saying.杂项讨论（miscellany） 212
+条款45：知道 c++（编译器）默默为我们完成和调用哪些函数 212
+know what functions c++ silently writes and calls.
+条款46：宁愿编译和连接时出错，也不要执行时才错 216
+prefer compile-time and link-time errors to runtime errors. 219
+ensure that non-local static objects are initialized 
+before they’re used.
+条款48：不要对编译器的警告讯息视而不见 223
+pay attention to compiler warnings.
+条款49：尽量让自己熟悉 c++ 标准程序库 224
+familiarize yourself with the standard library.
+条款50：加强自己对 c++ 的了解 232
+improve your understanding of c++.
+</code></pre><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Effective Cpp">Effective Cpp</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Effective Cpp">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

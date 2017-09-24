@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Inner Rich | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="读叔本华的作品, 一个精神匮乏者的自白和反馈, 以及成长; 唯有厚德可以载物">
+<meta name="keywords" content="思考">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Inner Rich">
+<meta property="og:url" content="localhost:4000/2017/07/11/inner-rich.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="读叔本华的作品, 一个精神匮乏者的自白和反馈, 以及成长; 唯有厚德可以载物">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/inner1.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/inner2.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/inner3.png">
+<meta property="og:updated_time" content="2017-09-24T05:56:07.787Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Inner Rich">
+<meta name="twitter:description" content="读叔本华的作品, 一个精神匮乏者的自白和反馈, 以及成长; 唯有厚德可以载物">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/inner1.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#精神"><span class="toc-number">2.1.</span> <span class="toc-text">精神</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主客体"><span class="toc-number">2.2.</span> <span class="toc-text">主客体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#财富"><span class="toc-number">2.3.</span> <span class="toc-text">财富</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#名望"><span class="toc-number">2.4.</span> <span class="toc-text">名望</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#健康"><span class="toc-number">2.5.</span> <span class="toc-text">健康</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#认识力"><span class="toc-number">2.6.</span> <span class="toc-text">认识力</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Inner Rich</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-11</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/思考/">思考</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>叔本华的唯意主义理论写的可能太过深奥, 或者他怕别人看不懂, 所以写了这个比较通俗的 “人生的智慧” 来讲述它的哲学理论. 完整理论的时候大概29岁吧(还是比较年轻的).</p>
+<p>我不得不在此重新郑重的推荐这本书, 因为本书关于我的精神建设, 财富的认识, 自身和外界的关系, 对待自己和外界的态度和方式, 产生了巨大的/颠覆性的改变.</p>
+<p>也是我事业重新起航的标志: 往自己的感兴趣的地方, 全身心投入.</p>
+<p> 第三次修改: 认识到 “意欲 will” 和 “ 认识力”的关系, 总结起来就是 <code>厚德载物</code>.</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>本文并没有详细的展开”人生的智慧”这本书的每一个章节, 只是对于其中核心内容的概括和总结, 包括了: 精神, 财富, 主客观, 名望, 身体.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>决定凡人命运的是以下三项内容:</p>
+<ol>
+<li>人的自身: 健康, 力量, 外貌, 气质, 品德, 精神, 智力</li>
+<li>身外之物: 财产和占有物</li>
+<li>名望: 比人对他的看法(名誉地位名声)<br>人的幸福取决于内在, 而不是自身之外的事物.</li>
+</ol>
+<h2 id="精神"><a href="#精神" class="headerlink" title="精神"></a>精神</h2><p>一个精神丰富的人, 在独处的时候, 沉浸于自己的精神世界, 自得其乐; 但对于一个冥顽不灵的人, 接连不断地聚会, 看起, 出游消遣都无法取走那折磨人的无聊.也就是要我们能够享有自己卓越的, 与众不同的精神个性所带来的乐趣.<br>总结一下就是: 一个人的内在丰富, 就不会对外界要求过多.</p>
+<h2 id="主客体"><a href="#主客体" class="headerlink" title="主客体"></a>主客体</h2><p>关于人的自身, 他强调 自身的个性, 意识, 精神作为主体, 其在幸福上的作用远远大过外界, 即客体.</p>
+<p>后两项是客体, 可以被剥夺或者获取, 人的能力可以左右;<br>然而主体部分是一个人的个性, 终身不变. 我们能做的也就是尽可能的利用我们的既定个性. 因此, 我们应该遵循着符合我们个性的方向, 努力争取适合个性的发展, 除此之外则一概避免. 所以, 我们必须选择与我们个性相配的地位, 职业和生活方式. </p>
+<p>从事高于自己能力的工作, 可能是年轻时候的不幸, 避免高估自己的能力</p>
+<h2 id="财富"><a href="#财富" class="headerlink" title="财富"></a>财富</h2><p>过分盈余的财富对于我们的幸福帮助不大(但不应该忽略生活必需品), 相反为了管好偌大的财产, 我们会有许多不可避免的操劳, 它们打扰了我们舒适悠闲的生活.<br>但是常人追求财富比追求精神情趣更要来劲千百倍, 因此我们看到很多人像蚂蚁似地不眠不休, 辛勤劳作, 从早到晚盘算着如何增加它们已有的财富.</p>
+<p>如果有基本的生活保证的情况下, 人的内在拥有对于人的幸福才是最关键的.(注意, 仅当财富过量的时候, 却攀比的时候, 就说明内心匮乏)<br>也就是说, 财富的多少和个人的快乐无关, 关键还是要看一个人的精神世界是否丰富或者是否匮乏.</p>
+<h2 id="名望"><a href="#名望" class="headerlink" title="名望"></a>名望</h2><p>地位, 名声, 名望, 名誉; 这些东西只有少数, 甚至极少数人才有机会得到(叔本华认为只有少数人才会把社会地位放置在财产之前); 并且这些和人的财富又是相互影响, 互相促进的关系(他人对自己的良好评价, 能以各种形式帮助自己获取财富)</p>
+<h2 id="健康"><a href="#健康" class="headerlink" title="健康"></a>健康</h2><p>对于自身, 他还强调了健康: 人的健康远远压倒了一切外在的好处.<br>也强调了保证自身的健康需要, 避免一切纵欲放荡的行为, 令人不快和剧烈的情绪动荡, 以及长时间, 紧张的精神劳累; </p>
+<p>每天至少户外进行两小时的身体快速运动.<br>(有什么规定或者依据说是两小时?)</p>
+<h2 id="认识力"><a href="#认识力" class="headerlink" title="认识力"></a>认识力</h2><p>以前不是太理解”厚德载物”的意思, 之后经过前辈(也可以称为我哲学上的师傅)的指点,  发现如果一个人的精神能力的增长不能高于物质的增长速度, 那么就会迷失在金钱上. 也就是说, 过多的金钱, 其实也对你的认识力提出了更高的要求.</p>
+<p>具体的我不再多解释, 可以参考第四章关于”人对他人的看法”的解释, 下面我也贴上相关的探讨记录:</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/inner1.png" alt="认识力"></p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/inner2.png" alt="提高认识力"></p>
+<p>最后才发现, 赢取财富的同时也要提高认识力, 因为”厚德载物”<br><img src="http://omotkhw3y.bkt.clouddn.com/inner3.png" alt="厚德载物"></p>
+<p>提高认识力最基本的途径就是: 多阅读, 多思考.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>当初朋友(知己)推荐我看这本书的时候是在我意识当我这个人虚荣心比较强, 爱面子, 爱攀比, 他推荐的.</p>
+<p>后来看到最后, 发现我这个人内心世界比较匮乏, 换句话说精神世界不够丰富, 过的去关注外界的物质,财富, 甚至攀比; 以至于整天闷闷不乐.</p>
+<p>总的来说, 这本书不是一天看完后能有深刻体会的, 它是一套理论体系.</p>
+<p>个人比较推荐: 内心世界丰富的人往往对于外界的依赖就比较少.</p>
+<p>最后, 为了<code>提高认识力:客观物质</code> 的比例, 请多阅读, 多思考, 多观察, 少发言.</p>
+<p>谢谢.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Inner Rich">Inner Rich</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Inner Rich">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

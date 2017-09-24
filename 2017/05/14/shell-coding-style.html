@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>shell代码规范 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="common rules of coding shell script">
+<meta name="keywords" content="编码规范,shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell代码规范">
+<meta property="og:url" content="localhost:4000/2017/05/14/shell-coding-style.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="common rules of coding shell script">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/shell.jpg">
+<meta property="og:updated_time" content="2017-09-24T00:49:28.431Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="shell代码规范">
+<meta name="twitter:description" content="common rules of coding shell script">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/shell.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#用shell的时机"><span class="toc-number">1.</span> <span class="toc-text">用shell的时机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件扩展名"><span class="toc-number">2.</span> <span class="toc-text">文件扩展名</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#STDOUT-vs-STDERR"><span class="toc-number">3.</span> <span class="toc-text">STDOUT vs STDERR</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注释"><span class="toc-number">4.</span> <span class="toc-text">注释</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件头"><span class="toc-number">4.1.</span> <span class="toc-text">文件头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-number">4.2.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#技巧注释"><span class="toc-number">4.3.</span> <span class="toc-text">技巧注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TODO注释"><span class="toc-number">4.4.</span> <span class="toc-text">TODO注释</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#命名约定"><span class="toc-number">5.</span> <span class="toc-text">命名约定</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#函数名"><span class="toc-number">5.1.</span> <span class="toc-text">函数名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量名"><span class="toc-number">5.2.</span> <span class="toc-text">变量名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常量和环境变量名"><span class="toc-number">5.3.</span> <span class="toc-text">常量和环境变量名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源文件名"><span class="toc-number">5.4.</span> <span class="toc-text">源文件名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#只读变量"><span class="toc-number">5.5.</span> <span class="toc-text">只读变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用本地变量"><span class="toc-number">5.6.</span> <span class="toc-text">使用本地变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数位置"><span class="toc-number">5.7.</span> <span class="toc-text">函数位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主函数main"><span class="toc-number">5.8.</span> <span class="toc-text">主函数main</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#格式"><span class="toc-number">6.</span> <span class="toc-text">格式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#缩进"><span class="toc-number">6.1.</span> <span class="toc-text">缩进</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#长度"><span class="toc-number">6.2.</span> <span class="toc-text">长度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#管道"><span class="toc-number">6.3.</span> <span class="toc-text">管道</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#循环和分支"><span class="toc-number">6.4.</span> <span class="toc-text">循环和分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#case语句"><span class="toc-number">6.5.</span> <span class="toc-text">case语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量扩展-引用"><span class="toc-number">6.6.</span> <span class="toc-text">变量扩展(引用)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引用-号"><span class="toc-number">6.7.</span> <span class="toc-text">引用(号)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#调用命令"><span class="toc-number">7.</span> <span class="toc-text">调用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#检查返回值"><span class="toc-number">7.1.</span> <span class="toc-text">检查返回值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内建or外部"><span class="toc-number">7.2.</span> <span class="toc-text">内建or外部</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#特性及错误"><span class="toc-number">8.</span> <span class="toc-text">特性及错误</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#命令替换"><span class="toc-number">8.1.</span> <span class="toc-text">命令替换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#和"><span class="toc-number">8.2.</span> <span class="toc-text">[和[[</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试字符串"><span class="toc-number">8.3.</span> <span class="toc-text">测试字符串</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#点通配符"><span class="toc-number">8.4.</span> <span class="toc-text">点通配符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Eval"><span class="toc-number">8.5.</span> <span class="toc-text">Eval</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#管道导向循环"><span class="toc-number">8.6.</span> <span class="toc-text">管道导向循环</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#结束语"><span class="toc-number">9.</span> <span class="toc-text">结束语</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>shell代码规范</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-05-14</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/编码规范/">编码规范</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/shell/">shell</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>简单一句话, shell代码规范.主要参考了: “Google Shell 风格指南”, 对部分内容做了补充.<br><a id="more"></a></p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/shell.jpg" alt=""></p>
+<blockquote>
+<p>开玩笑, 我当然说的是Linux环境啦.</p>
+</blockquote>
+<p>下面分条目罗列:</p>
+<h1 id="用shell的时机"><a href="#用shell的时机" class="headerlink" title="用shell的时机"></a>用shell的时机</h1><ol>
+<li>有性能要求的不选shell脚本(几乎所有的脚本都不可能完成性能要求的任务)</li>
+<li>写shell请指明”#!/bin/bash”, 而且为了保证兼容性, 最好选择bash.</li>
+<li>如果你的shell脚本超过了100行, 请用python而不是shell.  (这是Google的建议)</li>
+<li>只用于调用其他工具, 并且处理的数据量非常少.(大量的使用数据, 而不是一些简单的变量的时候, 也改用python)</li>
+</ol>
+<h1 id="文件扩展名"><a href="#文件扩展名" class="headerlink" title="文件扩展名"></a>文件扩展名</h1><ol>
+<li>可执行文件不能有扩展名</li>
+<li>库(或者需要source的环境文件)以.sh作为扩展名, 而且不加可执行权限</li>
+<li>不要添加SUID,SGID权限</li>
+</ol>
+<h1 id="STDOUT-vs-STDERR"><a href="#STDOUT-vs-STDERR" class="headerlink" title="STDOUT vs STDERR"></a>STDOUT vs STDERR</h1><p>推荐使用类似如下函数, 将错误信息和其他状态信息一起打印出来:<br>(把错误信息全部打印到标准错误输出)</p>
+<pre><code class="bash">err() {
+    echo &quot;[$(date +&#39;%Y-%m-%dT%H:%M:%S%z&#39;)]: $@&quot; &gt;&amp;2
+}
+
+if ! do_something; then
+    err &quot;Unable to do_something&quot;
+    exit &quot;${E_DID_NOTHING}&quot;
+fi
+</code></pre>
+<h1 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h1><h2 id="文件头"><a href="#文件头" class="headerlink" title="文件头"></a>文件头</h2><p>每个文件必须包含一个顶层注释(每个文件的开头是其文件内容的描述), 对其内容进行简要概述(版权声明和作者信息是可选的)</p>
+<pre><code class="bash">#!/bin/bash
+#
+# Perform hot backups of Oracle databases.
+</code></pre>
+<p>完整一点儿的, 可以这样:</p>
+<pre><code>      1. 第一行一般为调用使用的语言
+      2. 下面要有这个程序名，避免更改文件名为无法找到正确的文件
+      3. 版本号
+      4. 更改后的时间
+      5. 作者相关信息
+      6. 该程序的作用，及注意事项
+      7. 版权与是否开放共享GNU说明
+      8. 最后是各版本的更新简要说明
+</code></pre><p>一个生动的例子如下:</p>
+<pre><code class="bash">#!/bin/bash
+# -------------------------------------------------------------------------------
+# Filename:    check_memory.sh
+# Revision:    2.0
+# Date:        2017/05/10
+# Author:      Merlin
+# Email:       wizardmerlin945@gmail.com
+# Website:     http://www.wizardmerlin.github.io
+# Description: module of memory check
+# Notes:       this module xxxxx
+# -------------------------------------------------------------------------------
+# Copyright:   2017 (c) Merlin
+# License:     GPL
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty
+# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# you should have received a copy of the GNU General Public License
+# along with this program (or with Nagios);
+#
+# Credits go to Ethan Galstad for coding Nagios
+# If any changes are made to this script, please mail me a copy of the changes
+# -------------------------------------------------------------------------------
+#Version 1.0
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#Version 2.0
+#yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+</code></pre>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>任何不是既明显又短的函数都必须被注释, 任何库函数无论其长短和复杂性都必须被注释</p>
+<p>所有的函数注释应该包含:(特别注意使用全局变量)</p>
+<ul>
+<li>函数的描述</li>
+<li>全局变量的使用和修改</li>
+<li>使用的参数说明</li>
+<li>返回值，而不是上一条命令运行后默认的退出状态</li>
+</ul>
+<p>下面是一个案例:</p>
+<pre><code class="bash">#!/bin/bash
+#
+# Perform hot backups of Oracle databases.
+
+export PATH=&#39;/usr/xpg4/bin:/usr/bin:/opt/csw/bin:/opt/goog/bin&#39;
+
+#######################################
+# Cleanup files from the backup dir
+# Globals:
+#   BACKUP_DIR
+#   ORACLE_SID
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+cleanup() {
+  ...
+}
+</code></pre>
+<h2 id="技巧注释"><a href="#技巧注释" class="headerlink" title="技巧注释"></a>技巧注释</h2><p>这部分遵循谷歌代码注释的通用做法.<br>不要注释所有代码, 如果有一个复杂的算法或者你正在做一些与众不同的, 放一个简单的注释.</p>
+<h2 id="TODO注释"><a href="#TODO注释" class="headerlink" title="TODO注释"></a>TODO注释</h2><p>使用TODO注释临时的、短期解决方案的、或者足够好但不够完美的代码。</p>
+<p>TODOs应该包含全部大写的字符串TODO, 接着是括号中<code>user_name</code>, 冒号是可选的.最好在TODO条目之后加上 bug或者ticket 的序号.<br>例如:</p>
+<pre><code class="bash"># TODO(merlin): Handle the unlikely edge cases (bug ####)
+</code></pre>
+<h1 id="命名约定"><a href="#命名约定" class="headerlink" title="命名约定"></a>命名约定</h1><h2 id="函数名"><a href="#函数名" class="headerlink" title="函数名"></a>函数名</h2><p>如果你正在写单个函数, 请用小写字母来命名, 并用下划线分隔单词.如果你正在写一个包, 使用双冒号<code>::</code>来分隔包名.</p>
+<p>大括号必须和函数名位于同一行(就像在Google的其他语言一样), 并且函数名和圆括号之间没有空格.</p>
+<pre><code class="bash"># Single function
+my_func() {
+  ...
+}
+
+# Part of a package
+mypackage::my_func() {
+  ...
+}
+</code></pre>
+<p>当函数名后存在<code>()</code>时, 关键词<code>function</code>是多余的, 但是其促进了函数的快速辨识.</p>
+<h2 id="变量名"><a href="#变量名" class="headerlink" title="变量名"></a>变量名</h2><p>命名规则和函数名一样.</p>
+<p>循环的变量名应该和循环的任何变量同样命名:</p>
+<pre><code class="bash">for zone in ${zones}; do
+  something_with &quot;${zone}&quot;
+done
+</code></pre>
+<h2 id="常量和环境变量名"><a href="#常量和环境变量名" class="headerlink" title="常量和环境变量名"></a>常量和环境变量名</h2><p>常量和任何导出到环境中的都应该大写, 并且放在文件的顶部.</p>
+<pre><code class="bash"># Constant
+readonly PATH_TO_FILES=&#39;/some/path&#39;
+
+# Both constant and environment
+declare -xr ORACLE_SID=&#39;PROD&#39;
+</code></pre>
+<p>第一次设置时有一些就变成了常量(例如通过getopts).<br>因此, 可以在getopts中或基于条件来设定常量, 但之后应该立即设置其为只读.<br>值得注意的是, 在函数中<code>declare</code>不会对全局变量进行操作, 所以推荐使用 <code>readonly</code> 和 <code>export</code> 来代替。</p>
+<pre><code class="bash">VERBOSE=&#39;false&#39;
+while getopts &#39;v&#39; flag; do
+  case &quot;${flag}&quot; in
+    v) VERBOSE=&#39;true&#39; ;;
+  esac
+done
+readonly VERBOSE
+</code></pre>
+<h2 id="源文件名"><a href="#源文件名" class="headerlink" title="源文件名"></a>源文件名</h2><p>小写, 如果需要的话使用下划线分隔单词<br>这是为了和在Google中的其他代码风格保持一致:<br>maketemplate 或者 make_template, 而不是 make-template</p>
+<h2 id="只读变量"><a href="#只读变量" class="headerlink" title="只读变量"></a>只读变量</h2><p>使用 <code>readonly</code> 或者 <code>declare -r</code> 来确保变量只读.<br>因为全局变量在shell中广泛使用, 所以在使用它们的过程中捕获错误是很重要的.当你声明了一个变量, 希望其只读, 那么请明确指出.</p>
+<pre><code class="bash">zip_version=&quot;$(dpkg --status zip | grep Version: | cut -d &#39; &#39; -f 2)&quot;
+if [[ -z &quot;${zip_version}&quot; ]]; then
+  error_message
+else
+  readonly zip_version
+fi
+</code></pre>
+<h2 id="使用本地变量"><a href="#使用本地变量" class="headerlink" title="使用本地变量"></a>使用本地变量</h2><p>一般用在函数中, 使用<code>local</code>关键字<br>声明和赋值应该在不同行, 当赋值的值由命令替换提供时, 声明和赋值必须分开. 因为内建的 <code>local</code> 不会从命令替换中传递退出码.</p>
+<pre><code class="bash">my_func2() {
+  local name=&quot;$1&quot;
+
+  # Separate lines for declaration and assignment:
+  local my_var
+  my_var=&quot;$(my_func)&quot; || return
+
+  # DO NOT do this: $? contains the exit code of &#39;local&#39;, not my_func
+  local my_var=&quot;$(my_func)&quot;
+  [[ $? -eq 0 ]] || return
+
+  ...
+}
+</code></pre>
+<h2 id="函数位置"><a href="#函数位置" class="headerlink" title="函数位置"></a>函数位置</h2><p>如果你有函数, 请将他们一起放在文件头部. 只有<code>includes</code>,  <code>set声明</code>和<code>常量设置</code>可能在函数声明之前完成. 不要在函数之间隐藏可执行代码. 如果那样做,会使得代码在调试时难以跟踪并出现意想不到的讨厌结果.</p>
+<h2 id="主函数main"><a href="#主函数main" class="headerlink" title="主函数main"></a>主函数main</h2><p>对于包含至少一个其他函数的足够长的脚本, 需要称为 main 的函数.</p>
+<p>为了方便查找程序的开始, 将主程序放入一个称为 main 的函数，作为最下面的函数. 这使其和代码库的其余部分保持一致性, 同时允许你定义更多变量为局部变量（如果主代码不是一个函数就不能这么做）。</p>
+<p>文件中最后的非注释行应该是对 main 函数的调用, 例如:</p>
+<pre><code class="bash">main &quot;$@&quot;
+</code></pre>
+<p>然然仅仅是顺序执行(线性流)的脚本, main函数的出现可能会有些多余.</p>
+<h1 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h1><h2 id="缩进"><a href="#缩进" class="headerlink" title="缩进"></a>缩进</h2><p>主要注意点如下:</p>
+<ol>
+<li>缩进两个空格, 没有制表符</li>
+<li>在代码块之间请使用空行以提升可读性</li>
+<li>缩进为两个空格,  无论你做什么, 请不要使用制表符</li>
+<li>对于已有文件，保持已有的缩进格式</li>
+</ol>
+<h2 id="长度"><a href="#长度" class="headerlink" title="长度"></a>长度</h2><p>行的最大长度为80个字符</p>
+<p>如果你必须写长度超过80个字符的字符串, 如果可能的话, 尽量使用here document或者嵌入的换行符.</p>
+<ul>
+<li>END; 语法</li>
+<li>字符串内嵌换行符号</li>
+</ul>
+<p>例如:</p>
+<pre><code class="bash"># DO use &#39;here document&#39;s
+cat &lt;&lt; END;
+I am an exceptionally long
+string.
+END
+
+# Embedded newlines are ok too
+long_string=&quot;I am an exceptionally
+  long string.&quot;
+</code></pre>
+<p>长度超过80个字符的文字串且不能被合理地分割, 这是正常的, 但强烈建议找到一个方法使其变短.</p>
+<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>如果一行容得下整个管道操作，那么请将整个管道操作写在同一行。<br>否则应该将整个管道操作分割成每行一个管段, 管道操作的下一部分应该将管道符放在新行并且缩进2个空格. </p>
+<pre><code class="bash"># All fits on one line
+command1 | command2
+
+# Long commands
+command1 \
+  | command2 \
+  | command3 \
+  | command4
+</code></pre>
+<p>(注意上面代码, 如果在第二行, 要进行缩进)</p>
+<p>这适用于使用管道符’|’的合并命令链以及使用’||’和’&amp;&amp;’的逻辑运算链.</p>
+<h2 id="循环和分支"><a href="#循环和分支" class="headerlink" title="循环和分支"></a>循环和分支</h2><p>请将 <code>; do</code>, <code>; then</code> 和 <code>while</code> , <code>for</code> , <code>if</code> 放在同一行.<br>else 应该单独一行, 结束语句应该单独一行并且跟开始语句垂直对齐.</p>
+<p>例如:</p>
+<pre><code class="bash">for dir in ${dirs_to_cleanup}; do
+  if [[ -d &quot;${dir}/${ORACLE_SID}&quot; ]]; then
+    log_date &quot;Cleaning up old files in ${dir}/${ORACLE_SID}&quot;
+    rm &quot;${dir}/${ORACLE_SID}/&quot;*
+    if [[ &quot;$?&quot; -ne 0 ]]; then
+      error_message
+    fi
+  else
+    mkdir -p &quot;${dir}/${ORACLE_SID}&quot;
+    if [[ &quot;$?&quot; -ne 0 ]]; then
+      error_message
+    fi
+  fi
+done
+</code></pre>
+<h2 id="case语句"><a href="#case语句" class="headerlink" title="case语句"></a>case语句</h2><p>主要注意缩进和换行:</p>
+<ul>
+<li>缩进: <ul>
+<li>通过2个空格缩进可选项</li>
+<li>匹配表达式<code>value )</code>比 case 和 esac 缩进一级; 多行操作要再缩进一级</li>
+</ul>
+</li>
+<li>换行: <ul>
+<li>在同一行可选项的模式<code>右圆括号</code>之后和结束符<code>;;</code>之前各需要一个空格</li>
+<li>长可选项或者多命令可选项应该被拆分成多行: 模式、操作和结束符 ;; 在不同的行</li>
+</ul>
+</li>
+</ul>
+<p>例如:</p>
+<pre><code class="bash">case &quot;${expression}&quot; in
+  a)
+    variable=&quot;...&quot;
+    some_command &quot;${variable}&quot; &quot;${other_expr}&quot; ...
+    ;;
+  absolute)
+    actions=&quot;relative&quot;
+    another_command &quot;${actions}&quot; &quot;${other_expr}&quot; ...
+    ;;
+  *)
+    error &quot;Unexpected expression &#39;${expression}&#39;&quot;
+    ;;
+esac
+</code></pre>
+<p>同一行的情况:右括号之后和结束符<code>;;</code>之前请使用一个空格分隔</p>
+<pre><code class="bash">verbose=&#39;false&#39;
+aflag=&#39;&#39;
+bflag=&#39;&#39;
+files=&#39;&#39;
+while getopts &#39;abf:v&#39; flag; do
+  case &quot;${flag}&quot; in
+    a) aflag=&#39;true&#39; ;;
+    b) bflag=&#39;true&#39; ;;
+    f) files=&quot;${OPTARG}&quot; ;;
+    v) verbose=&#39;true&#39; ;;
+    *) error &quot;Unexpected option ${flag}&quot; ;;
+  esac
+done
+</code></pre>
+<h2 id="变量扩展-引用"><a href="#变量扩展-引用" class="headerlink" title="变量扩展(引用)"></a>变量扩展(引用)</h2><p>推荐将其他所有变量用大括号括起来(但不是强制)<br>荐用<code>${var}</code> 而不是 <code>$var</code>.</p>
+<pre><code class="bash"># Section of recommended cases.
+
+# Preferred style for &#39;special&#39; variables:
+echo &quot;Positional: $1&quot; &quot;$5&quot; &quot;$3&quot;
+echo &quot;Specials: !=$!, -=$-, _=$_. ?=$?, #=$# *=$* @=$@ \$=$$ ...&quot;
+
+# Braces necessary:
+echo &quot;many parameters: ${10}&quot;
+
+# Braces avoiding confusion:
+# Output is &quot;a0b0c0&quot;
+set -- a b c
+echo &quot;${1}0${2}0${3}0&quot;
+
+# Preferred style for other variables:
+echo &quot;PATH=${PATH}, PWD=${PWD}, mine=${some_var}&quot;
+while read f; do
+  echo &quot;file=${f}&quot;
+done &lt; &lt;(ls -l /tmp)
+
+# Section of discouraged cases
+
+# Unquoted vars, unbraced vars, brace-quoted single letter
+# shell specials.
+echo a=$avar &quot;b=$bvar&quot; &quot;PID=${$}&quot; &quot;${1}&quot;
+
+# Confusing use: this is expanded as &quot;${1}0${2}0${3}0&quot;,
+# not &quot;${10}${20}${30}
+set -- a b c
+echo &quot;$10$20$30&quot;
+</code></pre>
+<h2 id="引用-号"><a href="#引用-号" class="headerlink" title="引用(号)"></a>引用(号)</h2><p>主要涉及:</p>
+<ul>
+<li>单引号</li>
+<li>双引号</li>
+<li>引用(命令行-函数)参数</li>
+</ul>
+<p>大致规则如下:(google原文档比较难理解)</p>
+<ul>
+<li>引号用于包裹变量、命令替换符、空格或shell元字符的字符串</li>
+<li>单引号用于引用字符串中没有子串(shell元字符可以不用转义)</li>
+<li>双引号用于引用的字符串中可以有子串, 或者”$( )”命令子串, 或者”命令行(位置)参数”,例如<code>&quot;$1&quot;</code></li>
+<li>推荐引用是单词的字符串</li>
+<li>千万不要引用整数</li>
+<li>请使用<code>$@</code> 除非你有特殊原因需要使用<code>$*</code> (参考下面的代码)</li>
+</ul>
+<p>代码演示如下:</p>
+<pre><code class="bash"># &#39;Single&#39; quotes indicate that no substitution is desired.
+# &quot;Double&quot; quotes indicate that substitution is required/tolerated.
+
+# Simple examples
+# &quot;quote command substitutions&quot;
+flag=&quot;$(some_command and its args &quot;$@&quot; &#39;quoted separately&#39;)&quot;
+
+# &quot;quote variables&quot;
+echo &quot;${flag}&quot;
+
+# &quot;never quote literal integers&quot;
+value=32
+
+# &quot;quote command substitutions&quot;, even when you expect integers
+number=&quot;$(generate_number)&quot;
+
+# &quot;prefer quoting words&quot;, not compulsory
+readonly USE_INTEGER=&#39;true&#39;
+
+# &quot;quote shell meta characters&quot; 这里单引号和双引号作用不一样
+echo &#39;Hello stranger, and well met. Earn lots of $$$&#39;
+echo &quot;Process $$: Done making \$\$\$.&quot;
+
+# &quot;command options or path names&quot;
+# ($1 is assumed to contain a value here)
+grep -li Hugo /dev/null &quot;$1&quot;
+
+# Less simple examples
+# &quot;quote variables, unless proven false&quot;: ccs might be empty
+git send-email --to &quot;${reviewers}&quot; ${ccs:+&quot;--cc&quot; &quot;${ccs}&quot;}
+
+# Positional parameter precautions: $1 might be unset
+# Single quotes leave regex as-is.
+grep -cP &#39;([Ss]pecial|\|?characters*)$&#39; ${1:+&quot;$1&quot;}
+
+# For passing on arguments,
+# &quot;$@&quot; is right almost everytime, and
+# $* is wrong almost everytime:
+#
+# * $* and $@ will split on spaces, clobbering up arguments
+#   that contain spaces and dropping empty strings;
+# * &quot;$@&quot; will retain arguments as-is, so no args
+#   provided will result in no args being passed on;
+#   This is in most cases what you want to use for passing
+#   on arguments.
+# * &quot;$*&quot; expands to one argument, with all args joined
+#   by (usually) spaces,
+#   so no args provided will result in one empty string
+#   being passed on.
+# (Consult &#39;man bash&#39; for the nit-grits ;-)
+
+set -- 1 &quot;2 two&quot; &quot;3 three tres&quot;; echo $# ; set -- &quot;$*&quot;; echo &quot;$#, $@&quot;)
+set -- 1 &quot;2 two&quot; &quot;3 three tres&quot;; echo $# ; set -- &quot;$@&quot;; echo &quot;$#, $@&quot;)
+</code></pre>
+<h1 id="调用命令"><a href="#调用命令" class="headerlink" title="调用命令"></a>调用命令</h1><h2 id="检查返回值"><a href="#检查返回值" class="headerlink" title="检查返回值"></a>检查返回值</h2><p>总是检查返回值并给出信息返回值.</p>
+<p>对于非管道命令, 使用 <code>$?</code> 或直接通过一个 <code>if</code> 语句来检查以保持其简洁.</p>
+<pre><code class="bash">if ! mv &quot;${file_list}&quot; &quot;${dest_dir}/&quot; ; then
+  echo &quot;Unable to move ${file_list} to ${dest_dir}&quot; &gt;&amp;2
+  exit &quot;${E_BAD_MOVE}&quot;
+fi
+
+# Or
+mv &quot;${file_list}&quot; &quot;${dest_dir}/&quot;
+if [[ &quot;$?&quot; -ne 0 ]]; then
+  echo &quot;Unable to move ${file_list} to ${dest_dir}&quot; &gt;&amp;2
+  exit &quot;${E_BAD_MOVE}&quot;
+fi
+</code></pre>
+<p>Bash也有 <code>PIPESTATUS</code> 变量, 允许检查从管道所有部分返回的代码.<br>如果仅仅需要检查整个管道是成功还是失败, 以下的方法是可以接受的:</p>
+<pre><code class="bash">tar -cf - ./* | ( cd &quot;${dir}&quot; &amp;&amp; tar -xf - )
+if [[ &quot;${PIPESTATUS[0]}&quot; -ne 0 || &quot;${PIPESTATUS[1]}&quot; -ne 0 ]]; then
+  echo &quot;Unable to tar files to ${dir}&quot; &gt;&amp;2
+fi
+</code></pre>
+<p>可是, 只要你运行任何其他命令, <code>PIPESTATUS</code> 将会被覆盖.如果你需要基于管道中发生的错误执行不同的操作, 那么你需要在运行命令后立即将 <code>PIPESTATUS</code>数组 赋值给另一个(数组)变量(别忘了 [ 是一个会将 PIPESTATUS 擦除的命令)</p>
+<pre><code class="bash">tar -cf - ./* | ( cd &quot;${DIR}&quot; &amp;&amp; tar -xf - )
+return_codes=(${PIPESTATUS[*]})
+if [[ &quot;${return_codes[0]}&quot; -ne 0 ]]; then
+  do_something
+fi
+if [[ &quot;${return_codes[1]}&quot; -ne 0 ]]; then
+  do_something_else
+fi
+</code></pre>
+<h2 id="内建or外部"><a href="#内建or外部" class="headerlink" title="内建or外部"></a>内建or外部</h2><p>可以在调用shell内建命令和调用另外的程序之间选择, 请选择内建命令.<br>(从健壮性和扩展性方面进行考虑)</p>
+<pre><code class="bash"># Prefer this:
+addition=$((${X} + ${Y}))
+substitution=&quot;${string/#foo/bar}&quot;
+
+# Instead of this:
+addition=&quot;$(expr ${X} + ${Y})&quot;
+substitution=&quot;$(echo &quot;${string}&quot; | sed -e &#39;s/^foo/bar/&#39;)&quot;
+</code></pre>
+<p>(我个人的习惯, 使用<code>$[  ]</code> 而不是 <code>$((  ))</code> 进行数学计算)</p>
+<h1 id="特性及错误"><a href="#特性及错误" class="headerlink" title="特性及错误"></a>特性及错误</h1><h2 id="命令替换"><a href="#命令替换" class="headerlink" title="命令替换"></a>命令替换</h2><p>使用 <code>$(command)</code> 而不是反引号. 理由如下:</p>
+<p>嵌套的反引号要求用反斜杠转义内部的反引号.<br>而 <code>$(command)</code> 形式嵌套时不需要改变, 而且更易于阅读.</p>
+<pre><code class="bash"># This is preferred:
+var=&quot;$(command &quot;$(command1)&quot;)&quot;
+
+# This is not:
+var=&quot;`command \`command1\``&quot;
+</code></pre>
+<h2 id="和"><a href="#和" class="headerlink" title="[和[["></a>[和[[</h2><p>条件测试, 推荐使用 <code>[[ ... ]]</code> ，而不是 <code>[</code>, <code>test</code> , 和 <code>/usr/bin/ [</code>.</p>
+<ul>
+<li>因为在 “[[“ 和 “]]” 之间不会有路径名称扩展或单词分割发生</li>
+<li>“[[ … ]]” 允许正则表达式匹配, 而 “[ … ]” 不允许</li>
+</ul>
+<pre><code class="bash"># This ensures the string on the left is made up of characters in the
+# alnum character class followed by the string name.
+# Note that the RHS should not be quoted here.
+# For the gory details, see
+# E14 at http://tiswww.case.edu/php/chet/bash/FAQ
+if [[ &quot;filename&quot; =~ ^[[:alnum:]]+name ]]; then
+  echo &quot;Match&quot;
+fi
+
+# This matches the exact pattern &quot;f*&quot; (Does not match in this case)
+if [[ &quot;filename&quot; == &quot;f*&quot; ]]; then
+  echo &quot;Match&quot;
+fi
+
+# This gives a &quot;too many arguments&quot; error as f* is expanded to the
+# contents of the current directory
+if [ &quot;filename&quot; == f* ]; then
+  echo &quot;Match&quot;
+fi
+</code></pre>
+<h2 id="测试字符串"><a href="#测试字符串" class="headerlink" title="测试字符串"></a>测试字符串</h2><p>尽可能使用引用,而不是过滤字符串.</p>
+<p>即应该这样: </p>
+<pre><code class="bash"># Do this:
+if [[ &quot;${my_var}&quot; = &quot;some_string&quot; ]]; then
+  do_something
+fi
+
+# -z (string length is zero) and -n (string length is not zero) are
+# preferred over testing for an empty string
+if [[ -z &quot;${my_var}&quot; ]]; then
+  do_something
+fi
+
+# This is OK (ensure quotes on the empty side), but not preferred:
+if [[ &quot;${my_var}&quot; = &quot;&quot; ]]; then
+  do_something
+fi
+</code></pre>
+<p>而不是这样:</p>
+<pre><code class="bash"># Not this:
+if [[ &quot;${my_var}X&quot; = &quot;some_stringX&quot; ]]; then
+  do_something
+fi
+</code></pre>
+<p>判断空串,应该使用<code>-n</code>选项, 而不是直接应用字符串.(测试目的明确)</p>
+<pre><code class="bash"># Use this
+if [[ -n &quot;${my_var}&quot; ]]; then
+  do_something
+fi
+
+# Instead of this as errors can occur if ${my_var} expands to a test
+# flag
+if [[ &quot;${my_var}&quot; ]]; then
+  do_something
+fi
+</code></pre>
+<h2 id="点通配符"><a href="#点通配符" class="headerlink" title="点通配符"></a>点通配符</h2><p>如果你要使用<code>*</code>作为文件/目录的通配符, 那么请用目录路径作为限制,这样比较安全.</p>
+<p>即使用 <code>./*</code> 而不是直接使用 <code>*</code> , 因为文件名可能以<code>-</code>开头.</p>
+<p>演示代码如下:</p>
+<pre><code class="bash"># Here&#39;s the contents of the directory:
+# -f  -r  somedir  somefile
+
+# This deletes almost everything in the directory by force
+psa@bilby$ rm -v *
+removed directory: `somedir&#39;
+removed `somefile&#39;
+
+# As opposed to:
+psa@bilby$ rm -v ./*
+removed `./-f&#39;
+removed `./-r&#39;
+rm: cannot remove `./somedir&#39;: Is a directory
+removed `./somefile&#39;
+</code></pre>
+<h2 id="Eval"><a href="#Eval" class="headerlink" title="Eval"></a>Eval</h2><p>当用于给变量赋值时, 避免使用<code>eval</code>, 因为Eval解析输入, 并且能够设置变量, 但无法检查这些变量是什么.</p>
+<pre><code class="bash"># What does this set?
+# Did it succeed? In part or whole?
+eval $(set_my_variables)
+
+# What happens if one of the returned values has a space in it?
+variable=&quot;$(eval some_function)&quot;
+</code></pre>
+<h2 id="管道导向循环"><a href="#管道导向循环" class="headerlink" title="管道导向循环"></a>管道导向循环</h2><p>总之, 请使用过程替换或者for循环, 而不是管道导向while循环.</p>
+<p>把第一个命令的结果传递给第二个命令, 如果第二个命令是循环, 则称为”管道导向循环”, 例如:</p>
+<pre><code class="bash">last_line=&#39;NULL&#39;
+your_command | while read line; do
+  last_line=&quot;${line}&quot;
+done
+
+# This will output &#39;NULL&#39;
+echo &quot;${last_line}&quot;
+</code></pre>
+<p>子进行中修改了变量last_line, 回到父进程的时候, 还是没有变.<br>管道导向while循环中的隐式子shell使得追踪bug变得很困难.</p>
+<p>在while循环中被修改的变量是不能传递给父shell的, 因为循环命令是在一个子shell中运行的.(父子进行不共享内部变量)</p>
+<p>如果你确定输入中不包含空格或者特殊符号（通常意味着不是用户输入的），那么可以使用一个for循环:</p>
+<pre><code class="bash">total=0
+# Only do this if there are no spaces in return values.
+for value in $(command); do
+  total+=&quot;${value}&quot;
+done
+</code></pre>
+<p>特殊情况:<br>使用过程替换允许重定向输出, 但是请将命令放入一个 <code>显式的子shell</code> 中, 而不是bash为while循环创建的隐式子shell.</p>
+<pre><code class="bash">total=0
+last_file=
+while read count filename; do
+  total+=&quot;${count}&quot;
+  last_file=&quot;${filename}&quot;
+done &lt; &lt;(your_command | uniq -c)
+
+# This will output the second field of the last line of output from
+# the command.
+echo &quot;Total = ${total}&quot;
+echo &quot;Last one = ${last_file}&quot;
+</code></pre>
+<p>当不需要传递复杂的结果给父shell时可以使用while循环, 当你特别不希望改变父shell的范围变量时这可能也是有用的.</p>
+<p>但这种情况的, 代码逻辑的解析过程会比较复杂, 还不如直接使用 <code>awk</code> 这类工具.</p>
+<pre><code class="bash"># Trivial implementation of awk expression:
+
+cat /proc/mounts | while read src dest type opts rest; do
+  if [[ ${type} == &quot;nfs&quot; ]]; then
+    echo &quot;NFS ${dest} maps to ${src}&quot;
+  fi
+done
+</code></pre>
+<p>或者</p>
+<pre><code class="bash">awk &#39;$3 == &quot;nfs&quot; { print $2 &quot; maps to &quot; $1 }&#39; /proc/mounts
+</code></pre>
+<h1 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h1><p>借用别人的话:</p>
+<blockquote>
+<p>运用常识和判断力, 并且 保持一致.</p>
+<p>风格指南的重点在于提供一个通用的编程规范, 这样大家可以把精力集中在实现内容而不是表现形式上. 我们展示的是一个总体的的风格规范, 但局部风格也很重要, 如果你在一个文件中新加的代码和原有代码风格相去甚远, 这就破坏了文件本身的整体美观, 也让打乱读者在阅读代码时的节奏, 所以要尽量避免.</p>
+</blockquote>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="shell代码规范">shell代码规范</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="shell代码规范">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>深挖、挖线程模型(C+11并发库和Posix Pthread) | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在前面两篇文章的基础上, 进行深挖!">
+<meta name="keywords" content="cpp,线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深挖、挖线程模型(C+11并发库和Posix Pthread)">
+<meta property="og:url" content="localhost:4000/2017/07/04/deep-in-thread.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="在前面两篇文章的基础上, 进行深挖!">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/wawawa.jpg">
+<meta property="og:updated_time" content="2017-09-24T05:43:39.163Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深挖、挖线程模型(C+11并发库和Posix Pthread)">
+<meta name="twitter:description" content="在前面两篇文章的基础上, 进行深挖!">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/wawawa.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#回顾Posix-Thread"><span class="toc-number">2.1.</span> <span class="toc-text">回顾Posix Thread</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#调度策略"><span class="toc-number">2.1.1.</span> <span class="toc-text">调度策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调度继承"><span class="toc-number">2.2.</span> <span class="toc-text">调度继承</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#优先级"><span class="toc-number">2.2.1.</span> <span class="toc-text">优先级</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#脱离同步"><span class="toc-number">2.2.2.</span> <span class="toc-text">脱离同步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#取消线程"><span class="toc-number">2.2.3.</span> <span class="toc-text">取消线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#取消点"><span class="toc-number">2.2.4.</span> <span class="toc-text">取消点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#静态初始化"><span class="toc-number">2.2.5.</span> <span class="toc-text">静态初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化一次"><span class="toc-number">2.2.6.</span> <span class="toc-text">初始化一次</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程清理"><span class="toc-number">2.2.7.</span> <span class="toc-text">线程清理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程回收"><span class="toc-number">2.2.8.</span> <span class="toc-text">线程回收</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TSD"><span class="toc-number">2.2.9.</span> <span class="toc-text">TSD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#同步，pthread-detach"><span class="toc-number">2.2.10.</span> <span class="toc-text">同步，pthread_detach</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#回顾C-11并发库"><span class="toc-number">2.3.</span> <span class="toc-text">回顾C++11并发库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#技术细节探讨"><span class="toc-number">2.4.</span> <span class="toc-text">技术细节探讨</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>深挖、挖线程模型(C+11并发库和Posix Pthread)</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-04</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/线程/">线程</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>前面已经有两篇 <code>非常详细</code> 的文章说过了 <code>pthread</code> 和 <code>c++并发库</code>, 这里再次对其进行深入探究.<br>如果对c/c++线程库不太熟悉, 可以参考我以前写的总结:</p>
+<ul>
+<li><a href="http://www.merlinblog.site/2017/03/19/linux-pthread.html" target="_blank" rel="external">linux-pthread</a></li>
+<li><a href="http://www.merlinblog.site/2017/06/29/thread-again.html" target="_blank" rel="external">c++线程库</a></li>
+</ul>
+<p>当然你对进程有非常深入的理解那最好了, 因为本文是基于 <code>linux平台</code> 写的.</p>
+<ul>
+<li><a href="http://www.merlinblog.site/2017/03/12/linux-process.html" target="_blank" rel="external">linux-process</a> </li>
+</ul>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/wawawa.jpg" alt="post-cover"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>到目前为止, 接触的线程部分, 已经说了 <code>pthread</code> , <code>boost线程库</code> &amp; <code>c++11线程库</code> , 也就是说 讲了很多 <code>并发编程</code> 的内容. 但是大多是从使用场景上来说, 至于线程本身的原理却讲的比较少, 本文主要就是讲讲原理或者其他细枝末节的东西. </p>
+<p>也可能在中间穿插一些我个人的开发经验.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="回顾Posix-Thread"><a href="#回顾Posix-Thread" class="headerlink" title="回顾Posix Thread"></a>回顾Posix Thread</h2><p>Posix部分, 权做复习和经验总结, 快速的把以前学过的带一遍.</p>
+<h3 id="调度策略"><a href="#调度策略" class="headerlink" title="调度策略"></a>调度策略</h3><p>调度策略有三种:</p>
+<ul>
+<li>SCHED_OTHER：非实时、正常</li>
+<li>SCHED_RR：实时、轮询法</li>
+<li>SCHED_FIFO：实时、先入先出</li>
+</ul>
+<p>例子:</p>
+<pre><code class="c++"> pthread_attr_t attr;
+ pthread_attr_init(&amp;attr);
+ pthread_attr_setschedpolicy(&amp;attr, SCHED_FIFO);//sched_policy
+</code></pre>
+<h2 id="调度继承"><a href="#调度继承" class="headerlink" title="调度继承"></a>调度继承</h2><p>线程A创建了线程B，则线程B的调度策略是与线程A的调度策略与线程B的继承策略有关的。如果线程B继承策略为PTHREAD_INHERIT_SCHED，则线程B的调度策略与线程A相同；如果线程B继承策略为PTHREAD_EXPLICIT_SCHE，则线程B的调度策略由attr决定。</p>
+<pre><code class="c++">pthread_attr_setinheritsched(&amp;attr,PTHREAD_EXPLICIT_SCHED);
+</code></pre>
+<h3 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h3><p>线程优先级支持两种设置方式, 一种是创建时设置(通过线程属性), 另一种是创建后动态设置.</p>
+<pre><code class="c++">pthread_attr_setschedparam(&amp;attr, new_priority);
+</code></pre>
+<p>如果是动态设置, 则使用下列函数设置:</p>
+<pre><code class="c++">pthread_attr_getschedparam(&amp;attr, &amp;schedparam);
+schedparam.sched_priority = new_priority;
+pthread_attr_setschedparam(&amp;attr, &amp;schedparam);
+//或者
+pthread_setschedparam(pthrid, sched_policy, &amp;schedparam);
+</code></pre>
+<h3 id="脱离同步"><a href="#脱离同步" class="headerlink" title="脱离同步"></a>脱离同步</h3><p>如果设置了detachstate状态，则pthread_join()会失效，线程会自动释放所占用的资源。<br>线程的缺省状态为PHREAD_CREATE_JOINABLE状态，线程运行起来后，一旦被设置为PTHREAD_CREATE_DETACH状态，则无法再恢复到joinable状态。</p>
+<pre><code class="c++">pthread_attr_setdetachstate (&amp;attr,PTHREAD_CREATE_DETACHED);
+</code></pre>
+<h3 id="取消线程"><a href="#取消线程" class="headerlink" title="取消线程"></a>取消线程</h3><p>有一个线程在使用select监控网口，主控线程此时接到了用户的通知，要放弃监听，则主控线程会向监听线程发送取消请求。 Linux的pthread线程接收到取消请求时，并不会立刻终止线程，而是要等到取消点时才会结束任务。这样我们可以为取消点建立某些特殊的处理(有专门的hook函数)。Select是取消点，所以可以退出。(一般系统调用都是取消点)</p>
+<p>发送终止信号给thread线程, 如果成功则返回0, 否则为非0值.发送成功并不意味着thread会终止.</p>
+<pre><code class="c++">int pthread_cancel(pthread_t thread)
+</code></pre>
+<pre><code class="c++">//old_state如果不为NULL则存入原来的Cancel状态以便恢复
+int pthread_setcancelstate(int state, int *oldstate)
+</code></pre>
+<p>设置本线程对Cancel信号的反应，state有两种值:</p>
+<ul>
+<li>PTHREAD_CANCEL_ENABLE（缺省）</li>
+<li>PTHREAD_CANCEL_DISABLE</li>
+</ul>
+<p>分别表示收到信号后设为CANCLED状态和忽略CANCEL信号继续运行.</p>
+<p>设置本线程取消动作的执行时机: (仅当Cancel状态为Enable时有效)</p>
+<pre><code class="c++">//oldtype如果不为NULL则存入原来的取消动作类型值
+int pthread_setcanceltype(int type, int *oldtype)
+</code></pre>
+<p>type由两种取值:</p>
+<ul>
+<li>PTHREAD_CANCEL_DEFFERED //下一个取消点再推出</li>
+<li>PTHREAD_CANCEL_ASYCHRONOUS //立即执行(退出)</li>
+</ul>
+<h3 id="取消点"><a href="#取消点" class="headerlink" title="取消点"></a>取消点</h3><p>Pthread规定了取消点的概念。不论线程何时收到取消请求，都只能在取消点上才能取消线程。这就保证了风险的可控。<br>Pthread标准指定了以下几个取消点：</p>
+<ul>
+<li>pthread_testcancel</li>
+<li>所有调度点, 如pthread_cond_wait、sigwait、select、sleep等</li>
+</ul>
+<p>检查本线程是否处于Canceld状态:</p>
+<pre><code class="c++">//如果是, 则进行取消动作, 否则直接返回
+void pthread_testcancel(void);
+</code></pre>
+<p>根据POSIX标准，read()、write()等会引起阻塞的系统调用都是Cancelation-point，而其他pthread函数都不会引起Cancelation动作。但是pthread_cancel的手册页声称，由于LinuxThread库与C库结合得不好，因而目前C库函数都不是Cancelation-point，因此可以在需要作为Cancelation-point的系统调用前后调用pthread_testcancel()，从而达到POSIX标准所要求的目标，即如下代码段:</p>
+<pre><code>pthread_testcancel();
+retcode = read(fd, buffer, length);
+pthread_testcancel();
+</code></pre><p>但是这段代码, 比较尴尬的是, read是一个阻塞函数, 如果没有读满字节或者没有数据可读, 那么read阻塞, 没有执行至取消点的必然路径, 则线程无法由外部其他线程的取消请求而终止. </p>
+<h3 id="静态初始化"><a href="#静态初始化" class="headerlink" title="静态初始化"></a>静态初始化</h3><p>对于mutex, cond等存在静态初始化<br>例如:</p>
+<pre><code>pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t cond =   PTHREAD_COND_INITIALIZER;
+</code></pre><h3 id="初始化一次"><a href="#初始化一次" class="headerlink" title="初始化一次"></a>初始化一次</h3><pre><code class="c++">pthread_once_t  once_control = PTHREAD_ONCE_INIT;
+int pthread_once(pthread_once_t *once_control, void (*init_routine) (void))
+</code></pre>
+<p>once_control一般取值 <code>PTHREAD_ONCE_INIT</code>, 该变量保证了init_routine()函数在本进程执行序列中仅执行一次, 但具体是哪个线程执行则不确定. 例如下面代码, 虽然两个线程都有调用 once_run() 函数, 但实际上, 它仅执行一次:</p>
+<pre><code class="c++">
+#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+pthread_once_t  once=PTHREAD_ONCE_INIT;
+void once_run(void)
+{
+    printf(&quot;once_run in thread %d\n&quot;,pthread_self());
+}
+void * child1(void *arg)
+{
+    int tid=pthread_self();
+    printf(&quot;thread %d enter\n&quot;,tid);
+    pthread_once(&amp;once,once_run);
+    printf(&quot;thread %d returns\n&quot;,tid);
+}
+void * child2(void *arg)
+{
+    int tid=pthread_self();
+    printf(&quot;thread %d enter\n&quot;,tid);
+    pthread_once(&amp;once,once_run);
+    printf(&quot;thread %d returns\n&quot;,tid);
+}
+int main(void)
+{
+    int tid1,tid2;
+    printf(&quot;hello\n&quot;);
+    pthread_create(&amp;tid1,NULL,child1,NULL);
+    pthread_create(&amp;tid2,NULL,child2,NULL);
+    sleep(10);
+    printf(&quot;main thread exit\n&quot;);
+    return 0;
+}
+</code></pre>
+<p>具体内部实现, 应该是使用了互斥锁和条件变量保证由pthread_once()指定的函数执行且仅执行一次, once_control变量flag来代表是否执行过了, 执行过了pthread_once()会立即返回0, 而不会去执行指定的函数run_once.<br>如果once_control的初值不是 PTHREAD_ONCE_INIT（LinuxThreads定义为0），pthread_once()的行为就会不正常, 该方面 Linux Pthread和NPTL实现不统一. 所以最好还是初始化为 <code>PTHREAD_ONCE_INIT</code> .</p>
+<h3 id="线程清理"><a href="#线程清理" class="headerlink" title="线程清理"></a>线程清理</h3><p>不论是可预见的线程终止还是异常终止，都会存在资源释放的问题，在不考虑因运行出错而退出的前提下，如何保证线程终止时能顺利的释放掉自己所占用的资源，特别是锁资源，就是一个必须考虑解决的问题。最经常出现的情形是资源独占锁的使用：线程为了访问临界资源而为其加上锁，但在访问过程中被外界取消，如果线程处于响应取消状态，且采用异步方式响应，或者在打开独占锁以前的运行路径上存在取消点，则该临界资源将永远处于锁定状态得不到释放。外界取消操作是不可预见的，因此的确需要一个机制来简化用于资源释放的编程。</p>
+<p><code>pthread_cleanup_push()</code> 之后, 如果出现了终止, 例如调用pthread_exit()和取消点终止, 都将执行pthread_cleanup_push()入栈的清理函数; 如果是正常结束呢? 那就手动调用<code>void pthread_cleanup_pop(int execute)</code>.</p>
+<p>一般流程是这样的: (push, pop总是成对出现的)</p>
+<pre><code class="c++">pthread_cleanup_push(pthread_mutex_unlock, (void *) &amp;mut);
+pthread_mutex_lock(&amp;mut);
+/* do some work */
+pthread_mutex_unlock(&amp;mut);
+pthread_cleanup_pop(0);
+</code></pre>
+<p>但是这样做, 有很大的问题, 如果线程处于PTHREAD_CANCEL_ASYNCHRONOUS状态, 在你的清理函数中有放锁操作时, 试想CANCEL事件有可能在pthread_cleanup_push()和pthread_mutex_lock()之间发生, 或者pthread_mutex_unlock()和pthread_cleanup_pop()之间发生, 从而导致清理函数unlock一个并没有加锁的mutex变量. 所以一般使用前, 要把立即退出, 改换成<code>PTHREAD_CANCEL_DEFERRED</code> 即下一个取消点退出, 这样可以保证资源正确的释放:</p>
+<pre><code class="c++">{
+ int oldtype;
+ pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, &amp;oldtype);
+
+ pthread_cleanup_push(routine, arg);
+ //...
+ pthread_cleanup_pop(execute);
+
+ pthread_setcanceltype(oldtype, NULL);
+}
+</code></pre>
+<p>这里注意一下, 各个编译器对于return的处理可能有一点儿区别, 在线程宿主函数中主动调用return，如果return语句包含在pthread_cleanup_push()/pthread_cleanup_pop()对中，则不会引起清理函数的执行，反而会导致segment fault。</p>
+<h3 id="线程回收"><a href="#线程回收" class="headerlink" title="线程回收"></a>线程回收</h3><p>进程中各个线程的运行都是相互独立的，线程的终止并不会通知，也不会影响其他线程，终止的线程所占用的资源也并不会随着线程的终止而得到释放。正如进程之间可以用wait()系统调用来同步终止并释放资源一样，线程之间也有类似机制，那就是pthread_join()函数。</p>
+<pre><code class="c++">//线程是Jinable的话
+void pthread_exit(void *retval)
+int pthread_join(pthread_t th, void **thread_return)
+int pthread_detach(pthread_t th)
+</code></pre>
+<p>线程将处于DETACHED状态, 在结束运行时自行释放所占用的内存资源，同时也无法由pthread_join()同步，pthread_detach()执行之后，对th请求pthread_join()将返回错误(-1)。</p>
+<h3 id="TSD"><a href="#TSD" class="headerlink" title="TSD"></a>TSD</h3><p>在多线程环境下，由于数据空间是共享的，因此全局变量也为所有线程所共有。但有时应用程序设计中有必要提供线程私有的全局变量. 仅在某个线程中有效，但却可以跨多个函数访问，比如程序可能需要每个线程维护一个链表，而使用相同的函数操作，最简单的办法就是使用同名而不同变量地址的线程相关数据结构。这样的数据结构可以由Posix线程库维护，称为线程私有数据（Thread-specific Data，或TSD）.</p>
+<p>(其他语言一般称为 ThreadLocal)</p>
+<p>实现机制是采用了二级表, 全局变量名一样, 但是各个线程的值不同. TSD池用一个结构数组表示:</p>
+<pre><code>//key-value结构, 所有线程共享的全局数组
+static struct pthread_key_struct pthread_keys[PTHREAD_KEYS_MAX] = { { 0, NULL } };
+</code></pre><p>不论哪个线程调用pthread_key_create()，所创建的key都是所有线程可访问的，但各个线程可根据自己的需要往key中填入不同的值，这就相当于提供了一个同名而不同值的全局变量。<br>具体的创建函数如下:</p>
+<pre><code class="c++">int pthread_key_create(pthread_key_t *key, void (*destr_function) (void *))
+</code></pre>
+<p>该函数从TSD池中分配一项，将其值赋给key供以后访问使用。如果destr_function不为空，在线程退出(pthread_exit())时将以key所关联的数据为参数调用destr_function()，以释放分配的缓冲区。创建一个TSD就相当于将结构数组中的某一项设置为”in_use”，并将其索引返回给*key. key保留了索引, 所以每个线程可以根据自己的情况,在相关索引里存入自己的值, 同时维护一张自己的表. key是全局的.</p>
+<p>但是注意, 这个函数, 仅仅是表示某个线程对于某个key是 “正在使用”, 真正设置值, 是在下面的函数里:</p>
+<pre><code class="c++">//设置
+int  pthread_setspecific(pthread_key_t  key,  const void  *pointer)
+
+//获取
+void * pthread_getspecific(pthread_key_t key)
+</code></pre>
+<p>写入 pthread_setspecific() 时, 将pointer指针值(不是所指的内容)与key相关联, 而相应的get函数则将与key相关联的数据读出来. 数据类型都设为 <code>void *</code> 因此可以指向任何类型的数据.</p>
+<p>一般实现中, 采用二维 void * 指针数组来存放与key关联的数据, 也就是各个线程自己维护的这张表, 每个线程能有多少个key存储呢? 那要看数组大小.</p>
+<p>数组大小由以下几个宏来说明:</p>
+<pre><code class="c++">#define PTHREAD_KEY_2NDLEVEL_SIZE       32
+#define PTHREAD_KEY_1STLEVEL_SIZE   \
+  ((PTHREAD_KEYS_MAX + PTHREAD_KEY_2NDLEVEL_SIZE - 1)/ PTHREAD_KEY_2NDLEVEL_SIZE)
+</code></pre>
+<p>其中在 <code>/usr/include/bits/local_lim.h</code> 中定义了 PTHREAD_KEYS_MAX为1024, 因此一维数组大小为32.<br>而具体存放的位置由key值经过以下计算得到: idx1st = key / PTHREAD_KEY_2NDLEVEL_SIZEidx2nd = key % PTHREAD_KEY_2NDLEVEL_SIZE, 说明第二维度(value长度, 也为32), 也就是说, 数据存放在一个32×32的稀疏矩阵中. 同样, 访问的时候也由key值经过类似计算得到数据所在位置索引, 再取出其中内容返回.</p>
+<p>上面说了, 真正调用destr_function去释放key所对应的全局空间的是 pthread_exit() 线程退出时, 那么下面的delete函数呢?</p>
+<pre><code class="c++">int pthread_key_delete(pthread_key_t key)
+</code></pre>
+<p>这个函数并不检查当前是否有线程正使用该TSD，也不会调用清理函数（destr_function），而只是将TSD释放以供下一次调用pthread_key_create()使用。 也就是说, 把所有线程共享的全局数组的某个key所对应的索引位置置空NULL, 好在重用.</p>
+<p>放一个简单的案例吧:</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+
+pthread_key_t key;//key是全局的
+
+void echomsg(int t)
+{
+    printf(&quot;destructor excuted in thread %d,param=%d\n&quot;,
+           pthread_self(),t);
+}
+void * child1(void *arg)
+{
+    int tid=pthread_self();
+    printf(&quot;thread %d enter\n&quot;,tid);
+    pthread_setspecific(key,(void *)tid);
+    sleep(2);
+    printf(&quot;thread %d returns %d\n&quot;,tid,pthread_getspecific(key));
+    sleep(5);
+}
+void * child2(void *arg)
+{
+    int tid=pthread_self();
+    printf(&quot;thread %d enter\n&quot;,tid);
+    pthread_setspecific(key,(void *)tid);
+    sleep(1);
+    printf(&quot;thread %d returns %d\n&quot;,tid,pthread_getspecific(key));
+    sleep(5);
+}
+int main(void)
+{
+    int tid1,tid2;
+    printf(&quot;hello\n&quot;);
+    pthread_key_create(&amp;key,echomsg);
+    pthread_create(&amp;tid1,NULL,child1,NULL);
+    pthread_create(&amp;tid2,NULL,child2,NULL);
+    sleep(10);
+    pthread_key_delete(key);
+    printf(&quot;main thread exit\n&quot;);
+    return 0;
+}
+</code></pre>
+<p>还是要强调一下, 只有线程退出的时候, 采取主动调用那个<code>pthread_key_create()</code> 指定的清理函数.</p>
+<h3 id="同步，pthread-detach"><a href="#同步，pthread-detach" class="headerlink" title="同步，pthread_detach"></a>同步，pthread_detach</h3><p>同步里面 mutex 和 condition 用的最多, 其次是稍稍强大的 sem 信号量, 读写锁则是特别情况才用. 同步的内容比较多, 还是参考我的博客 <a href="http://www.merlinblog.site/2017/03/19/linux-pthread.html" target="_blank" rel="external">posix-thread</a> 吧.</p>
+<p>(主要弄熟 posix thread 中的 mutex, detach)</p>
+<h2 id="回顾C-11并发库"><a href="#回顾C-11并发库" class="headerlink" title="回顾C++11并发库"></a>回顾C++11并发库</h2><h2 id="技术细节探讨"><a href="#技术细节探讨" class="headerlink" title="技术细节探讨"></a>技术细节探讨</h2><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="深挖、挖线程模型(C+11并发库和Posix Pthread)">深挖、挖线程模型(C+11并发库和Posix Pthread)</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="深挖、挖线程模型(C+11并发库和Posix Pthread)">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

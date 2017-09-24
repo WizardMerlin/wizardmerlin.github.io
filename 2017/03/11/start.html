@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>start writing | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本博客的书写规则(writing rules)">
+<meta name="keywords" content="编码规范">
+<meta property="og:type" content="article">
+<meta property="og:title" content="start writing">
+<meta property="og:url" content="localhost:4000/2017/03/11/start.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="本博客的书写规则(writing rules)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/hexo.jpg">
+<meta property="og:updated_time" content="2017-09-23T07:52:27.810Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="start writing">
+<meta name="twitter:description" content="本博客的书写规则(writing rules)">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/hexo.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#语法限制"><span class="toc-number">1.</span> <span class="toc-text">语法限制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#风格限制"><span class="toc-number">2.</span> <span class="toc-text">风格限制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#语言限制"><span class="toc-number">3.</span> <span class="toc-text">语言限制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分类限制"><span class="toc-number">4.</span> <span class="toc-text">分类限制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#FYI"><span class="toc-number">5.</span> <span class="toc-text">FYI</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>start writing</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-03-11</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/编码规范/">编码规范</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>把博客从博客园, 开源中国迁移到了 Hexo ; 本篇章主要讲述一下书写规则, 顺便测试一下 hexo 的体验, 希望不要太糟糕, 其实抱有希望. 本文主要谈论了语法限制, 文档风格, 书写语言限制, 分类限制, 以及一些高级markdown语法的参考.</p>
+<blockquote>
+<p>“just for fun”  — linus said</p>
+</blockquote>
+<p>同样的, 我写博客, 也不考虑别人是不是看, 别人什么看法, 其实与我无关; 只是出于个人目的.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/hexo.jpg" alt="post-cover"></p>
+<hr>
+<h1 id="语法限制"><a href="#语法限制" class="headerlink" title="语法限制"></a>语法限制</h1><pre><code>1.  level : allow but limit (using &quot;#&quot; &quot;##&quot; &quot;###&quot;, that is using level 1, 2 and 3)
+2.  bold : forbid
+3.  highlight : allow (only use it for key word)
+4.  list : allow (welcome, use it as u like)
+5.  link : allow (that is ok, just ok)
+6.  footnode : allow (welcome, use it as u like)
+7.  pics : allow (welcome, use it as u need)
+8.  reference : allow (refer to books and famous people) 
+9.  code block : allow (welcome, use it as u like)
+10. italic: forbid
+11. table: allow (that is ok, use it as u need)
+</code></pre><h1 id="风格限制"><a href="#风格限制" class="headerlink" title="风格限制"></a>风格限制</h1><pre><code>1. one space between `char and number`, `char and punctuation`
+2. do not use duplicate punctuation at the sametime.
+3. name of `file.md` must be lower case (using `- ` instead of `_`)
+4. paragraph should eat the line head
+</code></pre><h1 id="语言限制"><a href="#语言限制" class="headerlink" title="语言限制"></a>语言限制</h1><pre><code>  using english as much as possible.
+</code></pre><h1 id="分类限制"><a href="#分类限制" class="headerlink" title="分类限制"></a>分类限制</h1><pre><code>1. codings (一切编程相关, 包括架构, 设计)
+2. books (简单的n书评, 或者读书笔记, 或推荐)
+3. managements (teamwork/leading)
+4. domain (行业知识/领域知识)
+5. musings (体会, 感受, 认识)
+6. music (个人爱好)
+</code></pre><h1 id="FYI"><a href="#FYI" class="headerlink" title="FYI"></a>FYI</h1><pre><code>1. footnode
+&lt;span id = &quot;footnode&quot;&gt;跳转到这里：&lt;/span&gt;
+[[footnode-name]](#footnode)
+
+
+2. pic
+![tupian](http://baidu.com)
+
+
+3. link
+[link](http:)
+
+
+4. table
+
+| Colomn0| Colomn1| Colomn2  |
+|---:|:---|:---|
+| xxxxxx| yyyy-yyy | zzz |
+| mmm| yyy-yyyy |   xxxx |
+
+attention： |:----| (left align) |:------:|(center ) |------:| (right align)
+</code></pre><hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)</p>
+<p>Saturday, 11. March 2017 04:09PM </p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="start writing">start writing</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="start writing">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>UDP模型简述 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="主要是和TCP进行对比">
+<meta name="keywords" content="网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UDP模型简述">
+<meta property="og:url" content="localhost:4000/2017/06/19/udp-model.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="主要是和TCP进行对比">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/udp%E6%A8%A1%E5%9E%8B.PNG">
+<meta property="og:updated_time" content="2017-09-24T02:01:23.911Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UDP模型简述">
+<meta name="twitter:description" content="主要是和TCP进行对比">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/udp%E6%A8%A1%E5%9E%8B.PNG">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#udp的特点"><span class="toc-number">2.1.</span> <span class="toc-text">udp的特点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简要说明"><span class="toc-number">2.1.1.</span> <span class="toc-text">简要说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何保证可靠性"><span class="toc-number">2.1.2.</span> <span class="toc-text">如何保证可靠性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#与TCP对比"><span class="toc-number">2.1.3.</span> <span class="toc-text">与TCP对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#udp流量控制"><span class="toc-number">2.1.4.</span> <span class="toc-text">udp流量控制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#c-s模型"><span class="toc-number">2.2.</span> <span class="toc-text">c-s模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#广播"><span class="toc-number">2.3.</span> <span class="toc-text">广播</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#组播"><span class="toc-number">2.4.</span> <span class="toc-text">组播</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">3.1.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#补充connect"><span class="toc-number">3.2.</span> <span class="toc-text">补充connect</span></a></li></ol></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>UDP模型简述</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-06-19</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/网络/">网络</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>tcp模型一般说的比较多, 因为tcp稳定,可靠; 但是代价就是传输效率不高, 实时性不强.这个时候udp正好做了弥补. 本文就谈谈udp.</p>
+</blockquote>
+<p>(所涉及的代码都是核心代码, 很多没有做出错和异常处理, 比如说sendto, recvfrom都要检查返回值, 特别recvfrom还要检查发送端是不是已知服务器, 否则忽略)<br><a id="more"></a></p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>本文主要总结:</p>
+<ul>
+<li>udp的特点(对比tcp), 优缺点, 适用场景</li>
+<li>basic udp c-s模型</li>
+<li>广播模型</li>
+<li>组播模型</li>
+</ul>
+<p>(网络基础就不说了)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="udp的特点"><a href="#udp的特点" class="headerlink" title="udp的特点"></a>udp的特点</h2><h3 id="简要说明"><a href="#简要说明" class="headerlink" title="简要说明"></a>简要说明</h3><ol>
+<li>通信速度快, 保证实时性</li>
+<li>不建立连接, 不维护连接, 更不用断开连接</li>
+<li>稳定性差, 正确率无保证(可靠性差)</li>
+</ol>
+<p>一句话概括: 无连接的,不可靠报文传输.</p>
+<h3 id="如何保证可靠性"><a href="#如何保证可靠性" class="headerlink" title="如何保证可靠性"></a>如何保证可靠性</h3><p>由于无需创建连接, 所以 UDP 开销较小, 数据传输速度快, 实时性较强.多用于对实时性要求较高的通信场合, 如视频会议, 电话会议等.<br>但随之也伴随着数据传输不可靠, 传输数据的正确率, 传输顺序和流量都得不到控制和保证.<br>所以, 通常情况下, 使用 UDP 协议进行数据传输, 为保证数据的正确性, 我们需要 <code>在应用层添加辅助校验协议</code> 来弥补 UDP 的不足, 以达到数据可靠传输的目的.</p>
+<h3 id="与TCP对比"><a href="#与TCP对比" class="headerlink" title="与TCP对比"></a>与TCP对比</h3><p>TCP: (TCP协议, 在IP网络不稳定的基础上, 做相关的弥补)</p>
+<ul>
+<li>数据稳定(有回传应答机制, 可以保证丢包后能重传)</li>
+<li>速率稳定(建立连接后, 基本上所有数据都是走的同一条连接线路)</li>
+<li>流量稳定(滑动窗口, 拥塞控制以及相关算法)</li>
+<li>传输效率低.<br>发送前一定要建立连接, 之后还要处理断开连接; 每次传递过去还需要回执之火才发送下一次数据(可能是多个接收对应一个回执, 稍稍弥补了一下).</li>
+</ul>
+<p>(适合大文件, 重要文件传输; 因为丢包可以重传)</p>
+<p>UDP</p>
+<ul>
+<li>需要自己在应用层, 添加辅助校验协议来弥补 UDP 的不足.<br>(可能接收方缓冲区满了, 对方还在继续发(接收方只能照单收), 套接字的缓冲区被填满后, 新到达的数据报就会被丢弃, 导致大量丢包)<br>(也就是说, 需要在应用层自定义网络协议, 来弥补UDP的丢包; 但是应用层自定义协议的开发量的是非常大的, 技术要求高)</li>
+<li>传输效率高, 实时性强, 传输速度快.</li>
+</ul>
+<p>(适合视频会议, 视频电话, 广播, 聊天客户端)</p>
+<h3 id="udp流量控制"><a href="#udp流量控制" class="headerlink" title="udp流量控制"></a>udp流量控制</h3><p>由于它没有 TCP 滑动窗口的机制, 通常采用如下两种方法解决:</p>
+<ul>
+<li>服务器应用层设计流量控制, 控制发送数据速度</li>
+<li>借助 <code>setsockopt</code> 函数改变接收缓冲区大小(注意设置的是 <code>SO_RCVBUF</code>)</li>
+</ul>
+<pre><code class="c++">#include &lt;sys/socket.h&gt;
+int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);
+int n = 220x1024;
+setsockopt(sockfd, SOL_SOCKET, SO_RCVBUF, &amp;n, sizeof(n));
+</code></pre>
+<p>但是设置缓冲区大小一般是在bind之后, 真正开始通信之前; 特别是TCP时, 一定要在listen之前设置.</p>
+<p>补充:  缓冲区大小, 不是越大越好, 经验表明 <code>220x1024</code>时,  缓冲区的丢包率最低.</p>
+<p>(网络环境不好, 属于硬件或者环境问题, 单单依靠软件, 如改变缓冲区的大小, 解决不了)</p>
+<h2 id="c-s模型"><a href="#c-s模型" class="headerlink" title="c-s模型"></a>c-s模型</h2><p>由于 UDP 不需要维护连接, 程序逻辑简单了很多, 但是 UDP 协议是不可靠的, 保证通讯可靠性的机制需要在应用层实现.<br>基本代码如下:</p>
+<pre><code class="c++">/*server.cpp*/
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;ctype.h&gt;
+
+#define SERV_PORT 8000
+
+int main(void)
+{
+  struct sockaddr_in serv_addr, clie_addr;
+  socklen_t clie_addr_len;
+
+  int sockfd;
+  char buf[BUFSIZ] = {0};
+
+  char str[INET_ADDRSTRLEN];
+  int i, n;
+
+  //watchout SOCK_DGRAM
+  sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+
+  bzero(&amp;serv_addr, sizeof(serv_addr));
+  serv_addr.sin_family = AF_INET;
+  serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+  serv_addr.sin_port = htons(SERV_PORT);
+
+  bind(sockfd, (struct sockaddr *)&amp;serv_addr, sizeof(serv_addr));
+
+  printf(&quot;bind ok, new waitting for recv\n&quot;);
+
+  while(1){
+    clie_addr_len = sizeof(clie_addr);
+    n = recvfrom(sockfd, buf, BUFSIZ, 0, (struct sockaddr *)&amp;clie_addr, &amp;clie_addr_len);
+    if(n == -1) {
+      perror(&quot;recvfrom error&quot;);
+    }
+    printf(&quot;received from %s at PORT %d\n&quot;, inet_ntop(AF_INET, &amp;clie_addr.sin_addr, str, sizeof(str)), 
+       ntohs(clie_addr.sin_port));
+
+    //processing
+    for(i=0;i&lt;n;i++){
+      buf[i] = toupper(buf[i]);
+    }
+    //buf[n] = &#39;\0&#39;; //n&lt;BUFSIZ
+
+    n = sendto(sockfd, buf, BUFSIZ, 0, (struct sockaddr*)&amp;clie_addr, sizeof(clie_addr));
+    if(n==-1){
+      perror(&quot;send error&quot;);
+    }
+
+  }//end of while
+
+  close(sockfd);
+  return 0;
+}
+</code></pre>
+<p>bind之后直接开始传输数据, 不需要再进行listen等操作.</p>
+<p>client的代码更简单, 不需要connect了:</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;ctype.h&gt;
+
+#define SERV_PORT 8000
+
+int main(int argc, char *argv[])
+{
+
+  struct sockaddr_in servaddr;
+  int sockfd, n;
+  char buf[BUFSIZ] = {0};
+
+  sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+
+  bzero(&amp;servaddr, sizeof(servaddr));
+  servaddr.sin_family = AF_INET;
+  inet_pton(AF_INET, &quot;127.0.0.1&quot;, &amp;servaddr.sin_addr);
+
+  servaddr.sin_port = htons(SERV_PORT);
+
+  while(fgets(buf, BUFSIZ, stdin) != NULL) {
+    n = sendto(sockfd, buf, strlen(buf), 0, (struct sockaddr *)&amp;servaddr, sizeof(servaddr));
+    if(n==-1){
+      perror(&quot;send error&quot;);
+    }
+
+    n = recvfrom(sockfd, buf, BUFSIZ, 0, NULL, 0);//do not care the server side
+    if(n==-1){
+      perror(&quot;send error&quot;);
+    }
+    buf[n]=&#39;\0&#39;;
+    write(STDOUT_FILENO, buf, n);
+  }
+
+
+  return 0;
+}
+</code></pre>
+<p>具体代码可以参考: <a href="https://github.com/WizardMerlin/network_life/tree/master/code/udp_c_s" target="_blank" rel="external">https://github.com/WizardMerlin/network_life/tree/master/code/udp_c_s</a></p>
+<p>模型总结如下图:</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/udp%E6%A8%A1%E5%9E%8B.PNG" alt=""></p>
+<h2 id="广播"><a href="#广播" class="headerlink" title="广播"></a>广播</h2><p>广播(broadcast)一般用在局域网之内,需要的基础大概是:</p>
+<ul>
+<li>xxx.xxx.xxx.255 最后一个地址 <code>255</code> 表示广播</li>
+<li>一般是通过交换机进行转发(局域网内使用交换机足够了)<br><code>server---交换机(局域网)---局域网内的client(多个)</code></li>
+</ul>
+<p>简单说: 交换机发现数据包中的ip地址是255, 表明是一个广播, 就把该数据包发送给当前网络环境中的所有机器.(也就是说代码中你发送数据给 <code>255</code> 就足够了, 其他的你别管)</p>
+<p>socket默认是不允许广播的, 需要设置socket参数(开放广播权限, 即 <code>SO_BROADCAST</code> ):<br>(注意是在bind之后设置)</p>
+<pre><code class="c++">/*int setsockopt(int sockfd, int level, intoptname, 
+      const void *optval, socklen_t optlen);*/
+
+int flag = 1;
+setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &amp;flag, sizeof(flag));
+</code></pre>
+<p>具体代码参考如下:</p>
+<p>server发送给广播地址BROADCAST_IP(根据自己的网段指定), 填充client_ip的时候要手动指定端口号, 不能依靠隐式绑定了, 因为这个端口号也是client代码中需要显示绑定的.</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;string.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;net/if.h&gt;
+
+
+#define SERVER_PORT 8000
+#define CLIENT_PORT 9000 /*must*/
+#define MAXLINE 1500
+
+
+//according to ur ip address, set client to broadcast ip
+#define BROADCAST_IP &quot;192.168.1.255&quot;
+
+int main(void)
+{
+
+  int sockfd;
+  struct sockaddr_in serveraddr, clientaddr;
+  char buf[MAXLINE] = {0};
+
+  /*used for udp*/
+  sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+
+  bzero(&amp;serveraddr, sizeof(serveraddr));
+  serveraddr.sin_family = AF_INET;
+  serveraddr.sin_addr.s_addr = htonl(INADDR_ANY); /*server ip whatever*/
+  serveraddr.sin_port = htons(SERVER_PORT);
+
+
+  bind(sockfd, (struct sockaddr *)&amp;serveraddr, sizeof(serveraddr));
+
+  /*set broadcast previlege*/
+  int flag = 1;
+  setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &amp;flag, sizeof(flag));
+
+  /*fill out client, remember port*/
+  bzero(&amp;clientaddr, sizeof(clientaddr));
+  clientaddr.sin_family = AF_INET;
+  inet_pton(AF_INET, BROADCAST_IP, &amp;clientaddr.sin_addr.s_addr);
+  clientaddr.sin_port = htons(CLIENT_PORT); //must
+
+  int i = 0;
+  while(1) {
+    sprintf(buf, &quot;send %d message\n&quot;, i++);
+    sendto(sockfd, buf, strlen(buf), 0, 
+       (struct sockaddr *)&amp;clientaddr, sizeof(clientaddr));
+    sleep(1);
+  }
+
+  close(sockfd);
+
+  return 0;
+}
+</code></pre>
+<p>client代码:</p>
+<p>client绑定IP的时候, 绑定”0.0.0.0”即可(不能只接受本机广播吧)</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;arpa/inet.h&gt;
+
+#define SERVER_PORT 8000
+#define MAXLINE 4096
+#define CLIENT_PORT 9000 /*the same as broadcast port*/
+
+int main(int argc, char *argv[])
+{
+  struct sockaddr_in localaddr;
+  int confd;
+  ssize_t len;
+  char buf[MAXLINE] = {0};
+
+  confd = socket(AF_INET, SOCK_DGRAM, 0);
+
+  bzero(&amp;localaddr, sizeof(localaddr));
+  localaddr.sin_family = AF_INET;
+  inet_pton(AF_INET, &quot;0.0.0.0&quot;, &amp;localaddr.sin_addr.s_addr);//client ip whatever
+  localaddr.sin_port = htons(CLIENT_PORT);
+
+  int ret = bind(confd, (struct sockaddr *)&amp;localaddr, sizeof(localaddr));//must
+
+  if(ret == 0) {
+    printf(&quot;bind ok..\n&quot;);
+  }
+
+  while(1) {
+    len = recvfrom(confd, buf, sizeof(buf), 0, NULL, 0);
+    write(STDOUT_FILENO, buf, len);
+  }
+  close(confd);
+
+  return 0;
+}
+</code></pre>
+<p>具体代码请参考我的github库:<br><a href="https://github.com/WizardMerlin/network_life/tree/master/code/udp_broadcast" target="_blank" rel="external">https://github.com/WizardMerlin/network_life/tree/master/code/udp_broadcast</a></p>
+<h2 id="组播"><a href="#组播" class="headerlink" title="组播"></a>组播</h2><p>这个又叫多播(multicast), 也就是说, 发送随便你发, 但是我客户端接收不接受就有限制了, 只有在相应的组播组里, 才能接收.(简单举例: 不进相关的群, 就收不到群主的红包)</p>
+<p>组播组</p>
+<ul>
+<li>224.0.0.0～224.0.0.255 为预留的组播地址(永久组地址), 地址 224.0.0.0 保留不做分配, 其它地址供路由协议使用</li>
+<li>224.0.1.0～224.0.1.255 是公用组播地址, 可以用于 Internet; 欲使用需申请</li>
+<li>224.0.2.0～238.255.255.255 为用户可用的组播地址(临时组地址), 全网范围内有效;</li>
+<li>239.0.0.0～239.255.255.255 为本地管理组播地址, 仅在特定的本地范围内有效</li>
+</ul>
+<p>可以使用 <code>ip address</code> 或者 <code>ip ad</code> 查看一下网卡支持多播与否.<br>(可以使用命令打开或者关闭网卡 sudo ifconfig eth0 up/down)</p>
+<pre><code class="bash">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 00:16:3e:30:e0:f9 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.216.110/20 brd 172.17.223.255 scope global eth0
+</code></pre>
+<p>注意网卡编号, 代码中, 则通过 <code>if_nametoindex</code> 命令可以根据网卡名, 获取网卡序号:</p>
+<pre><code class="c++">#include &lt;net/if.h&gt;
+
+unsigned if_nametoindex(const char *ifname); /*use this*/
+char *if_indextoname(unsigned ifindex, char *ifname);
+struct if_nameindex *if_nameindex(void);
+void if_freenameindex(struct if_nameindex *ptr);
+</code></pre>
+<p>编程中还涉及到要填充一个组播地址结构体,  <code>/usr/include/linux/in.h</code> 下定义的结构体 <code>ip_mreqn</code>:</p>
+<pre><code class="c++">struct ip_mreqn {
+        struct in_addr  imr_multiaddr;          /* IP multicast address of group */
+        struct in_addr  imr_address;            /* local IP address of interface */
+        int             imr_ifindex;            /* Interface index */
+};
+</code></pre>
+<p>结构体 <code>imr_address group</code> 在设置server <code>发送组播权限</code> 时需要: </p>
+<pre><code class="c++">setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_IF, &amp;group, sizeof(group));
+</code></pre>
+<p>补充: </p>
+<ul>
+<li>构造imr_address 如果传入 <code>0.0.0.0</code> 即INADDR_ANY, 那么会在发送的时候自动分配一个本地地址. </li>
+<li>server代码中clientaddr的地址设置为group ip即可, 例如 <code>#define GROUP &quot;239.0.0.2&quot;</code></li>
+</ul>
+<p>核心代码(构造):</p>
+<pre><code class="c++">  inet_pton(AF_INET, GROUP, &amp;group.imr_multiaddr);  /*设置组地址*/
+  inet_pton(AF_INET, &quot;0.0.0.0&quot;, &amp;group.imr_address);  /*本地任意 IP*/
+
+  group.imr_ifindex = if_nametoindex(&quot;eth0&quot;);  /* eth0 --&gt; 编号 命令: ip ad */
+  setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_IF, &amp;group, sizeof(group));
+</code></pre>
+<p>并且注意server代码中发送给client的端口也要和client代码保持一致, 即指定相同的port.</p>
+<p>详细代码如下:<br>服务端:</p>
+<pre><code class="c++">/*server.cpp*/
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;net/if.h&gt;
+
+
+#define SERVER_PORT 6666
+#define CLIENT_PORT 9000
+#define MAXLINE 1500
+#define GROUP &quot;239.0.0.2&quot; //watch out group ip set to client ip
+
+
+int main(void)
+{
+  int sockfd, i ;
+  struct sockaddr_in serveraddr, clientaddr;
+  char buf[MAXLINE] = &quot;itcast\n&quot;;
+  char ipstr[INET_ADDRSTRLEN]; /* 16 Bytes */
+  socklen_t clientlen;
+  ssize_t len;
+  struct ip_mreqn group;
+
+  sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+
+  bzero(&amp;serveraddr, sizeof(serveraddr));
+  serveraddr.sin_family = AF_INET; /* IPv4 */
+  serveraddr.sin_addr.s_addr = htonl(INADDR_ANY); /* 本地任意 IP INADDR_ANY = 0 */
+  serveraddr.sin_port = htons(SERVER_PORT);
+
+  bind(sockfd, (struct sockaddr *)&amp;serveraddr, sizeof(serveraddr));
+
+  /*设置组地址*/
+  inet_pton(AF_INET, GROUP, &amp;group.imr_multiaddr);
+  /*本地任意 IP*/
+  inet_pton(AF_INET, &quot;0.0.0.0&quot;, &amp;group.imr_address);
+
+  /* eth0 --&gt; 编号 命令： ip ad */
+  group.imr_ifindex = if_nametoindex(&quot;eth0&quot;);
+  setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_IF, &amp;group, sizeof(group));
+
+  /*构造 client 地址 IP+端口 */
+  bzero(&amp;clientaddr, sizeof(clientaddr));
+  clientaddr.sin_family = AF_INET; /* IPv4 */
+  /*watch out group, not BROADCAST_IP*/
+  inet_pton(AF_INET, GROUP, &amp;clientaddr.sin_addr.s_addr); 
+  clientaddr.sin_port = htons(CLIENT_PORT);
+
+  while (1) {
+    //fgets(buf, sizeof(buf), stdin);
+    sendto(sockfd, buf, strlen(buf), 0, (struct sockaddr *)&amp;clientaddr, sizeof(clientaddr));
+    sleep(1);
+  }
+
+  close(sockfd);
+  return 0;
+}
+</code></pre>
+<p>客户端</p>
+<p>这边当然也要指定相关的组, 加入相关的组播组才可以接收到相关的数据.<br>(没有加入group组播组的客户端, 虽然server还是会借助交换机发送, 但是client不接收)</p>
+<pre><code class="c++">setsockopt(sockfd, IPPROTO_IP, IP_ADD_MEMBERSHIP, &amp;group, sizeof(group));
+</code></pre>
+<p>其中group即 <code>struct ip_mreqn group;</code></p>
+<p>核心代码:</p>
+<pre><code class="c++">  struct ip_mreqn group;
+
+  inet_pton(AF_INET, GROUP, &amp;group.imr_multiaddr);  /*设置组地址*/
+  inet_pton(AF_INET, &quot;0.0.0.0&quot;, &amp;group.imr_address);  /*本地任意 IP*/
+  group.imr_ifindex = if_nametoindex(&quot;eth0&quot;);  /* eth0*/
+
+  /*设置 client 加入多播组 */
+  setsockopt(confd, IPPROTO_IP, IP_ADD_MEMBERSHIP, &amp;group, sizeof(group));
+</code></pre>
+<p>详细代码如下:</p>
+<pre><code class="c++">/*client.cpp*/
+
+#include &lt;netinet/in.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;net/if.h&gt;
+
+#define SERVER_PORT 6666
+#define MAXLINE 4096
+#define CLIENT_PORT 9000
+#define GROUP &quot;239.0.0.2&quot;
+
+int main(int argc, char *argv[])
+{
+  struct sockaddr_in serveraddr, localaddr;
+  int confd;
+  ssize_t len;
+  char buf[MAXLINE];
+
+  /* 定义组播结构体 */
+  struct ip_mreqn group;
+  confd = socket(AF_INET, SOCK_DGRAM, 0);
+  //初始化本地端地址
+  bzero(&amp;localaddr, sizeof(localaddr));
+  localaddr.sin_family = AF_INET;
+  inet_pton(AF_INET, &quot;0.0.0.0&quot; , &amp;localaddr.sin_addr.s_addr);
+  localaddr.sin_port = htons(CLIENT_PORT);
+
+  bind(confd, (struct sockaddr *)&amp;localaddr, sizeof(localaddr));//must
+
+
+  inet_pton(AF_INET, GROUP, &amp;group.imr_multiaddr);  /*设置组地址*/
+  inet_pton(AF_INET, &quot;0.0.0.0&quot;, &amp;group.imr_address);  /*本地任意 IP*/
+  group.imr_ifindex = if_nametoindex(&quot;eth0&quot;);  /* eth0*/
+  /*设置 client 加入多播组 */
+  setsockopt(confd, IPPROTO_IP, IP_ADD_MEMBERSHIP, &amp;group, sizeof(group));
+
+  while (1) {
+    len = recvfrom(confd, buf, sizeof(buf), 0, NULL, 0);
+    write(STDOUT_FILENO, buf, len);
+  }
+
+  close(confd);
+  return 0;
+}
+</code></pre>
+<p>代码地址: <a href="https://github.com/WizardMerlin/network_life/tree/master/code/udp_multicast" target="_blank" rel="external">https://github.com/WizardMerlin/network_life/tree/master/code/udp_multicast</a></p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>全文把udp的核心内容大致讲了讲, 也说了开发中的注意事项.<br>详细的可以参考一下 《unp 卷1》.</p>
+<p>在做网络的应用的时候, 和udp还是有一些区别的(根据协议的特点做相应的调整), 它们适用的方向也不一样. 例如实时视频直播软件的时候可能是:</p>
+<ol>
+<li>屏幕截图模块(为保证画面流畅, 至少保证有24帧)</li>
+<li>截取帧数 (一般为保证画面, 8-12即可)</li>
+<li>压缩图片</li>
+<li>压缩数据包</li>
+<li>传递数据–(多播)</li>
+<li>解压缩</li>
+<li>成像</li>
+</ol>
+<p>其中传递数据的时候, 需要用到网络编程中的udp模型(加入错误和异常处理).</p>
+<h2 id="补充connect"><a href="#补充connect" class="headerlink" title="补充connect"></a>补充connect</h2><p>自然而然的认为udp模型下就应该没有connect啥事儿, 因为压根儿就不建立连接.<br>这样想就错了, 因为在TCP模型下connect有发送ack请求建立连接的作用, 但是除此之外, 它还有一个作用 <code>指明目的地址/端口</code> .</p>
+<p>一般来说, UDP客户端在建立了socket后会直接用sendto()函数发送数据, 需要在sendto()函数的参数里指明目的地址/端口. 如果一个UDP客户端在建立了插口后首先用connect()函数指明了目的地址/端口, 然后也可以用send函数发送数据, 因为此时send函数已经知道对方地址/端口, 用getsockname()也可以得到这个对端socket addr信息, 即UDP的connect只是告诉内核保存了对端的IP和端口号.</p>
+<p>从内核上看: connect绑定对端ip端口之后, 内核以后就将该套接字的数据发给这个对端地址, 从这个对端地址收到的数据也会发送给用户态客户程序.</p>
+<p>由此, UDP的套接字分为 <code>已连接的套接字</code> 和 <code>未连接的套接字</code>, 默认的是未连接的套接字，上面的例程采用的是未连接的套接字.</p>
+<p>区别如下:</p>
+<ul>
+<li>socket()——&gt;sendto()或recvfrom(), 默认未连接的套接字</li>
+<li>socket()——&gt;connect()——&gt;send或recv() 已连接套接字</li>
+</ul>
+<p>UDP客户端在建立了插口后会直接用sendto()函数发送数据, 还隐含了一个操作: 在发送数据之前, UDP会首先为该socket选择一个独立的UDP端口(在1024—5000之间), 将该插口置为已绑定状态. 当然你也可以自己bind, 强制使用某端口.</p>
+<p>但是一旦使用了connect, 也就是说强制绑定了发送和接收对象, 那么只能完成一对一的传输了. 特别是服务端使用了connect函数绑定了对端之后, 在不能接收其他的客户端请求了. UDP已连接的套接字只能实现一对一的传输, 如果要从多个地方接受数据和发送数据, 则只能使用未连接的套接字. </p>
+<p>因此, UDP客户端多用已连接的套接字(可以使用connect, 当然也可以不用), 服务端用未连接的套接字(服务器更没必要用connect).</p>
+<p>基本就这样了, 不足和错误之处, 还望指正.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="UDP模型简述">UDP模型简述</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="UDP模型简述">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

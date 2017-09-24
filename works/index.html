@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>works | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Coding for pleasure.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="works">
+<meta property="og:url" content="localhost:4000/works/index.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="Coding for pleasure.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-09-17T10:01:25.564Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="works">
+<meta name="twitter:description" content="Coding for pleasure.">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../css/common.css">
+<link rel="stylesheet" href="../css/nav.css">
+<link rel="stylesheet" href="../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <style>
+
+    header .bg-header {
+        height: 480px;
+        /*background-color: #62A4FF;*/
+        background-image: -webkit-linear-gradient(top, #54D3DD, #9778F9)
+    }
+
+    /*头像*/
+    .bg-header .avatar img {
+        border-radius: 50%;
+        margin-top: 50px;
+        max-width: 170px;
+    }
+
+    .bg-header h1,
+    .bg-header h2 {
+        color: white;
+    }
+
+    /*姓名*/
+    .bg-header h1 {
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(15, 15, 15, .3);
+    }
+
+    /*描述*/
+    .bg-header h2 {
+        font-size: 18px;
+        margin-top: 12px;
+    }
+
+    /*整个作品展示区*/
+    .works-area {
+        margin-top: -175px;
+    }
+
+    .works-area .works-item {
+        width: 80%;
+        max-width: 1200px;
+
+        border-radius: 2px;
+        border: 1px solid #eee8d5;
+        margin: 25px auto;
+        box-shadow: 8px 5px 10px rgba(0, 0, 0, .2);
+    }
+
+    .works-item-img {
+        margin: auto -26px;
+    }
+
+    .works-item-img img {
+        width: 100%;
+    }
+
+    .works-area .works-item {
+        background: white;
+        padding: 0 25px 15px;
+    }
+
+    .works-item .works-content {
+        padding-top: 15px;
+    }
+
+    .works-item .title {
+        height: 50px;
+        margin: 0;
+    }
+
+    .works-item .title{
+        font-size: 18px;
+    }
+
+    .works-item .use span {
+        display: inline-block;
+        font-size: 12px;
+        border-radius: 3px;
+        padding: 0 4px;
+        border: thin solid #795548;
+    }
+
+    .works-item .subtitle {
+        margin: 0;
+        font-size: 17px;
+    }
+</style>
+
+<div class="works-container" style="background-color: #fafafa">
+    <header>
+        <div class="bg-header is-flex justify-center">
+            <div class="profile">
+                <div class="avatar">
+                    <img src="http://omotkhw3y.bkt.clouddn.com/001.jpg">
+                </div>
+                <div class="personal-profile has-text-centered content">
+                    <h1>
+                        Merlin
+                    </h1>
+                    <h2>-- 个人作品集 --</h2>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container works-area">
+        
+            <div class="works-item">
+                <div class="title is-flex center justify-space-between ">
+                    <span>
+                        <strong>底层开发&amp;生产框架</strong>
+                    </span>
+                    <span class="title-date tag is-dark">
+                        2016.12
+                    </span>
+                </div>
+                <div class="works-item-img">
+                    <img src="http://omotkhw3y.bkt.clouddn.com/not_avaliable.png">
+                </div>
+                <div class="works-content">
+                    <div class="use text-warning">
+                        
+                        <span>
+                                Json
+                            </span>
+                        
+                        <span>
+                                C++
+                            </span>
+                        
+                        <span>
+                                Java
+                            </span>
+                        
+                        <span>
+                                Python
+                            </span>
+                        
+                        <span>
+                                Shell
+                            </span>
+                        
+                        <span>
+                                Lua
+                            </span>
+                        
+                        <span>
+                                R
+                            </span>
+                        
+                    </div>
+                    　
+                    <p class="subtitle"> 一个模仿框架, 但是在某几个细节点上达到了业界一级水平 </p>
+
+                    <p class="text-muted"> 链接说明: 主要存储在阿里云私有code页面和github </p>
+                </div>
+                <div class="is-flex" style="margin-top: 30px;">
+                    <a class="button is-info" href="https://github.com/WizardMerlin" target="_blank">
+                        Open it
+                    </a>
+                </div>
+
+            </div>
+        
+            <div class="works-item">
+                <div class="title is-flex center justify-space-between ">
+                    <span>
+                        <strong>博客v1.0</strong>
+                    </span>
+                    <span class="title-date tag is-dark">
+                        2015.3
+                    </span>
+                </div>
+                <div class="works-item-img">
+                    <img src="http://omotkhw3y.bkt.clouddn.com/not_avaliable.png">
+                </div>
+                <div class="works-content">
+                    <div class="use text-warning">
+                        
+                        <span>
+                                jQuery
+                            </span>
+                        
+                        <span>
+                                Bootstrap
+                            </span>
+                        
+                        <span>
+                                Node.js
+                            </span>
+                        
+                        <span>
+                                EJS
+                            </span>
+                        
+                        <span>
+                                Hexo
+                            </span>
+                        
+                        <span>
+                                SASS
+                            </span>
+                        
+                    </div>
+                    　
+                    <p class="subtitle"> 基于 Hexo 制作的个人博客主题 </p>
+
+                    <p class="text-muted"> Hexo 是某位台湾友人基于 Node.js 编写的博客框架 </p>
+                </div>
+                <div class="is-flex" style="margin-top: 30px;">
+                    <a class="button is-info" href="https://github.com/WizardMerlin" target="_blank">
+                        Open it
+                    </a>
+                </div>
+
+            </div>
+        
+    </div>
+</div>
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/search_core.js"></script>
+<script src="../js/script.js"></script>
+
+</body>
+</html>
+

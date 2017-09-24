@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Boost Boost Boost | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="C++必备啊, Boost还能说啥?">
+<meta name="keywords" content="cpp,boost">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Boost Boost Boost">
+<meta property="og:url" content="localhost:4000/2017/06/21/boost.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="C++必备啊, Boost还能说啥?">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/compile_b2.png">
+<meta property="og:updated_time" content="2017-09-24T03:36:40.803Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Boost Boost Boost">
+<meta name="twitter:description" content="C++必备啊, Boost还能说啥?">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/compile_b2.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装和建议"><span class="toc-number">2.1.</span> <span class="toc-text">安装和建议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bind"><span class="toc-number">2.2.</span> <span class="toc-text">Bind</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Function"><span class="toc-number">2.3.</span> <span class="toc-text">Function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Thread库"><span class="toc-number">2.4.</span> <span class="toc-text">Thread库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#线程管理"><span class="toc-number">2.4.1.</span> <span class="toc-text">线程管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程同步"><span class="toc-number">2.4.2.</span> <span class="toc-text">线程同步</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Asio"><span class="toc-number">2.5.</span> <span class="toc-text">Asio</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Atomic"><span class="toc-number">2.6.</span> <span class="toc-text">Atomic</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Boost Boost Boost</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-06-21</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/boost/">boost</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>首先, C++11以来, C++这门语言越来越强大, 并且好用. 所以使用boost库的机会是越来越少, 而且由于Boost库太大, 使用的时候, 也可能需要去进行适当的裁剪. 并且Boost 中也有很多是实验性质的东西, 在实际的开发中实用需要谨慎.</p>
+</blockquote>
+<p>那么今天总结Boost的意义在于? 其实就工作开发而言, 个人认为 <code>意义已经不大了</code> (除非你的编译器不支持C++11, 而只到C++03), 因为你可以直接上手学习C++11了, <code>regex</code>, <code>thread</code>, <code>tuple</code>, <code>unordered</code>, 智能指针等, 精华已经被抽取到了C++11标准中(实现上略有差别, 或者阉割). (但是就我个人而言, 当年在学习Boost的时候, 确实收获很多; 不过也未必, Boost很麻烦, 我碰到的大佬, 最多用用STL, 很少用Boost)</p>
+<p>本文是对Boost常用库的总结. (长文, 慎入)</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>本文是总结, 也是相关的工程实践(意思是说, 可能涉及到的实践细节比较多&amp;篇幅比较长), 但是不讲安装配置之类的.</p>
+<p>主要内容有:</p>
+<ul>
+<li>通用库<ul>
+<li>Smart_ptrs</li>
+<li>Conversion</li>
+<li>Utility</li>
+<li>Regex</li>
+</ul>
+</li>
+<li>数据结构(容器)<ul>
+<li>Tuple</li>
+<li>Array</li>
+<li>Unordered容器 </li>
+</ul>
+</li>
+<li>高级编程(重点)<ul>
+<li>Thread</li>
+<li>Asio (网络编程)</li>
+<li>Bind</li>
+<li>Function</li>
+<li>Ref</li>
+<li>Lambda</li>
+<li>Signals(信号与槽)</li>
+<li>数学/数字处理 (特别是金融里面用的比较多)</li>
+</ul>
+</li>
+</ul>
+<p>但是下面讲解可能不按照顺序, 按照我的熟悉程度讲解的. (越简单的越熟悉, 用的越多的越熟悉)</p>
+<p>(需要一定的STL基础, 最好非常熟悉STL)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>TODO, 东西比较多, 有时间一点点儿写. (整理思路和理清头绪, 再书写出来, 比想象中的费时间)</p>
+<h2 id="安装和建议"><a href="#安装和建议" class="headerlink" title="安装和建议"></a>安装和建议</h2><p>这里简要说说安装环境问题, 不管你在哪个平台, 都要涉及这个问题. Boost很大, 先把工作中常用的那几个部分非常熟悉了, 之后慢慢在工作中积累.</p>
+<p>下面是安装: (Linux平台, Ubuntu; )<br>如果你是用<a href="https://conan.io/#carousel" target="_blank" rel="external">conan</a>这种C++包管理器来管理库的话, 请自己玩.</p>
+<p>下面我记录一下，按照Boost Jam的安装方式来<code>完全安装</code>，借助其提供b2工具。<br>(安装的意思， 把头文件放在/usr/local/include, 把库文件放在/usr/local/lib目录)</p>
+<ul>
+<li>第一步生成相关b2可执行文件：<br><img src="http://omotkhw3y.bkt.clouddn.com/compile_b2.png" alt=""></li>
+<li>第二步: 开始安装  (我是完全安装)<pre><code>./b2 --buildtype=complete install
+</code></pre></li>
+</ul>
+<p>windows下安装: </p>
+<p>请下载二进制工具(经过预编译的)<br>(在state目录下, 就是已经编译好的库lib或者dll了, <code>请直接配置</code>, 见下文)</p>
+<p>当然我下载的是源码版本, 所以先编译吧.</p>
+<ul>
+<li>解压文件，在cmd中打开到boost库的根目录下: (我的解压在 <code>C:\local\boost_1_53_0</code>)</li>
+<li>双击bootstrap.bat文件或者cmd执行 <code>C:\local\boost_1_53_0&gt;C:\local\boost_1_53_0\bootstrap.bat</code><br>运行结果如下:<br>```<br>Building Boost.Build engine</li>
+</ul>
+<p>Bootstrapping is done. To build, run:</p>
+<pre><code>.\b2
+</code></pre><p>To adjust configuration, edit ‘project-config.jam’.<br>Further information:</p>
+<pre><code>- Command line help:
+.\b2 --help
+
+- Getting started guide:
+http://boost.org/more/getting_started/windows.html
+
+- Boost.Build documentation:
+http://www.boost.org/build/doc/html/index.html
+</code></pre><pre><code>* 生成bjam.exe, 直接双击bjam.exe或者执行以下命令`C:\local\boost_1_53_0\bjam.exe -j4 --debug-symbols=on --build-type=complete toolset=msvc-14.0 threading=multi runtime-link=shared` . (msvc-14.0针对msvc2015, 如果是vs2017, 请选择 toolset=msvc-14.1; 之后不用在项目属性页面切换 `平台工具集`)
+</code></pre><p>..updated 2219 targets…</p>
+<p>The Boost C++ Libraries were successfully built!</p>
+<p>The following directory should be added to compiler include paths:</p>
+<pre><code>C:\local\boost_1_53_0
+</code></pre><p>The following directory should be added to linker library paths:</p>
+<pre><code>C:\local\boost_1_53_0\stage\lib
+</code></pre><pre><code> 等待程序编译完成, 大约要两个小时左右, 会在boost根目录下生成 bin.v2 和 stage 两个文件夹, 其中bin.v2下是生成的中间文件, 大小在2.7G左右, 可以直接删除. stage下才是生成的dll和lib文件. 补充选项的意义:
+</code></pre><p>Properties:</p>
+<p>  toolset=toolset         Indicate the toolset to build with.</p>
+<p>  variant=debug|release   Select the build variant</p>
+<p>  link=static|shared      Whether to build static or shared libraries</p>
+<p>  threading=single|multi  Whether to build single or multithreaded binaries</p>
+<p>  runtime-link=static|shared<br>                          Whether to link to static or shared C and C++<br>                          runtime.</p>
+<pre><code>
+下面进行配置:
+</code></pre><p>路径是: 视图-&gt;属性管理器-&gt;当前项目-&gt;Debug|Win32-&gt;Microsoft.Cpp.Win32.user 双击<br>在弹出的属性对话框中:<br>通用属性-&gt;VC++目录：”包含目录”: boost的根目录，例: C:\boost_1_53_0<br>“库目录”: stage下的链接库目录，例:C:\boost_1_53_0\stage\lib<br>通用属性-&gt;链接器-&gt;常规:”附加库目录”:例:C:\boost_1_53_0\stage\lib</p>
+<pre><code>
+
+* 哪些库是必须编译才能使用的呢？(很多库不必编译就可以使用)
+![](http://omotkhw3y.bkt.clouddn.com/boost_show_must_compiled_libs.png)
+
+下面仔细说:
+所有的Boost头文件都以.hpp为后缀名,要详细的了解Boost各种库,可以打开libs/index.html文件.
+很多Boost库,只需要包含它的头文件即可, 头文件已经包含了模板和inline函数, 不需要编译成二进制库文件. 
+
+必须编译再使用的库:
+
+    Boost.Chrono 
+    Boost.Context 
+    Boost.Filesystem 
+    Boost.GraphParallel 
+    Boost.IOStreams 
+    Boost.Locale 
+    Boost.MPI 
+    Boost.ProgramOptions 
+    Boost.Python (see the Boost.Python build documentation before building and installing it) 
+    Boost.Regex  (注意)
+    Boost.Serialization 
+    Boost.Signals (注意) 
+    Boost.System (注意)
+    Boost.Thread (注意)
+    Boost.Timer 
+    Boost.Wave
+
+
+可选库: 必须要编译成二进制才能使用.
+
+    Boost.DateTime 
+    Boost.Graph 
+    Boost.Math 
+    Boost.Random 
+    Boost.Test 
+    Boost.Exception
+
+
+选择是否安装可以在用`b2`工具编译的时候，使用参数选项`with`和`without`
+
+```bash
+./b2 --with-atomic --buildtype=complete install
+</code></pre><p>表示只编译安装atmoic库.</p>
+<p>其他参考<code>./b2 --help</code></p>
+<ul>
+<li>来看一下是否安装成功？<ul>
+<li>查看一下<code>/usr/local/include/boost</code>目录下是否有内容</li>
+<li>写一段代码引用一下： <code>usr/local/include/boost/config.hpp</code><br>(这个文件会一直包含，直到定义了BOOST_STDLIB等宏)<br>代码如下：<br>```c++<br>#include <iostream><br>#include <boost config.hpp=""></boost></iostream></li>
+</ul>
+</li>
+</ul>
+<p>using namespace std;</p>
+<p>int main(void)<br>{<br>  cout &lt;&lt; BOOST_PLATFORM &lt;&lt; endl;<br>  cout &lt;&lt; BOOST_STDLIB &lt;&lt; endl;<br>  cout &lt;&lt; BOOST_COMPILER &lt;&lt; endl; </p>
+<p>  return 0;<br>}<br>/*<br>运行结果:<br>linux<br>GNU libstdc++ version 20150901<br>GNU C++ version 4.9.0 20150901</p>
+<p>或者<br>Win32<br>Dinkumware standard library version 650<br>Microsoft Visual C++ version 14.1</p>
+<p>*/</p>
+<pre><code>
+下面所有的代码都是在Widnows环境VS下书写(别问我为什么)
+
+## Ref
+
+网上有人这么问答: 
+c++本身有引用（&amp;），为什么C++11又引入了std::ref ?
+主要是考虑函数式编程（如std::bind）在使用时，是对参数直接拷贝，而不是引用。
+
+个人觉得这个回答就比较简单了, 或者说没有水准, 提问的人也问的没有水准. 已经有了指针, 那么为什么还会有智能指针呢?
+
+ref其实可以称为智能指针, 实际上它是原始对象的封装体的工厂方法(你看下面就知道了), 并且已经引入C++ 11标准了.
+
+具体你可以参考我的另一文章 [ref-in-cpp](http://www.merlinblog.site/2017/07/03/ref-in-cpp.html) , 详细说明了这些前因后果. 这里还是简单说一下`Boost.ref` .
+
+库 ref 在 boost/ref.hpp 中提供了模板工厂函数 boost::ref，boost::cref 分别对应包装引用和常引用。bind以及function的使用，而boost::ref可以用来助它们一臂之力。由于bind在绑定参数时，需要进行拷贝，因此当传入的引用对象无法进行拷贝时，编译器就会发生错误。那如何处理这种无法被拷贝的对象引用呢？这个时候ref就派上用场了。当然它的用处也不仅限于此，当在其它应用中，如果拷贝的代价过高时，就可以选择使用它。( 核心代码再 `boost/core/ref.hpp` )
+
+最常见的使用, 和 bind 一起用:
+```c++
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+#include &lt;boost/bind.hpp&gt;
+#include &lt;boost/function.hpp&gt;
+
+void print(std::ostream &amp;os, int i)
+{
+  os &lt;&lt; i &lt;&lt; std::endl;
+}
+
+int main()
+{
+  // std::cout为标准输出对象，它是无法进行拷贝的，因此此处必须使用boost::ref来绑定它的引用，
+  // 否则会提示拷贝构造失败，因为拷贝构造是私有的
+  boost::function&lt;void (int)&gt; pt = boost::bind(print, boost::ref(std::cout), _1);
+
+  std::vector&lt;int&gt; v;
+  v.push_back(1);
+  v.push_back(2);
+  v.push_back(3);
+  v.push_back(4);
+
+  std::for_each(v.begin(), v.end(), pt);
+
+  return 0;
+}
+</code></pre><p>小结: 当在某些情况下需要拷贝对象参数时, 如果该对象无法进行拷贝或者拷贝代价过高, 这时候就可以选择ref.</p>
+<p>btw: 当然上面讲解的时候, 非常潦草, 也没有概括它更多的用法, 详细请参考 std::ref, 或者我的博文 <a href="http://www.merlinblog.site/2017/07/03/ref-in-cpp.html" target="_blank" rel="external">ref-in-cpp</a> .</p>
+<h2 id="Bind"><a href="#Bind" class="headerlink" title="Bind"></a>Bind</h2><h2 id="Function"><a href="#Function" class="headerlink" title="Function"></a>Function</h2><h2 id="Thread库"><a href="#Thread库" class="headerlink" title="Thread库"></a>Thread库</h2><p>Boost并发领域有3个主要的库, Atomic, Thread, Asio, 它们达到并发的手段有一定的区别, 当然也有最佳适用场景了, 这里先谈线程(但是并发不仅仅只有多线程一种手段).</p>
+<p>该库有多个头文件, 最常用的是 <code>boost/thread.hpp</code>, 其他还有<code>boost/atomic.hpp</code>. 相比传统的 <code>pthread</code> 线程库, 新的线程库是为了简化线程的开发工作(提供了很多方便的封装, 并且同一种性质的机制, 提供了多个选择, 例如mutex, 还有shared_mutex等)(并发操作在这个真多核时代越来越重要). 如果你有 <code>pthread</code> 相关基础, 这里接受起来会非常爽, 非常快, 话不多说, 我就叙述一下.</p>
+<p>(仅仅一个 boost/thread 内容就不少)</p>
+<p>该部分内容, 大部分已经移植到标准库, 这里还有一本专门的书去讲解 <a href="">《C++并发编程实战》</a>, 我的另一篇文章 <a href="http://www.merlinblog.site/2017/06/29/thread-again.html" target="_blank" rel="external">thread-again</a> 会有详细的讲解.</p>
+<h3 id="线程管理"><a href="#线程管理" class="headerlink" title="线程管理"></a>线程管理</h3><p>一个非常简单的demo:</p>
+<pre><code class="c++">#include &lt;iostream&gt;
+#include &lt;boost/config.hpp&gt;
+#include &lt;boost/thread.hpp&gt;
+
+
+void wait(int sec)
+{
+  boost::this_thread::sleep(boost::posix_time::seconds(sec));
+}
+
+void thread()
+{
+  for (int i = 0; i &lt; 5; ++i)
+    {
+      wait(1);
+      std::cout &lt;&lt; i &lt;&lt; std::endl;
+    }
+}
+
+
+int main(void)
+{
+  boost::thread t(thread);
+
+  t.join();
+}
+</code></pre>
+<p>出现问题: 无法打开文件”libboost_thread-vc140-mt-gd-xxx.lib”, 请检查上面的安装步骤, 以及使用的<code>平台工具集</code>是否和你编译的库版本一致. (即toolset=msvc-14.0对应vs2015)</p>
+<p>上述程序的解释:<br>一个线程总是在一开始就绑定到一个类型为 boost::thread 的变量, 但是一旦创建, 就不在取决于它. 即使 t 越界或者析构了, 该线程也将继续执行.</p>
+<h3 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h3><p>这里面有多种Mutex, Condition_Variable, Barrier等, 当然为了加锁解锁方便, 也使用raii手法做了很多封装, 比如unique_lock之类的.</p>
+<ul>
+<li>递归锁<br>同一资源, 多次加锁. 由于在递归函数里可能碰到对同一个资源锁的获取, 所以需要使用递归锁, 方便递归函数的执行.<br>```c++<br>#include <iostream><br>#include <boost thread.hpp=""></boost></iostream></li>
+</ul>
+<p>//测试重入锁<br>void test_recursive_mutex()<br>{<br>  //定义递归互斥量<br>  boost::recursive_mutex rmutex;  </p>
+<p>  //func1<br>  boost::function<void(int)> func1=<a href="int cnt">&amp;func1,&amp;rmutex</a>{<br>    std::cout&lt;&lt;”start func1”&lt;&lt;std::endl;</void(int)></p>
+<pre><code>//raii手法获取锁
+boost::recursive_mutex::scoped_lock lck(rmutex);  
+std::cout &lt;&lt; &quot;\t\tthread1, cnt: &quot; &lt;&lt; cnt &lt;&lt; std::endl;  
+
+boost::this_thread::sleep(boost::posix_time::milliseconds(500));  
+if(cnt&lt;3)  
+  {  
+func1(++cnt); //递归调用
+  }  
+</code></pre><p>  };</p>
+<p>  boost::function<void(int)> func2 = <a href="int cnt">&amp;func2, &amp;rmutex</a> {<br>    std::cout &lt;&lt; “start func2” &lt;&lt; std::endl;</void(int)></p>
+<pre><code>boost::recursive_mutex::scoped_lock lck(rmutex);
+std::cout &lt;&lt; &quot;\t\t thread2, cnt:&quot; &lt;&lt; cnt &lt;&lt; std::endl;
+
+if (cnt &lt; 3) {
+  func2(++cnt); //递归调用
+}
+</code></pre><p>  };</p>
+<p>  boost::thread t1(func1,0);<br>  boost::thread t2(func2,0);    </p>
+<p>  boost::this_thread::sleep(boost::posix_time::milliseconds(500));  </p>
+<p>  t1.join();<br>  t2.join();<br>} </p>
+<p>int main(void)<br>{<br>  test_recursive_mutex();<br>}</p>
+<pre><code>
+
+* shared_mutex
+这个是c++11并发库中没有加入的(但是pthread中有). 其实和它的名字, 不太像, 我一般把它理解成读写锁.
+
+读写锁, 一般就是 `多个读者, 单个写者`, 也就是说适用于多读者, 少写者, 或者说`多共享, 少独占`的锁的场景. 读写锁相关的问题, 已经在我的文章pthread中说了很多了, 下面直接来看使用.
+
+一个简单的例子(计数器):
+```c++
+
+class Counter {
+public:
+  Counter() : value_(0) {
+  }
+
+  // Multiple threads/readers can read the counter&#39;s value at the same time.
+  size_t Get() const {
+    boost::shared_lock&lt;boost::shared_mutex&gt; lock(mutex_);
+    return value_;
+  }
+
+  // Only one thread/writer can increment/write the counter&#39;s value.
+  void Increase() {
+    // You can also use lock_guard here.
+    boost::unique_lock&lt;boost::shared_mutex&gt; lock(mutex_);
+    value_++;
+  }
+
+  // Only one thread/writer can reset/write the counter&#39;s value.
+  void Reset() {
+    boost::unique_lock&lt;boost::shared_mutex&gt; lock(mutex_);
+    value_ = 0;
+  }
+
+private:
+  mutable boost::shared_mutex mutex_;
+  size_t value_;
+};
+</code></pre><p>get方法, 由于是考虑到读写同时存在, 并且读次数也不少, 所以这里用的读写锁 <code>shared_mutex</code>, 然后用<code>shared_lock</code> 或者<code>unique_lock</code> 或者<code>lock_guard</code>进行封装, 对 shared_mutex 使用 lock_guard 或 unique_lock 就达到了写者独占的目的. 当然不用这些自动上锁解锁的工具, 你手动也行. shared_mutex 比一般的 mutex 多了函数 lock_shared() / unlock_shared()，允许多个（读者）线程同时加锁、解锁，而 shared_lock 则相当于共享版的 lock_guard.</p>
+<p>测试一下上面的代码:</p>
+<pre><code class="c++">boost::mutex g_io_mutex;
+
+void Worker(Counter&amp; counter) {
+  for (int i = 0; i &lt; 3; ++i) {
+    counter.Increase();
+    size_t value = counter.Get();
+
+    boost::lock_guard&lt;boost::mutex&gt; lock(g_io_mutex);
+    std::cout &lt;&lt; boost::this_thread::get_id() &lt;&lt; &#39; &#39; &lt;&lt; value &lt;&lt; std::endl;
+  }
+}
+
+int main() {
+  Counter counter;
+
+  boost::thread_group threads; 
+  threads.create_thread(boost::bind(Worker, boost::ref(counter)));
+  threads.create_thread(boost::bind(Worker, boost::ref(counter)));
+
+  threads.join_all();
+  return 0;
+}
+</code></pre>
+<p>输出结果:</p>
+<pre><code>2978 1
+4114 2
+2978 3
+4114 4
+4114 6
+2978 5
+</code></pre><p>(计数器, 还是使用下面的atomic比较好, 无(显)锁编程)</p>
+<p>假如一个线程，先作为读者用 shared_lock 加锁，读完后突然又想变成写者，该怎么办？<br>先解读者锁，再加写者锁。这种做法的问题是，一解一加之间，其他写者说不定已经介入并修改了数据，那么当前线程作为读者时所持有的状态（比如指针、迭代器）也就不再有效。最好是在不放锁的情况下进行升级, 可以使用 <code>upgrade_lock</code> :</p>
+<pre><code class="c++">{
+  // Acquire shared ownership to read.
+  boost::upgrade_lock&lt;boost::shared_mutex&gt; upgrade_lock(shared_mutex_);
+
+  // Read...
+
+  // Upgrade to exclusive ownership to write.
+  boost::upgrade_to_unique_lock&lt;boost::shared_mutex&gt; unique_lock(upgrade_lock);
+
+  // Write...
+}
+</code></pre>
+<h2 id="Asio"><a href="#Asio" class="headerlink" title="Asio"></a>Asio</h2><p>该部分属于网络编程部分, 也有很多封装API, 但是目前没有移植到标准库, 详细请参考我的另一篇文章 <a href="http://www.merlinblog.site/2017/08/11/Asio.html" target="_blank" rel="external">Asio</a> .</p>
+<h2 id="Atomic"><a href="#Atomic" class="headerlink" title="Atomic"></a>Atomic</h2><p>这个库对于常用类型的原子操作做了底层封装, 可以不用加锁就让多个线程间可以同步的操作一个共享变量. 可担当计数器或者标志位的角色, 该原子操作不可打断.<br>一般 <code>bool</code>, <code>int</code> 类型的封装用的比较多, 特别是 <code>Boost::atomic&lt;int&gt;</code> (其typedef的 <code>Boost::atomic_int</code> ), 简单的案例如下:</p>
+<pre><code class="c++">#include&lt;boost/atomic.hpp&gt; 
+
+boost::atomic_int a(0); //全局变量, 必须初始化
+
+int main()
+{
+    std::cout&lt;&lt;a&lt;&lt;std::endl;
+
+    boost::thread t1([&amp;](){        
+      for (int cnt=0;cnt&lt;100000;cnt++) {  
+            a+=1;  
+      }  
+
+    });  
+
+   boost::thread t2([&amp;](){  
+      for (int cnt=0;cnt&lt;100000;cnt++) {  
+            a-=1;  
+      }  
+   });
+
+   t1.join();  
+   t2.join();  
+
+   std::cout&lt;&lt;&#39;\t&#39;&lt;&lt;a&lt;&lt;std::endl;
+}
+</code></pre>
+<p>其成员函数load, store分别相当于读取和存储, exchange相当于交换(但是返回之前的值).</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="http://www.boost.org/doc/libs/1_53_0/doc/html/index.html" target="_blank" rel="external">Boost官方文档</a>  (boost_1_53_pdf, N个pdf, 够你一看; 推荐给初学者)</li>
+<li>《Beyond the C++ Standard Library: An Introduction to Boost》 (有中文版翻译, 还不错; 推荐初学者)</li>
+<li><a href="http://zh.highscore.de/cpp/boost/" target="_blank" rel="external">《Boost中文手册》</a>    (非常推荐给初学者, 但是写的非常简陋, 还有一些错误)</li>
+<li>《深入实践Boost:94个秘技》 机械工业出版社  (非常不错的一本, 推荐; 但不推荐初学者)</li>
+<li>《Boost程序完全开发指南 3e》 罗剑锋电子工业出版社  (作者水平好, 讲的也不错, 就是讲的比较啰嗦, 不推荐)</li>
+<li><a href="http://www.merlinblog.site/2017/08/11/Asio.html" target="_blank" rel="external">我的文章asio</a>  专门讲网络编程(同步IO和异步IO)</li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Boost Boost Boost">Boost Boost Boost</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Boost Boost Boost">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

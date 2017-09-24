@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>TDD | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="测试驱动开发模型 test-driven development">
+<meta name="keywords" content="开发管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TDD">
+<meta property="og:url" content="localhost:4000/2017/07/06/tdd.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="测试驱动开发模型 test-driven development">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/tdd.jpg">
+<meta property="og:updated_time" content="2017-09-24T05:47:11.307Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TDD">
+<meta name="twitter:description" content="测试驱动开发模型 test-driven development">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/tdd.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#快速概览"><span class="toc-number">2.1.</span> <span class="toc-text">快速概览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相关技术"><span class="toc-number">2.2.</span> <span class="toc-text">相关技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#入门实践"><span class="toc-number">2.3.</span> <span class="toc-text">入门实践</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>TDD</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-06</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/开发管理/">开发管理</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>单元测试的编写也不是一件容易的事情, 除非使用 TDD 方式, 否则编写出容易测试的代码不但对开发人员的设计编码要求很高, 而且代码中的各种依赖也常常为单元测试带来无穷无尽的障碍.</p>
+<p>测试驱动开发模式, 这并不是一种新技术, 而是一个趋势, 它强调生成源代码之前测试用例的设计(敏捷过程模型也这样强调).</p>
+<p>本文详细探索一下TDD模型.</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p><code>Kent Beck</code> 先生最早在其极限编程（XP）方法论中，向大家推荐“测试驱动”这一最佳实践，还专门撰写了《测试驱动开发》一书，详细说明如何实现。经过几年的迅猛发展，测试驱动开发已经成长为一门独立的软件开发技术，其名气甚至盖过了极限编程。</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="快速概览"><a href="#快速概览" class="headerlink" title="快速概览"></a>快速概览</h2><p>TDD的流程非常简单, 每次在引入代码之前, 先设计测试用例, 然后写下代码顺应测试用例; 之后每次一小段的增量开发, 直到构建完成. 每次发现测试失败, 那么以前相关的旧代码都要在回归测试中重新测试(避免新代码在旧代码中产生副作用).</p>
+<p>测试驱动是一种软件开发模式:</p>
+<ul>
+<li>首先编写测试用例(快速新增一个测试)</li>
+<li>除非存在相关的测试用例, 否则不编写代码</li>
+<li>由测试内容决定编写代码内容</li>
+<li>要求维护一套完备的测试用例(集)</li>
+</ul>
+<p>大概的流程图如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/tdd.jpg" alt="tdd"></p>
+<p>简单来说, 就是 不可运行-可运行-重构, 或者<code>红灯 -&gt; 绿灯 -&gt; 重构</code>, 这正是测试驱动开发的口号.</p>
+<p>通过测试来推动整个开发的进行, 其中编码的时候, 只编写能通过当前测试的功能代码. 下面是其优点综述:</p>
+<ul>
+<li>TDD根据客户需求编写测试用例，对功能的过程和接口都进行了设计，而且这种从使用者角度对代码进行的设计通常更符合后期开发的需求。因为关注用户反馈，可以及时响应需求变更，同时因为从使用者角度出发的简单设计，也可以更快地适应变化。(从使用者角度)</li>
+<li>出于易测试和测试独立性的要求，将促使我们实现松耦合的设计，并更多地依赖于接口而非具体的类，提高系统的可扩展性和抗变性。而且TDD明显地缩短了设计决策的反馈循环，使我们几秒或几分钟之内就能获得反馈。(促使我们松耦合涉及)</li>
+<li>将测试工作提到编码之前，并频繁地运行所有测试，可以尽量地避免和尽早地发现错误，极大地降低了后续测试及修复的成本，提高了代码的质量。在测试的保护下，不断重构代码，以消除重复设计，优化设计结构，提高了代码的重用性，从而提高了软件产品的质量。(及早发现错误, 急躁更正)</li>
+<li>TDD提供了持续的回归测试，使我们拥有重构的勇气，因为代码的改动导致系统其他部分产生任何异常，测试都会立刻通知我们。完整的测试会帮助我们持续地跟踪整个系统的状态，因此我们就不需要担心会产生什么不可预知的副作用了。(持续全局测试)</li>
+<li>TDD所产生的单元测试代码就是最完美的开发者文档，它们展示了所有的API该如何使用以及是如何运作的，而且它们与工作代码保持同步，永远是最新的</li>
+<li>TDD可以减轻压力、降低忧虑、提高我们对代码的信心、使我们拥有重构的勇气，这些都是快乐工作的重要前提</li>
+<li>这种开发流程有助于编写简洁可用和高质量的代码,并加速开发过程.(快速的提高了开发效率)</li>
+</ul>
+<p>一个生动的比喻:</p>
+<blockquote>
+<p>盖房子的时候，工人师傅砌墙，会先用桩子拉上线，以使砖能够垒的笔直，因为垒砖的时候都是以这根线为基准的。TDD就像这样，先写测试代码，就像工人师傅先用桩子拉上线，然后编码的时候以此为基准，<code>只编写符合这个测试的功能代码</code>。而一个新手或菜鸟级的小师傅，却可能不知道拉线，而是直接把砖往上垒，垒了一些之后再看是否笔直，这时候可能会用一根线，量一下砌好的墙是否笔直，如果不直再进行校正，敲敲打打。使用传统的软件开发过程就像这样，我们先编码，编码完成之后才写测试程序，以此检验已写的代码是否正确，如果有错误再一点点修改。</p>
+</blockquote>
+<p>你是希望先砌墙再拉线，还是希望先拉线再砌墙呢？如果你喜欢前者，那就算了，而如果你喜欢后者，那就转入TDD阵营吧！</p>
+<p>补充:<br>有些人认为TDD入门难, 原因是:在还没项目代码之前写测试用例，那就是等于我要凭空想象那些个抽象又晦涩难懂的功能点，还得要在心中勾勒出它们的轮廓以及细节. 但是问题是, 所有的用例都是根据需求设计而来的, 也就是说,前期设计还是要有的, 只是代码实现这个环节, 采用了测试用例优先的原则.</p>
+<h2 id="相关技术"><a href="#相关技术" class="headerlink" title="相关技术"></a>相关技术</h2><p>TDD开发中, 根据业务的不同, 编程语言的不同, 所使用的相关技术可能也会有一些不同, 但是有几样是相同的.</p>
+<p>工作流:<br>首先以一个未能通过的测试开始，随后编写足以通过该测试的代码，然后再重构代码。当然我们都不愿意看到不能通过的测试CASE，当你再继续编写项目代码，让原本不能通过的测试CASE通过的时候，你会感觉心里有一丝丝的惬意，然后再将代码优化重构，瞬间又有了些成就感。抿一口水，工作就这么快乐的完成了。</p>
+<p>模拟对象:<br>先写测试用例, 给出接口调用流程, 那么在这里伪对象是必须的(特别是在模块间有依赖的时候, 比如分层模型); 根据具体的编程语言, 可能出现依赖注入框(DI/IOC)与模拟框架(Mock) 等技术.</p>
+<p>Mock对象测试框架:<br>合作任务量一旦比较大的时候, 可能会频繁的需要模拟对象, 这个时候, 怎么办? 手工创建? 每个对象内部需要不一样, 哪有什么通用格式创建伪对象? 更麻烦的是伪对象之间有依赖关系怎么办?对象内部状态中没保存,怎么维护?<br>这个时候, 显然你需要一个框架, 单元测试框架, Mock框架.</p>
+<p>单元&amp;回归测试框架:<br>测试用例跑过了, 不代表代码就写好了; 有时候代码质量不高, 肯定会被上级要求重构的, 这个时候, 好不容易重构好了, 又担心引入了新问题, 这个时候又要重新跑测试用例, 并且不仅仅是跑当前的, 以前的要一起跑(整体测试), 这个时候就需要一个回归测试框架.</p>
+<p>注: 有时候, 例如 Gtest 测试工具(框架)就包含了单元测试, 回归测试, Mock对象等功能.</p>
+<h2 id="入门实践"><a href="#入门实践" class="headerlink" title="入门实践"></a>入门实践</h2><p>结合Gtest, 尝试一下 TDD 开发的妙处和代价.<br>TDD要保证代码刚刚好适量, 仅为当前测试用例编写代码, 也就是说, 先给出简明扼要的对象调用接口, 具体的实现放在后面, 等实现写出来再测试一下. 这样一来即使相互依赖的模块也不必再等对方完成之后, 在开始自己的模块开发, 因为可以直接在测试用例中使用Mock对象了(当然项目组成员之间使用IOC或者其他解耦合技术也是可以的).</p>
+<p>本案例, 需要你有 Google Test 基础(没有的话, 直接看我怎么操作, 但实践不了) .</p>
+<p>加入要写一个链式存储的栈, 简称<code>链栈</code> (LinkStack), 采用TDD的形式; 既然是TDD, 那么肯定就不是先去写实现, 而是</p>
+<ul>
+<li>根据功能, 涉及并编写测试用例</li>
+<li>使测试用例通过</li>
+<li>再编写下一个测试用例</li>
+<li>使原来所有的测试用例通过(没有通过则进行调整, 重构代码)</li>
+<li>往返循环, 直至所有的功能都经过测试用例的测试.</li>
+</ul>
+<p>由于是简单实践TDD, 我每一个功能点只写一个.</p>
+<ul>
+<li>初始化(根据已经存在的数组, 进行初始化)</li>
+<li>打印stack元素</li>
+<li>获取stack元素个数</li>
+<li>入栈新元素</li>
+<li>出栈元素</li>
+<li>获得栈顶元素(但是不出站)</li>
+<li>清空栈元素</li>
+</ul>
+<p>好了功能点大致概括了, 现在开始建立工程, 写测试用例, 注意是一个功能一个功能的写(而不是一股脑), 通过一个才进行下一个.<br>(方便起见, 我还是在Linux上写)</p>
+<p>整个测试过程, 都需要完备的数组用于初始化, 所以先写TestSuite事件: (上来就初始化多个不同类型的数组, 并且所有测试都可以用)<br>linkstack_unittest.cpp</p>
+<pre><code class="c++">#include&lt;gtest/gtest.h&gt;
+#include &lt;iostream&gt;
+
+
+class LINK_STACK_TEST : public ::testing::Test
+{
+
+protected:
+
+  static void SetUpTestCase() 
+  {
+    std::cout &lt;&lt; &quot;Test Suite Start&quot; &lt;&lt; std::endl;
+    //other resource init
+  }
+
+  static void TearDownTestCase() 
+  {
+    std::cout &lt;&lt; &quot;Test Suite End&quot; &lt;&lt; std::endl;
+    //other resource delete    
+  }
+
+  //仅用于本演示
+  //所有LINK_STACK_TEST下的测试共享
+  static int int_array[3];
+  static char char_array[3];
+};
+
+int LINK_STACK_TEST::int_array[3]={0};
+char LINK_STACK_TEST::char_array[3]={0};
+
+//确保可以初始化Test Suite
+TEST_F(LINK_STACK_TEST, INIT)
+{
+  //TODO
+}
+
+
+int main(int argc, char *argv[])
+{
+  ::testing::InitGoogleTest(&amp;argc, argv);
+
+  return RUN_ALL_TESTS();  
+}
+</code></pre>
+<p>编译(生成可执行文件run_test)运行一下:</p>
+<pre><code>$ ./run_test
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+StackEnvironment SetUP
+[----------] 1 test from LINK_STACK_TEST
+[ RUN      ] LINK_STACK_TEST.INIT
+[       OK ] LINK_STACK_TEST.INIT (0 ms)
+[----------] 1 test from LINK_STACK_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+StackEnvironment TearDown
+[==========] 1 test from 1 test case ran. (0 ms total)
+[  PASSED  ] 1 test.
+</code></pre><p>环境OK, 之后开始测试初始化, 在 <code>linkstack_unittest.cpp</code> 添加一个宏即可(但不要去编译, 因为一定通不过):</p>
+<pre><code class="c++">TEST(LINK_STACK_TEST, INIT)
+{
+  LinkStack&lt;int&gt; int_stack(int_array);
+  LinkStack&lt;char&gt; char_stack(char_array);
+}
+</code></pre>
+<p>(其实这里可以用Mock对象)<br>此时先去给出一个头文件(实现空方法), 为了下面编译:</p>
+<pre><code>//link_stack.hpp
+#include &lt;iostream&gt;
+
+template&lt;typename Type&gt; 
+class LinkStack
+{
+public:
+  LinkStack(){}
+  LinkStack(const Type (&amp;array)[3])
+  {
+    //TODO
+  }
+  ~LinkStack(){}
+
+};
+</code></pre><p>然后包含该头文件, 测试一下:</p>
+<pre><code class="c++">//linkstack_unittest.cpp
+#include&lt;gtest/gtest.h&gt;
+#include &lt;iostream&gt;
+#include &quot;link_stack.hpp&quot;
+
+class LINK_STACK_TEST : public ::testing::Test
+{
+
+protected:
+
+  static void SetUpTestCase() 
+  {
+    std::cout &lt;&lt; &quot;Test Suite Start&quot; &lt;&lt; std::endl;
+    //other resource init
+  }
+
+  static void TearDownTestCase() 
+  {
+    std::cout &lt;&lt; &quot;Test Suite End&quot; &lt;&lt; std::endl;
+    //other resource delete    
+  }
+
+  //仅用于本演示
+  //所有LINK_STACK_TEST下的测试共享
+  static int int_array[3];
+  static char char_array[3];
+};
+
+int LINK_STACK_TEST::int_array[3]={0};
+char LINK_STACK_TEST::char_array[3]={0};
+
+//确保可以初始化Test Suite
+TEST_F(LINK_STACK_TEST, INIT)
+{
+  //TODO
+  LinkStack&lt;int&gt; int_stack(int_array);
+  LinkStack&lt;char&gt; char_stack(char_array);
+}
+
+
+int main(int argc, char *argv[])
+{
+  ::testing::InitGoogleTest(&amp;argc, argv);
+
+  return RUN_ALL_TESTS();  
+}
+</code></pre>
+<p>运行一下:</p>
+<pre><code>[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from LINK_STACK_TEST
+Test Suite Start
+[ RUN      ] LINK_STACK_TEST.INIT
+[       OK ] LINK_STACK_TEST.INIT (0 ms)
+Test Suite End
+[----------] 1 test from LINK_STACK_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran. (0 ms total)
+[  PASSED  ] 1 test.
+</code></pre><p>然后把这个 构造函数, 写完在测试一下:</p>
+<pre><code class="c++">  LinkStack(const Type (&amp;array)[3])
+  {
+    m_ptop = NULL; //import
+    //重构的时候可以直接调用push方法    
+    //为了简单我在这里直接简单些 
+    for(int i =    0; i&lt;3; ++i){
+      m_ptop = new StackNode&lt;Type&gt;(array[i], m_ptop);
+    }
+  }
+</code></pre>
+<p>跑一下, 还是通过, 说明初始化的时候没有出错;<br>但是其实是看不出初始化是否正确的; 在测试一个打印函数吧:</p>
+<pre><code class="c++">template&lt;typename Type&gt; 
+void LinkStack&lt;Type&gt;::Print()
+{
+  StackNode&lt;Type&gt; *tmp = m_ptop; 
+  while(tmp != NULL){
+    std::cout &lt;&lt; tmp-&gt;m_data;
+    if (tmp-&gt;m_pnext == NULL) {
+      break;
+    }    
+    std::cout &lt;&lt; &quot;--&gt; &quot;;
+    tmp= tmp-&gt;m_pnext;      
+  }
+
+  std::cout &lt;&lt; &quot;;&quot; &lt;&lt; std::endl;
+}
+</code></pre>
+<p>由于当前功能实在太少, 所以当前测试改成这样:</p>
+<pre><code>TEST_F(LINK_STACK_TEST, INIT_PRINT)
+{
+  LinkStack&lt;int&gt; int_stack(int_array);
+  LinkStack&lt;char&gt; char_stack(char_array);
+
+  int_stack.Print();
+  char_stack.Print();
+}
+</code></pre><p>编译运行之后:</p>
+<pre><code>[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from LINK_STACK_TEST
+Test Suite Start
+[ RUN      ] LINK_STACK_TEST.INIT_PRINT
+3--&gt; 2--&gt; 1;
+c--&gt; b--&gt; a;
+[       OK ] LINK_STACK_TEST.INIT_PRINT (0 ms)
+Test Suite End
+[----------] 1 test from LINK_STACK_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran. (0 ms total)
+[  PASSED  ] 1 test.
+</code></pre><p>之后其他功能的添加, 也和该步骤类似, 下面就省略了.</p>
+<p>给出一份完整参考代码:</p>
+<pre><code class="c++">//link_stack.hpp
+template&lt;typename Type&gt; class LinkStack;
+template&lt;typename Type&gt; class StackNode{
+private:
+  friend class LinkStack&lt;Type&gt;;
+  StackNode(Type dt,StackNode&lt;Type&gt; *next=NULL):m_data(dt),m_pnext(next){}
+private:
+  Type m_data;
+  StackNode&lt;Type&gt; *m_pnext;
+};
+
+template&lt;typename Type&gt; class LinkStack{
+public:
+  LinkStack():m_ptop(NULL){}
+  ~LinkStack(){
+    MakeEmpty();
+  }
+public:
+  void MakeEmpty(); //make the stack empty
+  void Push(const Type item); //push the data
+  Type Pop(); //pop the data
+  Type GetTop() const; //get the data
+  void Print(); //print the stack
+  bool IsEmpty() const{
+    return m_ptop==NULL;
+  }
+private:
+  StackNode&lt;Type&gt; *m_ptop;
+};
+
+template&lt;typename Type&gt; void LinkStack&lt;Type&gt;::MakeEmpty(){
+  StackNode&lt;Type&gt; *pmove;
+  while(m_ptop!=NULL){
+    pmove=m_ptop;
+    m_ptop=m_ptop-&gt;m_pnext;
+    delete pmove;
+  }
+}
+
+template&lt;typename Type&gt; void LinkStack&lt;Type&gt;::Push(const Type item){
+  m_ptop=new StackNode&lt;Type&gt;(item,m_ptop);
+}
+
+template&lt;typename Type&gt; Type LinkStack&lt;Type&gt;::GetTop() const{
+  if(IsEmpty()){
+    cout&lt;&lt;&quot;There is no elements!&quot;&lt;&lt;endl;
+    exit(1);
+  }
+  return m_ptop-&gt;m_data;
+}
+
+template&lt;typename Type&gt; Type LinkStack&lt;Type&gt;::Pop(){
+  if(IsEmpty()){
+    cout&lt;&lt;&quot;There is no elements!&quot;&lt;&lt;endl;
+    exit(1);
+  }
+  StackNode&lt;Type&gt; *pdel=m_ptop;
+  m_ptop=m_ptop-&gt;m_pnext;
+  Type temp=pdel-&gt;m_data;
+  delete pdel;
+  return temp;
+}
+
+template&lt;typename Type&gt; void LinkStack&lt;Type&gt;::Print(){
+  StackNode&lt;Type&gt; *pmove=m_ptop;
+  cout&lt;&lt;&quot;buttom&quot;;
+  while(pmove!=NULL){
+    cout&lt;&lt;&quot;---&gt;&quot;&lt;&lt;pmove-&gt;m_data;
+    pmove=pmove-&gt;m_pnext;
+  }
+  cout&lt;&lt;&quot;---&gt;top&quot;&lt;&lt;endl&lt;&lt;endl&lt;&lt;endl;
+}
+</code></pre>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="">软件工程-实践者的研究方法 7e</a>  第五部分, 有一小节专门讲这个</li>
+<li><a href="http://www.agiledata.org/essays/tdd.html" target="_blank" rel="external">Introduction to TDD</a> 作为敏捷的一部分讲的, 排版很糟糕(写的很乱)</li>
+<li><a href="http://www.cnblogs.com/blsong/p/4602001.html" target="_blank" rel="external">测试驱动开发实践</a> 作者也是转载的, 还不错, 给出的案例也还行.</li>
+<li><a href="">Test-Driven-Development</a> kent Beck 2003</li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="TDD">TDD</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="TDD">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>using-regex-in-java | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Java中已经有相当成熟的包提供了正则表达式支持, 直接引用就可以了.">
+<meta name="keywords" content="正则表达式,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="using-regex-in-java">
+<meta property="og:url" content="localhost:4000/2017/05/12/using-regex-in-java.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="Java中已经有相当成熟的包提供了正则表达式支持, 直接引用就可以了.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/reg.jpg">
+<meta property="og:updated_time" content="2017-09-24T00:35:40.171Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="using-regex-in-java">
+<meta name="twitter:description" content="Java中已经有相当成熟的包提供了正则表达式支持, 直接引用就可以了.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/reg.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#regular-expression-string-patterns"><span class="toc-number">2.1.</span> <span class="toc-text">regular expression string patterns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Matching-a-string"><span class="toc-number">2.2.</span> <span class="toc-text">Matching a string</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Capturing-groups"><span class="toc-number">2.3.</span> <span class="toc-text">Capturing groups</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Finding-and-replacing-strings"><span class="toc-number">2.4.</span> <span class="toc-text">Finding and replacing strings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-Flags"><span class="toc-number">2.5.</span> <span class="toc-text">Pattern Flags</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>using-regex-in-java</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-05-12</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/正则表达式/">正则表达式</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/java/">java</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>oracle官方的java tutorials里面有相关章节专门讲这个主题,也很详细, 如下:<br><a href="https://docs.oracle.com/javase/tutorial/essential/regex/" target="_blank" rel="external">https://docs.oracle.com/javase/tutorial/essential/regex/</a></p>
+<p>个人觉得太啰嗦了, 本文只写<code>java.util.regex</code>的主要(核心)内容.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/reg.jpg" alt=""></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>java.util.regex这个包主要涉及以下几个类</p>
+<ol>
+<li>Pattern</li>
+<li>Matcher</li>
+<li>PatternSyntaxException</li>
+</ol>
+<p>主要用于2个方面:</p>
+<ol>
+<li>Match String</li>
+<li>Capture Group</li>
+</ol>
+<p>注意<code>java.util.regex</code>属于标准库, 和<code>PCRE</code>也是兼容的.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>正文内容可以参考: </p>
+<h2 id="regular-expression-string-patterns"><a href="#regular-expression-string-patterns" class="headerlink" title="regular expression string patterns"></a>regular expression string patterns</h2><p>简单的说, 稍微特殊点儿的就是, 在Java中如果要写正则表达式, 就要对backslash进行转义.</p>
+<p>原因就是Java中的正则表达式是以<code>\</code>开头的, 而这个反斜杠本身是做转义的, 所以要对”\”做转义, 转换成普通含义;之后才能表面后面写的特殊符号是正则表达式的符号.</p>
+<p>例如说, 在c语言中使用正则表达式的时候, <code>&quot;\w&quot;</code>, 在Java中就要写成<code>&quot;\\w&quot;</code>.<br>(effectively escaping the backslash with itself)</p>
+<p>This is only necessary when hard-coding patterns into Java code, as strings that are read in from user input or from files are read by character individually and escape sequences are not interpreted.(只有硬编码的时候才需要”\“, 从文件中读取的pattern, 没必要这么做)</p>
+<p>This is a common approach to get around this problem, by either putting the patterns in a Properties or resource file so they can be easier to read and understand.<br>Other languages like C# or Python support the notion of raw strings, but Java has yet to add this useful feature into the core language.</p>
+<h2 id="Matching-a-string"><a href="#Matching-a-string" class="headerlink" title="Matching a string"></a>Matching a string</h2><p>这里主要是借助<code>java.util.regex.Pattern</code>这个类, 一般使用代码如下:</p>
+<pre><code class="java">Pattern p = Pattern.compile(&quot;a*b&quot;);
+Matcher m = p.matcher(&quot;aaaaab&quot;);
+boolean b = m.matches(); //true
+</code></pre>
+<p>或者</p>
+<pre><code class="java">boolean isMatch = Pattern.matches(String regex, String inputStr)
+</code></pre>
+<p>其中上面使用Matcher可以获得更多的信息(inpt text的哪部分匹配), 而简单使用Pattern这个类只能判定是否匹配.<br>具体可以看下面这个例子:</p>
+<pre><code class="java">// Lets use a regular expression to match a date string.
+Pattern ptrn = Pattern.compile(&quot;([a-zA-Z]+) (\\d+)&quot;);
+Matcher matcher = ptrn.matcher(&quot;June 24&quot;);
+
+if (matcher.matches()) {
+    // Indeed, the expression &quot;([a-zA-Z]+) (\d+)&quot; matches the date string
+
+    // This will print [0, 7], since it matches at the beginning and end of the 
+    System.out.println(&quot;Match at index [&quot; + matcher.start() + 
+        &quot;, &quot; + matcher.end() + &quot;)&quot;);
+
+    // To get the fully matched text, you can read the Matcher object&#39;s group
+    System.out.println(&quot;Match: &quot; + matcher.group()); //print &quot;June 24&quot;
+}
+</code></pre>
+<p>(matcher指向当前匹配时的全串)</p>
+<h2 id="Capturing-groups"><a href="#Capturing-groups" class="headerlink" title="Capturing groups"></a>Capturing groups</h2><p>上面已经演示了, 使用Matcher类如何截取匹配的group, you can just iterate through the extracted groups in the returned Matcher.<br>下面演示一下, 分别匹配两组字符串(第0组是整个串, 第一组才是第一个子串)</p>
+<pre><code class="java">// capture date
+String pattern = &quot;([a-zA-Z]+) (\\d+)&quot;;
+Pattern ptrn = Pattern.compile(&quot;([a-zA-Z]+) (\\d+)&quot;);
+Matcher matcher = ptrn.matcher(&quot;June 24, August 9, Dec 12&quot;);
+
+// This will print each of the matches and the index in the input string
+// where the match was found:
+//   June 24 at index [0, 7)
+//   August 9 at index [9, 17)
+//   Dec 12 at index [19, 25)
+while (matcher.find()) {
+    System.out.println(String.format(&quot;Match: %s at index [%d, %d]&quot;,
+        matcher.group(), matcher.start(), matcher.end()));
+}
+
+// If we are iterating over the groups in the match again, first reset the
+// matcher to start at the beginning of the input string.
+matcher.reset();
+
+// For each match, we can extract the captured information by reading the 
+// captured groups.
+while (matcher.find()) {
+    // This will print the number of captured groups in this match
+    System.out.println(String.format(&quot;%d groups captured&quot;, 
+        matcher.groupCount()));
+
+    // This will print the month and day of each match.  Remember that the
+    // first group is always the whole matched text, so the month starts at
+    // index 1 instead.
+    System.out.println(&quot;Month: &quot; + matcher.group(1) + &quot;, Day: &quot; + 
+        matcher.group(2));
+
+    // Each group in the match also has a start and end index, which is the
+    // index in the input string that the group was found.
+    System.out.println(String.format(&quot;Month found at[%d, %d)&quot;, 
+        matcher.start(1), matcher.end(1)));
+
+}
+</code></pre>
+<p>说明:matcher.start(1), matcher.end(1);//查看第一个子组的start和end.<br>不传参数的matcher.start(), matcher.end()查看的本次匹配全串的首尾位置,而不是子组.</p>
+<h2 id="Finding-and-replacing-strings"><a href="#Finding-and-replacing-strings" class="headerlink" title="Finding and replacing strings"></a>Finding and replacing strings</h2><p>如果给定的text中包含你要确定的字符串(子串), 替换成别的串, 也是常见需求之一.<br>(replace a part of a string using regular expressions)</p>
+<p>主要借助下面两个方法:</p>
+<ol>
+<li>Matcher.replaceAll() </li>
+<li>Matcher.replaceFirst()</li>
+</ol>
+<pre><code class="java">String replacedString = matcher.replaceAll(String inputStr)
+String replacedString = matcher.replaceFirst(String inputStr)
+</code></pre>
+<p>替换的时候, 使用占位符就好; <code>$</code>后面跟着<code>数字</code>, 并且”$0”表示full matched text</p>
+<p>比如说, 我想交换一个串的第一部分和第二部分, 可以这样写:</p>
+<pre><code class="java">// Lets try and reverse the order of the day and month in a few date 
+// strings. Notice how the replacement string also contains metacharacters
+// (the back references to the captured groups) so we use a verbatim 
+// string for that as well.
+Pattern ptrn = Pattern.compile(&quot;([a-zA-Z]+) (\\d+)&quot;);
+Matcher matcher = ptrn.matcher(&quot;June 24, August 9, Dec 12&quot;);
+
+// This will reorder the string inline and print:
+//   24 of June, 9 of August, 12 of Dec
+// Remember that the first group is always the full matched text, so the 
+// month and day indices start from 1 instead of zero.
+String replacedString = matcher.replaceAll(&quot;$2 of $1&quot;);
+System.out.println(replacedString);
+</code></pre>
+<h2 id="Pattern-Flags"><a href="#Pattern-Flags" class="headerlink" title="Pattern Flags"></a>Pattern Flags</h2><p>和posix c下使用regex一样, 编译的时候也可以传入参数flag, 从编译出不同兼容性的正则表达式.<br>(perl, posix基本, posix扩展; 区分大小写, 是否忽略换行等等)</p>
+<pre><code class="java">//Compiles the given regular expression into a pattern with the given flags.
+public static Pattern compile(String regex, int flags)
+</code></pre>
+<p>主要介绍4中:(文档中给了9种, 实际没用到那么多)</p>
+<ul>
+<li>Pattern.CASE_INSENSITIVE makes the pattern case insensitive so that it matches strings of different capitalizations</li>
+<li>Pattern.MULTILINE is necessary if your input string has newline characters (\n) and allows the start and end metacharacter (^ and $ respectively) to match at the beginning and end of each line instead of at the beginning and end of the whole input string</li>
+<li>Pattern.DOTALL allows the dot metacharacter (.) to match new line characters as well</li>
+<li>Pattern.LITERAL makes the pattern literal, in the sense that the escaped characters are matched as-is. For example, the pattern “\d” will match a backslash followed by a ‘d’ character as opposed to a digit character</li>
+</ul>
+<p>(其中第二个是比较实用的, 识别”换行”, “行头”以及”行尾”)</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>上面已经演示了最常见的用法:</p>
+<ol>
+<li>Pattern.compile();</li>
+<li>pattern.matcher();</li>
+<li>matcher.replace相关</li>
+</ol>
+<p>若有更多的需求, 可以详细参考一下<code>Pattern Class</code>和<code>Matcher Class</code>两个的相关源码和文档.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="using-regex-in-java">using-regex-in-java</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="using-regex-in-java">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>C++非面向对象 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="summary of c-plus-plus language feature">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++非面向对象">
+<meta property="og:url" content="localhost:4000/2017/06/21/c-plus-plus-more.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="summary of c-plus-plus language feature">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.cplusplus.com/img/iostream.gif">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/c_io.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/io_mode.png">
+<meta property="og:updated_time" content="2017-09-24T03:17:27.495Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++非面向对象">
+<meta name="twitter:description" content="summary of c-plus-plus language feature">
+<meta name="twitter:image" content="http://www.cplusplus.com/img/iostream.gif">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#模板"><span class="toc-number">2.1.</span> <span class="toc-text">模板</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#函数模板"><span class="toc-number">2.1.1.</span> <span class="toc-text">函数模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译器支持"><span class="toc-number">2.1.2.</span> <span class="toc-text">编译器支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类模板"><span class="toc-number">2.1.3.</span> <span class="toc-text">类模板</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于类型转换"><span class="toc-number">2.2.</span> <span class="toc-text">关于类型转换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4种类型转换"><span class="toc-number">2.2.1.</span> <span class="toc-text">4种类型转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RTTI"><span class="toc-number">2.2.2.</span> <span class="toc-text">RTTI</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常机制"><span class="toc-number">2.3.</span> <span class="toc-text">异常机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#异常思想"><span class="toc-number">2.3.1.</span> <span class="toc-text">异常思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用惯例"><span class="toc-number">2.3.2.</span> <span class="toc-text">使用惯例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>C++非面向对象</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-06-21</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>C++除了面向对象部分, 其他还有:</p>
+<ul>
+<li>模板(泛型编程)</li>
+<li>类型转换和RTTI</li>
+<li>异常机制</li>
+<li>IO</li>
+</ul>
+<p>本文就说这4个方面. </p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>模板, 类型参数化, 这个在STL中用的比较多, 也容易把它和重载联系在一起.</p>
+<p>异常机制, 本来是一种很优秀的设计(更好的服务于面向对象), 结果是大多数c++程序员不太爱用这个机制.</p>
+<p>IO, c++的标准IO, 文件IO, 串IO是在c的基础上进行封装, 扩展后的产物, 比原来的printf, scanf等更加安全(多了编译时检查), 支持更加强大的格式控制; 然而就是由于扩充了太多东西, 所以用起来稍微有点儿复杂了(好吧, 我承认引入了相当的复杂度).</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h2><p>总结性的一句话: 模板可以看成参数的静多态, 一般用于表达逻辑结构相同, 但具体数据元素类型不同的数据对象的通用行为.</p>
+<p>实现手段: 泛型<br>  <code>template</code> 关键字告诉 C++编译器 我要开始泛型了, 你不要随便报错(其实就是进行两次编译, 第二次进行的是特化编译)</p>
+<p>具体分类</p>
+<pre><code>* 函数模板(和重载有重合, 但是绝对不冲突)
+* 类模板
+</code></pre><h3 id="函数模板"><a href="#函数模板" class="headerlink" title="函数模板"></a>函数模板</h3><p>函数模板举例:</p>
+<pre><code class="c++">template &lt;typename T&gt;
+void myswap(T &amp;a, T &amp;b)
+{
+  T t;
+  t = a;
+  a = b;
+  b = t;
+}
+</code></pre>
+<p>代替</p>
+<pre><code class="c++">void myswap(int &amp;a, int &amp;b)
+{
+  int t = a;
+  a = b;
+  b = t;
+}
+
+void myswap(char &amp;a, char &amp;b)
+{
+  char t = a;
+  a = b;
+  b = t;
+}
+</code></pre>
+<p>调用:</p>
+<pre><code class="c++">myswap&lt;float&gt;(a, b); //显示类型调用
+myswap(a, b); //自动数据类型推导(注意是严格匹配)
+</code></pre>
+<p>当然泛型参数也可以作为函数参数, 例如:</p>
+<pre><code class="c++">template&lt;typename T, typename T2&gt;
+void sortArray(T *a, T2 num)
+{
+  T tmp ;
+  int i, j ;
+  for (i=0; i&lt;num; i++)
+    {
+      for (j=i+1; j&lt;num; j++)
+    {
+      if (a[i] &lt; a[j])
+        {
+          tmp = a[i];
+          a[i] = a[j];
+          a[j] = tmp;
+        }
+    }
+    }
+}
+</code></pre>
+<p>调用模板函数和普通函数的区别:</p>
+<ul>
+<li>普通函数可以进行自动类型转换, 但是带有泛型参数的函数模板不行(必须严格匹配)</li>
+<li>函数模板可以像普通函数一样被重载(函数重载和模板有重合, 但是大部分作用不同)</li>
+<li>C++编译器优先考虑普通函数(先考虑最优匹配(完美类型匹配), 如果两者都匹配, 则先考虑普通函数)</li>
+<li>可以通过空模板实参列表的语法限定编译器只通过模板匹配, 即调用时加上<code>&lt;&gt;</code>, 例如’Max&lt;&gt;(a, b)’, 而不是<code>Max(a,b)</code></li>
+</ul>
+<p>完整案例:</p>
+<pre><code class="c++">#include &quot;iostream&quot;
+  using namespace std;
+
+int Max(int a, int b)
+{
+  cout&lt;&lt;&quot;int Max(int a, int b)&quot;&lt;&lt;endl;
+  return a &gt; b ? a : b;
+}
+
+
+template&lt;typename T&gt;
+T Max(T a, T b)
+{
+  cout&lt;&lt;&quot;T Max(T a, T b)&quot;&lt;&lt;endl;
+  return a &gt; b ? a : b;
+}
+
+template&lt;typename T&gt;
+T Max(T a, T b, T c)
+{
+  cout&lt;&lt;&quot;T Max(T a, T b, T c)&quot;&lt;&lt;endl;
+  return Max(Max(a, b), c);
+}
+
+void main()
+{
+  int a = 1;
+  int b = 2;
+  cout&lt;&lt;Max(a, b)&lt;&lt;endl; //当函数模板和普通函数都符合调用时,优先选择普通函数
+  cout&lt;&lt;Max&lt;&gt;(a, b)&lt;&lt;endl; //若显示使用函数模板,则使用&lt;&gt; 类型列表
+  cout&lt;&lt;Max(3.0, 4.0)&lt;&lt;endl; //如果 函数模板产生更好的匹配 使用函数模板
+  cout&lt;&lt;Max(5.0, 6.0, 7.0)&lt;&lt;endl; //重载
+  cout&lt;&lt;Max(&#39;a&#39;, 100)&lt;&lt;endl; //调用普通函数 可以隐式类型转换
+  system(&quot;pause&quot;);
+  return ;
+}
+</code></pre>
+<h3 id="编译器支持"><a href="#编译器支持" class="headerlink" title="编译器支持"></a>编译器支持</h3><p>泛型参数实现的模板机制, 需要C++编译器支持.</p>
+<p>编译机制探究:</p>
+<ul>
+<li>为什么函数模板可以和函数重载放在一块? (重载很简单, 就是编译时改名; 函数模板可以有多个重载, 它俩不冲突)</li>
+<li>C++编译器是如何提供函数模板机制的？(会针对存在的每种类型进行实参话编译么?)</li>
+</ul>
+<p>编译器并不是把函数模板处理成能够处理任意类的函数(代价太大), 而是对函数模板进行两次编译:</p>
+<ul>
+<li>在声明的地方对模板代码本身进行编译</li>
+<li>在调用的地方对参数替换后的代码进行编译(编译器从函数模板通过具体类型产生不同的函数)</li>
+</ul>
+<p>注明: 第二次就是特化编译, 产生具体的函数.</p>
+<h3 id="类模板"><a href="#类模板" class="headerlink" title="类模板"></a>类模板</h3><p>类模板一般用在容器类中比较多(类模板在表示如数组、 表、 图等数据结构显得特别重要, 这些数据结构的表示和算法不受所包含的元素类型的影响).</p>
+<p>举个简单的类模板的例子:</p>
+<pre><code class="c++">
+template&lt;typename T&gt;
+class A
+{ 
+public:
+    A(T t)
+    {
+        this-&gt;t = t;
+    }
+
+    T&amp; getT()
+    {
+        return t;
+    }
+
+public:
+    T t;
+
+};
+
+int main(void) 
+{
+  //模板了中如果使用了构造函数,则遵守以前的类的构造函数的调用规则
+  A&lt;int&gt; a(100);
+  a.getT();
+  printAA(a);
+  return ;
+}
+</code></pre>
+<p>类模板还涉及到一些其他的问题, 特别是它和继承, 友元等扯在一起的时候, 以及类模板定义的位置.</p>
+<ul>
+<li>继承问题<br>例如:<br>```c++<br>class A {};</li>
+</ul>
+<p>class B: public A<int><br>{<br>}</int></p>
+<pre><code> 结论: 
+ * 子类从模板类继承的时候,需要让编译器知道,  父类的数据类型具体是什么. 
+ * 如果不初始化父类的参数类型, 那么实例化的时候就完全无法确定实例化时父类对象的大小, 本例中 `A&lt;int&gt;` (数据类型的本质:固定大小内存块的别名).
+
+ 一个具体的例子:
+ ```c++
+
+class B : public A&lt;int&gt;
+{ 
+public:
+    B(int i) : A&lt;int&gt;(i) { } 
+
+    void printB()
+    {
+       cout&lt;&lt;&quot;A:&quot;&lt;&lt;t&lt;&lt;endl;
+    }
+};
+
+
+//作为函数参数的情况
+void pintBB(B &amp;b)
+{
+  b.printB();
+} 
+
+void printAA(A&lt;int&gt; &amp;a) //类模板做函数参数
+{
+  a.getT();
+} 
+
+void main()
+{
+  A&lt;int&gt; a(100); 
+
+  a.getT();
+  printAA(a);
+  B b(10);
+  b.printB();
+
+  return ;
+}
+</code></pre><p> 总结就是: 模板可以有层次, 一个类模板可以作为基类, 派生出派生模板类.</p>
+<ul>
+<li><p>模板函数的实现位置<br>大致上应该有三种情况:</p>
+<ul>
+<li>所有的类模板函数写在类的内部(.hpp文件)</li>
+<li>所有的类模板函数写在类的外部, 在一个 cpp 文件中</li>
+<li>所有的类模板函数写在类的外部, 在不同的.h 和.cpp中 (分开写的时候.h要包含.cpp)</li>
+</ul>
+<p>最好写在同一个文件中, 命名为.hpp, 具体参考 Boost库的写法就知道了.</p>
+</li>
+</ul>
+<ul>
+<li><p>模板和友元函数</p>
+<p>友元函数中带有类型参数怎么办?<br>案例: (用友元函数重载 <code>&lt;&lt;</code> <code>&gt;&gt;</code> )<br>// friend ostream&amp; operator&lt;&lt; <t> (ostream &amp;out, Complex<t> &amp;c3) ;</t></t></p>
+</li>
+</ul>
+<ul>
+<li>声明友元函数<br>```c++<br>template<typename t=""><br>class Complex;</typename></li>
+</ul>
+<p>template<typename t=""><br>Complex<t> mySub(Complex<t> &amp;c1, Complex<t> &amp;c2);</t></t></t></typename></p>
+<pre><code>* 类的内部声明
+```c++
+friend Complex&lt;T&gt; mySub&lt;T&gt;(Complex&lt;T&gt; &amp;c1, Complex&lt;T&gt; &amp;c2);
+</code></pre><ul>
+<li>外部友元函数实现<pre><code class="c++">//实现的地方, 函数名后面不要再加 &lt;T&gt; 泛型参数了
+template&lt;typename T&gt;
+Complex&lt;T&gt; mySub(Complex&lt;T&gt; &amp;c1, Complex&lt;T&gt; &amp;c2)
+{
+Complex&lt;T&gt; tmp(c1.a - c2.a, c1.b-c2.b);
+return tmp;
+}
+</code></pre>
+</li>
+<li><p>友元函数调用</p>
+<pre><code class="c++">Complex&lt;int&gt; c4 = mySub&lt;int&gt;(c1, c2);
+cout&lt;&lt;c4;
+</code></pre>
+<p>强调一点: 如果在类模板外定义成员函数, 应写成类模板形式:</p>
+<pre><code class="c++">template &lt;class 虚拟类型参数&gt;
+函数类型 类模板名&lt;虚拟类型参数&gt;::成员函数名(函数形参表列) 
+{
+//TODO 
+}
+</code></pre>
+</li>
+<li><p>类模板和static<br>3句话就可以概括:</p>
+<ul>
+<li>类模板实例化出来的模板类, 该模板类的所有实例共享该模板类的static成员.</li>
+<li>所有模板类static成员只是类模板的一个副本(即下次从类模板的编译出具体的模板类, static成员值不会变)</li>
+<li>初始化也要带上泛型参数, 例如: <code>template&lt;typename T&gt; int Circle&lt;T&gt;::num = 0</code> .</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="关于类型转换"><a href="#关于类型转换" class="headerlink" title="关于类型转换"></a>关于类型转换</h2><h3 id="4种类型转换"><a href="#4种类型转换" class="headerlink" title="4种类型转换"></a>4种类型转换</h3><p>(当然Boost库也提供了自己的)<br>最主要的, 清楚要转的变量, 类型转换前是什么类型, 类型转换后是什么类型. 转换有什么后果.<br>一般情况下, 不建议进行类型转换; 避免进行类型转换.</p>
+<ul>
+<li><p>c 风格<br>强制类型转换(Type Cast)很简单, 不管什么类型的转换统统是:</p>
+<pre><code class="c">TYPE b = (TYPE)a;
+</code></pre>
+</li>
+<li><p>c++风格<br>类型转换提供了 4 种类型转换操作符来应对不同场合的应用:</p>
+<ul>
+<li>static_cast 静态类型转换, 如 int 转换成 char (但不用于指针类型)</li>
+<li>reinterpreter_cast 重新解释类型(主要用于指针类型)</li>
+<li>dynamic_cast 命名上理解是动态类型转换,如子类和父类之间的多态类型转换</li>
+<li>const_cast 字面上理解就是去 const 属性(或者加上const)</li>
+</ul>
+<p>格式如下:</p>
+<pre><code class="c++">TYPE B = static_cast&lt;TYPE&gt;(a);
+</code></pre>
+<p>好处可能是, 有编译时或者运行时检查; 运行时出错还会跑出 <code>bad_cast</code> 异常.</p>
+</li>
+</ul>
+<p> 总结:</p>
+<ul>
+<li><p>static_cast和reinterpret_cast&lt;&gt;</p>
+<ul>
+<li>static_cast&lt;&gt;() 静态类型转换, 编译时 c++编译器会做类型检查;基本类型能转换, 包括类型截断, 但是不能转换指针类型</li>
+<li><p>若不同类型的指针之间, 进行强制类型转换, 用 reinterpret_cast&lt;&gt;() 进行重新解释</p>
+</li>
+<li><p>一般性结论:</p>
+<ul>
+<li>c 语言中 能隐式类型转换的, 在 c++中可用 static_cast&lt;&gt;()进行类型转换. 因 C++编译器在编译检查一般都能通过;</li>
+<li>c 语言中不能隐式类型转换的, 在 c++中可以用 reinterpret_cast&lt;&gt;() 进行强行类型解释. (一般就是指不同类型的指针)</li>
+</ul>
+<p>总结: static_cast&lt;&gt;()和 reinterpret_cast&lt;&gt;() 基本上把 C 语言中的 强制类型转换给覆盖. 并且reinterpret_cast&lt;&gt;()很难保证移植性.</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>dynamic_cast 和const_cast<ul>
+<li>dynamic_cast&lt;&gt;()  动态类型转换, 安全的基类和子类之间转换(基类指针转换赋值给子类指针); 运行时类型检查</li>
+<li>const_cast&lt;&gt;()    去除变量的只读属性(小心引起异常; 如果原来的变量被const修饰, 去掉const就妄想改变其value, 一般会出错)</li>
+</ul>
+</li>
+</ul>
+<h3 id="RTTI"><a href="#RTTI" class="headerlink" title="RTTI"></a>RTTI</h3><p>RTTI获取父类指针真正指向哪个子类.</p>
+<p>Circle和Square皆是由Figure所衍生出来的子类别, 它们各有自己的draw()函数.<br>当C++ 提供了RTTI, 就可写个函数如下:</p>
+<pre><code class="c++">void drawing( Figure *p ) 
+{ 
+   if( typeid(*p).name() == &quot;Circle&quot; ) {
+         ((Circle*)p)-&gt;draw(); 
+   }
+
+   if( typeid(*p).name() == &quot;Rectangle&quot; ){
+     ((Rectangle*)p)-&gt;draw(); 
+   } 
+
+}
+</code></pre>
+<p>此时typeid可以是非 virtual 的函数, 子类隐藏(shadow)了父类的实现.</p>
+<p>如果C++ 并未提供RTTI, 则程序员毫无选择必须使用虚拟函数来支持 drawing() 函数的多态性.<br>将draw()宣告为虚拟函数, 调用写法如下:</p>
+<pre><code class="c++">void drawing(Figure *p) 
+{     
+      p-&gt;draw();                 
+}
+</code></pre>
+<p>RTTI部分还有其他内容, 个人用的不是太多.</p>
+<hr>
+<h2 id="异常机制"><a href="#异常机制" class="headerlink" title="异常机制"></a>异常机制</h2><p>这一部分至少有2个点可以说:</p>
+<ul>
+<li>异常处理这种思想(语言层面的错误处理)</li>
+<li>c++异常的使用惯例<ul>
+<li>栈的解旋 </li>
+<li>抛出对象的生命周期管理</li>
+<li>自定义异常类的写法</li>
+<li>c++标准库的继承结构</li>
+</ul>
+</li>
+</ul>
+<h3 id="异常思想"><a href="#异常思想" class="headerlink" title="异常思想"></a>异常思想</h3><p>C语言中怎么处理异常呢?</p>
+<p>比如在写本地套接字的时候, 封装监听函数:</p>
+<pre><code class="c++">/*
+ * Create a server endpoint of a connection.
+ * Returns fd if all OK, &lt;0 on error.
+ * name : file_name
+ */
+int serv_listen(const char *name)
+{
+  int fd, len, err, rval;
+  struct sockaddr_un un;
+  /* create a UNIX domain stream socket */
+  if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) &lt; 0)
+    return(-1);
+  /* in case it already exists */
+  unlink(name);
+  /* fill in socket address structure */
+  memset(&amp;un, 0, sizeof(un)); //bzero ok
+  un.sun_family = AF_UNIX;
+  strcpy(un.sun_path, name);
+  len = offsetof(struct sockaddr_un, sun_path) + strlen(name);
+  /* bind the name to the descriptor */
+  if (bind(fd, (struct sockaddr *)&amp;un, len) &lt; 0) {
+    rval = -2;
+    goto errout;
+  }
+  if (listen(fd, QLEN) &lt; 0) { /* tell kernel we&#39;re a server */
+    rval = -3;
+    goto errout;
+  }
+  return(fd);
+ errout:
+  err = errno; /*tmp store in case of close error*/
+  close(fd);
+  errno = err;
+  return(rval);
+}
+
+
+/*调用逻辑如下*/
+  lfd = serv_listen(&quot;foo.socket&quot;);
+  if (lfd &lt; 0) {
+    switch (lfd) {
+    case -3:perror(&quot;listen&quot;); break;
+    case -2:perror(&quot;bind&quot;); break;
+    case -1:perror(&quot;socket&quot;); break;
+    }
+    exit(-1);
+  }
+</code></pre>
+<p>不同的状态, 对应不同的返回值, 并不是语言层面的支持</p>
+<p><code>erro code</code> 这种机制, 状态流和函数控制流是混合在一起的, 来回跳转需要额外的支持: </p>
+<ul>
+<li>从流程控制来看<br>以前的程序逻辑, 流程控制, 基本上是围绕函数调用展开; 也就是会所控制流程主要是依据函数调用(基于栈结构的)<br>面向对象编程却要求对象之间有方向, 有目的的控制传动, 从一开始, 异常就是冲着改变程序控制结构, 以适应面向对象程序更有效地工作.</li>
+<li>从错误处理来看<br>虽然errocode也是一种报告错误(一般只能层层上报给相关调用者), 可以进行错误处理的机制, 但是它的错误处理控制流程和程序(函数调用)主逻辑严重耦合.<br>异常是另一种控制结构, 它依附于栈结构, 却可以同时设置多个异常类型作为捕获条件, 从而以类型匹配在栈机制中跳跃回馈(一般是自动层层上报, 也可以跨级跨函数上报).<br>并且最重要的: 异常的引发和异常的处理不必在同一个函数中, 底层着重于处理具体的流程, 出了异常就上报给上层, 上层处理决策, 错误处理(回馈).<br>c++编译器通过 throw 来产生对象, c++编译器再执行对应的 catch 分支, 相当于一个函数调用, 把实参传递给形参(所以这里也存在着变量声明周期的问题).</li>
+<li>捕捉方式<br>errcode是依据上层协议好的code; 异常机制基于类型匹配(它假定你使用的是纯面向对象的思路, 通过对象实例进行相关操作, 然后捕捉出错的实体对象), 但也可以在 catch 的时候引入对象.</li>
+</ul>
+<p>总结性的一句:底层着重于处理具体的流程, 出了异常就上报给上层, 上层处理决策, 错误处理(回馈).</p>
+<h3 id="使用惯例"><a href="#使用惯例" class="headerlink" title="使用惯例"></a>使用惯例</h3><ul>
+<li><p>栈的解旋<br>最基本的调用方式就是 ‘try{} catch(类型 )’方式, catch的地方有点儿类似于 函数调用, 即涉及到函数实参往形参传递,  不过唯一不同的是, 这里是(严格)类型匹配, 而不是参数匹配, 换句话说, 不要指望有什么调用参数不满足的时候可以自动向上转换(异常捕捉严格按照类型匹配(和泛型编程类似, 不允许相容类型的隐式转换, 比如抛掷 char 类型用 int 型就捕捉不到))</p>
+<p>基本调用形式:</p>
+<pre><code class="c++">try {  
+  // do something  
+  throw exception;  
+} catch (exception declaration) {  
+  //  excepetion handling code   
+  // throw or no  
+} catch (exception declaration) {  
+  //  another excepetion handling code   
+  // throw or no  
+}
+</code></pre>
+<p><code>throw</code>语句一旦调用, 就相当于try块作用域结束(之后进入catch块, 就相当于一次函数调用), 那么在此期间定义的所有栈对象, 自动析构(顺序和定义的顺序相反).<br>如果异常流走下去, 不能再回头, 是否应该把对象析构掉? 异常抛出的代码块中, 对象会被析构, 称之为堆栈反解(栈解旋)</p>
+</li>
+</ul>
+<ul>
+<li><p>抛出对象的生命周期管理<br>上面已经明确说了, try里面出现异常, 或者主动抛出异常, 如果能够被catch捕获, 那么就相当于进行了一次函数调用. 此时catch子句如果有参数, 例如:(虽然通常是不许要参数, 直接按类型捕获的)</p>
+<pre><code class="c++">catch(ClassA &amp;a){
+//...
+}
+</code></pre>
+<p>但是这里面有一些规则:</p>
+<ul>
+<li>捕获时按照值传递, 那么除了throw是产生临时对象外, 调用catch时也会进行拷贝构造. (临时对象还是会被析构)</li>
+<li>多个捕获之间, 值传递和引用兼容, 但是指针和值传递不兼容(编译器会报错 ).</li>
+<li>推荐使用引用, 这样catch中使用的就是throw时产生了对象. (不推荐使用值传递的方式, 因为会额外调用拷贝构造函数)</li>
+<li>使用指针时, 如果throw时没有使用new关键字, 那么产生的临时栈对象会在进入catch时析构, 那么catch的指针变量其实是野指针(而抛出时使用new关键字, 那么在catch子句中就要手动delete, 总之不推荐catch指针变量).</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>自定义异常类的写法<br>一般抛出的异常是一系列关联的, 有联系的异常, 此时需要自定义异常类型, 并且设计好继承机构, 方面多态捕获. 其实也是为了简化该系列类型异常的捕获逻辑, 简单的例子如下:</p>
+<pre><code class="c++">try{
+//...
+} catch(Sub1 &amp;e) {
+ e.deal();
+} catch(Sub2 &amp;e) {
+ e.deal();
+} catch(Base &amp;e) {
+ e.deal()
+} catch(...) {
+ e.deal();
+}
+</code></pre>
+<p>但是如果你设计了很好的异常结构, 并且<code>deal</code>是虚函数, 那么上面三个调用完全可以是一个(运行时根据抛出的具体对象决定):</p>
+<p>```c++<br>class Base : public std::exception<br>{<br>public:<br> virtual void deal() {}<br> virtual const char *what() const throw();<br>};</p>
+</li>
+</ul>
+<p>class Sub1 : public Base<br>{<br> public:<br>  virtaul void deal() {}<br>}<br>//…</p>
+<p>//catch的时候使用父类引用<br>catch(Base &amp;e) {<br>   e.deal()<br>} catch(…) {<br>   e.deal();<br>}</p>
+<pre><code>
+ 一般what方法也要重写, 并且`std::exception`的直接基类最好提供一下有参构造.
+ ```c++
+class myexception : public std::exception 
+{
+public:  
+  myexception(std::string s) : exception(s.c_str()) 
+  {
+  }
+
+  virtual const char *what() const {  
+    return exception::what();  
+  }  
+};  
+
+void Func() {  
+  try{  
+    int *p = NULL;  
+    if (p == NULL) {  
+      throw myexception(&quot;p is NULL&quot;);  
+    }  
+  } catch(myexception e) {  
+    printf(&quot;%s\n&quot;, e.what());  
+    throw;    //重新抛出异常，异常类型为myexception  
+  } catch (std::exception e) {  
+    printf(&quot;%s&quot;, e.what());  
+  }  
+}
+</code></pre><ul>
+<li><p>c++标准库的继承结构<br>这部分只要记住, <code>std::exception</code> 是所有相关异常的父类, 然后根据具体的情况, 抛出的是其子类.</p>
+<p>头文件 stdexcept, C++标准库所有函数抛出异常的基类, exception的接口定义如下:</p>
+<pre><code class="c++">namespace std {
+  class exception 
+  {
+  public:
+      exception() throw();   //不抛出任何异常
+          exception(const exception&amp; e) throw();
+          exception&amp; operator= (const exception&amp; e) throw();
+          virtual ~exception() throw)();
+          virtual const char* what() const throw(); //返回异常的描述信息
+   };
+}
+</code></pre>
+<p>其他异常类的定义如下:</p>
+<pre><code class="c++">namespace std {
+    class logic_error: public exception 
+    {
+         public:
+       explicit logic_error(const string &amp;what_arg);
+
+   };
+
+   class invalid_argument: public logic_error 
+   {
+        public:
+          explicit invalid_argument(const string &amp;what_arg);
+   };
+
+       class out_of_range: public logic_error 
+   {
+        public:
+          explicit out_of_range(const string &amp;what_arg);
+       };
+
+   class length_error: public logic_error 
+   {
+        public:
+          explicit length_error(const string &amp;what_arg);
+   };
+
+   class domain_error: public logic_error 
+   {
+        public:
+                explicit domain_error(const string &amp;what_arg);
+   };
+}
+</code></pre>
+</li>
+</ul>
+<p> 总结起来就是:</p>
+<ul>
+<li>exception类派生出了几个大子类: bad_cast, bad_alloc, bad_typeid, bad_exception, ios_base::failure(C++输入输出流中的错误), runtime_error, logic_error.</li>
+<li>bad_alloc: 在new头文件中定义了bad_alloc异常, 用于报告new操作符不能正确分配内存的情形.</li>
+<li>bad_cast: 当dynamic_cast失败时, 程序会抛出bad_cast异常类</li>
+</ul>
+<p> 其中runtime_error和logic_error也还有很多子类:</p>
+<ul>
+<li>runtime_error: overflow_error, underflow_error, range_error.</li>
+<li><p>logic_error: domain_error, ivalid_argument, out_of_range, length_error.</p>
+<p>逻辑错误主要包括invalid_argument, out_of_range, length_error, domain_error. 当函数接收到无效的实参会抛出 <code>invaild_argument</code> 异常, 如果函数接收到超出期望范围的实参, 会抛出out_of_range异常等等.<br>使用c++标准库定义的异常类如下:<br>```c++<br>#include<stdexcept></stdexcept></p>
+</li>
+</ul>
+<p>try{<br>  throw invalid_argument(“haha”);<br>} catch(invalid_argument&amp; in) {<br>  cout&lt;&lt;”we catch invalid_argument”&lt;&lt;in.what()&lt;&lt;endl;<br>}catch(…){<br>  cout&lt;&lt;”we catch unexpected error,exit”&lt;&lt;endl;<br>  return 1;<br>}</p>
+<pre><code>
+
+
+
+
+* 声明注意
+ * 为了加强程序的可读性, 可以在函数声明中列出可能抛出的所有异常类型,  例如: `void func() throw (A, B, C , D);` //这个函数 func() 能够且只能抛出类型 A B C D 及其子类型的异常
+ * 如果在函数声明中没有包含异常接口声明, 则次函数可以抛掷任何类型的异常, 例如: `void func();` (最好不要声明)
+ * 一个不抛掷任何类型异常的函数可以声明为: `void func() throw();`
+ * 如果匹配的处理器未找到, 则运行函数 terminate 将被自动调用, 其缺省功能是调用 abort 终止程序
+ * 处理不了的异常, 可以在 catch 的最后一个分支, 使用 throw 语法, 向上扔(直至程序终止)
+ ```c++
+class A{};
+
+void f(){
+     if(...) throw A;
+}
+
+
+void g(){
+  try{
+      f();
+  }catch(B){
+      cout&lt;&lt;“exception B\n”;
+  }
+}
+
+
+int main(){
+    g();
+}
+</code></pre><p> throw A 将穿透函数 f, g 和 main, 抵达系统的最后一道防线——激发 terminate 函数. 该函数调用引起运行终止的 abort 函数. 其他补充: </p>
+<ul>
+<li>可以修改默认的终止行为(set_terminate 函数在头文件 exception 中声明, 参数为函数指针 <code>void(*)()</code> )<br>```c++<br>#include <excepetion><br>void myTerminate(){cout&lt;&lt;“HereIsMyTerminate\n”;}</excepetion></li>
+</ul>
+<p>set_terminate(myTerminate);</p>
+<pre><code> * 构造函数没有返回类型, 无法通过返回值来报告运行状态, 所以只通过一种非函数机制的途径, 即异常机制来解决构造函数的出错问题(一般是不建议在构造函数中抛出异常的)
+
+
+---
+
+## IO
+ 个人不是太乐意去说, 因为太复杂了.(第二天我还是把这部分内容补全了, 进行了分类整理,  贴出了开发中比较实用的代码)
+
+ 比c io函数强的地方时, 安全(编译时类型检查 type safe); 功能丰富, 但是使用复杂(细节多).
+ (如果你使用习惯了c io api, 转变到使用c++ io api就需要一些时间过渡)
+ * 标准IO (标准输入输出) 头文件&lt;iostream&gt;, 包含抽象类 iostream ; 标准io类: istream, ostream, iostream.
+ * 文件IO 头文件 &lt;fstream&gt;, 包含: ifstream, ofstream, fstream
+ * 串IO  输入字符串流 &lt;strstream&gt;, 包含: istrstream, ostrstream, strstream. 
+
+
+ 主要内容就是:
+ * 继承关系图
+ * 流对象及iomanip, 缓存问题
+ * 文件IO及错误处理
+ * 二进制, 文本文件的读写
+
+
+ * 继承关系图
+ ```bash
+                        ---&gt; basic_istream ---&gt; ifstream
+                       |                      |
+ios_base ---&gt; basic_ios                        ---&gt; iostream  ---&gt; fstream 
+                       |                      |
+                        ---&gt; basic_ostream ---&gt; ofstream
+ /*上面的ifstream, ofstream, fstream的位置替换成 
+         istringstream, ostringstream, stringstream, 
+  就变成了串IO的继承关系图 */
+</code></pre><p> 贴一幅图, 地址参考cplusplus.com<br> <img src="http://www.cplusplus.com/img/iostream.gif" alt="iostream"></p>
+<p> 涉及到的头文件:</p>
+<ul>
+<li>ios</li>
+<li>istream</li>
+<li>ostream</li>
+<li>streambuf</li>
+<li>iostream</li>
+<li>fstream</li>
+<li><p>sstream</p>
+<ul>
+<li>流对象</li>
+<li>流对象不能复制, 例如:<br>```c++<br>fstream fs1,fs2;</li>
+</ul>
+<p>fs1 = fs2; //error<br>fstream fs3(fs2); //error</p>
+<pre><code>* 流对象带缓冲(读写都要先经过缓冲区)
+ * 刷新缓冲的行为: 程序正常结束, 缓冲区满, endl和flush函数的调用, `unitbuf` 的设置
+* 除了使用流对象类定义的方法输入输出, 还可以使用 `&lt;&lt;` `&gt;&gt;` 进行输出和输入
+* 标准输入cin
+常见的用法:
+```c++
+int a, b;
+char buf[1024]; //string buf;
+cin &gt;&gt; a &gt;&gt; b &gt;&gt; buf; //读入字符串时遇到空格则止 12 23.5 aa bb cc dd
+</code></pre><p>也就是说, 用标准输入读取不了字符串中的空格, 所以出现了get函数作为弥补, 其重载如下:<br>```c++<br>//读入一个字符并返回(包括回车、tab、空格等空白字符)<br>char get(); </p>
+<p>//经典用法:<br>char ch;<br>while( (ch=cin.get()) !=EOF) {<br>cout.put(ch);<br>}</p>
+</li>
+</ul>
+<p> /<em>读入一个字符,如果读取成功则返回非 0 值(真),<br> 如失败(遇到文件结束符),则函数返回 0 值(假) </em>/<br> istream&amp; get(char&amp;);</p>
+<p> //经典用法<br> char ch;<br> while(cin.get(ch)) {<br>   cout.put(ch);<br> }</p>
+<pre><code>    还有一个重要的重载, 该函数遇到delimiter并不会读入自定义buf中(而是放在流中), 所以下次读要从delimiter后一个位置开始, 否则函数直接返回.
+  ```c++
+  istream&amp; get(char *, int ,char )
+  // istream&amp; get(字符数组，字符个数 n,终止字符) 
+  //或 istream &amp; get(字符指针，字符个数 n,终止字符)
+</code></pre><pre><code>即不会越过中止符(最多读取n-1个), 读不满时, 会阻塞等待.
+
+  和该函数相似的就是 getline() :
+</code></pre><pre><code class="c++"> istream&amp; getline(char *, int , char dilimeter = &#39;\n&#39;)
+</code></pre>
+<pre><code>这个函数最多也是读取n-1个字符, 不同的是, 它默认以换行为结束符, 并且从输入流中摘取 中止符(但不放入buf), 下次再从流中读取时, 中止符就没有了. 并且读不满时也会阻塞等待.
+
+cin对象还有3个重要的方法: 
+    * `ignore(streamsize n =1, int delim = EOF)`默认忽略一个字符(中止符是EOF)
+    * `int peek()` 流指针不移动, 但是只是取下一个位置的字符看看.(字符还在流中)
+    * `istream&amp; putback(char c)` 从流中读出来的(忽略的也算), 再退回去到流中(给下一次读取)
+</code></pre><ul>
+<li><p>cout<br>和cout一起的还有cerr(只能在屏幕上输出, 不能输出到文件, 无缓存, 实时刷新到屏幕), clog(有缓存, 其他和cerr类似)<br>输出的时候可以结合 <code>iomanip</code> 进行很多格式控制, 例如: <code>cout &lt;&lt; hex &lt;&lt; n &lt;&lt; endl;</code> 等</p>
+<ul>
+<li>hex, oct, dec</li>
+<li>setw(n); //设置输出域宽</li>
+<li>setfill(c); //域宽不足的, 用指定字符c补</li>
+<li>setiosflags(ios::left)(左对齐)</li>
+<li>setiosflags(ios::right)(右对齐)</li>
+<li>setiosflags(ios::showpoint);// 强制显示小数点和尾0</li>
+<li>setiosflags(ios::showpos); //强制显示符号</li>
+<li>setiosflags(ios::scientific)(科学记数法)</li>
+<li>setiosflags(ios::fixed)(定点数)</li>
+<li>setprecision(n); //设置有效位数自动四舍五入</li>
+<li>setiosflags(ios::uppercase);//设置大写</li>
+<li>resetiosflags(ios::uppercase);//重新设置成小写</li>
+</ul>
+<p>成员函数大概如下:</p>
+<ul>
+<li>ostream put(char)</li>
+<li>write() //一般用于二进制格式读写</li>
+</ul>
+</li>
+<li><p>流异常处理是在说文件IO是遇到的fail(), eof(), bad(), good().</p>
+<ul>
+<li>文件IO及异常处理<br>主要涉及文本文件(注意换行符10和回车换行13,10的转换)和二进制文件(内存映像文件), 一个是顺序存取, 一个是随机存取(按字节或者块儿). </li>
+<li>c语言中的IO问题:(必不可少的借助 <code>FILE *</code> 指针)<br><img src="http://omotkhw3y.bkt.clouddn.com/c_io.png" alt="c_io"></li>
+<li>c++中, 对文件的操作是由文件流类完成的, 即ifstream, ofstream 和 fstream 类的对象. 对文件的操作过程可按照一下四步进行: 即定义文件流类的对象, 打开文件, 对文件进<br>行读写操作, 关闭文件.</li>
+</ul>
+</li>
+<li><p>打开文件</p>
+<pre><code class="c++">void open(const unsigned char *filename, int mode, 
+                 int access=filebuf:openprot)
+</code></pre>
+<p>而一般使用的时候, 直接使用对象打开</p>
+<pre><code class="c++">ifstream ifs(&quot;xxx.txt&quot;,ios::in);
+</code></pre>
+<ul>
+<li><p>文件的打开方式<br>见下图: <img src="http://omotkhw3y.bkt.clouddn.com/io_mode.png" alt=""><br>```<br>ios::in|ios::out      表示以读/写方式打开文件<br>ios::in|ios:: binary  表示以二进制读方式打开文件<br>ios::out|ios:: binary 表示以二进制写方式打开文件<br>ios::in|ios::out|ios::binary 表示以二进制读/写方式打开文件<br>/<em>默认</em>/<br>对于 ifstream 流, mode 参数的默认值为 ios::in，<br>对于 ofstream 流, mode 的默 认值为 ios::out|ios::trunc,<br>对于 fstream 流, mode 的默认值为 ios::in|ios::out|ios::app</p>
+<p>/<em>具体案例</em>/<br>ifstream ifs(“xxx.txt”,ios::in);<br>if(!ifs) {</p>
+<pre><code> cout&lt;&lt;&quot;open error1&quot;&lt;&lt;endl;
+</code></pre><p>}<br>char buf[100];<br>if(ifs&gt;&gt;buf) {</p>
+<pre><code> cout&lt;&lt;buf&lt;&lt;endl;                 
+</code></pre><p>}</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>  ofstream ofs(&quot;yyy.txt&quot;,ios::out|ios::app);
+  if(!ofs) {
+        cout&lt;&lt;&quot;open error2&quot;&lt;&lt;endl;                 
+  }
+  ofs&lt;&lt;&quot;abcefldkj&quot;&lt;&lt;endl;
+  ```
+  不指明打开方式 `ios::binary` 时, 默认按照文本方式读写.
+* 文件关闭(调用流对象的close()方法)
+* 流对象的状态判断(ios_base), 一般用于检测cin.
+  * eof() 读到文件尾返回true
+  * bad() 读写过程中出错, 返回true.(空间不足或者不是写打开)
+  * fail() 包含eof()和bad(), 并且格式错误也返回true
+  * good() 读写正常返回true
+  * clear() 清除所有标志位(该函数可以有参数)
+  使用案例可以是这样的:
+  ```c++
+  int ival;
+  // read cin and test only for EOF;
+  //loop is executed even if there are other IO failures
+  while (cin &gt;&gt; ival, !cin.eof()) {
+        // input stream is corrupted; bail out
+          if (cin.bad()) {
+             throw runtime_error(&quot;IO stream corrupted&quot;);
+    }
+
+          if (cin.fail()) { 
+       cerr&lt;&lt; &quot;bad data, try again&quot;; 
+       cin.clear(istream::failbit); 
+             continue; // get next input
+          }
+
+        // do real work
+  }
+  ```
+* 关于 `operator void*() const` 或者 `operator bool() const` 或者 `bool operator!()const` 转换函数的重载.
+ ```
+ //函数在 while(cin)或是 if(cin)时被调用, 将流对象转换成 void *类型
+ operator void *() const;
+ //函数在 while(!cin)或是 if(!cin)时被调用, 将流对象转换成 bool 类型
+ bool operator!() const;
+
+ /*从其函数上看, iostream*/
+ while(cin) // while(!cin.fail()) //while the stream is OK
+ while(!cin) // while(cin.fail()) //while the stream is NOT OK
+ ```
+* 文本文件读写的总结
+  * 写
+      ```c++
+operator&lt;&lt;
+osream put(int);
+```
+
+  * 读
+    ```c++
+operator&gt;&gt;()
+int get();
+istream&amp; get(int);
+istream &amp; get(char*,int n, char deli);
+istream&amp; getline(char *, int n);
+```
+  * 案例
+
+      ```c++
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+
+using namespace std;
+
+int main()
+{
+  fstream ifs(&quot;src.txt&quot;,ios::in);
+
+  if(!ifs) {
+      cout&lt;&lt;&quot;open error&quot;&lt;&lt;endl;
+      return -1;
+  }
+
+  fstream ofs(&quot;dest.txt&quot;,ios::out|ios::trunc);
+  if(!ofs) {
+      cout&lt;&lt;&quot;open error&quot;&lt;&lt;endl;
+      return -1;
+  }
+
+  char buf[1024];
+  while(ifs.get(buf,1024,&#39;\n&#39;)) {
+      while(ifs.peek() == &#39;\n&#39;) {
+          ifs.ignore();
+      }
+      ofs&lt;&lt;buf&lt;&lt;endl;
+       }
+
+  ifs.close();
+  ofs.close();
+
+  return 0;
+}
+```
+
+* 二进制文件读写
+  * 流对象函数
+      ```c++
+ostream &amp; write(const char * buffer,int len);
+istream &amp; read(char * buff, int len); 
+```
+  * 文件指针操作
+      ```c++
+//对于输入输出文件, p和g可以任意使用
+tellg();    
+tellp();
+seekg(绝对位置);
+seekg(相对位置,参照位置);
+seekp(绝对位置);
+seekp(相对位置,参照位置);
+//关于位置的定义(相对位置的负数表示从后往前)
+ios::beg = 0 相对于文件头
+ios::cur = 1 相对于当前位置
+ios::end = 2 相对于文件尾
+```
+  * 案例
+      ```c++
+#include &lt;fstream&gt;
+
+using namespace std;
+struct student
+{
+    int num;
+    char name[20];
+    float score;
+};
+
+int main(void)
+{
+    int i;
+    student stud[5]={
+            1001,&quot;xxx&quot;,85,
+            1002,&quot;yyy&quot;,97.5,
+        1004,&quot;zzz&quot;,54,
+        1006,&quot;111&quot;,76.5,
+        1010,&quot;2222&quot;,96 
+        };
+
+
+    fstream iofile(&quot;stud.dat&quot;, 
+            ios::in|ios::out|ios::binary);
+    if(!iofile) {
+        cerr&lt;&lt;&quot;open error!&quot;&lt;&lt;endl;
+    abort();
+    }
+
+    for(i=0;i&lt;5;i++) {
+        iofile.write((char *)&amp;stud[i], sizeof(stud[i]));
+    }
+
+    student stud1[5];
+    for(i=0;i&lt;5;i=i+2) {
+    iofile.seekg(i*sizeof(stud[i]), ios::beg);
+    iofile.read((char *)&amp;stud1[i/2],sizeof(stud1[i]));
+    cout&lt;&lt;stud1[i/2].num&lt;&lt;&quot; &quot;
+        &lt;&lt;stud1[i/2].name&lt;&lt;&quot; &quot;&lt;&lt;stud1[i/2].score&lt;&lt;endl;
+    }
+    cout&lt;&lt;endl;
+
+    //modify stud[2]
+    stud[2].num=1012;
+    strcpy(stud[2].name,&quot;Wu&quot;);
+    stud[2].score=60;
+    iofile.seekp(2*sizeof(stud[0]),ios::beg);
+    iofile.write((char *)&amp;stud[2],sizeof(stud[2]));
+
+    //read again
+    iofile.seekg(0,ios::beg);
+    for(i=0; i&lt;5; i++) {
+    iofile.read((char *)&amp;stud[i],sizeof(stud[i]));
+    cout&lt;&lt;stud[i].num&lt;&lt;&quot; &quot;
+        &lt;&lt;stud[i].name&lt;&lt;&quot; &quot;&lt;&lt;stud[i].score&lt;&lt;endl;
+    }
+
+    iofile.close();
+    return 0;
+}
+```
+</code></pre><p>  好了, IO部分也就差不多这样了.</p>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>几乎花了一个上午在写这部分内容(全部写完IO花了2天), 说起来不觉得多, 写起来还真有点儿多.</p>
+<p>人家说, “写一辈子程序, 看一辈子c++书”, c++确实有点儿复杂; 你不能老想着什么都要语言机制解决, 这样语言会越来越大, 越来越复杂.Java则是有选择的扩充, 该舍弃的舍弃; 只把好用的拿出来. 毕竟你不能假设所有人都是高手吧? (为了推广, 不能总是搞很小众的东西;大众能接收的是小众的东西)</p>
+<p>就这样吧, 其他内容请参考 《c++ primer 5e》, 《C++标准库自修手册》, 官方文档.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="C++非面向对象">C++非面向对象</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="C++非面向对象">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

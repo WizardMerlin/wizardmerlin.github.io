@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Coding for pleasure.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Merlin&#39;s Blog">
+<meta property="og:url" content="localhost:4000/index.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="Coding for pleasure.">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Merlin&#39;s Blog">
+<meta name="twitter:description" content="Coding for pleasure.">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/nav.css">
+<link rel="stylesheet" href="css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <style>
+    .post-hover:hover {
+        box-shadow: inset 0 0 100px #000;
+        transition: box-shadow .2s;
+    }
+
+    .sub-post-container .post-hover:hover h3 {
+        text-decoration: underline gray;
+    }
+
+
+    .primary-item-main {
+        height: 330px;
+        background-size: cover;
+    }
+
+    .primary-container .title,
+    .primary-container .sub-title,
+    .primary-container .post-content-text,
+    .primary-container .date {
+        color: #fff;
+    }
+
+    .post-content-text {
+        color: #f1f1f1!important;
+    }
+
+    .primary-container .post-hover {
+        background: black;
+    }
+
+    .content-bg-mask {
+        background: rgba(0,0,0,.4);
+    }
+
+</style>
+
+<div style="background: #f5f8f9;">
+    <div id="main-container" class="container" style="padding-top: 20px;">
+        <div class="is-flex main-content justify-center">
+            <section class="column is-13">
+                
+<div class="primary-container content-box is-flex-desktop clear-padding bottom-line" style="margin-bottom: 25px;">
+    <div class="column  is-7-desktop">
+        <a href="/2017/09/12/cpp-resource-manage.html">
+            <div class="full-height post-hover"
+                 style="
+                         background-image: url('');
+                         height: 350px;
+                         background-size: cover;
+                         background-repeat: no-repeat;
+                         ">
+                    <div class=" is-flex flex-column center content has-text-centered full-height has-padding content-bg-mask">
+                        <h1 class="title text-shadow" style="margin-bottom: 15px;">
+                            集中谈谈C++资源管理
+                        </h1>
+                        <div>
+                        
+                            `
+                                <span class="tag is-post-tag">cpp</span>
+                            
+                        
+                        </div>
+                        <p class="post-content-text is-marginless has-padding text-shadow">
+                            C++中谈资源管理, 已经不是一天两天的事儿了, 感觉心好累. 看看大佬们为了资源管理(偷懒), 都做哪些事儿.
+由于以前已经写了好多篇了, 这里算作汇总吧:
+
+RAII
+PIMPL
+智能指针(引用计数,标记擦除)
+GC
+malloc/..
+                        </p>
+                        <p class="date text-shadow">2017-09-12</p>
+                        <button class="button is-info is-small">阅读详情</button>
+                    </div>
+            </div>
+        </a>
+    </div>
+    <div class="column is-5 is-hidden-touch" style="padding-left: 0;">
+        <div class="full-height is-flex flex-column justify-space-between" style="min-height: 350px;">
+            
+                
+<a class="post-hover" href="/2017/09/05/lessons-history.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/history.jpg')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                经验教训汇总
+            </h3>
+            
+            
+            <span class="tag is-post-tag">思考</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                本文不记载我经历过的事情, 但是记载我遇到过的 教训 &amp;成长, 以及 遗憾 . 此篇是最..
+            </p>
+            <p class="date text-shadow is-marginless">2017-09-05</p>
+        </div>
+    </div>
+</a>
+            
+            
+                
+<a class="post-hover" href="/2017/09/04/mustang.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/%E9%87%8E%E9%A9%AC.png')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                Mustang
+            </h3>
+            
+            
+            <span class="tag is-post-tag">思考</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                老东家的部门经理给说了很多人生经验, 我觉得最重要的是他说的四个字 顺其自然 (let it b..
+            </p>
+            <p class="date text-shadow is-marginless">2017-09-04</p>
+        </div>
+    </div>
+</a>
+            
+        </div>
+    </div>
+    <div class="column is-12 is-hidden-desktop">
+        
+        
+<a class="post-hover" href="/2017/09/05/lessons-history.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/history.jpg')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                经验教训汇总
+            </h3>
+            
+            
+            <span class="tag is-post-tag">思考</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                本文不记载我经历过的事情, 但是记载我遇到过的 教训 &amp;成长, 以及 遗憾 . 此篇是最..
+            </p>
+            <p class="date text-shadow is-marginless">2017-09-05</p>
+        </div>
+    </div>
+</a>
+        
+        
+        
+<a class="post-hover" href="/2017/09/04/mustang.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/%E9%87%8E%E9%A9%AC.png')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                Mustang
+            </h3>
+            
+            
+            <span class="tag is-post-tag">思考</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                老东家的部门经理给说了很多人生经验, 我觉得最重要的是他说的四个字 顺其自然 (let it b..
+            </p>
+            <p class="date text-shadow is-marginless">2017-09-04</p>
+        </div>
+    </div>
+</a>
+        
+    </div>
+</div>
+
+                    
+                    
+                
+                    
+                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/history.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/09/05/lessons-history.html">
+                                            <p style="font-size: 24px;">经验教训汇总</p>
+									    </a>
+                                        
+                                            <span class="sub-title">我过去所得到的教训</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/思考/">
+                                                <span class="tag is-post-tag">
+												  思考
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         本文不记载我经历过的事情, 但是记载我遇到过的 教训 &amp;成长, 以及 遗憾 . 此篇是最终篇, 以后个人教训全部更新在这里.
+
+本文长期更新(最近一次2017年9月)
+
+
+修身, 修心, 积累财富, 一个不能少. 你说呢?
+更...
+                                        </p>
+									<a class="post-hover" href="/2017/09/05/lessons-history.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/%E9%87%8E%E9%A9%AC.png')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/09/04/mustang.html">
+                                            <p style="font-size: 24px;">Mustang</p>
+									    </a>
+                                        
+                                            <span class="sub-title">小伙你网络库的源码都研究完了么, 就跑这儿若无其事的看车?</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/思考/">
+                                                <span class="tag is-post-tag">
+												  思考
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         老东家的部门经理给说了很多人生经验, 我觉得最重要的是他说的四个字 顺其自然 (let it be),  但是有时候自己有选择的时候, 也要注意好跟随自己的意志.顺气自然的意思是, 在自己能力范围以内, 做到最好 . 星爷不是说了么,...
+                                        </p>
+									<a class="post-hover" href="/2017/09/04/mustang.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  " style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/emacs_ecb.png')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/08/31/my-emacs.html">
+                                            <p style="font-size: 24px;">Merlin&#39;s Emacs</p>
+									    </a>
+                                        
+                                            <span class="sub-title">刚好换新的环境,顺便把emacs环境重新修正一下</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/linux/">
+                                                <span class="tag is-post-tag">
+												  linux
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         最开始(刚开始工作的时候)接触的 IDE 其实是 SourceInsight . 那时候很多 android 框架的源码要看, 要分析, 也一度想要购买正版 SI. 后来机缘巧合单位的老前辈推荐我用 emacs, 从此踏上一条不归路....
+                                        </p>
+									<a class="post-hover" href="/2017/08/31/my-emacs.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  " style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/deepin1.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/08/31/deepin.html">
+                                            <p style="font-size: 24px;">Deepin Linux</p>
+									    </a>
+                                        
+                                            <span class="sub-title">把自己的代码环境, 迁移新的 Deepin 发行版, 记录了一些常用库和工具的安装参考.</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/linux/">
+                                                <span class="tag is-post-tag">
+												  linux
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         以前的老系统, 由于系统太老, 有时候安装软件真的非常不适合. 我个人开发一直使用linux(Ubuntu64), 主要用terminal(emacs -nw). 所以要换一个稳定, 新一点儿的系统; 考虑了ubuntu麒麟, 16,...
+                                        </p>
+									<a class="post-hover" href="/2017/08/31/deepin.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  " style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/new_era_1.png')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/08/30/milestone1.html">
+                                            <p style="font-size: 24px;">Linux后台开发经验分享(里程碑)</p>
+									    </a>
+                                        
+                                            <span class="sub-title">一些列工作经验的分享,干货</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/里程碑/">
+                                                <span class="tag is-post-tag">
+												  里程碑
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         本文总结了我的个人经验, 包括我自己亲身经历的, 后台同学一起讨论的, 网络曾经看到的等等. 写这一篇不同于以往的 经验分享 (可能文中的内容不会太详细, 但尽量说清楚).
+
+身边人对于你的影响可能比你的努力更重要
+
+
+引子如果你把你...
+                                        </p>
+									<a class="post-hover" href="/2017/08/30/milestone1.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  " style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/agile.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/08/27/first-about-agile.html">
+                                            <p style="font-size: 24px;">First Agile</p>
+									    </a>
+                                        
+                                            <span class="sub-title">谈谈自己经历 敏捷开发 的体会</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/开发管理/">
+                                                <span class="tag is-post-tag">
+												  开发管理
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         老东家一直有个站会, 在看板(Kan Board)面前阐述一下自己的任务进度. 说实话, 我非常排斥这种东西(虽然我拥护TDD和XP). 后来听京东和支付宝的同学也在说敏捷会议, 敏捷开发, 我这才意识过来:
+哦, 敏捷已经是趋势了....
+                                        </p>
+									<a class="post-hover" href="/2017/08/27/first-about-agile.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  " style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/thrift_sequence.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/08/22/thrift.html">
+                                            <p style="font-size: 24px;">Thrift</p>
+									    </a>
+                                        
+                                            <span class="sub-title">经典的跨语言编程框架Thrift, 有着protobuffer无法匹敌的, 庞大...</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/网络/">
+                                                <span class="tag is-post-tag">
+												  网络
+												</span>
+												</a>
+                                            
+												<a class="post-hover" href="/tags/cpp/">
+                                                <span class="tag is-post-tag">
+												  cpp
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         有同行老早就在实践这个库了.毫无疑问, 本文是继 protobuffer 之后, 又要花大力气讲解的一个(FB的)库(而且绝对是值得你花一个晚上自习看看的库). 不过可惜的是, 实际开发中它并不如pb应用广泛, 可能很大一个原因是因为...
+                                        </p>
+									<a class="post-hover" href="/2017/08/22/thrift.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+
+                <!--翻頁-->
+                <nav class="pagination is-flex" style="justify-content: flex-end;">
+                    
+                        
+                        
+                            <a class="pagination-next" href="/page/2/">后一页</a>
+                        
+                    
+                </nav>
+
+            </section>
+
+            
+                <style>
+    /*user info start*/
+    .user-info {
+        padding: 10px 0 0;
+    }
+
+    .user-info .avatar {
+        width: 155px;
+        height: 155px;
+        border-radius: 50%; /*设置图像的圆角*/
+    }
+
+    .sns-container {
+        flex-wrap: wrap;
+    }
+
+    .sns-container a{
+        color: black;
+    }
+    /*user info end*/
+
+    /*Tag start*/
+    #tag_cloud
+	.tags-item{
+    	vertical-align: center;
+        display: inline-block;
+        color: #000;
+        border: 1px solid grey;
+        margin: 1px 1px 1px 1px;
+        padding: 1px 2px 3px 5px; /*上右下左*/
+        border-radius: 6px;
+
+    }
+
+	.tags-item-span {
+		margin-left: 0px;
+    	vertical-align: super;
+    	font-size: .8em;
+	}
+
+    /*Tag end*/
+
+    /*Site box start*/
+    .site-box {
+        height: 60px;
+    }
+    /*Site box end*/
+
+    .category-list-item,
+    .archive-list-item {
+        display: flex;
+        margin-bottom: 4px;
+        justify-content: space-between;
+    }
+    .category-list-link,
+    .archive-list-link {
+        color: black;
+    }
+
+    .category-list-count,
+    .archive-list-count {
+        width: 32px;
+        text-align: center;
+        border-radius: 4px;
+        color: #fff;
+        background-color: gray;
+    }
+</style>
+
+
+<!-- 上面设置风格 -->
+
+<aside class="column is-hidden-touch is-3" style="max-width: 280px; min-width: 230px">
+    <div class="content-box user-info">
+        <div class="has-padding">
+            <header class="has-text-centered">
+                <img class="avatar" src="http://omotkhw3y.bkt.clouddn.com/001.jpg">
+            </header>
+            <section class="has-text-centered">
+                <h3><strong>Merlin</strong></h3>
+                <p class="sub-title">"the Best or Nothing"</p>
+                
+                <p class="is-flex center" style=" color: gray">
+                    <i class="fa fa-map-marker" style="padding: 5px"></i>
+                    武汉&上海&旧金山
+                </p>
+                
+            </section>
+        </div>
+        <div class="top-line">
+            <ul class="sns-container justify-center is-flex has-padding">
+                
+
+                
+
+                
+
+                
+                <li>
+                    <a target="_blank" href="http://weibo.com/gmajors">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                        </span>
+                    </a>
+                </li>
+                
+
+                
+
+                
+                <li>
+                    <a target="_blank" href="https://github.com/WizardMerlin">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                        </span>
+                    </a>
+                </li>
+                
+
+                
+            </ul>
+        </div>
+    </div>
+    <div class="content-box">
+        <!--post数量和tag category 数量-->
+        <div class="site-box is-flex">
+            <div class="flex-1 is-flex flex-column center full-height right-line">
+                <p>博文总计</p>			
+                <strong>83</strong>
+            </div>
+            <div class="flex-1 is-flex flex-column center full-height">
+                <p>标签数</p>
+                <strong>19</strong>
+            </div>
+        </div>
+    </div>
+    <div id='tag_cloud' class="content-inner content-box">
+        <div class="has-text-centered">
+            <strong>标签</strong>
+        </div>
+        <div class="content-inner is-flex flex-wrap justify-space-between">
+            
+             <a class="tags-item" href="tags/网络/" title="点击 网络 详情" rel="17">
+                    网络<span class="tags-item-span"><b>17</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/linux/" title="点击 linux 详情" rel="13">
+                    linux<span class="tags-item-span"><b>13</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/cpp/" title="点击 cpp 详情" rel="32">
+                    cpp<span class="tags-item-span"><b>32</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/boost/" title="点击 boost 详情" rel="7">
+                    boost<span class="tags-item-span"><b>7</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/设计模式/" title="点击 设计模式 详情" rel="1">
+                    设计模式<span class="tags-item-span"><b>1</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/stl/" title="点击 stl 详情" rel="3">
+                    stl<span class="tags-item-span"><b>3</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/线程/" title="点击 线程 详情" rel="7">
+                    线程<span class="tags-item-span"><b>7</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/开发管理/" title="点击 开发管理 详情" rel="3">
+                    开发管理<span class="tags-item-span"><b>3</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/交易/" title="点击 交易 详情" rel="5">
+                    交易<span class="tags-item-span"><b>5</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="13">
+                    思考<span class="tags-item-span"><b>13</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/piano/" title="点击 piano 详情" rel="1">
+                    piano<span class="tags-item-span"><b>1</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/里程碑/" title="点击 里程碑 详情" rel="1">
+                    里程碑<span class="tags-item-span"><b>1</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/mysql/" title="点击 mysql 详情" rel="1">
+                    mysql<span class="tags-item-span"><b>1</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/编码规范/" title="点击 编码规范 详情" rel="3">
+                    编码规范<span class="tags-item-span"><b>3</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/python/" title="点击 python 详情" rel="2">
+                    python<span class="tags-item-span"><b>2</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/shell/" title="点击 shell 详情" rel="1">
+                    shell<span class="tags-item-span"><b>1</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/算法/" title="点击 算法 详情" rel="2">
+                    算法<span class="tags-item-span"><b>2</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/正则表达式/" title="点击 正则表达式 详情" rel="4">
+                    正则表达式<span class="tags-item-span"><b>4</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/java/" title="点击 java 详情" rel="1">
+                    java<span class="tags-item-span"><b>1</span></b>
+             </a>
+            
+        </div>
+    </div>
+    <div class="content-inner content-box">
+        <div class="has-text-centered">
+            <strong>分类</strong>
+        </div>
+        <div class="content-inner">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="categories/books/">books</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="categories/codings/">codings</a><span class="category-list-count">59</span></li><li class="category-list-item"><a class="category-list-link" href="categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="categories/managements/">managements</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="categories/musings/">musings</a><span class="category-list-count">6</span></li></ul>
+        </div>
+    </div>
+    <div class="content-inner content-box">
+        <div class="has-text-centered">
+            <strong>归档</strong>
+        </div>
+        <div class="content-inner">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="archives/2017/08/">August 2017</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="archives/2017/07/">July 2017</a><span class="archive-list-count">31</span></li><li class="archive-list-item"><a class="archive-list-link" href="archives/2017/06/">June 2017</a><span class="archive-list-count">19</span></li><li class="archive-list-item"><a class="archive-list-link" href="archives/2017/05/">May 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="archives/2017/04/">April 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="archives/2017/03/">March 2017</a><span class="archive-list-count">9</span></li></ul>
+        </div>
+    </div>
+
+   <div class="content-inner content-box" style="height:260px;">
+        <div class="has-text-centered">
+            <strong>RESERVED</strong>
+        </div>
+        <div class="content-inner">
+
+		<div align="center">
+			<br/>
+			<br>博客当前版本: <b>v2.0</b></br>
+			<br>很多模块和组件有待提升</br>
+		</div>
+        </div>
+    </div>
+</aside>
+
+            
+
+		
+        </div>
+    </div>
+</div>
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/search_core.js"></script>
+<script src="js/script.js"></script>
+
+</body>
+</html>
+

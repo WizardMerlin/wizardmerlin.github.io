@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Jni | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="JNI技术, 一种本来是用来写java虚拟机的技术, 后来被NDK玩坏了">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jni">
+<meta property="og:url" content="localhost:4000/2017/08/22/jni.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="JNI技术, 一种本来是用来写java虚拟机的技术, 后来被NDK玩坏了">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/jobject.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/jni.jpg">
+<meta property="og:updated_time" content="2017-09-24T07:21:13.671Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Jni">
+<meta name="twitter:description" content="JNI技术, 一种本来是用来写java虚拟机的技术, 后来被NDK玩坏了">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/jobject.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#开发流程"><span class="toc-number">2.1.</span> <span class="toc-text">开发流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java主调C代码"><span class="toc-number">2.1.1.</span> <span class="toc-text">Java主调C代码.</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本地方法规范"><span class="toc-number">2.2.</span> <span class="toc-text">本地方法规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命名符号解析"><span class="toc-number">2.2.1.</span> <span class="toc-text">命名符号解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类型符号解析"><span class="toc-number">2.2.2.</span> <span class="toc-text">类型符号解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参数解析"><span class="toc-number">2.2.3.</span> <span class="toc-text">参数解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象类型解析"><span class="toc-number">2.2.4.</span> <span class="toc-text">对象类型解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类型别名解析"><span class="toc-number">2.2.5.</span> <span class="toc-text">类型别名解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调用Java方法"><span class="toc-number">2.2.6.</span> <span class="toc-text">调用Java方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法签名"><span class="toc-number">2.2.7.</span> <span class="toc-text">方法签名</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常处理"><span class="toc-number">2.3.</span> <span class="toc-text">异常处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java部分处理"><span class="toc-number">2.3.1.</span> <span class="toc-text">Java部分处理:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#本地部分处理"><span class="toc-number">2.3.2.</span> <span class="toc-text">本地部分处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNI接口详解"><span class="toc-number">2.4.</span> <span class="toc-text">JNI接口详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#返回码说明"><span class="toc-number">2.4.1.</span> <span class="toc-text">返回码说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#接口代码说明"><span class="toc-number">2.4.2.</span> <span class="toc-text">接口代码说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简单案例"><span class="toc-number">2.4.3.</span> <span class="toc-text">简单案例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Jni</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-08-22</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>“Java Native Interface” , 最初是在Android NDK编程的时候接触的, 不过个人对于客户端开发一直没有太大的兴趣, 所以自那之后也搁置了很久.</p>
+<p>近期正好总结<code>跨语言编程实践</code>, 那么正好也就写一写, 就当写了一个中文的简要参考手册.</p>
+<p>(参考资料中的第一本书推荐一下)</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>跨语言的调用怎么弄? 这个话题, 太大了, 我倒是可以给你推荐一个框架, 脸书的Thrift; 这里只考虑 Java 和 C 的互相调用的话(调用方向不一样,方式也有稍稍不同, 复杂度也不一样), 就引出了JNI技术(JNI本身是native接口, 但在编程框架中更像一种协议), 专门针对Java和C交互.</p>
+<p>我想最初设计这个框架的人一定考虑了至少3个问题:</p>
+<ul>
+<li>跨语言对象的对接问题</li>
+<li>数据类型规格问题</li>
+<li>调用效率问题</li>
+</ul>
+<p>JNI允许运行在Java虚拟机的Java代码与用其他语言(如C, C++和汇编)编写的库交互, 通过JNI, 可以在native code中完成至少下面的事情:</p>
+<ul>
+<li>创建、检查或者更新java对象</li>
+<li>调用java方法</li>
+<li>捕捉和抛出异常</li>
+<li>加载class和获取class信息</li>
+<li>运行时类型检查</li>
+</ul>
+<p>理论太啰嗦了, 不说了. 下面详细介绍这些技术, 以及常见的开发流程.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h2><h3 id="Java主调C代码"><a href="#Java主调C代码" class="headerlink" title="Java主调C代码."></a>Java主调C代码.</h3><p>也就是说实现部分是在C, Java部分就是起到简单的调用.</p>
+<p>根据Java代码, 使用相应的编译器Javap生成本地访问头文件, 然后C代码中引用该头文件, 返回操作结果. Java代码中虚拟机运行时加载相应的本地代码(可能需要LoadLibrary), 从而完成java代码调用C代码.</p>
+<p>流程归纳起来就是:<br>编译,加载,链接本地方法.</p>
+<ul>
+<li>编译:<br>java VM是多线程的 ，所以native libraries应该用多线程编译器来进行编译和链接。例如使用Sun Studio compiler编译器的时候，要为c++代码添加-mt标记；使用 GNU gcc compiler的时候，需添加-D_REENTRANT 或-D_POSIX_C_SOURCE</li>
+<li>加载<br>native库通过System.loadLibrary方法进行加载。如：<br>```c++<br>package pkg;  </li>
+</ul>
+<p>class Cls { </p>
+<pre><code> native double f(int i, String s); 
+
+ static { 
+     System.loadLibrary(“pkg_Cls”); 
+ } 
+</code></pre><p>} </p>
+<pre><code> 系统会对library名会进行转换，在不同平台上有不同的转换方式，例如，Solaris系统转换pkg_Cls为libpkg_Cls.so，而Win32系统转换pkg_Cls为pkg_Cls.dll
+* 链接
+ 如果系统不支持动态链接，那么所有本地方法需要预链接到虚拟机，这种情况下，VM已经完成System.loadLibrary了。程序员也可以调用JNI函数RegisterNatives()来注册该类关联的本地方法
+
+
+
+### C主调Java代码
+这个相对来说, 应该算作被动调用(需求比较少), C语言回调Java方法.
+
+根据Java代码生成相应的C代码的步骤是一样的, `javap -jni 包名.类名`, 然后在本地代码中引入生成的头文件, 然后根据该头文件的函数, 给出函数实现.
+
+但是在函数实现中, 就开始利用虚拟机的特性, 开始`反射`的写法了, 比如你的反射可能是这么写的:
+
+```java
+Class&lt;?&gt; instance = Class.forName(&quot;com.example.Test&quot;);
+Method declearMethod = instance.getDeclaredMethod(&quot;intMethod&quot;, new Class[]{});
+declearMethod.invoke(instance.newInstance(), new Object[]{});
+</code></pre><p>那么在本地代码写法也类似, 先要拿到Class类型, 之后找到方法(ID), 然后再进行调用处理, 核心代码可能是:</p>
+<pre><code class="c++">//在某本地函数体内 
+jclass jclazz = (*env)-&gt;FindClass(env, &quot;com/example/Test&quot;);
+jmethodID methodId = (*env)-&gt;GetMethodID(env, jclazz, &quot;intMethod&quot;, &quot;()V&quot;/*方法签名符号,约定参数和返回值*/);
+(*env)-&gt;CallVoidMethod(env, jobject, methodId); //jobject是本地函数默认的参数
+</code></pre>
+<p>(如果是返回值的可能要用其他的JNI方法)</p>
+<p>(方法签名可以看下面的规则, 得知其符号规则; 或者使用javap工具通过字节码拿到方法签名<code>javap -s</code>)</p>
+<p>但是值得注意的是C回调Java代码, 是发生在Java代码调用C代码的时候, 发现自己被回调了; 毕竟运行都是在虚拟机的主导下(也就是说没有虚拟机环境是不行的). </p>
+<p>C回调的方法一定要和jobject是同一个类型的(jobject实例所在的类), 如果你在该类的这个本地方法里, 调用其他Java类的方法, 还要增加处理:需要创建相关类的对象(就是拿到局部引用,AllObject或者NewObject方法)或者获取类的信息(静态方法调用GetStaticMethodID(), CallStaicVoidMethod()等), 例如</p>
+<pre><code class="c">//先FindClass 返回一个jclass对象clazz, 并且拿到methodID
+jobject obj = (*env)-&gt;AllocObject(env, clazz);
+(*env)-&gt;CallVoidMethod(env, obj, methodId);
+</code></pre>
+<p>但是回调的场景, 最好还是放在同一个类吧, 不要跨类方法调用.</p>
+<h2 id="本地方法规范"><a href="#本地方法规范" class="headerlink" title="本地方法规范"></a>本地方法规范</h2><p>Java方法, 如果转换(编译)到本地代码, 对应哪个方式其实是有讲究的, 例如:</p>
+<pre><code class="java">package pkg;  
+
+class Cls { 
+    //对应本地方法名: Java_pkg_Cls_f__ILjava_lang_String_2, 
+   //参数列表:JNIEnv *env,jobject obj,jint i,jstring s
+    native double f(int i, String s); 
+
+p}
+</code></pre>
+<p>下面就仔细讲解一下对应的映射或者编译规则.</p>
+<h3 id="命名符号解析"><a href="#命名符号解析" class="headerlink" title="命名符号解析"></a>命名符号解析</h3><p>一个本地方法名有以下几个组成部分：</p>
+<ul>
+<li>前缀Java_</li>
+<li>完整类名（类名中的.用_代替）</li>
+<li>下划线_</li>
+<li>方法名（方法名中的特殊字符需要转义）</li>
+<li>参数签名（非必须，有重载方法的时候才需要），如果有重载的本地方法，需要再添加两个下划线_<em>，然后再添加方法签名（由java字段描述符描述，用</em>代替描述符中的包名分割/符，签名中的特殊字符需要转义）</li>
+</ul>
+<p>关于转义:</p>
+<ul>
+<li>_0XXXX    一个Unicode字符XXXX。注意小写是用来表示非ascii Unicode字符, 如:_0abcd与_0ABCD不相同</li>
+<li><em>1        字符</em></li>
+<li>_2        参数签名中的字符;</li>
+<li>_3        参数签名中的字符[</li>
+</ul>
+<h3 id="类型符号解析"><a href="#类型符号解析" class="headerlink" title="类型符号解析"></a>类型符号解析</h3><p>注意这些规则, 对应的是用在函数或者参数名字上(java和c数据类型对应有另外一套规则)<br>命名中的类型(Java类型对应本地符号)规则, 如下:</p>
+<pre><code>Boolean        Z
+Byte        B
+Char        C
+Short        S
+Int        I
+Long        J (特殊)
+Float        F
+Double        D
+Void        V
+</code></pre><p>特殊的有数组和对象:</p>
+<pre><code>数组:
+   &quot;[类型&quot; 表示, 如：int[]-&gt; [I, int[][]-&gt; [[I, Thread[]-&gt; [Ljava/lang/Thread;
+
+objects:
+   以&quot;L&quot;开头, 以&quot;;&quot;结尾, 用&quot;/&quot; 隔开的包及类名. 比如: Ljava/lang/String;
+   如果是嵌套类, 则用$来表示嵌套, 例 Landroid/os/FileUtils$FileStatus;
+</code></pre><h3 id="参数解析"><a href="#参数解析" class="headerlink" title="参数解析"></a>参数解析</h3><p>一个Java方法, 编译到native code会自然多出两个参数, 一个代表JNI接口指针类型(Java虚拟机环境), 另外一个是对象实例的引用(通俗来说就是this指针, 当然进程方法可以不用).</p>
+<p>例如:<br>Java代码:</p>
+<pre><code class="java">package pkg;  
+
+class Cls { 
+
+     native double f(int i, String s); 
+
+}
+</code></pre>
+<p>编译到C代码就是:</p>
+<pre><code class="c++">/*c和c++在使用JNI接口的时候有点不一致, 
+   请仔细观察通过env调用接口的调用方式 */
+
+//C版本
+jdouble Java_pkg_Cls_f__ILjava_lang_String_2 (
+     JNIEnv *env,        /* interface pointer */
+     jobject obj,        /* &quot;this&quot; pointer */
+     jint i,             /* argument #1 */
+     jstring s)          /* argument #2 */
+{
+     /* Obtain a C-copy of the Java string */
+     const char *str = (*env)-&gt;GetStringUTFChars(env, s, 0);
+
+     /* process the string */
+     ...
+
+     /* Now we are done with str */
+     (*env)-&gt;ReleaseStringUTFChars(env, s, str);
+
+     return ...
+}
+
+//C++版本
+extern &quot;C&quot; /* specify the C calling convention */  
+jdouble Java_pkg_Cls_f__ILjava_lang_String_2 ( 
+
+     JNIEnv *env,        /* interface pointer */ 
+     jobject obj,        /* &quot;this&quot; pointer */ 
+     jint i,             /* argument #1 */ 
+     jstring s)          /* argument #2 */ 
+{ 
+
+     const char *str = env-&gt;GetStringUTFChars(s, 0); 
+     ... 
+
+     env-&gt;ReleaseStringUTFChars(s, str); 
+
+     return ... 
+}
+</code></pre>
+<h3 id="对象类型解析"><a href="#对象类型解析" class="headerlink" title="对象类型解析"></a>对象类型解析</h3><p>本地代码中的参数, 才不管你Java类的具体类型, 统一jobject类型;<br>当然也可以对应更细致(也不那么细致):<br><img src="http://omotkhw3y.bkt.clouddn.com/jobject.jpg" alt="jobject"></p>
+<p>java对象引用:</p>
+<ul>
+<li>基本类型（如整型，字符等）在Java和native之间是采用值传递</li>
+<li>Java对象采用的是引用(地址)传递(Java语言本身封装了指针)</li>
+</ul>
+<p>全局引用&amp;弱全局引用, 局部引用:</p>
+<ul>
+<li>局部引用在方法调用的时候有效，在方法调用结束之后会自动释放</li>
+<li>全局引用会一直可用，直到显式地对其进行释放</li>
+<li>弱全局引用跟全局引用的区别是弱全局引用持有的java对象可以被VM进行回收，所以才使用弱全局引用前，我们需要对其进行检测，看它对应的对象是否被回收了</li>
+</ul>
+<p>JNIENV方法:</p>
+<ul>
+<li>返回的Java对象都是局部引用</li>
+<li>可以接受全局引用和全局引用</li>
+</ul>
+<p>native方法: (C方法)</p>
+<ul>
+<li>可以返回局部或者全局引用</li>
+<li>接收的一般是局部引用(Java对象)</li>
+</ul>
+<p>并且JNI允许程序从局部引用创建一个全局引用.</p>
+<p>native代码中的局部的对象, 该怎么释放?</p>
+<ul>
+<li>在方法调用结束之后，我们依赖VM去帮我们释放所有局部引用</li>
+<li>以下几种情况下，我们应该显式地释放局部引用:<ul>
+<li>方法中创建了一个比较大的java对象的，并持有其局部引用，使用完之后，如果接下来都不再需要使用了，如果仍然不对它进行释放的话，在方法结束之前，这个对象都不会进行释放，这样会对资源造成浪费</li>
+<li>JNI会将创建的局部引用都存储在一个局部引用表中，如果这个表超过了最大容量限制，就会造成局部引用表溢出，使程序崩溃。比如在一个循环中创建局部引用，最好在每一轮循环中释放局部引用，否则随着循环次数增加，很可能就内存溢出了</li>
+</ul>
+</li>
+</ul>
+<p>局部引用仅仅在其创建的线程内有效(也就是占用的是本地代码的栈空间), native代码不能跨线程传递局部引用.</p>
+<h3 id="类型别名解析"><a href="#类型别名解析" class="headerlink" title="类型别名解析"></a>类型别名解析</h3><p>上面的jint, 其实是JNI定义的别名(具体对应什么可以自己定义), 对应的可能是标准C中的long, 其实你也可以使用c语言标准中的int类型.</p>
+<p>详细的信息可以参考下面:</p>
+<pre><code>Java 类型   JNI类型别名         描述
+boolean        jboolean         unsigned char, 8 bits
+byte        jbyte         signed char, 8 bits
+char        jchar         unsigned short, 16 bits
+short        jshort         signed short, 16 bits
+int        jint         signed long, 32 bits
+long        jlong         __int64, signed long long,  64 bits
+float        jfloat         float, 32 bits
+double        jdouble         double 64 bits
+void        void         N/A
+</code></pre><p><img src="http://omotkhw3y.bkt.clouddn.com/jni.jpg" alt="别名"><br>当然你也可以选择使用或者不用:(默认使用)</p>
+<pre><code>#define JNI_FALSE  0 
+#define JNI_TRUE   1
+</code></pre><p>注意到char使用的双字节编码, 而不是单字节编码，所以Java虚拟机的UTF-8字符串不可能有嵌入的空值; 并且不支持标准的四字节编码，用 two-times-three-byte 格式代替</p>
+<h3 id="调用Java方法"><a href="#调用Java方法" class="headerlink" title="调用Java方法"></a>调用Java方法</h3><p>JNI允许native代码访问对象的成员以及调用它的方法，通过两个步骤即可实现访问，比如，我们需要调用cls中的f方法：</p>
+<pre><code class="c">jmethodID mid = env-&gt;GetMethodID(cls, “f”, “(ILjava/lang/String;)D”);//mid可以重复使用
+jdouble result = env-&gt;CallDoubleMethod(obj, mid, 10, str);
+</code></pre>
+<p>但是需要注意的是，字段ID或方法ID并不能防止VM卸载该类. 当类被卸载后, 方法ID和字段ID将变成不可用的. 因此，我们需要确保： </p>
+<ul>
+<li>持有class的引用，让它不被卸载，或者 </li>
+<li>重新获取方法id或者字段id</li>
+</ul>
+<p>关于<code>jmethodID</code>:<br>在C中, 字段和方法的 ID 是一个指向结构体的指针:</p>
+<pre><code class="c">struct _jfieldID;                       /* opaque structure */
+typedef struct _jfieldID* jfieldID;     /* field IDs */
+
+struct _jmethodID;                      /* opaque structure */
+typedef struct _jmethodID* jmethodID;   /* method IDs */
+</code></pre>
+<h3 id="方法签名"><a href="#方法签名" class="headerlink" title="方法签名"></a>方法签名</h3><pre><code class="c">//方法签名为：(ILjava/lang/String;[I)J 
+long f (int n, String s, int[] arr);
+</code></pre>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p>JNI不对空指针或非法参数类型等错误进行检测, 因为:</p>
+<ul>
+<li>检查所有可能的错误会降低方法执行的性能</li>
+<li>在很多时候，没有足够的运行时信息去进行检测<br>程序员不得传递一个非法指针或者错误的类型给JNI函数, 否则可能会导致系统异常货虚拟机崩溃.</li>
+</ul>
+<p>JNI允许本地方法抛出处理任何异常，也可以处理Java中抛出的异常，剩下没有处理的异常会继续给VM处理.</p>
+<h3 id="Java部分处理"><a href="#Java部分处理" class="headerlink" title="Java部分处理:"></a>Java部分处理:</h3><p>大多数情况下，JNI提供的方法通过返回错误码或者抛出java异常来处理错误，因此，程序中可以:</p>
+<ul>
+<li>检查JNI函数返回值</li>
+<li>调用 ExceptionOccurred() 方法，获取方法中抛出的异常</li>
+</ul>
+<p>有两种情况下，程序需要优先检测java异常而不是先检测返回码:</p>
+<ul>
+<li>通过JNI调用Java方法的时候，需要ExceptionOccurred()检测是否在Java方法中抛出了异常</li>
+<li>一些访问数组的方法，它不返回错误码，但是会抛出 ArrayIndexOutOfBoundsException 或者 ArrayStoreException异常</li>
+</ul>
+<h3 id="本地部分处理"><a href="#本地部分处理" class="headerlink" title="本地部分处理"></a>本地部分处理</h3><p>有两种方法可以在本地方法中处理异常:</p>
+<ul>
+<li>检测到异常的时候立即返回，异常将会在调用该本地代码的地方抛出</li>
+<li>在本地方法中调用ExceptionClear()清除异常，处理接下来的逻辑</li>
+</ul>
+<p>异常抛出的时，本地方法需清除异常后，才能继续调用其他JNI接口方法.</p>
+<p>有异常发生后，只有以下方法才能被安全调用：</p>
+<pre><code>  ExceptionOccurred()
+  ExceptionDescribe()
+  ExceptionClear()
+  ExceptionCheck()
+  ReleaseStringChars()
+  ReleaseStringUTFChars()
+  ReleaseStringCritical()
+  Release&lt;Type&gt;ArrayElements()
+  ReleasePrimitiveArrayCritical()
+  DeleteLocalRef()
+  DeleteGlobalRef()
+  DeleteWeakGlobalRef()
+  MonitorExit()
+  PushLocalFrame()
+  PopLocalFrame()
+</code></pre><h2 id="JNI接口详解"><a href="#JNI接口详解" class="headerlink" title="JNI接口详解"></a>JNI接口详解</h2><p>花时间阅读那个 <code>jni.h</code>, 以及参考文档.</p>
+<p>JNI函数必须接受一个非空对象，你必须保证传入的参数不为空，JNI函数不需要再对它进行空指针判断.</p>
+<h3 id="返回码说明"><a href="#返回码说明" class="headerlink" title="返回码说明"></a>返回码说明</h3><pre><code class="c">#define JNI_OK          (0)         /* no error */
+#define JNI_ERR         (-1)        /* generic error */
+#define JNI_EDETACHED   (-2)        /* thread detached from the VM */
+#define JNI_EVERSION    (-3)        /* JNI version error */
+
+#define JNI_COMMIT      1           /* copy content, do not free buffer */
+#define JNI_ABORT       2           /* free buffer w/o copying back */
+</code></pre>
+<h3 id="接口代码说明"><a href="#接口代码说明" class="headerlink" title="接口代码说明"></a>接口代码说明</h3><p>该部分比较多(1000多行), 有一定的注释</p>
+<pre><code class="c">    /**
+     * 返回本地方法接口的版本
+     *
+     * @param env JNI接口指针
+     *
+     * @return 高16位返回主版本号，低16位返回次版本号, 
+      如在JDK/JRE 1.6中，返回0x00010006
+      也有可能返回 JNI_EDETACHED 和 JNI_EVERSION 错误码
+     */
+    jint (*GetVersion)(JNIEnv *);
+
+
+    /**
+     * 从二进制的.class的数据缓冲区中加载类
+     *
+     * @param env JNI接口指针
+     * @param name UTF8编码的需要加载的类的名字
+     * @param loader 类加载器
+     * @param buf 包含.class字节码的数组
+     * @param bufLen 长度
+     *
+     * @return class对象或NULL
+     *
+     * @throws ClassFormatError 不是有效的class数据
+     * @throws ClassCircularityError 类或接口是自身的父类或自身继承了该接口
+     * @throws OutOfMemoryError 内存不足
+     * @throws SecurityException 如果该类是属于java包的
+     */
+    jclass (*DefineClass)(JNIEnv *, const char *, jobject, const jbyte *, jsize);
+
+
+    /**
+     * 用于加载本地定义的类
+     *
+     * @param env JNI接口指针
+     * @param name 完整的包名(&quot;/&quot;代替&quot;.&quot;) 或 数组类型字段描述(&quot;[&quot;开头，紧跟签名描述)，
+        如&quot;java/lang/String&quot; for java.lang.String, 
+          &quot;[Ljava/lang/Object;&quot; for java.lang.Object[]
+     *
+     * @return class对象或NULL
+     *
+     * @throws ClassFormatError 不是有效的class数据
+     * @throws ClassCircularityError 类或接口是自身的父类或自身继承了该接口
+     * @throws OutOfMemoryError 内存不足
+     * @throws NoClassDefFoundError 找不到name对应的class类
+     */
+    jclass (*FindClass)(JNIEnv *, const char *);
+
+
+    /**
+     * 从java.lang.reflect.Method 或 java.lang.reflect.Constructor 获取method ID
+     *
+     * @param env JNI接口指针
+     * @param method java.lang.reflect.Method 或 java.lang.reflect.Constructor对象
+     *
+     * @return 方法ID
+     */
+    jmethodID (*FromReflectedMethod)(JNIEnv *, jobject);
+
+
+    /**
+     * 从java.lang.reflect.Field获取field ID
+     *
+     * @param env JNI接口指针
+     * @param field java.lang.reflect.Field对象
+     *
+     * @return field ID
+     */
+    jfieldID (*FromReflectedField)(JNIEnv *, jobject);
+
+
+    /**
+     * 从method ID获取 java.lang.reflect.Method 或 java.lang.reflect.Constructor 对象
+     *
+     * @param env JNI接口指针
+     * @param cls 该方法的类对象
+     * @param methodID 方法ID
+     * @param isStatic 是否静态方法
+     *
+     * @return java.lang.reflect.Method 或 java.lang.reflect.Constructor 对象
+     *
+     * @throws OutOfMemoryError 内存不足
+     */
+    jobject (*ToReflectedMethod)(JNIEnv *, jclass, jmethodID, jboolean);
+
+
+    /**
+     * 如果clazz不是class对象或接口，则返回该class的超类
+     *
+     * @param env JNI接口指针
+     * @param clazz class对象
+     *
+     * @return 返回输入类的父类 或 NULL
+     */
+    jclass (*GetSuperclass)(JNIEnv *, jclass);
+
+
+    /**
+     * class1是否可以安全地转换为class2，以下三种情况会返回TRUE
+     * 1. 当class1和class2是同一个java class的引用
+     * 2. class1是class2的子类
+     * 3. class2是class1的某个接口
+     *
+     * @param env JNI接口指针
+     * @param clazz1 class1
+     * @param clazz2 class2
+     *
+     * @return JNI_TRUE or JNI_FALSE
+     */
+    jboolean (*IsAssignableFrom)(JNIEnv *, jclass, jclass);
+
+
+    /**
+     * 根据 field ID 获取 java.lang.reflect.Field 对象
+     *
+     * @param env JNI接口指针
+     * @param cls 该方法的类对象
+     * @param fieldID 字段ID
+     * @param isStatic 是否静态变量
+     *
+     * @return java.lang.reflect.Field 对象
+     *
+     * @throws OutOfMemoryError 内存不足
+     */
+    jobject (*ToReflectedField)(JNIEnv *, jclass, jfieldID, jboolean);
+
+
+    /**
+     * 抛出异常
+     *
+     * @param env JNI接口指针
+     * @param obj java.lang.Throwable 对象
+     *
+     * @return 0：成功， 负数：失败
+     *
+     * @throws Throwable
+     */
+    jint (*Throw)(JNIEnv *, jthrowable);
+
+
+    /**
+     * 根据clazz和message构造一个异常对象，并将它抛出
+     *
+     * @param env JNI接口指针
+     * @param clazz java.lang.Throwable的子类
+     * @param message 错误信息
+     *
+     * @return 0：成功， 负数：失败
+     *
+     * @throws Throwable
+     */
+    jint (*ThrowNew)(JNIEnv *, jclass, const char *);
+
+
+    /**
+     * 判断是否有异常抛出，在调用ExceptionClear()或java代码处理了exception之前，都可以用这个方法判断是否有异常
+     *
+     * @param env JNI接口指针
+     *
+     * @return 异常对象 or NULL
+     */
+    jthrowable (*ExceptionOccurred)(JNIEnv *);
+
+
+    /**
+     * 打印异常信息
+     *
+     * @param env JNI接口指针
+     */
+    void (*ExceptionDescribe)(JNIEnv *);
+
+
+    /**
+     * 清除所有已抛出的异常
+     *
+     * @param env JNI接口指针
+     */
+    void (*ExceptionClear)(JNIEnv *);
+
+
+    /**
+     * 抛出致命错误并且不希望虚拟机进行恢复。无返回值
+     *
+     * @param env JNI接口指针
+     * @param msg 错误信息
+     */
+    void (*FatalError)(JNIEnv *, const char *);
+
+
+    /**
+     * 创建一个新的本地引用帧
+     *
+     * @param env JNI接口指针
+     * @param capacity 容量
+     *
+     * @return 0：成功，负数：失败
+     *
+     * @throws OutOfMemoryError
+     */
+    jint (*PushLocalFrame)(JNIEnv *, jint);
+
+
+    /**
+     * 弹出当前本地引用帧，释放所有本地引用
+     *
+     * @param env JNI接口指针
+     * @param result
+     *
+     * @return
+     */
+    jobject (*PopLocalFrame)(JNIEnv *, jobject);
+
+
+    /**
+     * 为传入的obj创建全局引用，obj可以是全局引用也可以是局部引用。全局引用需要调用DeleteGlobalRef来释放
+     *
+     * @param env JNI接口指针
+     * @param obj 全局或局部引用
+     *
+     * @return 全局引用 or NULL(内存不足)
+     */
+    jobject (*NewGlobalRef)(JNIEnv *, jobject);
+
+
+    /**
+     * 释放全局引用
+     *
+     * @param env JNI接口指针
+     * @param globalRef 全局引用
+     */
+    void (*DeleteGlobalRef)(JNIEnv *, jobject);
+
+
+    /**
+     * 释放局部引用
+     *
+     * @param env JNI接口指针
+     * @param localRef 局部引用
+     */
+    void (*DeleteLocalRef)(JNIEnv *, jobject);
+
+
+    /**
+     * 判断两个引用是否同一java对象的引用
+     *
+     * @param env JNI接口指针
+     * @param ref1 引用1
+     * @param ref2 引用2
+     *
+     * @return JNI_TRUE:两个引用指向同一个java对象
+     */
+    jboolean (*IsSameObject)(JNIEnv *, jobject, jobject);
+
+
+    /**
+     * 为传入的ref创建局部引用，ref可以是全局引用也可以是局部引用
+     *
+     * @param env JNI接口指针
+     * @param ref 全局或局部引用
+     *
+     * @return 局部引用 or NULL
+     */
+    jobject (*NewLocalRef)(JNIEnv *, jobject);
+
+
+    /**
+     * 确保当前线程可以创建capacity个局部引用。在进入本地方法时，VM确保可以可以创建最少16个局部引用
+     *
+     * @param env JNI接口指针
+     * @param capacity 局部引用个数
+     *
+     * @return 0：成功，负数：失败
+     *
+     * @throws OutOfMemoryError 内存不足
+     */
+    jint (*EnsureLocalCapacity)(JNIEnv *, jint);
+
+
+    /**
+     * 创建一个新的java对象（不会调用对象的构造方法）
+     *
+     * @param env JNI接口指针
+     * @param clazz 非数组class对象
+     *
+     * @return java对象
+     *
+     * @throws InstantiationException clazz是一个接口或抽象类
+     * @throws OutOfMemoryError 内存不足
+     */
+    jobject (*AllocObject)(JNIEnv *, jclass);
+
+
+    /**
+     * 构造一个新的java对象，method ID指用以生成该类的构造方法，method ID必须是通过GetMethodID()获得
+     *
+     * @param env JNI接口指针
+     * @param clazz 非数组class对象
+     * @param ... 传递给构造方法的参数
+     *
+     * @return java对象 or NULL(对象构造失败)
+     *
+     * @throws InstantiationException clazz是一个接口或抽象类
+     * @throws OutOfMemoryError 内存不足
+     */
+    jobject (*NewObject)(JNIEnv *, jclass, jmethodID, ...);
+
+
+    /**
+     * 构造一个新的java对象，method ID指用以生成该类的构造方法，method ID必须是通过GetMethodID()获得
+     *
+     * @param env JNI接口指针
+     * @param clazz 非数组class对象
+     * @param args va_list结构，里面有传递给构造方法的参数
+     *
+     * @return java对象 or NULL(对象构造失败)
+     *
+     * @throws InstantiationException clazz是一个接口或抽象类
+     * @throws OutOfMemoryError 内存不足
+     */
+    jobject (*NewObjectV)(JNIEnv *, jclass, jmethodID, va_list);
+
+
+    /**
+     * 构造一个新的java对象，method ID指用以生成该类的构造方法，method ID必须是通过GetMethodID()获得
+     *
+     * @param env JNI接口指针
+     * @param clazz 非数组class对象
+     * @param args 参数数组，里面是传递给构造方法的参数
+     *
+     * @return java对象 or NULL(对象构造失败)
+     *
+     * @throws InstantiationException clazz是一个接口或抽象类
+     * @throws OutOfMemoryError 内存不足
+     */
+    jobject (*NewObjectA)(JNIEnv *, jclass, jmethodID, jvalue *);
+
+
+    /**
+     * 返回对象对应的class对象
+     *
+     * @param env JNI接口指针
+     * @param obj 非空java对象
+     *
+     * @return class对象
+     */
+    jclass (*GetObjectClass)(JNIEnv *, jobject);
+
+
+    /**
+     * 判断obj是否clazz的实例对象
+     *
+     * @param env JNI接口指针
+     * @param obj java对象
+     * @param clazz class对象
+     *
+     * @return
+     */
+    jboolean (*IsInstanceOf)(JNIEnv *, jobject, jclass);
+
+
+    /**
+     * 返回非静态方法的method ID
+     *
+     * @param env JNI接口指针
+     * @param clazz class对象
+     * @param name 方法名
+     * @param sig 方法签名
+     *
+     * @return 方法ID or NULL
+     *
+     * @throws NoSuchMethodError 找不到对应的方法
+     * @throws ExceptionInInitializerError class初始化失败
+     * @throws OutOfMemoryError 内存不足
+     */
+    jmethodID (*GetMethodID)(JNIEnv *, jclass, const char *, const char *);
+
+
+    /**
+     * Call&lt;type&gt;Method(JNIEnv *env, jobject obj, jmethodID methodID, ...);调用参数放到可变参数中
+     * Call&lt;type&gt;MethodA(JNIEnv *env, jobject obj, jmethodID methodID, const jvalue *args);调用参数放入jvalue数组
+     * Call&lt;type&gt;MethodV(JNIEnv *env, jobject obj, jmethodID methodID, va_list args);调用参数放入va_list结构中
+     *
+     * 以上三组调用接口都是根据 method ID调用java实例方法（非静态方法）的接口，其中method ID是通过GetMethodID()获取的
+     * 当这些方法用于调用java对象的私有方法或构造函数时，method ID必须从obj的真实类获取，而不应从其某个父类获取
+     * &lt;type&gt;是方法的返回类型，三类接口间唯一的区别是methodID参数之后调用参数的不同
+     *
+     *
+     * @param env JNI接口指针
+     * @param obj java对象
+     * @param methodID 方法ID
+     * @param args 调用参数
+     *
+     * @return java方法返回结果
+     *
+     * @throws java方法中可能抛出的异常
+     */
+    jobject (*CallObjectMethod)(JNIEnv *, jobject, jmethodID, ...);
+    jobject (*CallObjectMethodV)(JNIEnv *, jobject, jmethodID, va_list);
+    jobject (*CallObjectMethodA)(JNIEnv *, jobject, jmethodID, jvalue *);
+    jboolean (*CallBooleanMethod)(JNIEnv *, jobject, jmethodID, ...);
+    jboolean (*CallBooleanMethodV)(JNIEnv *, jobject, jmethodID, va_list);
+    jboolean (*CallBooleanMethodA)(JNIEnv *, jobject, jmethodID, jvalue *);
+    jbyte (*CallByteMethod)(JNIEnv *, jobject, jmethodID, ...);
+    jbyte (*CallByteMethodV)(JNIEnv *, jobject, jmethodID, va_list);
+    jbyte (*CallByteMethodA)(JNIEnv *, jobject, jmethodID, jvalue *);
+    jchar (*CallCharMethod)(JNIEnv *, jobject, jmethodID, ...);
+    jchar (*CallCharMethodV)(JNIEnv *, jobject, jmethodID, va_list);
+    jchar (*CallCharMethodA)(JNIEnv *, jobject, jmethodID, jvalue *);
+    jshort (*CallShortMethod)(JNIEnv *, jobject, jmethodID, ...);
+    jshort (*CallShortMethodV)(JNIEnv *, jobject, jmethodID, va_list);
+    jshort (*CallShortMethodA)(JNIEnv *, jobject, jmethodID, jvalue *);
+    jint (*CallIntMethod)(JNIEnv *, jobject, jmethodID, ...);
+    jint (*CallIntMethodV)(JNIEnv *, jobject, jmethodID, va_list);
+    jint (*CallIntMethodA)(JNIEnv *, jobject, jmethodID, jvalue *);
+    jlong (*CallLongMethod)(JNIEnv *, jobject, jmethodID, ...);
+    jlong (*CallLongMethodV)(JNIEnv *, jobject, jmethodID, va_list);
+    jlong (*CallLongMethodA)(JNIEnv *, jobject, jmethodID, jvalue *);
+    jfloat (*CallFloatMethod)(JNIEnv *, jobject, jmethodID, ...);
+    jfloat (*CallFloatMethodV)(JNIEnv *, jobject, jmethodID, va_list);
+    jfloat (*CallFloatMethodA)(JNIEnv *, jobject, jmethodID, jvalue *);
+    jdouble (*CallDoubleMethod)(JNIEnv *, jobject, jmethodID, ...);
+    jdouble (*CallDoubleMethodV)(JNIEnv *, jobject, jmethodID, va_list);
+    jdouble (*CallDoubleMethodA)(JNIEnv *, jobject, jmethodID, jvalue *);
+    void (*CallVoidMethod)(JNIEnv *, jobject, jmethodID, ...);
+    void (*CallVoidMethodV)(JNIEnv *, jobject, jmethodID, va_list);
+    void (*CallVoidMethodA)(JNIEnv *, jobject, jmethodID, jvalue *);
+
+
+    /**
+     * CallNonvirtual&lt;type&gt;Method(JNIEnv *env, jobject obj, jclass clazz, jmethodID methodID, ...);调用参数放到可变参数中
+     * CallNonvirtual&lt;type&gt;MethodA(JNIEnv *env, jobject obj, jclass clazz, jmethodID methodID, const jvalue *args);调用参数放入jvalue数组
+     * CallNonvirtual&lt;type&gt;MethodV(JNIEnv *env, jobject obj, jclass clazz, jmethodID methodID, va_list args);调用参数放入va_list结构中
+     *
+     * 以上三组调用接口都是根据 method ID 和 class 调用java实例方法（非静态方法）的接口，其中method ID是基于clazz通过GetMethodID()获取的
+     * &lt;type&gt;是方法的返回类型，三类接口间唯一的区别是methodID参数之后调用参数的不同
+     * 注意，和Call&lt;type&gt;Method不同，如果子类重写了父类的方法，Call&lt;type&gt;Method调用的是子类的方法，如果想调用父类的方法，
+     * 则需要用CallNonvirtual&lt;type&gt;Method，这个方法可以传入父类的class和父类的method id，从而达到调用父类方法的效果
+     *
+     *
+     * @param env JNI接口指针
+     * @param clazz class对象
+     * @param obj java对象
+     * @param methodID 方法ID
+     * @param args 调用参数
+     *
+     * @return java方法返回结果
+     *
+     * @throws java方法中可能抛出的异常
+     */
+    jobject (*CallNonvirtualObjectMethod)(JNIEnv *, jobject, jclass, jmethodID, ...);
+    jobject (*CallNonvirtualObjectMethodV)(JNIEnv *, jobject, jclass, jmethodID, va_list);
+    jobject (*CallNonvirtualObjectMethodA)(JNIEnv *, jobject, jclass, jmethodID, jvalue *);
+    jboolean (*CallNonvirtualBooleanMethod)(JNIEnv *, jobject, jclass, jmethodID, ...);
+    jboolean (*CallNonvirtualBooleanMethodV)(JNIEnv *, jobject, jclass, jmethodID, va_list);
+    jboolean (*CallNonvirtualBooleanMethodA)(JNIEnv *, jobject, jclass, jmethodID, jvalue *);
+    jbyte (*CallNonvirtualByteMethod)(JNIEnv *, jobject, jclass, jmethodID, ...);
+    jbyte (*CallNonvirtualByteMethodV)(JNIEnv *, jobject, jclass, jmethodID, va_list);
+    jbyte (*CallNonvirtualByteMethodA)(JNIEnv *, jobject, jclass, jmethodID, jvalue *);
+    jchar (*CallNonvirtualCharMethod)(JNIEnv *, jobject, jclass, jmethodID, ...);
+    jchar (*CallNonvirtualCharMethodV)(JNIEnv *, jobject, jclass, jmethodID, va_list);
+    jchar (*CallNonvirtualCharMethodA)(JNIEnv *, jobject, jclass, jmethodID, jvalue *);
+    jshort (*CallNonvirtualShortMethod)(JNIEnv *, jobject, jclass, jmethodID, ...);
+    jshort (*CallNonvirtualShortMethodV)(JNIEnv *, jobject, jclass, jmethodID, va_list);
+    jshort (*CallNonvirtualShortMethodA)(JNIEnv *, jobject, jclass, jmethodID, jvalue *);
+    jint (*CallNonvirtualIntMethod)(JNIEnv *, jobject, jclass, jmethodID, ...);
+    jint (*CallNonvirtualIntMethodV)(JNIEnv *, jobject, jclass, jmethodID, va_list);
+    jint (*CallNonvirtualIntMethodA)(JNIEnv *, jobject, jclass, jmethodID, jvalue *);
+    jlong (*CallNonvirtualLongMethod)(JNIEnv *, jobject, jclass, jmethodID, ...);
+    jlong (*CallNonvirtualLongMethodV)(JNIEnv *, jobject, jclass, jmethodID, va_list);
+    jlong (*CallNonvirtualLongMethodA)(JNIEnv *, jobject, jclass, jmethodID, jvalue *);
+    jfloat (*CallNonvirtualFloatMethod)(JNIEnv *, jobject, jclass, jmethodID, ...);
+    jfloat (*CallNonvirtualFloatMethodV)(JNIEnv *, jobject, jclass, jmethodID, va_list);
+    jfloat (*CallNonvirtualFloatMethodA)(JNIEnv *, jobject, jclass, jmethodID, jvalue *);
+    jdouble (*CallNonvirtualDoubleMethod)(JNIEnv *, jobject, jclass, jmethodID, ...);
+    jdouble (*CallNonvirtualDoubleMethodV)(JNIEnv *, jobject, jclass, jmethodID, va_list);
+    jdouble (*CallNonvirtualDoubleMethodA)(JNIEnv *, jobject, jclass, jmethodID, jvalue *);
+    void (*CallNonvirtualVoidMethod)(JNIEnv *, jobject, jclass, jmethodID, ...);
+    void (*CallNonvirtualVoidMethodV)(JNIEnv *, jobject, jclass, jmethodID, va_list);
+    void (*CallNonvirtualVoidMethodA)(JNIEnv *, jobject, jclass, jmethodID, jvalue *);
+
+
+    /**
+     * 根据class对象获取非静态成员变量的field ID
+     *
+     * @param env JNI接口指针
+     * @param clazz class对象
+     * @param name 变量名
+     * @param sig 变量签名
+     *
+     * @return field ID or NULL
+     *
+     * @throws NoSuchFieldError 找不到对应的变量ID
+     * @throws ExceptionInInitializerError class初始化失败
+     * @throws OutOfMemoryError 内存不足
+     */
+    jfieldID (*GetFieldID)(JNIEnv *, jclass, const char *, const char *);
+
+
+    /**
+     * 根据field id取出对象中相应的变量值，field Id通过GetFieldID()获取
+     *
+     * @param env JNI接口指针
+     * @param obj java对象
+     * @param fieldID 有效的field id
+     *
+     * @return 相应的变量值
+     */
+    jobject (*GetObjectField)(JNIEnv *, jobject, jfieldID);
+    jboolean (*GetBooleanField)(JNIEnv *, jobject, jfieldID);
+    jbyte (*GetByteField)(JNIEnv *, jobject, jfieldID);
+    jchar (*GetCharField)(JNIEnv *, jobject, jfieldID);
+    jshort (*GetShortField)(JNIEnv *, jobject, jfieldID);
+    jint (*GetIntField)(JNIEnv *, jobject, jfieldID);
+    jlong (*GetLongField)(JNIEnv *, jobject, jfieldID);
+    jfloat (*GetFloatField)(JNIEnv *, jobject, jfieldID);
+    jdouble (*GetDoubleField)(JNIEnv *, jobject, jfieldID);
+
+
+    /**
+     * 根据field id为相应的变量设置新的值，field Id通过GetFieldID()获取
+     *
+     * @param env JNI接口指针
+     * @param obj java对象
+     * @param fieldID 有效的field id
+     * @param value 要设置的值
+     */
+    void (*SetObjectField)(JNIEnv *, jobject, jfieldID, jobject);
+    void (*SetBooleanField)(JNIEnv *, jobject, jfieldID, jboolean);
+    void (*SetByteField)(JNIEnv *, jobject, jfieldID, jbyte);
+    void (*SetCharField)(JNIEnv *, jobject, jfieldID, jchar);
+    void (*SetShortField)(JNIEnv *, jobject, jfieldID, jshort);
+    void (*SetIntField)(JNIEnv *, jobject, jfieldID, jint);
+    void (*SetLongField)(JNIEnv *, jobject, jfieldID, jlong);
+    void (*SetFloatField)(JNIEnv *, jobject, jfieldID, jfloat);
+    void (*SetDoubleField)(JNIEnv *, jobject, jfieldID, jdouble);
+
+
+    /**
+     * 返回静态方法的method ID
+     *
+     * @param env JNI接口指针
+     * @param clazz class对象
+     * @param name 方法名
+     * @param sig 方法签名
+     *
+     * @return 方法ID or NULL
+     *
+     * @throws NoSuchMethodError 找不到对应的方法
+     * @throws ExceptionInInitializerError class初始化失败
+     * @throws OutOfMemoryError 内存不足
+     */
+    jmethodID (*GetStaticMethodID)(JNIEnv *, jclass, const char *, const char *);
+
+
+    /**
+     * CallStatic&lt;type&gt;Method(JNIEnv *env, jclass clazz, jmethodID methodID, ...);调用参数放到可变参数中
+     * CallStatic&lt;type&gt;MethodA(JNIEnv *env, jclass clazz, jmethodID methodID, const jvalue *args);调用参数放入jvalue数组
+     * CallStatic&lt;type&gt;MethodV(JNIEnv *env, jclass clazz, jmethodID methodID, va_list args);调用参数放入va_list结构中
+     *
+     * 以上三组调用接口都是根据 method ID调用java静态方法的接口，其中method ID是通过GetStaticMethodID()获取的
+     * method ID必须从clazz的真实类获取，而不应从其某个父类获取
+     * &lt;type&gt;是方法的返回类型，三类接口间唯一的区别是methodID参数之后调用参数的不同
+     *
+     *
+     * @param env JNI接口指针
+     * @param clazz class对象
+     * @param methodID 方法ID
+     * @param args 调用参数
+     *
+     * @return java方法返回结果
+     *
+     * @throws java方法中可能抛出的异常
+     */
+    jobject (*CallStaticObjectMethod)(JNIEnv *, jclass, jmethodID, ...);
+    jobject (*CallStaticObjectMethodV)(JNIEnv *, jclass, jmethodID, va_list);
+    jobject (*CallStaticObjectMethodA)(JNIEnv *, jclass, jmethodID, jvalue *);
+    jboolean (*CallStaticBooleanMethod)(JNIEnv *, jclass, jmethodID, ...);
+    jboolean (*CallStaticBooleanMethodV)(JNIEnv *, jclass, jmethodID, va_list);
+    jboolean (*CallStaticBooleanMethodA)(JNIEnv *, jclass, jmethodID, jvalue *);
+    jbyte (*CallStaticByteMethod)(JNIEnv *, jclass, jmethodID, ...);
+    jbyte (*CallStaticByteMethodV)(JNIEnv *, jclass, jmethodID, va_list);
+    jbyte (*CallStaticByteMethodA)(JNIEnv *, jclass, jmethodID, jvalue *);
+    jchar (*CallStaticCharMethod)(JNIEnv *, jclass, jmethodID, ...);
+    jchar (*CallStaticCharMethodV)(JNIEnv *, jclass, jmethodID, va_list);
+    jchar (*CallStaticCharMethodA)(JNIEnv *, jclass, jmethodID, jvalue *);
+    jshort (*CallStaticShortMethod)(JNIEnv *, jclass, jmethodID, ...);
+    jshort (*CallStaticShortMethodV)(JNIEnv *, jclass, jmethodID, va_list);
+    jshort (*CallStaticShortMethodA)(JNIEnv *, jclass, jmethodID, jvalue *);
+    jint (*CallStaticIntMethod)(JNIEnv *, jclass, jmethodID, ...);
+    jint (*CallStaticIntMethodV)(JNIEnv *, jclass, jmethodID, va_list);
+    jint (*CallStaticIntMethodA)(JNIEnv *, jclass, jmethodID, jvalue *);
+    jlong (*CallStaticLongMethod)(JNIEnv *, jclass, jmethodID, ...);
+    jlong (*CallStaticLongMethodV)(JNIEnv *, jclass, jmethodID, va_list);
+    jlong (*CallStaticLongMethodA)(JNIEnv *, jclass, jmethodID, jvalue *);
+    jfloat (*CallStaticFloatMethod)(JNIEnv *, jclass, jmethodID, ...);
+    jfloat (*CallStaticFloatMethodV)(JNIEnv *, jclass, jmethodID, va_list);
+    jfloat (*CallStaticFloatMethodA)(JNIEnv *, jclass, jmethodID, jvalue *);
+    jdouble (*CallStaticDoubleMethod)(JNIEnv *, jclass, jmethodID, ...);
+    jdouble (*CallStaticDoubleMethodV)(JNIEnv *, jclass, jmethodID, va_list);
+    jdouble (*CallStaticDoubleMethodA)(JNIEnv *, jclass, jmethodID, jvalue *);
+    void (*CallStaticVoidMethod)(JNIEnv *, jclass, jmethodID, ...);
+    void (*CallStaticVoidMethodV)(JNIEnv *, jclass, jmethodID, va_list);
+    void (*CallStaticVoidMethodA)(JNIEnv *, jclass, jmethodID, jvalue *);
+
+
+    /**
+     * 根据class对象获取静态成员变量的field ID
+     *
+     * @param env JNI接口指针
+     * @param clazz class对象
+     * @param name 变量名
+     * @param sig 变量签名
+     *
+     * @return field ID or NULL
+     *
+     * @throws NoSuchFieldError 找不到对应的变量ID
+     * @throws ExceptionInInitializerError class初始化失败
+     * @throws OutOfMemoryError 内存不足
+     */
+    jfieldID (*GetStaticFieldID)(JNIEnv *, jclass, const char *, const char *);
+
+
+    /**
+     * 根据field id取出对象中相应的变量值，field Id通过GetStaticFieldID()获取
+     *
+     * @param env JNI接口指针
+     * @param clazz class对象
+     * @param fieldID 有效的field id
+     *
+     * @return 相应的静态变量值
+     */
+    jobject (*GetStaticObjectField)(JNIEnv *, jclass, jfieldID);
+    jboolean (*GetStaticBooleanField)(JNIEnv *, jclass, jfieldID);
+    jbyte (*GetStaticByteField)(JNIEnv *, jclass, jfieldID);
+    jchar (*GetStaticCharField)(JNIEnv *, jclass, jfieldID);
+    jshort (*GetStaticShortField)(JNIEnv *, jclass, jfieldID);
+    jint (*GetStaticIntField)(JNIEnv *, jclass, jfieldID);
+    jlong (*GetStaticLongField)(JNIEnv *, jclass, jfieldID);
+    jfloat (*GetStaticFloatField)(JNIEnv *, jclass, jfieldID);
+    jdouble (*GetStaticDoubleField)(JNIEnv *, jclass, jfieldID);
+
+
+    /**
+     * 根据field id为相应的静态变量设置新的值，field Id通过GetStaticFieldID()获取
+     *
+     * @param env JNI接口指针
+     * @param clazz class对象
+     * @param fieldID 有效的field id
+     * @param value 要设置的值
+     */
+    void (*SetStaticObjectField)(JNIEnv *, jclass, jfieldID, jobject);
+    void (*SetStaticBooleanField)(JNIEnv *, jclass, jfieldID, jboolean);
+    void (*SetStaticByteField)(JNIEnv *, jclass, jfieldID, jbyte);
+    void (*SetStaticCharField)(JNIEnv *, jclass, jfieldID, jchar);
+    void (*SetStaticShortField)(JNIEnv *, jclass, jfieldID, jshort);
+    void (*SetStaticIntField)(JNIEnv *, jclass, jfieldID, jint);
+    void (*SetStaticLongField)(JNIEnv *, jclass, jfieldID, jlong);
+    void (*SetStaticFloatField)(JNIEnv *, jclass, jfieldID, jfloat);
+    void (*SetStaticDoubleField)(JNIEnv *, jclass, jfieldID, jdouble);
+
+
+    /**
+     * 创建一个新的java.lang.String对象
+     *
+     * @param env JNI接口指针
+     * @param unicodeChars 指向Unicode字符串的指针
+     * @param len Unicode字符串的长度
+     *
+     * @return String对象 or NULL
+     *
+     * @throws OutOfMemoryError 内存不足
+     */
+    jstring (*NewString)(JNIEnv *, const jchar *, jsize);
+
+
+    /**
+     * 返回java.lang.String的长度（Unicode字符数）
+     *
+     * @param env JNI接口指针
+     * @param string String对象
+     *
+     * @return 长度
+     */
+    jsize (*GetStringLength)(JNIEnv *, jstring);
+
+
+    /**
+     * 返回指向Unicode字符数组的指针
+     * 该指针在调用ReleaseStringchars()前一直有效
+     * 如果isCopy非空，则在复制完成后将*isCopy设为JNI_TRUE。否则设为JNI_FALSE
+     *
+     * @param env JNI接口指针
+     * @param string String对象
+     * @param isCopy 指向boolean的指针
+     *
+     * @return 指向字符串的指针 or NULL
+     */
+    const jchar *(*GetStringChars)(JNIEnv *, jstring, jboolean *);
+
+
+    /**
+     * 通知VM无需再访问chars
+     * chars是一个指针，通过GetStringChars()
+     *
+     * @param env JNI接口指针
+     * @param string String对象
+     * @param chars 指向字符串的指针
+     */
+    void (*ReleaseStringChars)(JNIEnv *, jstring, const jchar *);
+
+
+    /**
+     * 根据UTF-8编码的字符数组创建一个新的java.lang.String对象
+     *
+     * @param env JNI接口指针
+     * @param bytes 指向UTF-8字符串的指针
+     *
+     * @return String对象 or NULL
+     *
+     * @throws OutOfMemoryError 内存不足
+     */
+    jstring (*NewStringUTF)(JNIEnv *, const char *);
+
+
+    /**
+     * 返回字符串以UTF-8为编码的字节数
+     *
+     * @param env JNI接口指针
+     * @param string String对象
+     *
+     * @return 字符串的UTF-8字节数
+     */
+    jsize (*GetStringUTFLength)(JNIEnv *, jstring);
+
+
+    /**
+     * 返回指向UTF-8编码字符数组的指针
+     * 该指针在调用ReleaseStringUTFChars()前一直有效
+     * 如果isCopy非空，则在复制完成后将*isCopy设为JNI_TRUE。否则设为JNI_FALSE
+     *
+     * @param env JNI接口指针
+     * @param string String对象
+     * @param isCopy 指向boolean的指针
+     *
+     * @return 指向字符串的指针 or NULL
+     */
+    const char *(*GetStringUTFChars)(JNIEnv *, jstring, jboolean *);
+
+
+    /**
+     * 通知VM无需再访问utf
+     * utf是一个指针，通过GetStringUTFChars()
+     *
+     * @param env JNI接口指针
+     * @param string String对象
+     * @param utf 指向字符串的指针
+     */
+    void (*ReleaseStringUTFChars)(JNIEnv *, jstring, const char *);
+
+
+    /**
+     * 获取数组元素个数
+     *
+     * @param env JNI接口指针
+     * @param array java数组对象
+     *
+     * @return 数组长度
+     */
+    jsize (*GetArrayLength)(JNIEnv *, jarray);
+
+
+    /**
+     * 创建新的elementClass类型数组，所有元素初始值均设为initialElement
+     *
+     * @param env JNI接口指针
+     * @param length 数组大小
+     * @param elementClass 数组类型
+     * @param initialElement 初始值
+     *
+     * @return 数组对象 or NULL
+     */
+    jobjectArray (*NewObjectArray)(JNIEnv *, jsize, jclass, jobject);
+
+
+    /**
+     * 获取对象数组中指定index的值
+     *
+     * @param env JNI接口指针
+     * @param array java数组
+     * @param index 索引
+     *
+     * @return 索引对象的对象
+     *
+     * @throws ArrayIndexOutOfBoundsException
+     */
+    jobject (*GetObjectArrayElement)(JNIEnv *, jobjectArray, jsize);
+
+
+    /**
+     * 设置对象数组中指定index的值
+     *
+     * @param env JNI接口指针
+     * @param array java数组
+     * @param index 索引
+     * @param value 新的值
+     *
+     * @throws ArrayIndexOutOfBoundsException
+     */
+    void (*SetObjectArrayElement)(JNIEnv *, jobjectArray, jsize, jobject);
+
+
+    /**
+     * ArrayType New&lt;PrimitiveType&gt;Array(JNIEnv *env, jsize length);
+     * 创建基本类型数组对象
+     *
+     * @param env JNI接口指针
+     * @param length 数组大小
+     *
+     * @return 数组对象 or NULL
+     */
+    jbooleanArray (*NewBooleanArray)(JNIEnv *, jsize);
+    jbyteArray (*NewByteArray)(JNIEnv *, jsize);
+    jcharArray (*NewCharArray)(JNIEnv *, jsize);
+    jshortArray (*NewShortArray)(JNIEnv *, jsize);
+    jintArray (*NewIntArray)(JNIEnv *, jsize);
+    jlongArray (*NewLongArray)(JNIEnv *, jsize);
+    jfloatArray (*NewFloatArray)(JNIEnv *, jsize);
+    jdoubleArray (*NewDoubleArray)(JNIEnv *, jsize);
+
+
+    /**
+     * NativeType *Get&lt;PrimitiveType&gt;ArrayElements(JNIEnv *env, ArrayType array, jboolean *isCopy);
+     * 返回基本类型数组中的数据，通过返回的指针可以访问这些数据，若虚拟机支持pinning，则指针指向原始数组，否则指向原始数组的拷贝
+     * 返回的指针在Release&lt;PrimitiveType&gt;ArrayElements()调用前一直有效
+     * 数组用使用结束后，调用Release&lt;PrimitiveType&gt;ArrayElements，并在调用参数中决定是否把修改提交给java
+     *
+     * @param env JNI接口指针
+     * @param array java数组
+     * @param isCopy 指向boolean的指针，若不为NULL，则执行了复制设为JNI_TRUE，否则设为JNI_FALSE
+     *
+     * @return 指向数组元素的指针 or NULL
+     */
+    jboolean *(*GetBooleanArrayElements)(JNIEnv *, jbooleanArray, jboolean *);
+    jbyte *(*GetByteArrayElements)(JNIEnv *, jbyteArray, jboolean *);
+    jchar *(*GetCharArrayElements)(JNIEnv *, jcharArray, jboolean *);
+    jshort *(*GetShortArrayElements)(JNIEnv *, jshortArray, jboolean *);
+    jint *(*GetIntArrayElements)(JNIEnv *, jintArray, jboolean *);
+    jlong *(*GetLongArrayElements)(JNIEnv *, jlongArray, jboolean *);
+    jfloat *(*GetFloatArrayElements)(JNIEnv *, jfloatArray, jboolean *);
+    jdouble *(*GetDoubleArrayElements)(JNIEnv *, jdoubleArray, jboolean *);
+
+
+    /**
+     * Release&lt;PrimitiveType&gt;ArrayElements
+     * 通知VM不再需要访问这些数组，根据mode参数的不同，将决定是否把数组的修改复制到源数组
+     *
+     * @param env JNI接口指针
+     * @param array java数组对象
+     * @param elems 指向数组元素的指针
+     * @param mode 释放模式，0：把数据复制回源数组并释放elems缓冲区，JNI_COMMIT：把数据复制回源数组但不释放elems缓冲区，JNI_ABORT：不把数据复制回源数组，释放elems缓冲区
+     */
+    void (*ReleaseBooleanArrayElements)(JNIEnv *, jbooleanArray, jboolean *, jint);
+    void (*ReleaseByteArrayElements)(JNIEnv *, jbyteArray, jbyte *, jint);
+    void (*ReleaseCharArrayElements)(JNIEnv *, jcharArray, jchar *, jint);
+    void (*ReleaseShortArrayElements)(JNIEnv *, jshortArray, jshort *, jint);
+    void (*ReleaseIntArrayElements)(JNIEnv *, jintArray, jint *, jint);
+    void (*ReleaseLongArrayElements)(JNIEnv *, jlongArray, jlong *, jint);
+    void (*ReleaseFloatArrayElements)(JNIEnv *, jfloatArray, jfloat *, jint);
+    void (*ReleaseDoubleArrayElements)(JNIEnv *, jdoubleArray, jdouble *, jint);
+
+
+    /**
+     * void Get&lt;PrimitiveType&gt;ArrayRegion(JNIEnv *env, ArrayType array, jsize start, jsize len, NativeType *buf);
+     * 把基本类型数组拷贝到buf中
+     *
+     * @param env JNI接口指针
+     * @param array java数组
+     * @param start 开始index
+     * @param len 拷贝长度
+     * @param buf 目标地址
+     *
+     * @throws ArrayIndexOutOfBoundsException
+     */
+    void (*GetBooleanArrayRegion)(JNIEnv *, jbooleanArray, jsize, jsize, jboolean *);
+    void (*GetByteArrayRegion)(JNIEnv *, jbyteArray, jsize, jsize, jbyte *);
+    void (*GetCharArrayRegion)(JNIEnv *, jcharArray, jsize, jsize, jchar *);
+    void (*GetShortArrayRegion)(JNIEnv *, jshortArray, jsize, jsize, jshort *);
+    void (*GetIntArrayRegion)(JNIEnv *, jintArray, jsize, jsize, jint *);
+    void (*GetLongArrayRegion)(JNIEnv *, jlongArray, jsize, jsize, jlong *);
+    void (*GetFloatArrayRegion)(JNIEnv *, jfloatArray, jsize, jsize, jfloat *);
+    void (*GetDoubleArrayRegion)(JNIEnv *, jdoubleArray, jsize, jsize, jdouble *);
+
+
+    /**
+     * void Set&lt;PrimitiveType&gt;ArrayRegion(JNIEnv *env, ArrayType array, jsize start, jsize len, const NativeType *buf);
+     * 把buf中的内容拷贝回数组中
+     *
+     * @param env JNI接口指针
+     * @param array java数组
+     * @param start 开始index
+     * @param len 拷贝长度
+     * @param buf 源数据
+     *
+     * @throws ArrayIndexOutOfBoundsException
+     */
+    void (*SetBooleanArrayRegion)(JNIEnv *, jbooleanArray, jsize, jsize, const jboolean *);
+    void (*SetByteArrayRegion)(JNIEnv *, jbyteArray, jsize, jsize, const jbyte *);
+    void (*SetCharArrayRegion)(JNIEnv *, jcharArray, jsize, jsize, const jchar *);
+    void (*SetShortArrayRegion)(JNIEnv *, jshortArray, jsize, jsize, const jshort *);
+    void (*SetIntArrayRegion)(JNIEnv *, jintArray, jsize, jsize, const jint *);
+    void (*SetLongArrayRegion)(JNIEnv *, jlongArray, jsize, jsize, const jlong *);
+    void (*SetFloatArrayRegion)(JNIEnv *, jfloatArray, jsize, jsize, const jfloat *);
+    void (*SetDoubleArrayRegion)(JNIEnv *, jdoubleArray, jsize, jsize, const jdouble *);
+
+
+    /**
+     * 为clazz类注册本地方法
+     *
+     * @param env JNI接口指针
+     * @param clazz class对象
+     * @param methods clazz类中的本地方法，指向方法数组
+     * @param nMethods 本地方法个数
+     *
+     * @return 0：成功， 负数：失败
+     *
+     * @throws NoSuchMethodError
+     */
+    jint (*RegisterNatives)(JNIEnv *, jclass, const JNINativeMethod *, jint);
+
+
+    /**
+     * 取消clazz类本地方法的注册
+     *
+     * @param env JNI接口指针
+     * @param clazz class对象
+     *
+     * @return 0：成功， 负数：失败
+     */
+    jint (*UnregisterNatives)(JNIEnv *, jclass);
+
+
+    /**
+     * 进入与obj所引用的Java对象相关联的监控，obj 必须为非空
+     *
+     * @param env JNI接口指针
+     * @param obj java对象 或 class对象
+     *
+     * @return 0：成功， 负数：失败
+     */
+    jint (*MonitorEnter)(JNIEnv *, jobject);
+
+
+    /**
+     * 退出与obj所引用的Java对象相关联的监控，obj 必须为非空
+     * 当前线程必须是与obj所引用的Java对象相关联的监控程序的所有者
+     * 监控程序次数的计数器减 1。如果计数器的值变为 0，则释放当前线程的监控程序
+     *
+     * @param env JNI接口指针
+     * @param obj java对象 或 class对象
+     *
+     * @return 0：成功， 负数：失败
+     */
+    jint (*MonitorExit)(JNIEnv *, jobject);
+
+
+    /**
+     * 获取当前线程关联的Java VM接口
+     *
+     * @param env JNI接口指针
+     * @param vm java VM接口指针
+     *
+     * @return 0：成功， 负数：失败
+     */
+    jint (*GetJavaVM)(JNIEnv *, JavaVM **);
+
+
+    /**
+     * 从start index开始，拷贝len个Unicode字符到buf
+     *
+     * @param env JNI接口指针
+     * @param str string对象
+     * @param start 开始index
+     * @param len 拷贝长度
+     * @param buf 目标地址
+     *
+     * @throws StringIndexOutOfBoundsException
+     */
+    void (*GetStringRegion)(JNIEnv *, jstring, jsize, jsize, jchar *);
+
+
+    /**
+     * 从start index开始，取出len个Unicode字符转换为UTF-8编码后拷贝到buf
+     *
+     * @param env JNI接口指针
+     * @param str string对象
+     * @param start 开始index
+     * @param len 拷贝长度
+     * @param buf 目标地址
+     *
+     * @throws StringIndexOutOfBoundsException
+     */
+    void (*GetStringUTFRegion)(JNIEnv *, jstring, jsize, jsize, char *);
+
+
+    /**
+     * 与Get/Release&lt;primitivetype&gt;ArrayElements方法非常相似，在这个方法中VM尽量返回指向原始数组的指针
+     *
+     * @since JDK/JRE 1.2
+     *
+     * @param env JNI接口指针
+     * @param array java数组
+     * @param isCopy 指向boolean的指针，若不为NULL，则执行了复制设为JNI_TRUE，否则设为JNI_FALSE
+     *
+     * @return 指向数组元素的指针 or NULL
+     */
+    void *(*GetPrimitiveArrayCritical)(JNIEnv *, jarray, jboolean *);
+    void (*ReleasePrimitiveArrayCritical)(JNIEnv *, jarray, void *, jint);
+
+
+    /**
+     * 与Get/ReleaseStringChars方法非常相似，在这个方法中VM尽量返回指向原始字符串的指针
+     *
+     * @since JDK/JRE 1.2
+     *
+     * @param env JNI接口指针
+     * @param string String对象
+     * @param isCopy 指向boolean的指针
+     *
+     * @return 指向字符串的指针 or NULL
+     */
+    const jchar *(*GetStringCritical)(JNIEnv *, jstring, jboolean *);
+    void (*ReleaseStringCritical)(JNIEnv *, jstring, const jchar *);
+
+
+    /**
+     * 为传入的obj创建弱全局引用
+     * 弱全局引用不会阻止VM释放所引用的对象，程序中可以通过使用IsSameObject比较弱全局引用和NULL来确认所引用的对象是否被释放
+     *
+     * @param env JNI接口指针
+     * @param obj 全局或局部引用
+     *
+     * @return 弱全局引用 or NULL
+     */
+    jweak (*NewWeakGlobalRef)(JNIEnv *, jobject);
+
+
+    /**
+     * 删除弱全局引用
+     *
+     * @param env JNI接口指针
+     * @param obj 弱全局引用
+     */
+    void (*DeleteWeakGlobalRef)(JNIEnv *, jweak);
+
+
+    /**
+     * 判断是否有未处理异常
+     *
+     * @param env JNI接口指针
+     *
+     * @return JNI_TRUE表示有未处理异常，否则为JNI_FALSE
+     */
+    jboolean (*ExceptionCheck)(JNIEnv *);
+
+
+    /**
+     * 创建并返回java.nio.ByteBuffer对象，该对象引用以address为开始地址，大小为capacity的内存块
+     *
+     * @since JDK/JRE 1.4
+     *
+     * @param env JNI接口指针
+     * @param address 开始地址
+     * @param capacity 内存大小
+     *
+     * @return Jjava.nio.ByteBuffer or NULL
+     *
+     * @throws OutOfMemoryError
+     */
+    jobject (*NewDirectByteBuffer)(JNIEnv *, void *, jlong);
+
+
+    /**
+     * 根据java.nio.ByteBuffer对象，获取相应的内存数据并返回开始地址
+     *
+     * @since JDK/JRE 1.4
+     *
+     * @param env JNI接口指针
+     * @param buf java.nio.ByteBuffer对象
+     *
+     * @return 数据的开始地址 or NULL
+     */
+    void *(*GetDirectBufferAddress)(JNIEnv *, jobject);
+
+
+    /**
+     * 根据java.nio.ByteBuffer对象，获取相应的内存数据的大小
+     *
+     * @since JDK/JRE 1.4
+     *
+     * @param env JNI接口指针
+     * @param buf java.nio.ByteBuffer对象
+     *
+     * @return 数据大小 or -1
+     */
+    jlong (*GetDirectBufferCapacity)(JNIEnv *, jobject);
+
+
+    /**
+     * 获取java对象的引用类型，可能的返回值有：
+     * JNIInvalidRefType
+     * JNILocalRefType：局部引用
+     * JNIGlobalRefType：全局引用
+     * JNIWeakGlobalRefType ：全局弱若引用
+     *
+     * @since JDK/JRE 1.6
+     *
+     * @param env JNI接口指针
+     * @param obj java对象的引用
+     *
+     * @return 引用类型
+     */
+    jobjectRefType (*GetObjectRefType)(JNIEnv *, jobject);
+</code></pre>
+<h3 id="简单案例"><a href="#简单案例" class="headerlink" title="简单案例"></a>简单案例</h3><p>一般用的最多的就是Java调用C的实现, 下面给出了一个非常简单的例子:</p>
+<pre><code class="c">JNIEXPORT jintArray JNICALL Java_com_example_Test_intMethod
+(JNIENV *env, jobject jobject, jintArray jarray) {
+  //遍历数组元素, 每个元素+5; 最后返回原数组
+  int length = (*env)-&gt;GetArrayLength(env, jarray);
+  int *array = (*env)-&gt;GetINtArrayElements(env,jarray,0);
+
+  for(int i=0; i &lt; length; ++i) {
+      *(array+i) += 5;
+  }
+  return jarray;
+}
+</code></pre>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>jni本身还是比较简单的, 因为机制比较成熟了. 基本的规则, 本文已经讲了非常多了, 关键还是要熟悉 jni.h 这个文件里的相关API.</p>
+<p>先这样, 以后用到了再来详细搞.</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="">《the JNI Programmer’s Guide and Specification》</a>  主要参考资料, 把这本好好读读就可以了</li>
+<li><a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/" target="_blank" rel="external">http://docs.oracle.com/javase/7/docs/technotes/guides/jni/</a> 主要参考资料</li>
+<li><a href="">JNI编程指南</a>  网上找的比较偏理论的讲解,80多页</li>
+<li><a href="http://blog.csdn.net/shensky711/article/details/52806794" target="_blank" rel="external">http://blog.csdn.net/shensky711/article/details/52806794</a>  作者写的太乱了</li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Jni">Jni</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Jni">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

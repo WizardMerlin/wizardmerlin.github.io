@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>using-regex-in-python | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="regular expression operations in python 2.7">
+<meta name="keywords" content="python,正则表达式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="using-regex-in-python">
+<meta property="og:url" content="localhost:4000/2017/05/12/using-regex-in-python.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="regular expression operations in python 2.7">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/reg.jpg">
+<meta property="og:updated_time" content="2017-09-24T00:36:12.947Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="using-regex-in-python">
+<meta name="twitter:description" content="regular expression operations in python 2.7">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/reg.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Raw-Python-strings"><span class="toc-number">2.1.</span> <span class="toc-text">Raw Python strings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Matching-a-string"><span class="toc-number">2.2.</span> <span class="toc-text">Matching a string</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Capturing-groups"><span class="toc-number">2.3.</span> <span class="toc-text">Capturing groups</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Finding-and-replacing-strings"><span class="toc-number">2.4.</span> <span class="toc-text">Finding and replacing strings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#re-Flags"><span class="toc-number">2.5.</span> <span class="toc-text">re Flags</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Compiling-a-pattern-for-performance"><span class="toc-number">2.6.</span> <span class="toc-text">Compiling a pattern for performance</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>using-regex-in-python</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-05-12</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/python/">python</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/正则表达式/">正则表达式</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>python支持正则表达式是借助外部的re库, 该库在安装python的时候就已经绑定了.但是注意, 这个库是PERE的阉割版, 仅仅支持核心部分正则语法(就常用而言,足够了).</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/reg.jpg" alt=""><br><a id="more"></a></p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>本文没有像官方文档写<code>re</code>module一样去全篇幅的介绍相关的库, 而是从python开发者的角度去使用正则表达式, 当然你也可以去看文档, 其网址如下:</p>
+<p><a href="https://docs.python.org/2/library/re.html" target="_blank" rel="external">https://docs.python.org/2/library/re.html</a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="Raw-Python-strings"><a href="#Raw-Python-strings" class="headerlink" title="Raw Python strings"></a>Raw Python strings</h2><p>When writing regular expression in Python, it is recommended that you use raw strings instead of regular Python strings. Raw strings begin with a special prefix (r) and signal Python not to interpret backslashes and special metacharacters in the string, allowing you to pass them through directly to the regular expression engine.</p>
+<p>This means that a pattern like “\n\w” will not be interpreted and can be written as r”\n\w” instead of  “\n\w” as in other languages, which is much easier to read.</p>
+<h2 id="Matching-a-string"><a href="#Matching-a-string" class="headerlink" title="Matching a string"></a>Matching a string</h2><p>The re package has a number of top level methods, and to test whether a regular expression matches a specific string in Python, you can use re.search(). This method either returns None if the pattern doesn’t match, or a re.MatchObject with additional information about which part of the string the match was found.</p>
+<p>Note that this method stops after the first match, so this is best suited for testing a regular expression more than extracting data.</p>
+<pre><code class="python">matchObject = re.search(pattern, input_str, flags=0)
+</code></pre>
+<p>example:</p>
+<pre><code class="python">import re
+# Lets use a regular expression to match a date string. Ignore
+# the output since we are just testing if the regex matches.
+regex = r&quot;([a-zA-Z]+) (\d+)&quot;
+if re.search(regex, &quot;June 24&quot;):
+    # Indeed, the expression &quot;([a-zA-Z]+) (\d+)&quot; matches the date string
+
+    # If we want, we can use the MatchObject&#39;s start() and end() methods 
+    # to retrieve where the pattern matches in the input string, and the 
+    # group() method to get all the matches and captured groups.
+    match = re.search(regex, &quot;June 24&quot;)
+
+    # This will print [0, 7), since it matches at the beginning and end of the 
+    # string
+    print &quot;Match at index %s, %s&quot; % (match.start(), match.end())
+
+    # The groups contain the matched values.  In particular:
+    #    match.group(0) always returns the fully matched string
+    #    match.group(1) match.group(2), ... will return the capture
+    #            groups in order from left to right in the input string
+    #    match.group() is equivalent to match.group(0)
+
+    # So this will print &quot;June 24&quot;
+    print &quot;Full match: %s&quot; % (match.group(0))
+    # So this will print &quot;June&quot;
+    print &quot;Month: %s&quot; % (match.group(1))
+    # So this will print &quot;24&quot;
+    print &quot;Day: %s&quot; % (match.group(2))
+else:
+    # If re.search() does not match, then None is returned
+    print &quot;The regex pattern does not match. :(&quot;
+</code></pre>
+<h2 id="Capturing-groups"><a href="#Capturing-groups" class="headerlink" title="Capturing groups"></a>Capturing groups</h2><p>Unlike the re.search() method above, we can use re.findall() to perform a global search over the whole input string. If there are capture groups in the pattern, then it will return a list of all the captured data, but otherwise, it will just return a list of the matches themselves, or an empty list if no matches are found.</p>
+<p>If you need additional context for each match, you can use re.finditer() which instead returns an iterator of re.MatchObjects to walk through. Both methods take the same parameters.</p>
+<p>如下:</p>
+<pre><code class="python">matchList = re.findall(pattern, input_str, flags=0)
+</code></pre>
+<p>以及</p>
+<pre><code class="python">matchList = re.finditer(pattern, input_str, flags=0)
+</code></pre>
+<p>Example</p>
+<pre><code class="python">import re
+# Lets use a regular expression to match a few date strings.
+regex = r&quot;[a-zA-Z]+ \d+&quot;
+matches = re.findall(regex, &quot;June 24, August 9, Dec 12&quot;)
+for match in matches:
+    # This will print:
+    #   June 24
+    #   August 9
+    #   Dec 12
+    print &quot;Full match: %s&quot; % (match)
+
+# To capture the specific months of each date we can use the following pattern
+regex = r&quot;([a-zA-Z]+) \d+&quot;
+matches = re.findall(regex, &quot;June 24, August 9, Dec 12&quot;)
+for match in matches:
+    # This will now print:
+    #   June
+    #   August
+    #   Dec
+    print &quot;Match month: %s&quot; % (match)
+
+# If we need the exact positions of each match
+regex = r&quot;([a-zA-Z]+) \d+&quot;
+matches = re.finditer(regex, &quot;June 24, August 9, Dec 12&quot;)
+for match in matches:
+    # This will now print:
+    #   0 7
+    #   9 17
+    #   19 25
+    # which corresponds with the start and end of each match in the input string
+    print &quot;Match at index: %s, %s&quot; % (match.start(), match.end())
+</code></pre>
+<h2 id="Finding-and-replacing-strings"><a href="#Finding-and-replacing-strings" class="headerlink" title="Finding and replacing strings"></a>Finding and replacing strings</h2><p>Another common task is to find and replace a part of a string using regular expressions, for example, to replace all instances of an old email domain, or to swap the order of some text. You can do this in Python with the re.sub() method.</p>
+<p>The optional count argument is the exact number of replacements to make in the input string, and if this is value is less than or equal to zero, then every match in the string is replaced.</p>
+<pre><code class="python">replacedString = re.sub(pattern, replacement_pattern, input_str, count, flags=0)
+</code></pre>
+<p>example:</p>
+<pre><code class="python">import re
+# Lets try and reverse the order of the day and month in a date 
+# string. Notice how the replacement string also contains metacharacters
+# (the back references to the captured groups) so we use a raw 
+# string for that as well.
+regex = r&quot;([a-zA-Z]+) (\d+)&quot;
+
+# This will reorder the string and print:
+#   24 of June, 9 of August, 12 of Dec
+print re.sub(regex, r&quot;\2 of \1&quot;, &quot;June 24, August 9, Dec 12&quot;)
+</code></pre>
+<h2 id="re-Flags"><a href="#re-Flags" class="headerlink" title="re Flags"></a>re Flags</h2><p>In the Python regular expression methods above, you will notice that each of them also take an optional flags argument. Most of the available flags are a convenience and can be written into the into the regular expression itself directly, but some can be useful in certain cases.</p>
+<ul>
+<li>re.IGNORECASE makes the pattern case insensitive so that it matches strings of different capitalizations</li>
+<li>re.MULTILINE is necessary if your input string has newline characters (\n) and allows the start and end metacharacter (^ and $ respectively) to match at the beginning and end of each line instead of at the beginning and end of the whole input string</li>
+<li>re.DOTALL allows the dot (.) metacharacter match all characters, including the newline character (\n)</li>
+</ul>
+<h2 id="Compiling-a-pattern-for-performance"><a href="#Compiling-a-pattern-for-performance" class="headerlink" title="Compiling a pattern for performance"></a>Compiling a pattern for performance</h2><p>In Python, creating a new regular expression pattern to match many strings can be slow, so it is recommended that you compile them if you need to be testing or extracting information from many input strings using the same expression. This method returns a <code>re.RegexObject</code>.</p>
+<pre><code class="python">regexObject = re.compile(pattern, flags=0)
+</code></pre>
+<p>The returned object has exactly the same methods as above, except that they take the input string and no longer require the pattern or flags for each call.</p>
+<pre><code class="python">import re
+# Lets create a pattern and extract some information with it
+regex = re.compile(r&quot;(\w+) World&quot;)
+result = regex.search(&quot;Hello World is the easiest&quot;)
+if result:
+    # This will print:
+    #   0 11
+    # for the start and end of the match
+    print result.start(), result.end()
+
+# This will print:
+#   Hello
+#   Bonjour
+# for each of the captured groups that matched
+for result in regex.findall(&quot;Hello World, Bonjour World&quot;):
+    print result
+
+# This will substitute &quot;World&quot; with &quot;Earth&quot; and print:
+#   Hello Earth
+print regex.sub(r&quot;\1 Earth&quot;, &quot;Hello World&quot;)
+</code></pre>
+<p>一个方便的工具, 可以在线测试您写的相关语句:<br><a href="https://regex101.com/#python" target="_blank" rel="external">https://regex101.com/#python</a></p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>本文已经做了相当多的介绍和演示, 在python2.7中具体使用了regex.<br>如果上面的介绍还是不够, 下面也给出了更多的参考(可以参考官方文档):</p>
+<ol>
+<li><a href="">《Python Document》</a></li>
+<li><a href="">《Python Compatible Regex Tester》</a></li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="using-regex-in-python">using-regex-in-python</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="using-regex-in-python">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

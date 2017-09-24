@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>智能指针 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="集中说说Boost和标准库中的智能指针">
+<meta name="keywords" content="cpp,boost">
+<meta property="og:type" content="article">
+<meta property="og:title" content="智能指针">
+<meta property="og:url" content="localhost:4000/2017/07/01/smart-pointers.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="集中说说Boost和标准库中的智能指针">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.jpg">
+<meta property="og:updated_time" content="2017-09-24T05:13:50.347Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="智能指针">
+<meta name="twitter:description" content="集中说说Boost和标准库中的智能指针">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Boost智能指针"><span class="toc-number">2.1.</span> <span class="toc-text">Boost智能指针</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#scoped-ptr"><span class="toc-number">2.1.1.</span> <span class="toc-text">scoped_ptr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shared-ptr"><span class="toc-number">2.1.2.</span> <span class="toc-text">shared_ptr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#weak-ptr"><span class="toc-number">2.1.3.</span> <span class="toc-text">weak_ptr</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#标准库智能指针"><span class="toc-number">2.2.</span> <span class="toc-text">标准库智能指针</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#unique-ptr"><span class="toc-number">2.2.1.</span> <span class="toc-text">unique_ptr</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>智能指针</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-01</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/boost/">boost</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>智能指针的引入并没有完全解决资源自动回收的问题, 或者你不能做刷手掌柜, 但是也很大程度上简化了相关问题的处理.本文集中讲讲Boost或者标准库中的几种智能指针, 以 <code>用好</code> 为宗旨.<br>期间可能会遇到 <code>Noncopyable</code> 的智能指针 装入容器 问题(比如 unique_ptr ).</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.jpg" alt="post-cover"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><blockquote>
+<p>你平时用么? 看项目要求.</p>
+</blockquote>
+<p>C++(包括C语言中已存的一些关于内存的问题):</p>
+<ul>
+<li>空指针异常</li>
+<li>越界访问</li>
+<li>野指针</li>
+<li>内存泄露</li>
+</ul>
+<p>本质上都是因为编程能力造成，但是如果有自动回收，智能管理之类的(就像Java的垃圾回收机制)策略是不是更方便呢？</p>
+<p>Boost给出了相关的方案，智能指针smart pointers.<br>(当然STL野给出了auto_ptr，但是受到了限制比较多，而且存在一些问题，例如不支持拷贝构造函数以及赋值等，一般不推荐使用了)</p>
+<p>后来C++11也从Boost引入了3个智能指针:(本质上就是Boost的那一套)</p>
+<ul>
+<li>unique_ptr<br>smart pointer with unique object ownership semantics </li>
+<li>shared_ptr<br>smart pointer with shared object ownership semantics </li>
+<li>weak_ptr<br>weak reference to an object managed by std::shared_ptr </li>
+</ul>
+<p>现在用起来更加方便了.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="Boost智能指针"><a href="#Boost智能指针" class="headerlink" title="Boost智能指针"></a>Boost智能指针</h2><p>官方文档时这么说的:</p>
+<blockquote>
+<p>Smart pointers are objects which store pointers to dynamically allocated (heap) objects. They behave much like built-in C++ pointers except that they automatically delete the object pointed to at the appropriate time.<br>(到底是什么时候回收呢？ appropriate time)</p>
+<p>Smart pointers are particularly useful in the face of exceptions as they ensure proper destruction of dynamically allocated objects. They can also be used to keep track of dynamically allocated objects shared by multiple owners.</p>
+</blockquote>
+<pre><code class="c++">#include &lt;boost/smart_ptr.hpp&gt;
+using namespace boost;
+</code></pre>
+<p>大致上给了6种：</p>
+<ol>
+<li>scoped_ptr    <boost scoped_ptr.hpp="">           Simple sole ownership of single objects. Noncopyable.</boost></li>
+<li>scoped_array    <boost scoped_array.hpp="">       Simple sole ownership of arrays. Noncopyable.</boost></li>
+<li>shared_ptr    <boost shared_ptr.hpp="">           Object ownership shared among multiple pointers.</boost></li>
+<li>shared_array    <boost shared_array.hpp="">       Array ownership shared among multiple pointers.</boost></li>
+<li>weak_ptr    <boost weak_ptr.hpp="">           Non-owning observers of an object owned by shared_ptr.</boost></li>
+<li>intrusive_ptr                   <boost intrusive_ptr.hpp="">  Shared ownership of objects with an embedded reference count.</boost></li>
+</ol>
+<p>scope_ptr, Noncopyable也就是说不可以拷贝和赋值; 相比而言 shared_ptr则要好很多.<br>(array和普通指针的区别在于负责new还是new [])</p>
+<p>Additionally, the smart pointer library provides efficient factory functions for creating smart pointer objects:<br>(直接new创建智能指针消耗比较大, 这里可以用一下工厂方法)</p>
+<pre><code class="c++">make_shared,  allocate_shared for objects    &lt;boost/make_shared.hpp&gt;    Efficient creation of shared_ptr objects.
+make_shared,  allocate_shared for arrays    &lt;boost/make_shared.hpp&gt;    Efficient creation of shared_ptr arrays.
+make_unique    &lt;boost/make_unique.hpp&gt;         Creation of unique_ptr objects and arrays.
+</code></pre>
+<p>即 <code>&lt;boost/make_shared.hpp&gt;</code> 和 <code>&lt;boost/make_unique.hpp&gt;</code> , 大致像下面这样的用法:</p>
+<pre><code class="c++"> shared_ptr&lt;std::string&gt; strp = make_shared&lt;std::string&gt;(&quot;make_test&quot;);
+ shared_ptr&lt;std::vector&lt;int&gt; &gt; vecp = make_shared&lt; std::vector&lt;int&gt; &gt;(10, 3);
+</code></pre>
+<p>挨个说一下(重点放在 <code>shared_ptr</code> 和 <code>weak_ptr</code>, 其他不常用的不说)</p>
+<h3 id="scoped-ptr"><a href="#scoped-ptr" class="headerlink" title="scoped_ptr"></a>scoped_ptr</h3><pre><code class="c++">/* Smart_Ptr.cpp : 定义控制台应用程序的入口点*/
+
+#include &lt;boost/smart_ptr.hpp&gt;
+#include &lt;iostream&gt;
+
+class Test 
+{
+public:
+    Test(int x = 0);
+    virtual ~Test();
+
+    int getX() const;
+
+private:
+    int x;
+
+};
+
+Test::Test(int x) 
+{
+    this-&gt;x = x;
+    std::cout &lt;&lt; &quot;constructor called&quot; &lt;&lt; std::endl;
+}
+
+Test::~Test()
+{
+    std::cout &lt;&lt; &quot;deconstructor called&quot; &lt;&lt; std::endl;
+}
+
+int Test::getX() const
+{
+    return this-&gt;x;
+}
+
+int main(void)
+{
+    std::cout &lt;&lt; &quot;Main Function start&quot; &lt;&lt; std::endl;
+
+
+    //basic type: int
+    boost::scoped_ptr&lt;int&gt; int_ptr(new int(100));
+    ++*int_ptr;
+    std::cout &lt;&lt; *int_ptr &lt;&lt; std::endl;
+
+
+    //class type: Test
+    boost::scoped_ptr&lt;Test&gt; class_ptr(new Test(1));
+    std::cout &lt;&lt; class_ptr-&gt;getX() &lt;&lt; std::endl;
+    class_ptr.reset();
+
+    std::cout &lt;&lt; &quot;Main Function end&quot; &lt;&lt; std::endl;
+
+    return 0;
+}
+</code></pre>
+<p>运行结果如下:</p>
+<pre><code class="c++">Main Function start
+101
+constructor called
+1
+deconstructor called
+Main Function end
+</code></pre>
+<p>不用手动调用<code>delete ptr</code>确实不错，但是也有限制：</p>
+<ul>
+<li>scoped_ptr 只限于作用域内使用(出了定义智能指针的范围,管不了)</li>
+<li>指针管理权不可转移，不支持拷贝构造函数与赋值操作</li>
+</ul>
+<p>总结一下：</p>
+<pre><code>scoped_ptr&lt;T&gt; ptr_t(new T); //创建了一个智能指针维护空间
+ptr_t.reset(); //调用delete指针所指向空间
+ptr_t-&gt;get(); //返回内部管理的指针, 但禁止在get()出来的指针上执行delete
+</code></pre><h3 id="shared-ptr"><a href="#shared-ptr" class="headerlink" title="shared_ptr"></a>shared_ptr</h3><p>这个是重点, 可以看做auto_ptr的替代品, 内置引用计数, 支持拷贝和赋值, 支持 <code>*</code> 和 <code>-&gt;</code> 运算</p>
+<p>在 <code>scoped_ptr</code> 的基础上还要注意:</p>
+<ul>
+<li>不要循环引用(这个 <code>weak_ptr</code> 出面解决)</li>
+<li>不要用于函数的匿名参数(特别注意)–以独立语句将newed对象置入智能指针</li>
+<li><code>ptr.use_count()</code> 可以查看当前引用计数</li>
+<li><code>ptr.unique()</code> 查看引用是否唯一</li>
+</ul>
+<p>例如:</p>
+<pre><code class="c++">void bad() 
+{ 
+    f( shared_ptr(new int(2)), g() ); 
+}
+</code></pre>
+<p>应该写成:</p>
+<pre><code class="c++">void ok() 
+{ 
+    shared_ptr p(new int(2)); 
+    f(p, g()); 
+}
+</code></pre>
+<p>这一点 <code>Effective C++</code> 中反复强调了: 以独立语句将newed对象置入智能指针, 原因很简单: 在异常发生的同时, shared_ptr可能没有完全构造. 这样的话, 原始对象指针可能将会遗失. (也就是说, 尽可能独立语句完成 shared_ptr 的构造).</p>
+<p>详细看一下:</p>
+<pre><code class="c++">    shared_ptr&lt;int&gt; p0;
+
+    shared_ptr&lt;int&gt; p1(new int);
+    *p1=1;
+
+    /*---------------------------------------------------------------------------*/
+    shared_ptr&lt;int&gt;p2(p1); //p1引用计数+1; p1和p2同时管理一个内部指针
+    std::cout &lt;&lt; &quot;p1 count: &quot; &lt;&lt; p1.use_count() &lt;&lt; &quot; value: &quot; &lt;&lt; *p2 &lt;&lt; std::endl;
+    *p2 = 13;
+    std::cout &lt;&lt; &quot;p1 count: &quot; &lt;&lt; p1.use_count() &lt;&lt; &quot; value: &quot; &lt;&lt; *p2 &lt;&lt; std::endl;
+
+    p2.reset();
+    std::cout &lt;&lt; &quot;p1 count: &quot; &lt;&lt; p1.use_count() &lt;&lt; std::endl;  //p2解除之后引用计数-1
+
+    /*
+        Main Function start
+        p1 count: 2 value: 1
+        p1 count: 2 value: 13
+        p1 count: 1
+        Main Function end
+    */
+    /*---------------------------------------------------------------------------*/
+
+    // shared_ptr(std::auto_ptr&lt;Y&gt; &amp; r) 从 auto_ptr 获得指针管理权; 同时 auto_ptr 失去管理权
+    std::auto_ptr&lt;int&gt; p;
+    shared_ptr&lt;int&gt; p3(p);
+
+    // 从另外一个 shared_ptr 或 auto_ptr 获得指针管理权(拷贝构造函数)
+    shared_ptr&lt;int&gt; p4 = p1;
+
+    //shared_ptr&lt;Y&gt;(Y * p, D d) 类似于 shared_ptr&lt;Y&gt;(Y * p)
+    // 第一个参数是要被管理的指针; 
+    // 第二个删除参数 d 告诉 shared_ptr 在析构时不使用 delete 来操作指针 p, 而使用 d 来操作;
+    // 把 delete p 换成调用 d(p) 函数对象.
+</code></pre>
+<p>其他的方法，可以利用 <code>&lt;boost/make_shared.hpp&gt;</code> 提供的工厂方法:<br>(创建效率高)</p>
+<pre><code class="c++">    // include &lt;boost/make_shared.hpp&gt;
+
+    shared_ptr&lt;std::string&gt; strp = make_shared&lt;std::string&gt;(&quot;make_test&quot;);
+    std::cout &lt;&lt; *strp &lt;&lt; std::endl;
+
+    shared_ptr&lt;std::vector&lt;int&gt; &gt; vec_ptr = make_shared&lt; std::vector&lt;int&gt; &gt;(10, 3);
+    std::cout &lt;&lt; vecp_ptr-&gt;size() &lt;&lt; std::endl;
+</code></pre>
+<p>把智能指针放到容器中:(因为其实现了拷贝构造和赋值操作)</p>
+<pre><code class="c++">    typedef std::vector&lt;boost::shared_ptr&lt;int&gt;&gt; ptr_vector;
+
+    ptr_vector vector(10);
+
+    int i = 0;
+    for (ptr_vector::iterator it = vector.begin(); it != vector.end(); ++it) {
+        *it = boost::make_shared&lt;int&gt;(i++);
+        std::cout &lt;&lt; *(*it) &lt;&lt; &quot; &quot;;
+    }
+    std::cout &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;Main Function end&quot; &lt;&lt; std::endl;
+
+    /*result
+        Main Function start
+        0 1 2 3 4 5 6 7 8 9
+        Main Function end
+    */
+</code></pre>
+<p>如果想修改其中一个成员, 比如说vector中最后一个成员:</p>
+<pre><code class="c++">    shared_ptr&lt;int&gt; ptest = vector[9];
+    *ptest = 100;
+    std::cout &lt;&lt; *vector[9] &lt;&lt; std::endl;
+</code></pre>
+<p>用于自定义类型时候:</p>
+<p>如果一个类, 有成员是需要手动的分配空间的, 例如:</p>
+<pre><code class="c++">class Test
+{
+    private:
+        int *data;
+}
+</code></pre>
+<p>此时Test就要手动处理 <code>拷贝构造</code> 和 <code>赋值</code>还有<code>析构</code>; 避免由于浅拷贝导致的重复析构.比如说分配独立的Heap(构造函数重新分配成员空间；赋值函数先删除本对象原来的，再重新分配，或者使用临时对象)，即深拷贝来解决问题(说了太多遍，就不写例子了)</p>
+<p>然而自从有了shared_ptr, 不用手动提供拷贝构造和赋值方法了, 因为编译器帮你实现了默认的方法解决智能指针拷贝，引用计数等问题, 例子如下:<br>(前提是你使用的是智能指针作为成员)</p>
+<pre><code class="c++">class ClassInt
+{
+private:
+    shared_ptr&lt;int&gt; ptr_data;
+
+public:
+    ClassInt(int data_param) :ptr_data(new int)
+    {
+        init(data_param);
+        std::cout &lt;&lt; &quot;construct&quot; &lt;&lt; std::endl;
+    }
+
+
+    virtual ~ClassInt()
+    {
+        std::cout &lt;&lt; &quot;destructor, count = &quot; &lt;&lt; ptr_data.use_count() &lt;&lt; std::endl;
+    }
+
+    int get_data() const 
+    {
+        return *ptr_data;
+    }
+
+
+    long ptr_count() const 
+    {
+        return ptr_data.use_count();
+    }
+
+
+    void init(int data_param)
+    {
+        *ptr_data = data_param;
+    }
+
+};
+
+int main(void)
+{
+    ClassInt c1(10);
+    ClassInt c2(c1);
+    ClassInt c3 = c2;
+
+    std::cout &lt;&lt; c1.ptr_count() &lt;&lt; std::endl; //3
+    std::cout &lt;&lt; c2.get_data() &lt;&lt; std::endl; //10
+}
+</code></pre>
+<p>ptr_count 的数量可以看出他们指向了同样的地址, 而使用了 shared_ptr, 所以销毁的时候, 不会重复析构(先对引用计数操作).</p>
+<h3 id="weak-ptr"><a href="#weak-ptr" class="headerlink" title="weak_ptr"></a>weak_ptr</h3><p>weak_ptr 被设计为与 shared_ptr 共同工作，可以从一个 shared_ptr 或者另一个 weak_ptr 对象构造，获得资源的观测权.<br>值得强调的是weak_ptr一定从shared_ptr初始化而来, 它就是shared_ptr的助手(不能像普通指针那样使用 <code>-&gt;</code> 和 <code>*</code> 操作), 用于解决循环引用问题.<br>但是 weak_ptr 没有共享资源，它的构造不会引起指针引用计数的增加，同时，在析构的时候也不会引起引用计数的减少.(但是却可以从weak_ptr还原得到一个shared_ptr)</p>
+<p>主要用于打破循环引用, 不能两方都是用强引用, 要有一方使用weak_ptr，才能在相互引用的情况下, 保证引用计数可以减为1, 从未正确释放.</p>
+<p>例子：</p>
+<pre><code class="c++">class parent;
+class children;
+
+typedef boost::shared_ptr&lt;parent&gt; parent_ptr;
+typedef boost::shared_ptr&lt;children&gt; children_ptr;
+
+class parent
+{
+public:
+    ~parent() 
+    { 
+      std::cout &lt;&lt; &quot;destroying parent&quot; &lt;&lt; std::endl;;
+      }
+
+public:
+    children_ptr children;
+};
+
+class children
+{
+public:
+    ~children() 
+    { 
+      std::cout &lt;&lt; &quot;destroying children\n&quot;; 
+      }
+
+public:
+    parent_ptr parent;
+};
+
+int main()
+{
+    parent_ptr father(new parent()); //father.use_count 1
+    children_ptr son(new children);  //son.use_count 1
+
+    std::cout &lt;&lt; &quot;parent_ptr count &quot; &lt;&lt; father.use_count() &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;child_ptr count &quot; &lt;&lt; son.use_count() &lt;&lt; std::endl;
+
+    std::cout &lt;&lt; &quot;------------------&quot; &lt;&lt; std::endl;
+
+    /*相互赋值, 导致循环引用*/
+    father-&gt;children = son;
+    son-&gt;parent = father;
+
+    std::cout &lt;&lt; &quot;parent_ptr count &quot; &lt;&lt; father.use_count() &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;child_ptr count &quot; &lt;&lt; son.use_count() &lt;&lt; std::endl;
+
+    /*
+    parent_ptr count 1
+    child_ptr count 1
+    ------------------
+    parent_ptr count 2
+    child_ptr count 2
+    Main Function end
+    */
+
+}
+</code></pre>
+<p>当你析构father的时候, father引用计数减少1；但是由于son还引用着呢, 所以引用计数没有减少到0; 所以father指针所指向的parent的析构函数调用失败(引用计数还剩1); son指针销毁children的情况类似.</p>
+<p>解决方法，引入weak_ptr:</p>
+<ul>
+<li>expired()用于检测所管理的对象是否已经释放</li>
+<li>lock()用于获取所管理的对象的强引用指针</li>
+</ul>
+<pre><code class="c++">//parent 代码不变;
+class children
+{
+public:
+    ~children() { std::cout &lt;&lt;&quot;destroying children\n&quot;; }
+
+public:
+    boost::weak_ptr&lt;parent&gt; parent; //弱引用
+};
+</code></pre>
+<p>运行结果就变成了:</p>
+<pre><code class="c++">int main(void)
+{
+    parent_ptr father(new parent()); //father.use_count 1
+    children_ptr son(new children);  //son.use_count 1
+
+    std::cout &lt;&lt; &quot;parent_ptr count &quot; &lt;&lt; father.use_count() &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;child_ptr count &quot; &lt;&lt; son.use_count() &lt;&lt; std::endl;
+
+    std::cout &lt;&lt; &quot;------------------&quot; &lt;&lt; std::endl;
+
+    father-&gt;children = son; //son.use_count 2
+    son-&gt;parent = father; //father.use_count 1
+
+    std::cout &lt;&lt; &quot;parent_ptr count &quot; &lt;&lt; father.use_count() &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;child_ptr count &quot; &lt;&lt; son.use_count() &lt;&lt; std::endl;
+
+    /*
+    Main Function start
+    parent_ptr count 1
+    child_ptr count 1
+    ------------------
+    parent_ptr count 1
+    child_ptr count 2
+    destroying parent
+    destroying children
+    Main Function end
+    */
+}
+</code></pre>
+<p>从上面看到，赋值给weak_ptr的仍旧是 <code>boost::shared_ptr&lt;parent&gt;</code>,即 <code>shared_ptr</code>.</p>
+<h2 id="标准库智能指针"><a href="#标准库智能指针" class="headerlink" title="标准库智能指针"></a>标准库智能指针</h2><p>C++11引入的3个智能指针全部都在 <code>&lt;memory&gt;</code> 头文件中, <code>shared_ptr</code>和<code>weak_ptr</code>大致和Boost一样.</p>
+<pre><code class="c++">auto pShared = std::make_shared&lt;T&gt;(new T)
+auto pWeak = std::make_shared&lt;T&gt;(pShared);
+
+if(pWeak.expired()) {
+    std::cout &lt;&lt; &quot;The Obj is no longer exists&quot; &lt;&lt; std::endl;
+}
+
+std::shared_ptr&lt;T&gt; pNew(pWeak.lock()); //如果对象已经销毁则返回的是nullptr
+if(pNew){
+    //doing sth.
+} else {
+    std::cout &lt;&lt; &quot;The Obj is no longer exists&quot; &lt;&lt; std::endl;
+}
+</code></pre>
+<p>注意 <code>shared_ptr</code> 没有权限转移行为, 因为他是基于引用计数的, 所以这样的代码是错误的:</p>
+<pre><code class="c++">auto old_ptr = std::make_unique&lt;T&gt;(new T);
+
+//shared_ptr没有release()方法
+std::shared_ptr&lt;T&gt; new_ptr(old_ptr.release());
+</code></pre>
+<p>下面主要说说 <code>unique_ptr</code></p>
+<h3 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h3><p>这个本质上和 <code>scoped_ptr</code> 有点儿像, 不能拷贝, 不能赋值, 所以你想把外部具名的 unique_ptr 实例放入容器是不能的了.<br>作为函数参数, 返回值, 值传递也是不可能的了, 但是下面的案例除外:</p>
+<pre><code class="c++">unique_ptr&lt;int&gt; f(int i){
+    if (i == 0)
+        return unique_ptr&lt;int&gt;(new int(0));
+    else
+        return unique_ptr&lt;int&gt;(new int(1));
+}
+
+int main(void)
+{
+    auto p = f(2);
+    /*std::unique_ptr&lt;int&gt;  p;
+      p = f(2); //wrong
+    */
+    return 0;
+}
+</code></pre>
+<p>这里采用了匿名对象(临时对象), 直接初始化到容器内(相当于有人接收, 所以小三直接上位, 临时变量也不用销毁了), 但是注释起来的则产生的中间对象没有人接收, 行为不确定, 要看具体的编译器处理.(但是这样返回的临时对象的unique_ptr实在没有意义)</p>
+<p>补充知识: 具名返回值优化<br>C++ 11确实可以用move构造编译通过, 即便没有move构造, 还有一种潜规则即 <code>Named Return Value Optimization</code> (具名返回值优化). 这种情况下由于返回的时一个临时对象，所以编译器会将接受返回值的对象的引用传进去直接进行构造.</p>
+<p>下面的代码也是 ok 的:</p>
+<pre><code class="c++">std::cout &lt;&lt; &quot;Runtime polymorphism demo\n&quot;;
+{
+    std::unique_ptr&lt;B&gt; p = std::make_unique&lt;D&gt;(); // p is a unique_ptr that owns a D
+
+    // as a pointer to base
+    p-&gt;bar(); // virtual dispatch
+
+    std::vector&lt;std::unique_ptr&lt;B&gt;&gt; v;  // unique_ptr can be stored in a container
+
+    v.push_back(std::make_unique&lt;D&gt;());
+    v.push_back(std::move(p));
+    //v.push_back(p);       //error
+    v.emplace_back(new D);
+
+    for (auto&amp; p : v) {
+        p-&gt;bar(); // virtual dispatch
+    }
+}   // ~D called 3 times
+</code></pre>
+<p>因为存入容器的, 全部是没有调用拷贝构造的(直接新生成的或者采用移动构造转移所有权的), 保证了 <code>unique</code> 的不共享特性. </p>
+<p><code>v.push_back(std::make_unique&lt;D&gt;());</code> 临时的右值, 编译器允许. (就相当于一个中间对象)</p>
+<p>其他使用(reset, release等不说了)</p>
+<pre><code class="c++">size_t len[10];
+std::unique_ptr&lt;int[]&gt; pnumbers(new int[len]);
+//or
+std::unique_ptr&lt;int[]&gt; pnums = std::make_unique&lt;int[]&gt;(len);
+</code></pre>
+<p>控制权的转移:</p>
+<ul>
+<li>std::move</li>
+<li>reset(release())<br>(前一种方式其实是利用临时右值, 进行权限转移)</li>
+</ul>
+<p><code>unique_ptr</code> 不支持拷贝和复制, 所以只能唯一引用, 这和它的(RAII)实现有关.<br>(后面有时间再说)</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>几种智能指针的使用还是比较简单的, 中间也会有一些坑, 稍微注意一下就好了.</p>
+<p>但是智能指针的引入, 并没有完全解决相关回收泄露问题, 只是一定程度上缓解了, 简化了操作, 也就是说, 还是需要人为注意.</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://www.boost.org/doc/libs/1_60_0/libs/smart_ptr/smart_ptr.htm" target="_blank" rel="external">http://www.boost.org/doc/libs/1_60_0/libs/smart_ptr/smart_ptr.htm</a></li>
+<li>《Boost程序库完全开发指南》</li>
+<li><a href="">Effective C++</a> 资源管理部分</li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="智能指针">智能指针</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="智能指针">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>深挖TCP模型 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="summary of tcp protocol programming">
+<meta name="keywords" content="网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深挖TCP模型">
+<meta property="og:url" content="localhost:4000/2017/06/19/how-about-tcp.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="summary of tcp protocol programming">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/tcp1.jpg">
+<meta property="og:updated_time" content="2017-09-24T02:06:02.247Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深挖TCP模型">
+<meta name="twitter:description" content="summary of tcp protocol programming">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/tcp1.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP套接字模型"><span class="toc-number">2.1.</span> <span class="toc-text">TCP套接字模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#连接管理"><span class="toc-number">2.2.</span> <span class="toc-text">连接管理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>深挖TCP模型</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-06-19</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/网络/">网络</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>说完udp, 真的是忍不住说一下tcp, 连接管理, 滑动窗口, 拥塞控制(及其算法), 重发机制, 校验和等等<br> (谈理论的时候好像又回到了青涩的学生时代)</p>
+</blockquote>
+<p>详细可以参考 <code>unp 卷1</code> , 这里捡 <code>核心</code>说.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/tcp1.jpg" alt=""></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>为了保证可靠传输, TCP比UDP多了很多控制协议和算法, 可以闭上眼数一数:</p>
+<ul>
+<li>连接管理——3次握手和4次握手</li>
+<li>数据破坏——通过校验和</li>
+<li>丢包——应答与超时重发机制</li>
+<li>分片乱序——序列号</li>
+<li>窗口滑动——提高发送效率，对发送端和接收端流量进行控制</li>
+<li>加快通信速度——快速重发，三次收到重发消息进行重发</li>
+<li>流控制——避免网络流量浪费</li>
+<li>拥塞控制——慢启动算法，拥塞窗口</li>
+</ul>
+<p>为了日常开发, 对于tcp客户端和服务器端各个 <code>tcp状态</code> 也要非常熟悉.<br>(但是我不爱贴图, 所以只贴几张核心的图, 网上都有, 重点在于自己的理解和叙述)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="TCP套接字模型"><a href="#TCP套接字模型" class="headerlink" title="TCP套接字模型"></a>TCP套接字模型</h2><p>基本的TCP套接字模型已经说过了, <a href="https://wizardmerlin.github.io/2017/06/11/basic-socket-model.html" target="_blank" rel="external">参考</a> .<br>下面补充2个内容: </p>
+<ol>
+<li>监听<br>socket创建的套接字是主动套接字, 调用listen后变成监听套接字. TCP状态有CLOSE跃迁到LISTEN状态.<br>backlog是已完成队列和未完成队列大小之和, 对于监听套接字有两个队列, 一个是未完成队列, 一个是已完成队列.</li>
+</ol>
+<ul>
+<li>未完成队列：客户端发送一个SYN包, 服务器收到后变成SYN_RCVD状态, 这样的套接字被加入到未完成队列中</li>
+<li>已完成队列：TCP已经完成了3次握手后, 将这个套接字加入到已完成队列, 套接字处于ESTABLISHED状态</li>
+</ul>
+<p>accept函数返回时即从未完成队列到已完成队列转移一个连接.<br>该队列专门用于控制同时请求建立队列的客户端数量.</p>
+<ol>
+<li>建立连接客户端可能遇到的失败<br>客户端发送的SYN包可能会遇到失败, 可能有以下几种情况:</li>
+</ol>
+<ul>
+<li>如果客户端没有收到SYN的响应包(ACK), 根据TCP的超时重发机制进行重发. 75秒后还没收到, 就返回错误</li>
+<li>如果目的主机没有监听目的端口号, 就会返回一个RST的分节, 客户端收到RST后立刻返回错误</li>
+<li>如果SYN在中间路由遇到目的不可达, 客户端收到ICMP报文, 客户端保存这个报文信息, 并采用第一种情况方案解决, 也就是重发</li>
+</ul>
+<h2 id="连接管理"><a href="#连接管理" class="headerlink" title="连接管理"></a>连接管理</h2><p>为什么是3次, 为什么是4次?<br>个人认为这些问题都离不开关键词, 可靠传输.</p>
+<p>TODO</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="深挖TCP模型">深挖TCP模型</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="深挖TCP模型">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

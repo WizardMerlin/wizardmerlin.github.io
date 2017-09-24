@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Rapid Json | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="总结rapid-json">
+<meta name="keywords" content="网络,cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rapid Json">
+<meta property="og:url" content="localhost:4000/2017/08/22/rapid-json.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="总结rapid-json">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/rjson.jpg">
+<meta property="og:updated_time" content="2017-09-24T07:20:07.195Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Rapid Json">
+<meta name="twitter:description" content="总结rapid-json">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/rjson.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">2.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#库文件"><span class="toc-number">2.3.</span> <span class="toc-text">库文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#案例"><span class="toc-number">2.4.</span> <span class="toc-text">案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#深入"><span class="toc-number">2.5.</span> <span class="toc-text">深入</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Rapid Json</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-08-22</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/网络/">网络</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>国人自己开发的库, 全部以头文件的形式包含. 在知乎的<a href="https://www.zhihu.com/question/23654513" target="_blank" rel="external">评测</a>也是各种好评.<br>其他的解析工具, 玩玩就可以了, 实际项目中, 还是推荐用 <code>RapidJson</code>.</p>
+<p>本文是关于 rapid-json 的简单讲解和介绍.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/rjson.jpg" alt=""></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>发现每次都会有一大堆人去说XML和JSON的优缺点, 我觉得也是挺烦的, 下面一句话带过:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;country&gt;
+  &lt;name&gt;中国&lt;/name&gt;
+  &lt;province&gt;
+    &lt;name&gt;黑龙江&lt;/name&gt;
+    &lt;citys&gt;
+      &lt;city&gt;哈尔滨&lt;/city&gt;
+      &lt;city&gt;大庆&lt;/city&gt;
+    &lt;/citys&gt;  　　
+  &lt;/province&gt;
+  &lt;province&gt;
+    &lt;name&gt;广东&lt;/name&gt;
+    &lt;citys&gt;
+      &lt;city&gt;广州&lt;/city&gt;
+      &lt;city&gt;深圳&lt;/city&gt;
+      &lt;city&gt;珠海&lt;/city&gt;
+    &lt;/citys&gt; 　　
+  &lt;/province&gt;
+  &lt;province&gt;
+    &lt;name&gt;台湾&lt;/name&gt;
+    &lt;citys&gt;
+      　&lt;city&gt;台北&lt;/city&gt;
+      　&lt;city&gt;高雄&lt;/city&gt;
+    &lt;/citys&gt;　
+  &lt;/province&gt;
+  &lt;province&gt;
+    &lt;name&gt;新疆&lt;/name&gt;
+    &lt;citys&gt;
+      &lt;city&gt;乌鲁木齐&lt;/city&gt;
+    &lt;/citys&gt;
+  &lt;/province&gt;
+&lt;/country&gt;
+</code></pre><p>再看json</p>
+<pre><code>{
+    name: &quot;中国&quot;,
+    provinces: 
+        [
+     { name: &quot;黑龙江&quot;, citys: { city: [&quot;哈尔滨&quot;, &quot;大庆&quot;]} },
+     { name: &quot;广东&quot;, citys: { city: [&quot;广州&quot;, &quot;深圳&quot;, &quot;珠海&quot;]} },
+     { name: &quot;台湾&quot;, citys: { city: [&quot;台北&quot;, &quot;高雄&quot;]} },
+     { name: &quot;新疆&quot;, citys: { city: [&quot;乌鲁木齐&quot;]} }
+    ]
+}
+</code></pre><p>XML的可读性稍微好一些, 但是冗余信息多, 体积大; 并且解析方便程度来说, JSON完胜.<br>(但是业界流行程度来说, XML业界广泛认同)</p>
+<p>本文主要介绍RapidJson的使用以及一些心得, 如果你对它的源码也感兴趣的话, 可以参考该 <a href="http://miloyip.com/rapidjson/" target="_blank" rel="external">链接</a><br>(补充, 有人喜欢用 <a href="http://blog.csdn.net/hailong0715/article/details/51942736" target="_blank" rel="external">JsonCpp</a>, 不过还是推荐你用RapidJson吧)</p>
+<p>(虽然有官方教程, 不过觉得那个教程也是非常啰嗦的)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>rapidjson是腾讯的开源json解析框架，用c++实现。由于全部代码仅用header file实现，所以很容易集成到项目中。rapidjson的另一个特点是对json的标准符合程度是100%的(在开启了full precision选项的情况下).</p>
+<p>最重要的: <code>RapidJSON is a JSON parser and generator for C++</code> .</p>
+<p>总之, 业界也有好评, 个人觉得比 JsonCpp 好.</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>RapidJSON 是只有头文件的 C++ 库。只需把 include/rapidjson 目录复制至系统或项目的 include 目录中。<br>给出我的参考步骤:</p>
+<pre><code>$ git clone https://github.com/miloyip/rapidjson.git
+$ cmake .
+$ sudo make install
+</code></pre><p>然后, 你的相关库就安装到了 <code>/usr/local/include/</code></p>
+<h2 id="库文件"><a href="#库文件" class="headerlink" title="库文件"></a>库文件</h2><p>安装完了, 顺便可以扫一眼, 都有哪些库:</p>
+<pre><code>$ tree -L 2 /usr/local/include/rapidjson
+/usr/local/include/rapidjson
+├── allocators.h
+├── document.h
+├── encodedstream.h
+├── encodings.h
+├── error
+│   ├── en.h
+│   └── error.h
+├── filereadstream.h
+├── filewritestream.h
+├── fwd.h
+├── internal
+│   ├── biginteger.h
+│   ├── diyfp.h
+│   ├── dtoa.h
+│   ├── ieee754.h
+│   ├── itoa.h
+│   ├── meta.h
+│   ├── pow10.h
+│   ├── regex.h
+│   ├── stack.h
+│   ├── strfunc.h
+│   ├── strtod.h
+│   └── swap.h
+├── istreamwrapper.h
+├── memorybuffer.h
+├── memorystream.h
+├── msinttypes
+│   ├── inttypes.h
+│   └── stdint.h
+├── ostreamwrapper.h
+├── pointer.h
+├── prettywriter.h
+├── rapidjson.h
+├── reader.h
+├── schema.h
+├── stream.h
+├── stringbuffer.h
+└── writer.h
+
+3 directories, 35 files
+</code></pre><h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><p>先来些简单的案例, 再说相关的API和机制.</p>
+<p>此简单例子解析一个 JSON 字符串至一个 document (DOM), 对 DOM 作出简单修改, 最终把 DOM 转换(stringify) 至 JSON 字符串.</p>
+<pre><code class="c++">// JSON simple example
+// This example does not handle errors.
+
+#include &quot;rapidjson/document.h&quot;
+#include &quot;rapidjson/writer.h&quot;
+#include &quot;rapidjson/stringbuffer.h&quot;
+#include &lt;iostream&gt;
+
+using namespace rapidjson;
+
+int main() {
+    // 1. Parse a JSON string into DOM.
+    const char* json = &quot;{\&quot;project\&quot;:\&quot;rapidjson\&quot;,\&quot;stars\&quot;:10}&quot;;
+    Document d;
+    d.Parse(json);
+
+    // 2. Modify it by DOM.
+    Value&amp; s = d[&quot;stars&quot;];
+    s.SetInt(s.GetInt() + 1);
+
+    // 3. Stringify the DOM
+    StringBuffer buffer;
+    Writer&lt;StringBuffer&gt; writer(buffer);
+    d.Accept(writer);
+
+    // Output {&quot;project&quot;:&quot;rapidjson&quot;,&quot;stars&quot;:11}
+    std::cout &lt;&lt; buffer.GetString() &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+<p>注意此例子并没有处理潜在错误, 比如:</p>
+<pre><code class="c++">// 2. Modify it by DOM.   
+Value&amp; s = d[&quot;stars&quot;];
+if( s.IsInt() ) {
+    s.SetInt(s.GetInt() + 1);  
+}
+</code></pre>
+<p>编译运行:</p>
+<pre><code>$ g++ -g -Wall -O0 simpledom.cpp -o simpledom -I/usr/local/inlcude/
+$ ./simpledom
+{&quot;project&quot;:&quot;rapidjson&quot;,&quot;stars&quot;:11}
+</code></pre><p>可以简单的得出结论, 解析JSON是围绕 <code>rapidjson::Document</code>, <code>rapidjson::Value</code> 展开的, 关键性头文件:</p>
+<ul>
+<li>rapidjson/document.h</li>
+<li>rapidjson/writer.h</li>
+</ul>
+<hr>
+<p>再来一个实用一点儿的例子:<br>test.json</p>
+<pre><code>{
+    &quot;dictVersion&quot;: 1,  
+    &quot;content&quot;:  
+    [   
+        {&quot;key&quot;: &quot;word1&quot;, &quot;value&quot;: &quot;单词1&quot;} ,
+        {&quot;key&quot;: &quot;word2&quot;, &quot;value&quot;: &quot;单词2&quot;} ,
+        {&quot;key&quot;: &quot;word3&quot;, &quot;value&quot;: &quot;单词3&quot;} ,
+        {&quot;key&quot;: &quot;word4&quot;, &quot;value&quot;: &quot;单词4&quot;} ,
+        {&quot;key&quot;: &quot;word5&quot;, &quot;value&quot;: &quot;单词5&quot;} 
+    ]
+}
+</code></pre><p>对于这种格式化好的文件的读写, 可以采用流式读写处理:</p>
+<pre><code class="c++">// test.cpp
+#include &quot;rapidjson/document.h&quot;
+#include &quot;rapidjson/stringbuffer.h&quot;
+#include &quot;rapidjson/writer.h&quot;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+#include &lt;cassert&gt;
+#include &lt;iostream&gt;
+
+#define psln(x) std::cout &lt;&lt; #x &quot; = &quot; &lt;&lt; (x) &lt;&lt; std::endl
+
+
+
+void testSimpleDoc() {
+  using std::string;
+  using std::ifstream;
+
+  // read json content into string.
+  string      stringFromStream;
+  ifstream    in;
+  in.open(&quot;test.json&quot;, ifstream::in);
+  if (!in.is_open())
+    return;
+  string line;
+  while (getline(in, line)) {
+    stringFromStream.append(line + &quot;\n&quot;);
+  }
+  in.close();
+
+  // ---------------------------- read json --------------------
+  // parse json from string.
+  using rapidjson::Document;
+  Document doc;
+  doc.Parse(stringFromStream.c_str());
+  if (doc.HasParseError()) {
+    rapidjson::ParseErrorCode code = doc.GetParseError();
+    psln(code);
+    return;
+  }
+
+  // use values in parse result.
+  using rapidjson::Value;
+  using rapidjson::Type;
+  using rapidjson::StringBuffer;
+  using rapidjson::Writer;
+
+  Value &amp; v = doc[&quot;dictVersion&quot;];
+  if (v.IsInt()) {
+    psln(v.GetInt());
+  }
+
+  Value &amp; contents = doc[&quot;content&quot;];
+  if (contents.IsArray()) {
+    for (size_t i = 0; i &lt; contents.Size(); ++i) {
+      Value &amp; v = contents[i];
+      assert(v.IsObject());
+      if (v.HasMember(&quot;key&quot;) &amp;&amp; v[&quot;key&quot;].IsString()) {
+    psln(v[&quot;key&quot;].GetString());
+      }
+      if (v.HasMember(&quot;value&quot;) &amp;&amp; v[&quot;value&quot;].IsString()) {
+    psln(v[&quot;value&quot;].GetString());
+      }
+    }
+  }
+  // ---------------------------- write json --------------------
+  psln(&quot;add a value into array&quot;);
+
+  Value item(Type::kObjectType);
+  item.AddMember(&quot;key&quot;, &quot;word5&quot;, doc.GetAllocator());
+  item.AddMember(&quot;value&quot;, &quot;单词5&quot;, doc.GetAllocator());
+  contents.PushBack(item, doc.GetAllocator());
+
+  // convert dom to string.
+  StringBuffer buffer;      // in rapidjson/stringbuffer.h
+  Writer&lt;StringBuffer&gt; writer(buffer); // in rapidjson/writer.h
+  doc.Accept(writer);// Accept() traverses the DOM and generates Handler events.
+
+  psln(buffer.GetString());
+}
+
+
+int main(void)
+{
+  testSimpleDoc();
+  return 0;
+}
+</code></pre>
+<p>编译运行:</p>
+<pre><code>$ g++ -g -Wall test.cpp -o test -I/usr/local/include
+$ ./test 
+v.GetInt() = 1
+v[&quot;key&quot;].GetString() = word1
+v[&quot;value&quot;].GetString() = 单词1
+v[&quot;key&quot;].GetString() = word2
+v[&quot;value&quot;].GetString() = 单词2
+v[&quot;key&quot;].GetString() = word3
+v[&quot;value&quot;].GetString() = 单词3
+v[&quot;key&quot;].GetString() = word4
+v[&quot;value&quot;].GetString() = 单词4
+v[&quot;key&quot;].GetString() = word5
+v[&quot;value&quot;].GetString() = 单词5
+&quot;add a value into array&quot; = add a value into array
+buffer.GetString() = {&quot;dictVersion&quot;:1,&quot;content&quot;:[{&quot;key&quot;:&quot;word1&quot;,&quot;value&quot;:&quot;单词1&quot;},{&quot;key&quot;:&quot;word2&quot;,&quot;value&quot;:&quot;单词2&quot;},{&quot;key&quot;:&quot;word3&quot;,&quot;value&quot;:&quot;单词3&quot;},{&quot;key&quot;:&quot;word4&quot;,&quot;value&quot;:&quot;单词4&quot;},{&quot;key&quot;:&quot;word5&quot;,&quot;value&quot;:&quot;单词5&quot;},{&quot;key&quot;:&quot;word5&quot;,&quot;value&quot;:&quot;单词5&quot;}]}
+</code></pre><p>从上面两个例子, 就可以看出, 只要你给document对象parse(const char*)一个C串, 那么它就会把解析的内容全部存储在document对象里; <code>Value &amp; v = doc[key];</code> 可以拿到单个对象或者Array(这里的array就像一个list或者数组), 结合Value进行读写, Value类含有 <code>HasMember()</code>, <code>AddMemeber()</code> 之类的方法, 以及和Document类一样重载了 <code>operator[]()</code>, 而<code>v[&quot;key&quot;].GetString()</code>,  <code>v.GetInt()</code> 则可以拿到具体的内容. 上面例子只给出了array如何添加成员, 其实document添加成员, 也是<code>document.AddMember(&quot;key buffer&quot;, &quot;value buffer-object&quot;, document.GetAllocator());</code> , 并且 document 可以是Object, 也可以是Array, 上面这些例子都是Object. </p>
+<p>value[“key”]得到的类型还是Value类型, 当然也可以用v.IsObject()检验:</p>
+<pre><code class="c++">//Document -&gt; Value
+Value &amp; v = doc[key];
+v.GetInt();
+
+//对比: value.GetInt()
+v[&quot;key&quot;].GetString()
+</code></pre>
+<p>漂亮的输出到屏幕上(格式修正):</p>
+<pre><code class="c++">   #include &quot;rapidjson/prettywriter.h&quot;
+
+    StringBuffer sb;
+    PrettyWriter&lt;StringBuffer&gt; writer(sb);
+    document.Accept(writer);
+    puts(sb.GetString());
+</code></pre>
+<p>运行结果大致是:</p>
+<pre><code>v.GetInt() = 1
+v[&quot;key&quot;].GetString() = word1
+v[&quot;value&quot;].GetString() = 单词1
+v[&quot;key&quot;].GetString() = word2
+v[&quot;value&quot;].GetString() = 单词2
+v[&quot;key&quot;].GetString() = word3
+v[&quot;value&quot;].GetString() = 单词3
+v[&quot;key&quot;].GetString() = word4
+v[&quot;value&quot;].GetString() = 单词4
+&quot;add a value into array&quot; = add a value into array
+buffer.GetString() = {
+    &quot;dictVersion&quot;: 1,
+    &quot;content&quot;: [
+        {
+            &quot;key&quot;: &quot;word1&quot;,
+            &quot;value&quot;: &quot;单词1&quot;
+        },
+        {
+            &quot;key&quot;: &quot;word2&quot;,
+            &quot;value&quot;: &quot;单词2&quot;
+        },
+        {
+            &quot;key&quot;: &quot;word3&quot;,
+            &quot;value&quot;: &quot;单词3&quot;
+        },
+        {
+            &quot;key&quot;: &quot;word4&quot;,
+            &quot;value&quot;: &quot;单词4&quot;
+        },
+        {
+            &quot;key&quot;: &quot;word5&quot;,
+            &quot;value&quot;: &quot;单词5&quot;
+        }
+    ]
+}
+</code></pre><p>之后如果你想写入文件, 那么就把 <code>sb.GetString()</code> 以文本格式写入文件即可; 或者借助其他的流(下面的例子从stdin和stdout作为流输入和输出):</p>
+<pre><code class="c++">#include &quot;rapidjson/reader.h&quot;
+#include &quot;rapidjson/prettywriter.h&quot;
+#include &quot;rapidjson/filereadstream.h&quot;
+#include &quot;rapidjson/filewritestream.h&quot;
+#include &quot;rapidjson/error/en.h&quot;
+
+using namespace rapidjson;
+
+int main(int, char*[]) {
+    // Prepare reader and input stream.
+    Reader reader;
+    char readBuffer[65536];
+    /*
+     ifstream    in;
+     in.open(&quot;test.json&quot;, ifstream::in); 
+    */
+    FileReadStream is(stdin, readBuffer, sizeof(readBuffer));
+
+    // Prepare writer and output stream.
+    char writeBuffer[65536];
+    FileWriteStream os(stdout, writeBuffer, sizeof(writeBuffer));
+    PrettyWriter&lt;FileWriteStream&gt; writer(os);
+
+    // JSON reader parse from the input stream and let writer generate the output.
+    if (!reader.Parse&lt;kParseValidateEncodingFlag&gt;(is, writer)) {
+        fprintf(stderr, &quot;\nError(%u): %s\n&quot;, 
+     static_cast&lt;unsigned&gt;(reader.GetErrorOffset()), 
+         GetParseError_En(reader.GetParseErrorCode()));
+        return 1;
+    }
+
+    return 0;
+}
+</code></pre>
+<p>总之, 先把流读到字符串, 之后写解析逻辑.</p>
+<h2 id="深入"><a href="#深入" class="headerlink" title="深入"></a>深入</h2><p>其实说到这里, 使用上, 基本没有问题了.</p>
+<p>进一步的深入, 我给的建议是: </p>
+<ol>
+<li>先读一下 <a href="http://rapidjson.org/zh-cn/md_doc_tutorial_8zh-cn.html" target="_blank" rel="external">官方教程</a>.</li>
+<li>然后把源码下面的 example 下面所有的 demo 全部玩一遍.</li>
+</ol>
+<p>教程里面, 拷贝转移以及move()部分, 内存流&amp;文件流部分(包装流效率不高), DOM&amp;SAX部分都是仔细看的, 下面是我的部分笔记:</p>
+<pre><code>Value可以用作表示Object, Array, 甚至简单的string
+Value a(kArrayType);
+Value o(Type::kObjectType);
+Value s = &quot;str&quot;;
+
+
+如果Value直接写
+Value v; //NUll
+此时你并不知道它表示什么.
+
+
+下面这种形式存储的就是指针了(浅拷贝)
+Value s;
+s.SetString(&quot;rapidjson&quot;);    // 可包含空字符，长度在编译萁推导
+s = &quot;rapidjson&quot;;             // 上行的缩写
+
+直接赋值, 有时候为了安全, 需要做一下标记: `StringRef(cstr)`
+const char * cstr = getenv(&quot;USER&quot;);    //注意是 const char *
+size_t cstr_len = ...;                 // 如果有长度
+
+Value s;
+// s.SetString(cstr);                  // 这不能通过编译
+s.SetString(StringRef(cstr));          // 可以，假设它的生命周期安全，并且是以空字符结尾的
+s = StringRef(cstr);                   // 上行的缩写
+s.SetString(StringRef(cstr, cstr_len));// 更快，可处理空字符
+s = StringRef(cstr, cstr_len);         // 上行的缩写
+
+
+补充: 和value的直接赋值, AddMember(), PushBack() 都采用转移语义(没有分配内存)
+
+这是深拷贝, setString时提供了allocator, 并且指定了长度.
+//value.GetStringLength() 能获取UTF字符串中如果存在\u000即空字符的情况下的长度
+//比strlen()强大, 当然如果你不传入长度, 那就默认使用strlen()
+value.SetString(buffer, len, document.GetAllocator()); 
+
+
+如果value之间, 想深复制, 那么有两种方式:
+1. 构造中带有allocator
+Document d;
+Document::AllocatorType&amp; a = d.GetAllocator();
+Value v1(&quot;foo&quot;);
+// Value v2(v1); // 不容许
+Value v2(v1, a); // 制造一个克隆
+
+2. 采用copyfrom
+Value v2;
+v2.CopyFrom(v1, a);
+
+
+
+对于Value如果是 Object, 它的AddMemeber()比较标准的写法, 即采用的是重置的写法:
+//和Document一样的AddMember(), 注Object是有key, value的pair,并且key一定是字符串
+Value item(Type::kObjectType);
+item.AddMember(&quot;key&quot;, &quot;word5&quot;, doc.GetAllocator());
+
+
+Value类型是Array, 注意它的PushBack是移动语义就可以了(即使带了allocator), 
+当然这是针对非基本类型的数据(String, Object), 
+即Push进去的元素可以是string类型的value, 或者Object类型的value.
+
+push进去的是 string类型或者Object类型也存在临时变量无法赋值给非const引用的, 
+移动语义问题, 可以类似解决方法: move()返回一个非const引用
+// 就地 Value 参数
+contact.PushBack(Value(&quot;copy&quot;, document.GetAllocator()).Move(), // copy string
+                 document.GetAllocator());
+// 显式 Value 参数
+Value val(&quot;key&quot;, document.GetAllocator()); // copy string
+contact.PushBack(val, document.GetAllocator());
+</code></pre><p>这个时候(把那个几个example玩熟), 对这个库已经很熟悉了.<br>再深入, 就结合他的<a href="rapidjson.org">官网</a>以及源码慢慢琢磨吧.</p>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>没太多可说的, 写多了就熟悉了.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Rapid Json">Rapid Json</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Rapid Json">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

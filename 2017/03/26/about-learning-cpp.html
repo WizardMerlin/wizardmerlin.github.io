@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>学习C++的利弊 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="讲述一下当前cpp学习的成本代价优势，劣势，以及我用过的参考资料">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习C++的利弊">
+<meta property="og:url" content="localhost:4000/2017/03/26/about-learning-cpp.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="讲述一下当前cpp学习的成本代价优势，劣势，以及我用过的参考资料">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/c++.jpg">
+<meta property="og:updated_time" content="2017-09-23T08:58:58.922Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="学习C++的利弊">
+<meta name="twitter:description" content="讲述一下当前cpp学习的成本代价优势，劣势，以及我用过的参考资料">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/c++.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#不劝你学"><span class="toc-number">1.</span> <span class="toc-text">不劝你学</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#建议你学"><span class="toc-number">2.</span> <span class="toc-text">建议你学</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考书"><span class="toc-number">3.</span> <span class="toc-text">参考书</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>学习C++的利弊</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-03-26</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p><img src="http://omotkhw3y.bkt.clouddn.com/c++.jpg" alt="post-cover"></p>
+<blockquote>
+<p> 每次在群里, 总有上学的同学, 一般是大二的, 为我现在C++行情如何? 要不要学? 还是学Java? </p>
+</blockquote>
+<p>“奇怪，学习某项东西，是你的事情，跟我有什么关系? 再说了，我为什么要给你建议？我能拿到什么好处呀。”</p>
+<p>当然，不是这样的。</p>
+<a id="more"></a>
+<h1 id="不劝你学"><a href="#不劝你学" class="headerlink" title="不劝你学"></a>不劝你学</h1><p>我不劝你学习C++的原因其实很简单：<br>(排序分先后，必须分先后)</p>
+<ul>
+<li>学习某样东西第一要处于自愿：自己的兴趣爱好/自己乐意，这是最重要的。</li>
+<li>学习某项的技能一定要落到实处，要么是为了解决你个人的问题，要么是为了解决工作的问题等。</li>
+<li>“学习”不是一件轻松的事情，他有时候是顺着大脑来的，有时候却是强迫自己做自己不愿意做的事情。</li>
+<li>C++绝对不是一门速成的计算机编程语言，不敢说他是最难的(貌似scala，lisp更难？)，但是绝对是非常不容易的(学习成本太大)</li>
+<li>C++的适用范围没有变大，但是竞争却多了。你可以看到，现在很多go, python, lua等，在原本C++专属的领域开始慢慢侵入，可以想象的是，以当前C++这样的成长速度(他有时候还去抄袭java的某些特性)，它应该会逐渐从大众语言变称小众语言 </li>
+<li><code>一种语言就是一个体系</code>而不仅仅只语言本身，不巧的是C++的朋友们数量也很多(甚至包括汇编/编译器/链接器等)</li>
+</ul>
+<p>IT技术更新迭代快, 现在已经有很多语言在C++的领域可以(部分)代替C++, 如果你以后决心要走产品, 走管理, 其实不学也行.</p>
+<blockquote>
+<p>我的前辈, 以过来人的身份说, 其实销售整体比技术收入要高一些(如果你做不下来的话)</p>
+</blockquote>
+<h1 id="建议你学"><a href="#建议你学" class="headerlink" title="建议你学"></a>建议你学</h1><p>“但是事情总有例外的一面” , 蝙蝠侠-猫女(偷走维恩少爷妈妈的项链那一幕)</p>
+<p>股市中不是有这句话么： </p>
+<blockquote>
+<p>当大家都看空的时候就是底。</p>
+</blockquote>
+<p>通俗解释就是：<code>大家都不看好的时候，就开始反转了</code>。<br>物以稀为贵—–我没有劝你学习C++啊，这绝对不是劝你学习C++。</p>
+<p>还有, 即便你不做底层编码, 比如写驱动, 写引擎, 写后端交易系统代码, 学习C++对于你对于计算机系统, 以及整个IT行业的认识都很有帮助.</p>
+<h1 id="参考书"><a href="#参考书" class="headerlink" title="参考书"></a>参考书</h1><blockquote>
+<p>干一辈子革命, 读一辈子 C++ 书</p>
+</blockquote>
+<p>文章末尾不给你点儿图，感觉对不住你，希望不要吓到你(在下不算C++的高手，一般开发人员，而已)。</p>
+<p>其实书有很多, 为了节省你的时间, 我还是给你列举一下, 我经历过: (也有我的师傅指点我的)</p>
+<ul>
+<li>《C++ Primer》</li>
+<li>《Effective C++》</li>
+<li>《More Effective C++》</li>
+<li>《Effective STL》</li>
+<li>《C++语言演化》  这本比较特殊, 帮助你对 C++ 的各种机制有深刻的认识 </li>
+</ul>
+<p>读这些书, 应该可以省下一些时间, 至于《Inside C++ Object Model》这类讲原理的书, 快速翻一下, 不看也罢, 就面试的时候吹吹水而已.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)</p>
+<p>Sunday, 26. March 2017 10:10PM </p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="学习C++的利弊">学习C++的利弊</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="学习C++的利弊">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

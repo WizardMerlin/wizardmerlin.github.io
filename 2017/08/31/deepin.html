@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Deepin Linux | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="把自己的代码环境, 迁移新的 Deepin 发行版, 记录了一些常用库和工具的安装参考.">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deepin Linux">
+<meta property="og:url" content="localhost:4000/2017/08/31/deepin.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="把自己的代码环境, 迁移新的 Deepin 发行版, 记录了一些常用库和工具的安装参考.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/deepin1.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/update-alternatives.jpg">
+<meta property="og:updated_time" content="2017-09-24T07:30:13.895Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deepin Linux">
+<meta name="twitter:description" content="把自己的代码环境, 迁移新的 Deepin 发行版, 记录了一些常用库和工具的安装参考.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/deepin1.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装deepin"><span class="toc-number">2.1.</span> <span class="toc-text">安装deepin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#emacs"><span class="toc-number">2.2.</span> <span class="toc-text">emacs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rm绑定"><span class="toc-number">2.3.</span> <span class="toc-text">rm绑定</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rm-related"><span class="toc-number">2.4.</span> <span class="toc-text">rm related</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wget"><span class="toc-number">2.5.</span> <span class="toc-text">wget</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git"><span class="toc-number">2.6.</span> <span class="toc-text">git</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh"><span class="toc-number">2.7.</span> <span class="toc-text">ssh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#产生ssh-key"><span class="toc-number">2.8.</span> <span class="toc-text">产生ssh_key</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#locate"><span class="toc-number">2.9.</span> <span class="toc-text">locate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tree"><span class="toc-number">2.10.</span> <span class="toc-text">tree</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gcc"><span class="toc-number">2.11.</span> <span class="toc-text">gcc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#g"><span class="toc-number">2.12.</span> <span class="toc-text">g++</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#build-essential"><span class="toc-number">2.13.</span> <span class="toc-text">build-essential</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#binutils"><span class="toc-number">2.14.</span> <span class="toc-text">binutils</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java"><span class="toc-number">2.15.</span> <span class="toc-text">java</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jdk-path"><span class="toc-number">2.16.</span> <span class="toc-text">jdk path</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ant"><span class="toc-number">2.17.</span> <span class="toc-text">ant</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#maven"><span class="toc-number">2.18.</span> <span class="toc-text">maven</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IntelliJ"><span class="toc-number">2.19.</span> <span class="toc-text">IntelliJ</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#go通过-mercurial-版本控制工具管理"><span class="toc-number">3.</span> <span class="toc-text">go通过 mercurial 版本控制工具管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#go-related"><span class="toc-number">3.1.</span> <span class="toc-text">go related</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cmake"><span class="toc-number">3.2.</span> <span class="toc-text">cmake</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#开始编译"><span class="toc-number">4.</span> <span class="toc-text">开始编译</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#开始安装"><span class="toc-number">5.</span> <span class="toc-text">开始安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一般安装libboost-dev就行"><span class="toc-number">6.</span> <span class="toc-text">一般安装libboost-dev就行</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#或者sudo-apt-cache-search-boost搜自己想要的库"><span class="toc-number">7.</span> <span class="toc-text">或者sudo apt-cache search boost搜自己想要的库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#我直接从我的远端服务器拷贝了-boost-1-63-0-7z"><span class="toc-number">7.1.</span> <span class="toc-text">我直接从我的远端服务器拷贝了 boost_1_63_0.7z</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#也就是说-下面编译全是为了上面那些库-下面还是全编译吧"><span class="toc-number">8.</span> <span class="toc-text">也就是说, 下面编译全是为了上面那些库(下面还是全编译吧)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#如果-b2-–with-atomic-–buildtype-complete-install表示只编译atomic库"><span class="toc-number">9.</span> <span class="toc-text">如果./b2 –with-atomic –buildtype=complete install表示只编译atomic库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注意一下拷贝权限问题"><span class="toc-number">10.</span> <span class="toc-text">注意一下拷贝权限问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#node-npm-related"><span class="toc-number">10.1.</span> <span class="toc-text">node     npm related</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#安装的时候-先把python切换到2-7版本"><span class="toc-number">11.</span> <span class="toc-text">安装的时候, 先把python切换到2.7版本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#安装成功"><span class="toc-number">12.</span> <span class="toc-text">安装成功</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#remarkable-u-could-add-amp-to-run"><span class="toc-number">12.1.</span> <span class="toc-text">remarkable (u could add & to run)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">13.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Deepin Linux</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-08-31</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/linux/">linux</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>以前的老系统, 由于系统太老, 有时候安装软件真的非常不适合. 我个人开发一直使用linux(Ubuntu64), 主要用terminal(emacs -nw). 所以要换一个稳定, 新一点儿的系统; 考虑了ubuntu麒麟, 16, 17, 不得不说, 一点儿也不好用, 支持的非常差. 原版的ubuntu也是, 系统有时动不动就内部错误(Ubuntu可能会突然告诉你已经不提供软件更新了, 请升级到17.04; 然后你升级的时候又引来内部错误).<br>正好 <code>武汉深之度</code> 开发的 <code>deepin</code> 近来大家伙好评不断, 所以, 我就来试试. </p>
+<blockquote>
+<p>趁此机会, 把原来的所有 <code>开发环境</code> 切换到 deepin (旧 ubuntu 仅用于发布博客).<br>(如果有机会, 以后也想为它贡献代码)</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>为什么换deepin? 原系统 和 deepin对比如下, 不多解释了.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/deepin1.jpg" alt=""></p>
+<p>(好吧还是说一下,它的这个<code>terminal</code>太棒了;后期发现和emacs有些键可能冲突, 改以下就好了)</p>
+<p>真正一个好的环境, 仅仅从一个技术人员触发, 至少具备3点:</p>
+<ul>
+<li>开发舒服(效率高和个人水平有关)</li>
+<li>看源码舒服(特别是源码庞大, 调用复杂时)</li>
+<li>debug舒服</li>
+</ul>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="安装deepin"><a href="#安装deepin" class="headerlink" title="安装deepin"></a>安装deepin</h2><p>这里我装的是虚拟机.</p>
+<p>电脑的原配操作系统win10专业版, 所以一般不改变, 主要工作环境全部放在虚拟机里面, 一来编程对机器要求不是太高, 而来虚拟机文件也方便在电脑间移植.</p>
+<p>虚拟机里安装deepin很简单: 原来怎么安装ubuntu_amd64, 这里就怎么装deepin, 并且操作习惯也不用改, 和debain系列一致.</p>
+<p>安装完, 先升级一下系统 <code>sudo apt-get dist-upgrade</code> 或者可能也需要 <code>sudo apt-get update</code> 和 <code>sudo apt-get upgrade</code>.</p>
+<p>下面开始安装主要工作软件以及环境配置.</p>
+<hr>
+<h2 id="emacs"><a href="#emacs" class="headerlink" title="emacs"></a>emacs</h2><p>最先安装的就是emacs, 不然后面很捉急.</p>
+<pre><code class="bash">$ sudo apt-get install emacs25
+
+#安装完毕之后
+$ emacs --version
+GNU Emacs 25.1.1
+Copyright (C) 2016 Free Software Foundation, Inc.
+GNU Emacs comes with ABSOLUTELY NO WARRANTY.
+You may redistribute copies of GNU Emacs
+under the terms of the GNU General Public License.
+For more information about these matters, see the file named COPYING.
+</code></pre>
+<p>不过我使用的时候, 一般都是不带界面的emacs, 习惯了; 所以去加一个alias.</p>
+<p>现在<code>.bashrc</code>结尾面添加一个语句(<code>$ nano .bashrc</code>)</p>
+<pre><code class="shell">if [ -f ~/.merlin_bash ]; then
+    . ~/.merlin_bash
+fi
+</code></pre>
+<p>保存之后建立一个<code>.merlin_bash</code>文件:</p>
+<pre><code class="bash"># here we confiure some alias and environment info 
+# 1. alias
+# 2. environmen path
+
+
+# my alias
+alias ll=&#39;ls -l&#39;
+alias la=&#39;ls -A&#39;
+alias l=&#39;ls -CF&#39;
+
+alias em=&#39;emacs -nw&#39;
+</code></pre>
+<p>(重新打开以下终端或者source .bashrc)<br>现在可以使用emacs了, 还不错哦.</p>
+<p>关于emacs的配置, 请看我的另外一篇 <a href="http://www.merlinblog.site/2017/08/31/my-emacs.html" target="_blank" rel="external">文章</a>.</p>
+<p>如果你不配置<code>emacs</code>, 基本呵呵, 不配置除非你是神(要求你水平非常高), 不然很难用的顺手.</p>
+<blockquote>
+<p>以后的所有配置,都在.merlin_bash文件中.</p>
+</blockquote>
+<h2 id="rm绑定"><a href="#rm绑定" class="headerlink" title="rm绑定"></a>rm绑定</h2><p>rm命令已经引起无数次灾害了(深受其害!!), 这东西不处理不行. 如果在UI界面放入Trash, 那么会在<code>~/.local/share/Trash/</code>的两个子目录进行如下操作:</p>
+<ul>
+<li>把具体的文件放入files目录</li>
+<li><p>info目录里以文件相同的filename保存删除的信息</p>
+<pre><code>[Trash Info]
+Path=/home/merlin/Desktop/test/ideaIC-2017.2.3.tar.gz
+DeletionDate=2017-08-31T17:15:09
+</code></pre><p>所以我们的rm命令可以简单的用来把东西移动到Trash目录, 但不写入Info信息(而是添加尾缀时间戳), 以此区分是用rm命令删除的, 代码很简单(要考虑一下连续重复删除同一个文件, 删除的目录和文件同名等情况):<br>```</p>
+<h2 id="rm-related"><a href="#rm-related" class="headerlink" title="rm related"></a>rm related</h2><p>trash()<br>{<br>TRASH_DIR=”/home/merlin/.local/share/Trash/files”<br>RF=”-rf”<br>R=”-r”<br>F=”-f”</p>
+<p>if [ “$1” == ${RF} -o  “$1” == ${R} -o “$1” == ${F} ] ; then<br>   shift<br>fi</p>
+<p>for i in $*; do<br>   FILENAME=<code>basename $i</code><br>   STAMP=<code>date +%s</code><br>   mv -f “$i” ${TRASH_DIR}/${FILENAME}.${STAMP}<br>done<br>}</p>
+</li>
+</ul>
+<p>alias rm=trash</p>
+<pre><code>
+
+## bashrc文件
+
+德国人有一个造车时, 有一个思想, 这个思想用中国谚语说就是 `工欲善其事必先利其器` .
+有一些常用命令, 来弄个别名吧, 编辑`.merlin_bash`:
+
+```shell
+# here we confiure some alias and environment info
+# 1. alias
+# 2. environmen path
+
+
+# my alias
+
+## ls related
+alias ll=&#39;ls -al&#39;
+alias la=&#39;ls -A&#39;
+alias l=&#39;ls -CF&#39;
+
+## emacs related
+alias em=&#39;emacs -nw&#39;
+
+## move related
+alias mv=&#39;mv -i&#39;
+
+
+## cp related
+alias cp=&#39;cp -i&#39;
+
+
+
+## apt related
+alias add=&#39;sudo apt-get install&#39;
+alias delete=&#39;sudo apt-get --purge remove&#39;
+alias autoremove=&#39;sudo apt-get autoremove&#39;
+alias search=&#39;sudo apt-cache search&#39;
+alias policy=&#39;sudo apt-cache policy&#39;
+alias update=&#39;sudo apt-get update&#39;
+alias upgrade=&#39;sudo apt-get upgrade&#39;
+alias sysupgrade=&#39;sudo apt-get dist-upgrade&#39;
+
+
+## git related
+
+
+
+
+
+# path
+
+## java related
+JAVA_OPT=${_JAVA_OPTIONS}
+unset _JAVA_OPTIONS
+alias java=&quot;java ${JAVA_OPT}&quot;
+
+## node npm related
+export NODE_HOME=/home/merlin/Software/node-v6.11.2-linux-x64
+export NODE_PATH=$NODE_HOME/lib/node_modules
+export PATH=$PATH:$NODE_HOME/bin
+
+
+## go related
+export GOROOT=/usr/lib/go-1.7
+export GOBIN=$GOROOT/bin
+export PATH=$GOBIN:$PATH
+
+export GOPATH=/home/merlin/Desktop/GOPATH
+
+###for cross-compling go-code
+export GOOS=linux
+export GOARCH=amd64
+
+
+## ld and static path
+export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+</code></pre><p>差不多就这样了.</p>
+<h2 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h2><p>想下载东西, wget和curl必不可少(wget常用于下载, curl常用于调试RESTful)</p>
+<pre><code>$ add wget
+$ add curl
+</code></pre><h2 id="git"><a href="#git" class="headerlink" title="git"></a>git</h2><p>没有git几乎无法生存, 想要去拉个库, 晕,没有安装git.</p>
+<pre><code class="bash">$ add git
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+下列软件包是自动安装的并且现在不需要了：
+  libfile-copy-recursive-perl update-inetd
+使用&#39;sudo apt autoremove&#39;来卸载它(它们)。
+将会同时安装下列软件：
+  git-man liberror-perl
+建议安装：
+  git-daemon-run | git-daemon-sysvinit git-doc git-el git-email git-gui gitk gitweb git-arch git-cvs git-mediawiki git-svn
+下列【新】软件包将被安装：
+  git git-man liberror-perl
+升级了 0 个软件包，新安装了 3 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。
+需要下载 5,614 kB 的归档。
+解压缩后会消耗 31.0 MB 的额外空间。
+您希望继续执行吗？ [Y/n] Y
+获取:1 http://packages.deepin.com/deepin panda/main amd64 liberror-perl all 0.17024-1 [26.9 kB]
+获取:2 http://packages.deepin.com/deepin panda/main amd64 git-man all 1:2.11.0-4 [1,432 kB]
+获取:3 http://packages.deepin.com/deepin panda/main amd64 git amd64 1:2.11.0-4 [4,156 kB]                                       
+已下载 5,614 kB，耗时 15秒 (359 kB/s)                                                                                           
+正在选中未选择的软件包 liberror-perl。
+(正在读取数据库 ... 系统当前共安装有 152772 个文件和目录。)
+正准备解包 .../liberror-perl_0.17024-1_all.deb  ...
+正在解包 liberror-perl (0.17024-1) ...
+正在选中未选择的软件包 git-man。
+正准备解包 .../git-man_1%3a2.11.0-4_all.deb  ...
+正在解包 git-man (1:2.11.0-4) ...
+正在选中未选择的软件包 git。
+正准备解包 .../git_1%3a2.11.0-4_amd64.deb  ...
+正在解包 git (1:2.11.0-4) ...
+正在设置 git-man (1:2.11.0-4) ...
+正在设置 liberror-perl (0.17024-1) ...
+正在处理用于 man-db (2.7.6.1-2) 的触发器 ...
+正在设置 git (1:2.11.0-4) ...
+</code></pre>
+<p>看一下版本, 还挺新的.</p>
+<pre><code>$ git --version
+git version 2.11.0
+</code></pre><p>配置一下自己的信息:</p>
+<pre><code>$ git config --global user.name &quot;xxx&quot;
+$ git config --global user.email &quot;yyy&quot;
+</code></pre><h2 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h2><p>本机其实已经安装了ssh工具, 并且我也可以远程到我的remote服务器:</p>
+<pre><code># 一般默认22端口
+$ ssh username@address
+</code></pre><p>但是本机是否允许别的机器远程呢? 还是配置一下, 允许远程登录</p>
+<pre><code>$ ls /etc/ssh
+moduli    ssh_config
+</code></pre><p>自己建议一个文件<code>sshd_config</code>, 配置ssh-server，配置文件位于/etc/ssh/sshd_config, 默认端口为22, 为了安全, 一般自定义为其他端口.</p>
+<p>修改配置文件sshd_config, 一般修改远程登录过来的端口, 允许的账户, 超时是否断开.</p>
+<pre><code>1. 配置端口：　
+   Port 22 配置端口时你可以修改称自己想要的比方说23333,防止被端口扫描.
+
+2. 配置是否允许远程root账户登录
+   (但是你登录后可以su到root账户)
+   # Authentication:
+   LoginGraceTime 120
+   PermitRootLogin yes
+   StrictModes yes
+
+   一般可以禁止远程root账户登录.
+
+3. 避免超时自动断开
+
+   # keep alive within an hour if no operation happened of client
+   ClientAliveInterval 60
+   ClientAliveCountMax 60
+
+注意:
+
+每次一次配置都要重启sshd守护进程: service ssh restart
+(我这边儿重启sshd，提示unrecognized service)
+</code></pre><p>关于sshd的启动:</p>
+<p>首先确保ssh服务已经安装, 检查服务是否已经启动 </p>
+<pre><code>ps -e | grep sshd
+</code></pre><p>启动、停止、重启服务 </p>
+<pre><code>$ service sshd start     #开启ssh服务 
+$ service sshd stop      #停止ssh服务 
+$ service sshd restart   #重启ssh服务
+</code></pre><p>或者使用带有路径的脚本： </p>
+<pre><code>/etc/init.d/sshd start 
+/etc/init.d/sshd stop 
+/etc/init.d/restart
+</code></pre><h2 id="产生ssh-key"><a href="#产生ssh-key" class="headerlink" title="产生ssh_key"></a>产生ssh_key</h2><p>步骤很简单, 但是我劝你还是采用HTTPS实时的输入账号密码验证上传和下载; 不要使用ssh key(任何一个登录到你电脑的人可以随便弄你的库, 多可怕).</p>
+<pre><code># 如果~/.ssh下已经有了秘钥文件则不必生成
+$ ssh-keygen -t rsa -C &quot;your_email@example.com&quot;
+(直接回车什么都不做)
+</code></pre><p>在~/.ssh/得到了两个文件：id_rsa和id_rsa.pub, 打开id_rsa.pub文件，里面的信息即为SSH key; 在github上把公钥贴到SSH Key认证的位置, 那么凡是走ssh协议的传入, 你都可以不用密码了.</p>
+<p>当然如果你把自己的公钥<code>id_rsa.pub</code>拷贝到别人的<code>authorized_keys</code>文件内, 然后你ssh登录别人的电脑就不用认证密码了(但是你scp拷贝的这一回, 还是要输入登录到别人电脑的密码). 例如把我的公钥拷贝到xxx_ip地址的主机上, 登录那台电脑的用户名是yyy.</p>
+<pre><code>scp -r ~/.ssh/id_rsa.pub xxx_ip:/home/yyy/.ssh/authorized_keys
+# 然后输入用户yyy的密码, 拷贝成功的话, 下次你登录xxx_ip这台电脑, 就不要密码了, 直接即可
+$ ssh xxx_ip
+</code></pre><h2 id="locate"><a href="#locate" class="headerlink" title="locate"></a>locate</h2><p>真的要是要什么没有什么.</p>
+<pre><code>$ add locate
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+下列软件包是自动安装的并且现在不需要了：
+  libfile-copy-recursive-perl update-inetd
+使用&#39;sudo apt autoremove&#39;来卸载它(它们)。
+下列【新】软件包将被安装：
+  locate
+升级了 0 个软件包，新安装了 1 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。
+需要下载 212 kB 的归档。
+解压缩后会消耗 322 kB 的额外空间。
+获取:1 http://packages.deepin.com/deepin panda/main amd64 locate amd64 4.6.0+git+20161106-2 [212 kB]
+已下载 212 kB，耗时 0秒 (278 kB/s)
+正在选中未选择的软件包 locate。
+(正在读取数据库 ... 系统当前共安装有 153643 个文件和目录。)
+正准备解包 .../locate_4.6.0+git+20161106-2_amd64.deb  ...
+正在解包 locate (4.6.0+git+20161106-2) ...
+正在设置 locate (4.6.0+git+20161106-2) ...
+正在处理用于 man-db (2.7.6.1-2) 的触发器 ...
+
+$ sudo updatedb
+</code></pre><h2 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h2><pre><code>$ add tree
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+下列软件包是自动安装的并且现在不需要了：
+  libfile-copy-recursive-perl update-inetd
+使用&#39;sudo apt autoremove&#39;来卸载它(它们)。
+下列【新】软件包将被安装：
+  tree
+升级了 0 个软件包，新安装了 1 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。
+需要下载 46.1 kB 的归档。
+解压缩后会消耗 106 kB 的额外空间。
+获取:1 http://packages.deepin.com/deepin panda/main amd64 tree amd64 1.7.0-5 [46.1 kB]
+已下载 46.1 kB，耗时 0秒 (150 kB/s)
+正在选中未选择的软件包 tree。
+(正在读取数据库 ... 系统当前共安装有 153657 个文件和目录。)
+正准备解包 .../tree_1.7.0-5_amd64.deb  ...
+正在解包 tree (1.7.0-5) ...
+正在设置 tree (1.7.0-5) ...
+正在处理用于 man-db (2.7.6.1-2) 的触发器 ...
+</code></pre><h2 id="gcc"><a href="#gcc" class="headerlink" title="gcc"></a>gcc</h2><p>gcc的版本很给力, 但是有时候为了某些方便, 我还需要装一个低版本的.</p>
+<pre><code class="bash">$ gcc --version
+gcc (Debian 6.3.0-11) 6.3.0 20170321
+Copyright (C) 2016 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+$ locate gcc | grep -E &quot;/usr/bin/gcc-[0-9]&quot;
+/usr/bin/gcc-6
+</code></pre>
+<p>安装4.8, 4.9, 5.0版本的gcc</p>
+<pre><code>$ add gcc-4.8 gcc-4.9 gcc-5
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+下列软件包是自动安装的并且现在不需要了：
+  libfile-copy-recursive-perl update-inetd
+使用&#39;sudo apt autoremove&#39;来卸载它(它们)。
+将会同时安装下列软件：
+  cpp-4.8 cpp-4.9 cpp-5 libasan0 libasan1 libasan2 libcloog-isl4 libgcc-4.8-dev libgcc-4.9-dev libgcc-5-dev libmpx0
+建议安装：
+  gcc-4.8-locales gcc-4.9-locales gcc-5-locales gcc-4.8-multilib gcc-4.8-doc libgcc1-dbg libgomp1-dbg libitm1-dbg
+  libatomic1-dbg libasan0-dbg libtsan0-dbg libquadmath0-dbg gcc-4.9-multilib gcc-4.9-doc libasan1-dbg liblsan0-dbg
+  libubsan0-dbg libcilkrts5-dbg gcc-5-multilib gcc-5-doc libasan2-dbg libmpx0-dbg
+下列【新】软件包将被安装：
+  cpp-4.8 cpp-4.9 cpp-5 gcc-4.8 gcc-4.9 gcc-5 libasan0 libasan1 libasan2 libcloog-isl4 libgcc-4.8-dev libgcc-4.9-dev
+  libgcc-5-dev libmpx0
+升级了 0 个软件包，新安装了 14 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。
+需要下载 42.6 MB 的归档。
+解压缩后会消耗 141 MB 的额外空间。
+您希望继续执行吗？ [Y/n] Y
+</code></pre><p>安装完成之后, <code>sudo updatedb</code>, 然后查看一下相应的版本</p>
+<pre><code>$ locate gcc | grep -E &quot;/usr/bin/gcc-[0-9]&quot;
+/usr/bin/gcc-4.8
+/usr/bin/gcc-4.9
+/usr/bin/gcc-5
+/usr/bin/gcc-6
+
+$ gcc --version
+gcc (Debian 6.3.0-11) 6.3.0 20170321
+Copyright (C) 2016 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</code></pre><p>然后利用 <code>update-alternatives</code> 建立文件关联(当然你也可以自己建立软链接):</p>
+<pre><code># 首先要让系统知道我们安装了多个版本的gcc
+# 命令最后的 20和50是优先级，如果使用auto选择模式，系统将默认使用优先级高的
+$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
+update-alternatives: 使用 /usr/bin/gcc-4.8 来在自动模式中提供 /usr/bin/gcc (gcc)
+$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 30
+update-alternatives: 使用 /usr/bin/gcc-4.9 来在自动模式中提供 /usr/bin/gcc (gcc)
+$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 40
+update-alternatives: 使用 /usr/bin/gcc-5 来在自动模式中提供 /usr/bin/gcc (gcc)
+$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 50
+update-alternatives: 使用 /usr/bin/gcc-6 来在自动模式中提供 /usr/bin/gcc (gcc)
+</code></pre><p>再查看一下当前系统中安装的gcc有哪些:</p>
+<pre><code>$ sudo update-alternatives --query gcc
+Name: gcc
+Link: /usr/bin/gcc
+Status: auto
+Best: /usr/bin/gcc-6
+Value: /usr/bin/gcc-6
+
+Alternative: /usr/bin/gcc-4.8
+Priority: 20
+
+Alternative: /usr/bin/gcc-4.9
+Priority: 30
+
+Alternative: /usr/bin/gcc-5
+Priority: 40
+
+Alternative: /usr/bin/gcc-6
+Priority: 50
+</code></pre><p>想切换默认的gcc可以使用修改优先值的方式:</p>
+<pre><code>sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60
+</code></pre><p>或者交互的方式:<br><img src="http://omotkhw3y.bkt.clouddn.com/update-alternatives.jpg" alt="交互方式"></p>
+<blockquote>
+<p>update-alternatives 还可以用于配置多版本的Java或者Python等.</p>
+</blockquote>
+<p>当然你配置gcc的时候, 也可以顺带配置一下, gcc需要调用的binuitls, 比如 ar, nm, ranlib等(当然也可以配置对应版本的g++), 使用<code>--slave</code>选项.</p>
+<pre><code>$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 50 \
+--slave /usr/bin/g++ g++ /usr/bin/g++-5 \
+--slave /usr/bin/gcc-ar gcc-ar /usr/bin/gcc-ar-5 \
+--slave /usr/bin/gcc-nm gcc-nm /usr/bin/gcc-nm-5 \
+--slave /usr/bin/gcc-ranlib gcc-ranlib /usr/bin/gcc-ranlib-5
+</code></pre><h2 id="g"><a href="#g" class="headerlink" title="g++"></a>g++</h2><p>有些软件的安装, 需要其他的软件或者库; 如果那个工具&amp;库你经常用, 最好不要让它顺便给你装, 比如:</p>
+<pre><code>$ add build-essential
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+下列软件包是自动安装的并且现在不需要了：
+  libfile-copy-recursive-perl update-inetd
+使用&#39;sudo apt autoremove&#39;来卸载它(它们)。
+将会同时安装下列软件：
+  g++ g++-6
+建议安装：
+  g++-multilib g++-6-multilib gcc-6-doc libstdc++6-6-dbg
+下列【新】软件包将被安装：
+  build-essential g++ g++-6
+升级了 0 个软件包，新安装了 3 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。
+需要下载 7,096 kB 的归档。
+解压缩后会消耗 24.5 MB 的额外空间。
+您希望继续执行吗？ [Y/n] n
+中止。
+</code></pre><p>我自己装<code>g++</code>, 因为我可能要在多个版本的c++编译器间切换.</p>
+<pre><code class="bash">$ search &quot;g\+\+-[0-9]&quot; | less
+$ add g++-4.9 g++-5 g++-6
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+下列软件包是自动安装的并且现在不需要了：
+  libfile-copy-recursive-perl update-inetd
+使用&#39;sudo apt autoremove&#39;来卸载它(它们)。
+将会同时安装下列软件：
+  libstdc++-4.9-dev libstdc++-5-dev
+建议安装：
+  g++-4.9-multilib gcc-4.9-doc libstdc++6-4.9-dbg g++-5-multilib gcc-5-doc libstdc++6-5-dbg g++-6-multilib gcc-6-doc
+  libstdc++6-6-dbg libstdc++-4.9-doc libstdc++-5-doc
+下列【新】软件包将被安装：
+  g++-4.9 g++-5 g++-6 libstdc++-4.9-dev libstdc++-5-dev
+升级了 0 个软件包，新安装了 5 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。
+需要下载 35.8 MB 的归档。
+解压缩后会消耗 106 MB 的额外空间。
+您希望继续执行吗？ [Y/n] Y
+
+$ sudo updatedb
+</code></pre>
+<p>然后用<code>update-alternatives</code>来配置一下:</p>
+<pre><code>$ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 30
+$ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 40
+$ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 50
+</code></pre><p>然后query检查一下:</p>
+<pre><code class="bash">$ sudo update-alternatives --query g++
+Name: g++
+Link: /usr/bin/g++
+Status: auto
+Best: /usr/bin/g++-6
+Value: /usr/bin/g++-6
+
+Alternative: /usr/bin/g++-4.9
+Priority: 30
+
+Alternative: /usr/bin/g++-5
+Priority: 40
+
+Alternative: /usr/bin/g++-6
+Priority: 50
+
+$ g++ --version
+g++ (Debian 6.3.0-11) 6.3.0 20170321
+Copyright (C) 2016 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</code></pre>
+<h2 id="build-essential"><a href="#build-essential" class="headerlink" title="build-essential"></a>build-essential</h2><p>先查看一下依赖:</p>
+<pre><code class="bash">$ depends build-essential
+build-essential
+ |依赖: libc6-dev
+  依赖: &lt;libc-dev&gt;
+    libc6-dev
+  依赖: gcc
+  依赖: g++
+  依赖: make
+    make-guile
+  依赖: dpkg-dev
+</code></pre>
+<p>先看一下哪些没有</p>
+<pre><code class="bash"># 先更新一下本机数据
+$ update
+$ upgrade
+
+$ policy libc6-dev
+libc6-dev:
+  已安装：2.24-9
+  候选： 2.24-9
+  版本列表：
+ *** 2.24-9 500
+        500 http://packages.deepin.com/deepin panda/main amd64 Packages
+        100 /var/lib/dpkg/status
+
+$ policy make
+make:
+  已安装：4.1-9.1
+  候选： 4.1-9.1
+  版本列表：
+ *** 4.1-9.1 500
+        500 http://packages.deepin.com/deepin panda/main amd64 Packages
+        100 /var/lib/dpkg/status
+
+$ policy make-guile
+make-guile:
+  已安装：(无)
+  候选： 4.1-9.1
+  版本列表：
+     4.1-9.1 500
+        500 http://packages.deepin.com/deepin panda/main amd64 Packages
+
+$ policy dpkg-dev
+dpkg-dev:
+  已安装：1.18.23
+  候选： 1.18.23
+  版本列表：
+ *** 1.18.23 500
+        500 http://packages.deepin.com/deepin panda/main amd64 Packages
+        500 http://packages.deepin.com/deepin panda/main i386 Packages
+        100 /var/lib/dpkg/status
+</code></pre>
+<p>那就安装一下<code>make-guile</code>:</p>
+<pre><code>$ search &quot;make-guile*&quot;
+make-guile - utility for directing compilation with guile support
+$ add &quot;make-guile&quot;
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+将会同时安装下列软件：
+  guile-2.0-libs
+建议安装：
+  make-doc
+下列软件包将被【卸载】：
+  make
+下列【新】软件包将被安装：
+  guile-2.0-libs make-guile
+升级了 0 个软件包，新安装了 2 个软件包，要卸载 1 个软件包，有 0 个软件包未被升级。
+需要下载 2,536 kB 的归档。
+解压缩后会消耗 11.8 MB 的额外空间。
+您希望继续执行吗？ [Y/n] Y
+
+$ sudo updatedb
+
+$ make-guile --version
+bash: make-guile: 未找到命令
+
+$ locate make-guile
+/usr/share/doc/make-guile
+/usr/share/doc/make-guile/ABOUT-NLS.gz
+/usr/share/doc/make-guile/AUTHORS
+/usr/share/doc/make-guile/Explanations.gz
+/usr/share/doc/make-guile/NEWS.Debian.gz
+/usr/share/doc/make-guile/NEWS.gz
+/usr/share/doc/make-guile/README.Debian-Source
+/usr/share/doc/make-guile/README.customs.gz
+/usr/share/doc/make-guile/README.gz
+/usr/share/doc/make-guile/changelog.Debian.gz
+/usr/share/doc/make-guile/copyright
+/var/cache/apt/archives/make-guile_4.1-9.1_amd64.deb
+/var/lib/dpkg/info/make-guile.list
+/var/lib/dpkg/info/make-guile.md5sums
+</code></pre><p>再装<code>build-essential</code>:</p>
+<pre><code>$ add build-essential
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+将会同时安装下列软件：
+  g++
+建议安装：
+  g++-multilib
+下列【新】软件包将被安装：
+  build-essential g++
+升级了 0 个软件包，新安装了 2 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。
+需要下载 8,890 B 的归档。
+解压缩后会消耗 35.8 kB 的额外空间。
+您希望继续执行吗？ [Y/n] Y
+获取:1 http://packages.deepin.com/deepin panda/main amd64 g++ amd64 4:6.3.0-2 [1,544 B]
+获取:2 http://packages.deepin.com/deepin panda/main amd64 build-essential amd64 12.3 [7,346 B]
+已下载 8,890 B，耗时 6秒 (1,466 B/s)                                                                                            
+正在选中未选择的软件包 g++。
+(正在读取数据库 ... 系统当前共安装有 156361 个文件和目录。)
+正准备解包 .../g++_4%3a6.3.0-2_amd64.deb  ...
+正在解包 g++ (4:6.3.0-2) ...
+正在选中未选择的软件包 build-essential。
+正准备解包 .../build-essential_12.3_amd64.deb  ...
+正在解包 build-essential (12.3) ...
+正在设置 g++ (4:6.3.0-2) ...
+update-alternatives: 使用 /usr/bin/g++ 来在自动模式中提供 /usr/bin/c++ (c++)
+正在设置 build-essential (12.3) ...
+</code></pre><p>这么看来<code>policy</code>可能后面的<code>dpkg</code>工具可能和<code>update-alternatives</code>有点儿误会, 手动调整一下:</p>
+<pre><code>$ sudo update-alternatives --config g++
+有 3 个候选项可用于替换 g++ (提供 /usr/bin/g++)。
+
+  选择       路径            优先级  状态
+------------------------------------------------------------
+* 0            /usr/bin/g++-6     50        自动模式
+  1            /usr/bin/g++-4.9   30        手动模式
+  2            /usr/bin/g++-5     40        手动模式
+  3            /usr/bin/g++-6     50        手动模式
+
+要维持当前值[*]请按&lt;回车键&gt;，或者键入选择的编号：
+update-alternatives: 警告: 链接组 g++ 已损坏，故强制重新安装候选项 /usr/bin/g++-6
+
+$ ls /usr/bin/g++*
+/usr/bin/g++  /usr/bin/g++-4.9  /usr/bin/g++-5  /usr/bin/g++-6
+merlin@merlin-deepin:~$ ll /usr/bin/g++
+
+
+$ sudo update-alternatives --config g++
+有 3 个候选项可用于替换 g++ (提供 /usr/bin/g++)。
+
+  选择       路径            优先级  状态
+------------------------------------------------------------
+* 0            /usr/bin/g++-6     50        自动模式
+  1            /usr/bin/g++-4.9   30        手动模式
+  2            /usr/bin/g++-5     40        手动模式
+  3            /usr/bin/g++-6     50        手动模式
+
+要维持当前值[*]请按&lt;回车键&gt;，或者键入选择的编号：
+
+$ policy g++
+g++:
+  已安装：4:6.3.0-2
+  候选： 4:6.3.0-2
+  版本列表：
+ *** 4:6.3.0-2 500
+        500 http://packages.deepin.com/deepin panda/main amd64 Packages
+        100 /var/lib/dpkg/status
+</code></pre><p>好了.</p>
+<h2 id="binutils"><a href="#binutils" class="headerlink" title="binutils"></a>binutils</h2><p>这里, 可能会装一些, 不太常用的工具,(常用的可能都已经装了) 为下面可能装的库打基础(下面会详细说明, 哪些库要用到这些工具).</p>
+<h2 id="java"><a href="#java" class="headerlink" title="java"></a>java</h2><p>老实说, java, groovy, scala这类jvm语言已经写的很少了.(现在多用shell, python和c++).</p>
+<p>但是有些工具比如thrif还是需要这货的, 为java语言做支持.</p>
+<p>还是装两个版本, jdk7和jdk8, 然后用update-alternatives进行调整.</p>
+<pre><code>$ wget http://download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/jdk-8u144-linux-x64.tar.gz -P ~/Desktop/apps
+--2017-08-31 17:58:54--  http://download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/jdk-8u144-linux-x64.tar.gz
+正在解析主机 download.oracle.com (download.oracle.com)... 184.28.218.123, 184.28.218.122
+正在连接 download.oracle.com (download.oracle.com)|184.28.218.123|:80... 已连接。
+已发出 HTTP 请求，正在等待回应... 302 Found
+位置：http://101.44.1.8/files/2130000006C99F22/download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/jdk-8u144-linux-x64.tar.gz [跟随至新的 URL]
+--2017-08-31 17:58:54--  http://101.44.1.8/files/2130000006C99F22/download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/jdk-8u144-linux-x64.tar.gz
+正在连接 101.44.1.8:80... 已连接。
+已发出 HTTP 请求，正在等待回应... 200 OK
+长度：185515842 (177M) [application/octet-stream]
+正在保存至: “/home/merlin/Desktop/apps/jdk-8u144-linux-x64.tar.gz”
+
+jdk-8u144-linux-x64.tar.gz       100%[=======================================================&gt;] 176.92M  3.60MB/s  用时 44s     
+
+2017-08-31 17:59:44 (3.98 MB/s) - 已保存 “/home/merlin/Desktop/apps/jdk-8u144-linux-x64.tar.gz” [185515842/185515842])
+
+$ sudo mkdir /usr/local/lib/jvm
+$ sudo tar -xzvf ~/Desktop/apps/jdk-8u144-linux-x64.tar.gz -C /usr/local/lib/jvm
+
+$ $ ls /usr/local/lib/jvm
+jdk1.8.0_144
+
+# 设置环境变量, 在.merlin_bash结尾加上
+</code></pre><h2 id="jdk-path"><a href="#jdk-path" class="headerlink" title="jdk path"></a>jdk path</h2><p>export JAVA_HOME=/usr/local/lib/jvm/jdk1.8.0_144<br>export JRE_HOME=${JAVA_HOME}/jre<br>export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib<br>export PATH=${JAVA_HOME}/bin:$PATH</p>
+<pre><code>
+然后看一下是否安装成功:
+</code></pre><p>$ source .bashrc<br>$ which java<br>/usr/local/lib/jvm/jdk1.8.0_144/bin/java</p>
+<p>$ java -version<br>Picked up _JAVA_OPTIONS:   -Dawt.useSystemAAFontSettings=gasp<br>java version “1.8.0_144”<br>Java(TM) SE Runtime Environment (build 1.8.0_144-b01)<br>Java HotSpot(TM) 64-Bit Server VM (build 25.144-b01, mixed mode)</p>
+<pre><code>上面的`Picked up _JAVA_OPTIONS:   -Dawt.useSystemAAFontSettings=gasp`好奇怪, 检查一下`_JAVA_OPTIONS`这个环境变量:
+</code></pre><p>$ sudo grep -nr “JAVA_OPTIONS” /etc<br>/etc/profile.d/java-awt-font-gasp.sh:2:if ! echo ${_JAVA_OPTIONS} |grep -q – ${opt}  ;then<br>/etc/profile.d/java-awt-font-gasp.sh:3:    export _JAVA_OPTIONS=”${_JAVA_OPTIONS}  ${opt}”</p>
+<pre><code>查看了一下:
+</code></pre><p>$ cat /etc/profile.d/java-awt-font-gasp.sh</p>
+<pre><code>opt=&quot;-Dawt.useSystemAAFontSettings=gasp&quot;
+if ! echo ${_JAVA_OPTIONS} |grep -q -- ${opt}  ;then 
+    export _JAVA_OPTIONS=&quot;${_JAVA_OPTIONS}  ${opt}&quot;
+fi
+</code></pre><p>这个宏本来是指定运行参数(<code>java %JAVA_OPTIONS% -Xmx1024m -XX:MaxPermSize=128m</code>), 这里检查到”JAVA_OPTIONS”里没有设置<code>awt</code>界面组建的宏, 所以在这里指定了运行系统的字体和图形库. 但是一旦这里export, 后面运行<code>java</code>命令就会打印那条语句, 没办法, 在我的配置文件里面做一下处理吧.(JAVA_OPTIONS是运行时会自动指定的), 这里的文件就不要动了.<br>(意思是, 你的运行参数不要export了, 我运行的时候自己手动加载好了)</p>
+<pre><code>## java related (关于是否配置环境变量, 看下面说明)
+JAVA_OPT=${_JAVA_OPTIONS}
+unset _JAVA_OPTIONS
+alias java=&quot;java ${JAVA_OPT}&quot;
+</code></pre><p>然后注销重新登录, 运行<code>java -version</code> :</p>
+<pre><code>$ alias java
+alias java=&#39;java   -Dawt.useSystemAAFontSettings=gasp&#39;
+
+$ java -version
+java version &quot;1.8.0_144&quot;
+Java(TM) SE Runtime Environment (build 1.8.0_144-b01)
+Java HotSpot(TM) 64-Bit Server VM (build 25.144-b01, mixed mode)
+</code></pre><blockquote>
+<p>这里注意了,如果后面你要用update-alternatives管理javac,java等工具, 就不要配置环境变量!</p>
+</blockquote>
+<p>装完oralble的jdk, 还要装一个open jdk, 以免有时候编译需要(可能是某些版本的android框架或者应用需要).</p>
+<pre><code>$ search openjdk-8-jdk
+default-jdk - Standard Java or Java compatible Development Kit
+default-jdk-headless - Standard Java or Java compatible Development Kit (headless)
+openjdk-8-jdk - OpenJDK Development Kit (JDK)
+openjdk-8-jdk-headless - OpenJDK Development Kit (JDK) (headless)
+
+$ add openjdk-8-jdk
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+将会同时安装下列软件：
+  ca-certificates-java fonts-dejavu-extra java-common libatk-wrapper-java libatk-wrapper-java-jni libice-dev
+  libpthread-stubs0-dev libsm-dev libx11-dev libx11-doc libxau-dev libxcb1-dev libxdmcp-dev libxt-dev
+  openjdk-8-jdk-headless openjdk-8-jre openjdk-8-jre-headless x11proto-core-dev x11proto-input-dev x11proto-kb-dev
+  xorg-sgml-doctools xtrans-dev
+建议安装：
+  default-jre libice-doc libsm-doc libxcb-doc libxt-doc openjdk-8-demo openjdk-8-source visualvm icedtea-8-plugin
+  libnss-mdns fonts-ipafont-gothic fonts-ipafont-mincho fonts-wqy-zenhei fonts-indic
+下列【新】软件包将被安装：
+  ca-certificates-java fonts-dejavu-extra java-common libatk-wrapper-java libatk-wrapper-java-jni libice-dev
+  libpthread-stubs0-dev libsm-dev libx11-dev libx11-doc libxau-dev libxcb1-dev libxdmcp-dev libxt-dev openjdk-8-jdk
+  openjdk-8-jdk-headless openjdk-8-jre openjdk-8-jre-headless x11proto-core-dev x11proto-input-dev x11proto-kb-dev
+  xorg-sgml-doctools xtrans-dev
+升级了 0 个软件包，新安装了 23 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。
+需要下载 43.5 MB 的归档。
+解压缩后会消耗 170 MB 的额外空间。
+您希望继续执行吗？ [Y/n] Y
+...
+update-alternatives: 使用 /usr/lib/jvm/java-8-openjdk-amd64/bin/jconsole 来在自动模式中提供 /usr/bin/jconsole (jconsole)
+正在处理用于 libc-bin (2.24-9) 的触发器 ...
+正在处理用于 ca-certificates (20161130) 的触发器 ...
+Updating certificates in /etc/ssl/certs...
+0 added, 0 removed; done.
+Running hooks in /etc/ca-certificates/update.d...
+
+done.
+done.
+</code></pre><p>查看一下是不是update-alternatives已经托管:</p>
+<pre><code>sudo update-alternatives --config java
+链接组 java (提供 /usr/bin/java)中只有一个候选项：/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+无需配置。
+</code></pre><p>看来还是要手动配置一下, 我自己安装的/usr/local/lib/jvm下的那个, 以及这一个(因为他的路径不对, 主要到是jre)</p>
+<pre><code>$ sudo update-alternatives --remove java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+$ sudo update-alternatives --install /usr/bin/java java /usr/local/lib/jvm/jdk1.8.0_144/bin/java 300
+$ sudo update-alternatives --install /usr/bin/javac javac /usr/local/lib/jvm/jdk1.8.0_144/bin/javac 300
+$ sudo update-alternatives --install /usr/bin/jar jar /usr/local/lib/jvm/jdk1.8.0_144/bin/jar 300
+$ sudo update-alternatives --install /usr/bin/javah javah /usr/local/lib/jvm/jdk1.8.0_144/bin/javah 300
+$ sudo update-alternatives --install /usr/bin/javap javap /usr/local/lib/jvm/jdk1.8.0_144/bin/javap 300
+
+$ sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-8-openjdk-amd64/bin/java 200
+$ sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac 200
+$ sudo update-alternatives --install /usr/bin/jar jar /usr/lib/jvm/java-8-openjdk-amd64/bin/jar 200
+$ sudo update-alternatives --install /usr/bin/javah javah /usr/lib/jvm/java-8-openjdk-amd64/bin/javah 200
+$ sudo update-alternatives --install /usr/bin/javap javap /usr/lib/jvm/java-8-openjdk-amd64/bin/javap 200
+
+$ sudo update-alternatives --display java
+java - 手动模式
+  最佳链接版本为 /usr/local/lib/jvm/jdk1.8.0_144/bin/java
+ 链接目前指向 /usr/local/lib/jvm/jdk1.8.0_144/bin/java
+  链接 java 指向 /usr/bin/java
+/usr/lib/jvm/java-8-openjdk-amd64/bin/java - 优先级 200
+/usr/local/lib/jvm/jdk1.8.0_144/bin/java - 优先级 300
+</code></pre><p>(这里如果你配置了JAVA_HOME等环境变量, 那么<code>upate-alternatives</code>就失效了, 不能起到切换的作用)</p>
+<p>破Java环境, 终于闹腾好了.</p>
+<h2 id="ant"><a href="#ant" class="headerlink" title="ant"></a>ant</h2><p>ant: Java based build tool like make; 可能大家现在用maven啊, gradle啊比较多. 但是这个软件可能用于编译某些工具的库或者包, 所以还是要装一个.</p>
+<pre><code>$ add ant
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+将会同时安装下列软件：
+  ant-optional
+建议安装：
+  ant-doc ant-gcj ant-optional-gcj antlr javacc junit junit4 jython libbcel-java libbsf-java libcommons-logging-java libcommons-net-java libmail-java libjaxp1.3-java
+  libjdepend-java libjsch-java liblog4j1.2-java liboro-java libregexp-java libxalan2-java libxml-commons-resolver1.1-java
+下列【新】软件包将被安装：
+  ant ant-optional
+升级了 0 个软件包，新安装了 2 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。
+需要下载 2,270 kB 的归档。
+解压缩后会消耗 3,170 kB 的额外空间。
+您希望继续执行吗？ [Y/n] Y
+
+$ which ant
+/usr/bin/ant
+</code></pre><p>安装完毕.</p>
+<h2 id="maven"><a href="#maven" class="headerlink" title="maven"></a>maven</h2><p>有些库编译需要, 没有什么好说的.</p>
+<pre><code>$ add maven
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+将会同时安装下列软件：
+  junit junit4 libaopalliance-java libapache-pom-java libasm-java libatinject-jsr330-api-java libbsh-java libcdi-api-java
+  libcglib-java libclassworlds-java libcommons-cli-java libcommons-codec-java libcommons-httpclient-java libcommons-io-java
+  libcommons-lang-java libcommons-lang3-java libcommons-logging-java libcommons-net-java libcommons-parent-java libdom4j-java
+  libdoxia-core-java libeasymock-java libeclipse-aether-java libgeronimo-interceptor-3.0-spec-java libguava-java libguice-java
+  libhamcrest-java libhttpclient-java libhttpcore-java libisorelax-java libjaxen-java libjaxp1.3-java libjdom1-java libjetty9-java
+  libjsch-java libjsoup-java libjsr305-java libjzlib-java liblog4j1.2-java libmaven-parent-java libmaven2-core-java
+  libmaven3-core-java libmsv-java libobjenesis-java libplexus-ant-factory-java libplexus-archiver-java libplexus-bsh-factory-java
+  libplexus-cipher-java libplexus-classworlds-java libplexus-classworlds2-java libplexus-cli-java
+  libplexus-component-annotations-java libplexus-component-metadata-java libplexus-container-default-java
+  libplexus-container-default1.5-java libplexus-containers-java libplexus-containers1.5-java libplexus-interactivity-api-java
+  libplexus-interpolation-java libplexus-io-java libplexus-sec-dispatcher-java libplexus-utils-java libplexus-utils2-java
+  libqdox2-java librelaxng-datatype-java libservlet3.1-java libsisu-inject-java libsisu-plexus-java libslf4j-java libwagon-java
+  libwagon2-java libxalan2-java libxbean-java libxerces2-java libxml-commons-external-java libxml-commons-resolver1.1-java
+  libxom-java libxpp2-java libxpp3-java
+建议安装：
+  junit-doc libaopalliance-java-doc libatinject-jsr330-api-java-doc libclassworlds-java-doc libcommons-httpclient-java-doc
+  libcommons-io-java-doc libcommons-lang-java-doc libcommons-lang3-java-doc libavalon-framework-java libcommons-logging-java-doc
+  libexcalibur-logkit-java libcommons-net-java-doc libdom4j-java-doc libeasymock-java-doc libjaxp1.3-java-gcj libjdom1-java-doc
+  jetty9 libjsoup-java-doc libjsr305-java-doc libmail-java liblog4j1.2-java-doc libobjenesis-java-doc libplexus-cipher-java-doc
+  libplexus-classworlds-java-doc libplexus-classworlds2-java-doc libplexus-cli-java-doc libplexus-container-default-java-doc
+  libplexus-interactivity-api-java-doc libplexus-interpolation-java-doc libplexus-sec-dispatcher-java-doc libplexus-utils-java-doc
+  libplexus-utils2-java-doc libqdox2-java-doc testng libwagon-java-doc libxalan2-java-doc libbsf-java libxsltc-java groovy
+  libequinox-osgi-java libosgi-compendium-java libosgi-core-java libqdox-java libspring-beans-java libspring-context-java
+  libspring-core-java libspring-web-java libxerces2-java-doc libxerces2-java-gcj libxml-commons-resolver1.1-java-doc
+  libxom-java-doc
+下列【新】软件包将被安装：
+  junit junit4 libaopalliance-java libapache-pom-java libasm-java libatinject-jsr330-api-java libbsh-java libcdi-api-java
+  libcglib-java libclassworlds-java libcommons-cli-java libcommons-codec-java libcommons-httpclient-java libcommons-io-java
+  libcommons-lang-java libcommons-lang3-java libcommons-logging-java libcommons-net-java libcommons-parent-java libdom4j-java
+  libdoxia-core-java libeasymock-java libeclipse-aether-java libgeronimo-interceptor-3.0-spec-java libguava-java libguice-java
+  libhamcrest-java libhttpclient-java libhttpcore-java libisorelax-java libjaxen-java libjaxp1.3-java libjdom1-java libjetty9-java
+  libjsch-java libjsoup-java libjsr305-java libjzlib-java liblog4j1.2-java libmaven-parent-java libmaven2-core-java
+  libmaven3-core-java libmsv-java libobjenesis-java libplexus-ant-factory-java libplexus-archiver-java libplexus-bsh-factory-java
+  libplexus-cipher-java libplexus-classworlds-java libplexus-classworlds2-java libplexus-cli-java
+  libplexus-component-annotations-java libplexus-component-metadata-java libplexus-container-default-java
+  libplexus-container-default1.5-java libplexus-containers-java libplexus-containers1.5-java libplexus-interactivity-api-java
+  libplexus-interpolation-java libplexus-io-java libplexus-sec-dispatcher-java libplexus-utils-java libplexus-utils2-java
+  libqdox2-java librelaxng-datatype-java libservlet3.1-java libsisu-inject-java libsisu-plexus-java libslf4j-java libwagon-java
+  libwagon2-java libxalan2-java libxbean-java libxerces2-java libxml-commons-external-java libxml-commons-resolver1.1-java
+  libxom-java libxpp2-java libxpp3-java maven
+升级了 0 个软件包，新安装了 80 个软件包，要卸载 0 个软件包，有 2 个软件包未被升级。
+需要下载 27.6 MB 的归档。
+解压缩后会消耗 38.0 MB 的额外空间。
+您希望继续执行吗？ [Y/n] Y
+
+$ which maven
+</code></pre><h2 id="IntelliJ"><a href="#IntelliJ" class="headerlink" title="IntelliJ"></a>IntelliJ</h2><p>直接去 <a href="https://www.jetbrains.com/idea/download/#section=linux" target="_blank" rel="external">页面</a> 下载安装包.</p>
+<pre><code>$ wget https://download.jetbrains.8686c.com/idea/ideaIC-2017.2.3.tar.gz -P Desktop/apps
+$ mkdir Software
+$ tar -xzvf ~/Desktop/apps/ideaIC-2017.2.3.tar.gz -C Software/
+$ cd Software/idea-IC-172.3968.16/bin
+$ ./idea.sh
+</code></pre><p>之后安装时, 它会有一个步骤, 问你是否建立执行脚本, 点击确定即可, 然后可以看到:</p>
+<pre><code>$ which idea
+/usr/local/bin/idea
+
+$ whereis idea
+idea: /usr/local/bin/idea
+
+$ ll /usr/local/bin/idea
+-rwxr-xr-x 1 root root 3111 8月  31 21:58 /usr/local/bin/idea
+
+$ file /usr/local/bin/idea
+/usr/local/bin/idea: Python script, ASCII text executable
+``
+这样就算安装完毕了.
+
+
+
+
+## python
+一般linux是自带2.7版本的python的, 出于某些目的有时候也要安装python3(比如cppman就是需要python3安装), 幸好deepin也自带了.
+</code></pre><p>$ which python<br>/usr/bin/python</p>
+<p>$ whereis python<br>python: /usr/bin/python /usr/bin/python2.7 /usr/bin/python3.5 /usr/bin/python3.5m /usr/lib/python2.7 /usr/lib/python3.5 /etc/python /etc/python2.7 /etc/python3.5 /usr/local/lib/python2.7 /usr/local/lib/python3.5 /usr/include/python2.7 /usr/include/python3.5m /usr/share/python /usr/share/man/man1/python.1.gz</p>
+<p>$ python –version<br>Python 2.7.13</p>
+<pre><code>
+那么先把python2.7交给update-altertives管理再说.
+</code></pre><p>$ sudo update-alternatives –list python<br>update-alternatives: 错误: 无 python 的候选项</p>
+<p>##我个人更喜欢python3<br>$ sudo update-alternatives –install /usr/bin/python python /usr/bin/python3.5 200<br>$ sudo update-alternatives –install /usr/bin/python python /usr/bin/python2.7 100  </p>
+<p>$ sudo update-alternatives –list python<br>/usr/bin/python2.7<br>/usr/bin/python3.5</p>
+<p>$ sudo update-alternatives –display python<br>python - 自动模式<br>  最佳链接版本为 /usr/bin/python3.5<br> 链接目前指向 /usr/bin/python3.5<br>  链接 python 指向 /usr/bin/python<br>/usr/bin/python2.7 - 优先级 100<br>/usr/bin/python3.5 - 优先级 200</p>
+<p>$ python –version<br>Python 3.5.3</p>
+<pre><code>
+还没有完, 你会发现/usr/include/python2.7下面没有多少头文件! 所以还要安装相关的, 必要的库.
+</code></pre><p>$ sudo updatedb<br>$ locate Python.h   #没有结果</p>
+<p>#下面也没有结果<br>$ dpkg –get-selections |grep python-dev</p>
+<p>$ ldconfig -p | grep python-dev<br>  libpython3.5m.so.1.0 (libc6,x86-64) =&gt; /usr/lib/x86_64-linux-gnu/libpython3.5m.so.1.0<br>  libpython3.5m.so (libc6,x86-64) =&gt; /usr/lib/x86_64-linux-gnu/libpython3.5m.so<br>  libpython2.7.so.1.0 (libc6,x86-64) =&gt; /usr/lib/x86_64-linux-gnu/libpython2.7.so.1.0<br>  libpyglib-2.0-python2.7.so.0 (libc6,x86-64) =&gt; /usr/lib/libpyglib-2.0-python2.7.so.0<br>  libboost_python3.so.1.63.0 (libc6,x86-64) =&gt; /usr/local/lib/libboost_python3.so.1.63.0<br>  libboost_python3.so (libc6,x86-64) =&gt; /usr/local/lib/libboost_python3.so<br>  libboost_python.so.1.63.0 (libc6,x86-64) =&gt; /usr/local/lib/libboost_python.so.1.63.0<br>  libboost_python.so (libc6,x86-64) =&gt; /usr/local/lib/libboost_python.so<br>(可以查看库文件, 但不见得有头文件)</p>
+<pre><code>
+所以下面安装一下(Python.h is provided by -dev)
+</code></pre><p>$ add python-dev libboost-python-dev libboost-mpi-python-dev<br>正在读取软件包列表… 完成<br>正在分析软件包的依赖关系树<br>正在读取状态信息… 完成<br>将会同时安装下列软件：<br>  libboost-mpi-python1.62-dev libboost-mpi-python1.62.0 libboost-mpi1.62-dev libboost-mpi1.62.0 libboost-python1.62-dev<br>  libboost-python1.62.0 libboost-serialization1.62-dev libboost-serialization1.62.0 libboost1.62-dev libfabric1 libhwloc-dev<br>  libhwloc-plugins libhwloc5 libibverbs-dev libnuma-dev libopenmpi-dev libopenmpi2 libpsm-infinipath1 libpython-dev<br>  libpython2.7-dev mpi-default-bin mpi-default-dev ocl-icd-libopencl1 openmpi-bin openmpi-common python2.7-dev<br>建议安装：<br>  libboost-graph1.62-dev libboost1.62-doc gccxml libboost-atomic1.62-dev libboost-chrono1.62-dev libboost-context1.62-dev<br>  libboost-coroutine1.62-dev libboost-date-time1.62-dev libboost-exception1.62-dev libboost-fiber1.62-dev<br>  libboost-filesystem1.62-dev libboost-graph-parallel1.62-dev libboost-iostreams1.62-dev libboost-locale1.62-dev<br>  libboost-log1.62-dev libboost-math1.62-dev libboost-program-options1.62-dev libboost-random1.62-dev libboost-regex1.62-dev<br>  libboost-signals1.62-dev libboost-system1.62-dev libboost-test1.62-dev libboost-thread1.62-dev libboost-timer1.62-dev<br>  libboost-type-erasure1.62-dev libboost-wave1.62-dev libboost1.62-tools-dev libmpfrc++-dev libntl-dev libhwloc-contrib-plugins<br>  openmpi-doc opencl-icd gfortran<br>下列【新】软件包将被安装：<br>  libboost-mpi-python-dev libboost-mpi-python1.62-dev libboost-mpi-python1.62.0 libboost-mpi1.62-dev libboost-mpi1.62.0<br>  libboost-python-dev libboost-python1.62-dev libboost-python1.62.0 libboost-serialization1.62-dev libboost-serialization1.62.0<br>  libboost1.62-dev libfabric1 libhwloc-dev libhwloc-plugins libhwloc5 libibverbs-dev libnuma-dev libopenmpi-dev libopenmpi2<br>  libpsm-infinipath1 libpython-dev libpython2.7-dev mpi-default-bin mpi-default-dev ocl-icd-libopencl1 openmpi-bin openmpi-common<br>  python-dev python2.7-dev<br>升级了 0 个软件包，新安装了 29 个软件包，要卸载 0 个软件包，有 2 个软件包未被升级。<br>需要下载 40.9 MB 的归档。<br>解压缩后会消耗 185 MB 的额外空间。<br>您希望继续执行吗？ [Y/n] Y</p>
+<p>$ sudo updatedb<br>$ locate Python.h<br>/usr/include/python2.7/Python.h<br>/usr/include/python3.5m/Python.h</p>
+<pre><code>差不多了.
+
+
+
+
+安装pip3工具:
+</code></pre><p>$ add python3-pip<br>[sudo] merlin 的密码：<br>正在读取软件包列表… 完成<br>正在分析软件包的依赖关系树<br>正在读取状态信息… 完成<br>将会同时安装下列软件：<br>  libexpat1-dev libpython3-dev libpython3.5-dev python-pip-whl python3-cffi-backend python3-crypto<br>  python3-cryptography python3-dev python3-idna python3-keyring python3-keyrings.alt python3-pyasn1<br>  python3-secretstorage python3-setuptools python3-wheel python3.5-dev<br>建议安装：<br>  python3-crypto-dbg python-crypto-doc python-cryptography-doc python3-cryptography-vectors libkf5wallet-bin<br>  gir1.2-gnomekeyring-1.0 python3-pykde4 doc-base python-secretstorage-doc python-setuptools-doc<br>下列【新】软件包将被安装：<br>  libexpat1-dev libpython3-dev libpython3.5-dev python-pip-whl python3-cffi-backend python3-crypto<br>  python3-cryptography python3-dev python3-idna python3-keyring python3-keyrings.alt python3-pip python3-pyasn1<br>  python3-secretstorage python3-setuptools python3-wheel python3.5-dev<br>升级了 0 个软件包，新安装了 17 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。<br>需要下载 40.8 MB 的归档。<br>解压缩后会消耗 63.2 MB 的额外空间。<br>您希望继续执行吗？ [Y/n] Y</p>
+<p>$ $ which pip3<br>/usr/bin/pip3</p>
+<pre><code>
+这样就算差不多了, 以后根据自己的需求, 选择安装相应的库即可.
+
+
+
+## 安装pycharm
+
+下载 pycharm
+</code></pre><p>$ wget <a href="https://download.jetbrains.8686c.com/python/pycharm-community-2017.2.2.tar.gz" target="_blank" rel="external">https://download.jetbrains.8686c.com/python/pycharm-community-2017.2.2.tar.gz</a> -P Desktop/apps</p>
+<pre><code>
+安装
+</code></pre><p>$ tar -xzvf Desktop/apps/pycharm-community-2017.2.2.tar.gz -C Software/<br>$ cd Software/pycharm-community-2017.2.2/bin<br>$ ./pycharm.sh</p>
+<pre><code>安装时, 请勾选建立`/usr/local/bin/pycharm`脚本这一项, 然后可以看到
+</code></pre><p>$ which pycharm<br>/usr/local/bin/pycharm</p>
+<p>$ file /usr/local/bin/pycharm<br>/usr/local/bin/pycharm: Python script, ASCII text executable</p>
+<pre><code>
+## golang
+
+一般而言, 选择apt工具就够了 `sudo apt-get install golang`, 但是为了能够实时更新一下, 可以采用源:
+</code></pre><p>sudo add-apt-repository ppa:gophers/go<br>sudo apt-get update<br>sudo apt-get install golang-stable </p>
+<h1 id="go通过-mercurial-版本控制工具管理"><a href="#go通过-mercurial-版本控制工具管理" class="headerlink" title="go通过 mercurial 版本控制工具管理"></a>go通过 mercurial 版本控制工具管理</h1><pre><code>
+我直接安装的:
+</code></pre><p>$ add golang<br>正在读取软件包列表… 完成<br>正在分析软件包的依赖关系树<br>正在读取状态信息… 完成<br>将会同时安装下列软件：<br>  golang-1.7 golang-1.7-doc golang-1.7-go golang-1.7-src golang-doc golang-go golang-src<br>建议安装：<br>  bzr mercurial subversion<br>下列【新】软件包将被安装：<br>  golang golang-1.7 golang-1.7-doc golang-1.7-go golang-1.7-src golang-doc golang-go golang-src<br>升级了 0 个软件包，新安装了 8 个软件包，要卸载 0 个软件包，有 2 个软件包未被升级。<br>需要下载 29.5 MB 的归档。<br>解压缩后会消耗 147 MB 的额外空间。<br>您希望继续执行吗？ [Y/n] Y</p>
+<pre><code>
+之后需要配置一下环境变量:(网上很多配的是错的)
+</code></pre><h2 id="go-related"><a href="#go-related" class="headerlink" title="go related"></a>go related</h2><p>export GOROOT=/usr/lib/go-1.7<br>export GOBIN=$GOROOT/bin<br>export PATH=$GOBIN:$PATH</p>
+<p>export GOPATH=/home/merlin/Desktop/GOPATH</p>
+<p>###for cross-compling: window or linux;  386 or amd64<br>export GOOS=linux<br>export GOARCH=amd64</p>
+<pre><code>
+查看一下配置:
+</code></pre><p>$ go version<br>go version go1.7.4 linux/amd64</p>
+<p>$ source ~/.bashrc</p>
+<p>$ echo $GOPATH<br>/home/merlin/Desktop/GOPATH</p>
+<pre><code>在GOPATH下新建3个目录:(为你的项目)
+* src 存放源码
+* pkg 存放编译生成的文件
+* bin 存放生成的可执行文件
+
+
+
+
+
+
+
+
+
+
+## cppman
+
+我主业C++, 所以马上来配置一下c++的开发环境.
+
+`cppman` 可以实时从cplusplus.com以及cppreference.com上面下载文档的一个小工具. 
+repo的地址是: https://github.com/aitjcize/cppman 
+
+可以直接用apt工具安装
+```shell
+$ search &quot;cppman&quot;
+cppman - C++ 98/11 manual pages for Linux, with source from cplusplus.com
+
+$ add cppman
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+将会同时安装下列软件：
+  python3-bs4 python3-html5lib python3-webencodings
+建议安装：
+  python3-genshi
+下列【新】软件包将被安装：
+  cppman python3-bs4 python3-html5lib python3-webencodings
+升级了 0 个软件包，新安装了 4 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。
+需要下载 321 kB 的归档。
+解压缩后会消耗 1,861 kB 的额外空间。
+您希望继续执行吗？ [Y/n] Y
+
+# 安装完成之后, 要先从网站上缓存页面才可以.
+
+## 切换源
+$ cppman -s cppreference.com
+Source set to `cppreference.com&#39;.
+
+## 缓存
+$ cppman -c
+By default, cppman fetches pages on-the-fly if corresponding page is not found in the cache. The &quot;cache-all&quot; option is only useful if you want to view man pages offline. Caching all contents will take several minutes, do you want to continue [y/N]?
+y
+</code></pre><p>注意它需要装python3, 才行; 但是python是常用的, 所以版本管理还是交给update-alternatives吧.<br>(安装完python3之后再来安装cppman)</p>
+<p>(再缓存<code>cppman -c</code>的时候, 你最好使用一下代理, 否则很容易缓存失败)</p>
+<h2 id="cmake"><a href="#cmake" class="headerlink" title="cmake"></a>cmake</h2><p>像boost, thrift虽然都不适用cmake编译, 但是现在很多流行的库, 比如gtest等, 都是用cmake, 而且相对于make的好, 不需要我多说.</p>
+<p>下面就安装一下cmake.</p>
+<p><code>sudo apt-get install</code> 安装的版本往往比较老, 所以一般需要自己去下载, 然后编译安装.</p>
+<p>下载:  <a href="https://cmake.org/download/" target="_blank" rel="external">https://cmake.org/download/</a><br>或者(<a href="https://github.com/Kitware/CMake" target="_blank" rel="external">https://github.com/Kitware/CMake</a>)</p>
+<pre><code># 直接去官网拿压缩包源码
+$ wget https://cmake.org/files/v3.9/cmake-3.9.1.tar.gz -P Desktop/apps/
+$ cd Desktop/apps
+$ tar -xzvf cmake-3.9.1.tar.gz
+</code></pre><p>编译安装</p>
+<pre><code>$ ./configure
+CMake has bootstrapped.  Now run make.
+</code></pre><h1 id="开始编译"><a href="#开始编译" class="headerlink" title="开始编译"></a>开始编译</h1><p>$ make -j4</p>
+<h1 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h1><p>$ sudo make install</p>
+<pre><code>可以从安装日志中看到, 主要是这三个工具
+</code></pre><p>– Installing: /usr/local/bin/cmake<br>– Installing: /usr/local/bin/ctest<br>– Installing: /usr/local/bin/cpack</p>
+<pre><code>最后删除, 安装包.
+(你不要去下载它的gui客户端呀, 好神经的说)
+
+## qt
+主要包括qtcreator和qt库, 这是它的[官网](https://www.qt.io/download-open-source/), 越来越恶心的官网, 我决定直接用apt工具下载qtcreator, 之后qt核心库再去官网下载.
+</code></pre><p>add qtcreator<br>正在读取软件包列表… 完成<br>正在分析软件包的依赖关系树<br>正在读取状态信息… 完成<br>将会同时安装下列软件：<br>  binfmt-support clang clang-3.8 gdb libbabeltrace-ctf1 libbabeltrace1 libbotan-1.10-1 libc6-dbg<br>  libclang-common-3.8-dev libclang1-3.8 libclang1-3.9 libdw1 libffi-dev libjsoncpp1 libllvm3.8 libobjc-6-dev<br>  libqbscore1.8 libqbsqtprofilesetup1.8 libqt5designercomponents5 libqt5quicktest5 libqt5script5 libtinfo-dev llvm-3.8<br>  llvm-3.8-dev llvm-3.8-runtime qml-module-qtqml-models2 qmlscene qt5-doc qt5-qmltooling-plugins qtbase5-dev-tools<br>  qtbase5-doc qtconnectivity5-doc qtcreator-data qtcreator-doc qtdeclarative5-dev-tools qtdeclarative5-doc<br>  qtgraphicaleffects5-doc qtlocation5-doc qtmultimedia5-doc qtquickcontrols5-doc qtscript5-doc qtsensors5-doc<br>  qtserialport5-doc qtsvg5-doc qttools5-dev-tools qttools5-doc qtwebkit5-doc qtwebkit5-examples-doc qtwebsockets5-doc<br>  qtx11extras5-doc qtxmlpatterns5-dev-tools qtxmlpatterns5-doc<br>建议安装：<br>  gnustep gnustep-devel clang-3.8-doc gdb-doc gdbserver llvm-3.8-doc qtbase5-dev cmake kdelibs5-data subversion<br>下列【新】软件包将被安装：<br>  binfmt-support clang clang-3.8 gdb libbabeltrace-ctf1 libbabeltrace1 libbotan-1.10-1 libc6-dbg<br>  libclang-common-3.8-dev libclang1-3.8 libclang1-3.9 libdw1 libffi-dev libjsoncpp1 libllvm3.8 libobjc-6-dev<br>  libqbscore1.8 libqbsqtprofilesetup1.8 libqt5designercomponents5 libqt5quicktest5 libqt5script5 libtinfo-dev llvm-3.8<br>  llvm-3.8-dev llvm-3.8-runtime qml-module-qtqml-models2 qmlscene qt5-doc qt5-qmltooling-plugins qtbase5-dev-tools<br>  qtbase5-doc qtconnectivity5-doc qtcreator qtcreator-data qtcreator-doc qtdeclarative5-dev-tools qtdeclarative5-doc<br>  qtgraphicaleffects5-doc qtlocation5-doc qtmultimedia5-doc qtquickcontrols5-doc qtscript5-doc qtsensors5-doc<br>  qtserialport5-doc qtsvg5-doc qttools5-dev-tools qttools5-doc qtwebkit5-doc qtwebkit5-examples-doc qtwebsockets5-doc<br>  qtx11extras5-doc qtxmlpatterns5-dev-tools qtxmlpatterns5-doc<br>升级了 0 个软件包，新安装了 53 个软件包，要卸载 0 个软件包，有 5 个软件包未被升级。<br>需要下载 204 MB 的归档。<br>解压缩后会消耗 601 MB 的额外空间。<br>您希望继续执行吗？ [Y/n] Y<br>$ which qtcreator<br>/usr/bin/qtcreator</p>
+<pre><code>之后设置qt库的版本(环境变量), 比如`add libqt4-dev`, 可以在你的`.bashrc`里面, 或者使用`/usr/bin/qtchooser`来设置. 如要需要换最新版本的qt, 可以`sudo apt-get remove qtcreator`进行卸载, 或者purge.
+
+
+
+
+
+
+## boost
+
+玩cpp的, 不装boost?
+你可以用apt工具去装, 比如:
+</code></pre><h1 id="一般安装libboost-dev就行"><a href="#一般安装libboost-dev就行" class="headerlink" title="一般安装libboost-dev就行"></a>一般安装libboost-dev就行</h1><p>sudo apt-get install libboost-all-dev<br>sudo apt-get install libboost-dev</p>
+<h1 id="或者sudo-apt-cache-search-boost搜自己想要的库"><a href="#或者sudo-apt-cache-search-boost搜自己想要的库" class="headerlink" title="或者sudo apt-cache search boost搜自己想要的库"></a>或者sudo apt-cache search boost搜自己想要的库</h1><p>sudo apt-get install mpi-default-dev　　#安装mpi库<br>sudo apt-get install libicu-dev　　　　　#支持正则表达式的UNICODE字符集<br>sudo apt-get install python-dev　　　　　#需要python的话<br>sudo apt-get install libbz2-dev     #失败的话 sudo apt-get update试试</p>
+<pre><code>
+然后日常开发中, 常常用到这个库, 要确定的版本, 最好自己去官网下载安装(linux和vs版都要装).
+
+关于安装, 你可以参考一下, 我这篇文章[boost](http://www.merlinblog.site/2017/06/21/boost.html), 下面快速说:
+下载
+</code></pre><h2 id="我直接从我的远端服务器拷贝了-boost-1-63-0-7z"><a href="#我直接从我的远端服务器拷贝了-boost-1-63-0-7z" class="headerlink" title="我直接从我的远端服务器拷贝了 boost_1_63_0.7z"></a>我直接从我的远端服务器拷贝了 boost_1_63_0.7z</h2><p>$ scp -r merlin@xxxx:/home/merlin/packages/boost_1_63_0.7z ./apps/<br>$ 7z x boost_1_63_0.7z -o.</p>
+<pre><code>
+编译安装:
+</code></pre><p>$ ./bootstrap.sh<br>$ ./b2 –show-libraries<br>The following libraries require building:</p>
+<pre><code>- atomic
+- chrono
+- container
+- context
+- coroutine
+- coroutine2
+- date_time
+- exception
+- fiber
+- filesystem
+- graph
+- graph_parallel
+- iostreams
+- locale
+- log
+- math
+- metaparse
+- mpi
+- program_options
+- python
+- random
+- regex
+- serialization
+- signals
+- system
+- test
+- thread
+- timer
+- type_erasure
+- wave
+</code></pre><h1 id="也就是说-下面编译全是为了上面那些库-下面还是全编译吧"><a href="#也就是说-下面编译全是为了上面那些库-下面还是全编译吧" class="headerlink" title="也就是说, 下面编译全是为了上面那些库(下面还是全编译吧)"></a>也就是说, 下面编译全是为了上面那些库(下面还是全编译吧)</h1><h1 id="如果-b2-–with-atomic-–buildtype-complete-install表示只编译atomic库"><a href="#如果-b2-–with-atomic-–buildtype-complete-install表示只编译atomic库" class="headerlink" title="如果./b2 –with-atomic –buildtype=complete install表示只编译atomic库"></a>如果./b2 –with-atomic –buildtype=complete install表示只编译atomic库</h1><h1 id="注意一下拷贝权限问题"><a href="#注意一下拷贝权限问题" class="headerlink" title="注意一下拷贝权限问题"></a>注意一下拷贝权限问题</h1><p>$ sudo ./b2 –buildtype=complete install</p>
+<pre><code>之后查看一下编译日志:
+</code></pre><p>Component configuration:</p>
+<pre><code>- atomic                   : building
+- chrono                   : building
+- container                : building
+- context                  : building
+- coroutine                : building
+- coroutine2               : building
+- date_time                : building
+- exception                : building
+- fiber                    : building
+- filesystem               : building
+- graph                    : building
+- graph_parallel           : building
+- iostreams                : building
+- locale                   : building
+- log                      : building
+- math                     : building
+- metaparse                : building
+- mpi                      : building
+- program_options          : building
+- python                   : building
+- random                   : building
+- regex                    : building
+- serialization            : building
+- signals                  : building
+- system                   : building
+- test                     : building
+- thread                   : building
+- timer                    : building
+- type_erasure             : building
+- wave                     : building
+</code></pre><pre><code>之后跟着一大堆common.copy把lib和头文件分别拷贝到了, `/usr/local/include`和`/usr/local/lib`下面.
+
+只要不出现`failure`基本可以认定编译, 安装成功了.
+
+
+
+## log4cpp
+
+
+## rapidxml
+这个是常用的库, 不过有个坑需要你调整一下. 详细内容不再叙述, 请参考我的文章 [rapidxml](http://www.merlinblog.site/2017/08/22/rapid-xml.html)
+</code></pre><p>$ wget <a href="https://nchc.dl.sourceforge.net/project/rapidxml/rapidxml/rapidxml%201.13/rapidxml-1.13.zip" target="_blank" rel="external">https://nchc.dl.sourceforge.net/project/rapidxml/rapidxml/rapidxml%201.13/rapidxml-1.13.zip</a><br>$ unzip rapidxml-1.13.zip<br>Archive:  rapidxml-1.13.zip<br>   creating: rapidxml-1.13/<br>  inflating: rapidxml-1.13/license.txt<br>  inflating: rapidxml-1.13/manual.html<br>  inflating: rapidxml-1.13/rapidxml.hpp<br>  inflating: rapidxml-1.13/rapidxml_iterators.hpp<br>  inflating: rapidxml-1.13/rapidxml_print.hpp<br>  inflating: rapidxml-1.13/rapidxml_utils.hpp<br>$ sudo mv rapidxml-1.13 /usr/local/include/rapidxml</p>
+<pre><code>
+
+## rapidjson
+
+全部是头文件的库, 安装起来也比较简单:
+</code></pre><p>$ git clone <a href="https://github.com/miloyip/rapidjson.git" target="_blank" rel="external">https://github.com/miloyip/rapidjson.git</a><br>$ cd rapidjson<br>$ cmake .<br>$ sudo make install</p>
+<pre><code>
+
+
+## protobuffer
+下载
+</code></pre><p>$ git clone <a href="https://github.com/google/protobuf.git" target="_blank" rel="external">https://github.com/google/protobuf.git</a></p>
+<pre><code>
+编译安装:
+</code></pre><p>$ ./autogen.sh<br>$ ./configure<br>$ make<br>$ make check<br>$ sudo make install<br>$ sudo ldconfig # refresh shared library cache.</p>
+<pre><code>(整个过程还是比较顺利的)
+
+
+
+## thrift
+
+
+
+## npm
+
+npm is distributed with Node.js- which means that when you download Node.js, you automatically get npm installed on your computer. 
+可能你不写JavaScript的东西, 不过这个npm被很多其他软件用到, 所以最好你还是装一下(三兄弟一起).
+</code></pre><p>checking for nodejs… no<br>checking for node… no<br>checking for npm… no</p>
+<pre><code>下载并安装(不要使用apt工具, 因为版本都不新)
+</code></pre><p>$ wget <a href="https://nodejs.org/dist/v6.11.2/node-v6.11.2-linux-x64.tar.xz" target="_blank" rel="external">https://nodejs.org/dist/v6.11.2/node-v6.11.2-linux-x64.tar.xz</a> -P  ~/Desktop/apps<br>$ tar -xJvf Desktop/apps/node-v6.11.2-linux-x64.tar.xz -C Software/</p>
+<pre><code>之后配置一下环境变量就可以了:
+</code></pre><h2 id="node-npm-related"><a href="#node-npm-related" class="headerlink" title="node     npm related"></a>node     npm related</h2><p>export NODE_HOME=/home/merlin/Software/node-v6.11.2-linux-x64<br>export NODE_PATH=$NODE_HOME/lib/node_modules<br>export PATH=$PATH:$NODE_HOME/bin</p>
+<pre><code>
+测试一下安装工作:
+</code></pre><p>$ npm -v<br>3.10.10</p>
+<p>$ node -v<br>v6.11.2</p>
+<pre><code>
+
+## 开发文档
+一般使用的就是 glibc-doc 和 manpages-posix-dev.
+</code></pre><p>$ add glibc-doc<br>$ add glibc-doc-reference<br>$ add manpages-dev<br>$ add manpages-posix<br>$ add manpages-posix-dev</p>
+<pre><code>
+
+## 其他软件
+
+### gitk
+一般我熟悉的项目, 我直接用[git-emacs](git clone https://github.com/tsgates/git-emacs.git ):
+提交等写入操作, 使用git-emacs.
+</code></pre><p>;;git-emacs<br>(add-to-list ‘load-path “/path/to/git-emacs/“)<br>(require ‘git-emacs)</p>
+<pre><code>如果是别人的项目, 要我接手或者帮忙找错, 那么我直接使用gitk: `M-x gitk`
+(阅读建议使用 `gitk`)
+</code></pre><p>add gitk<br>正在读取软件包列表… 完成<br>正在分析软件包的依赖关系树<br>正在读取状态信息… 完成<br>将会同时安装下列软件：<br>  libtk8.6 tcl tcl8.6 tk tk8.6<br>建议安装：<br>  git-doc tcl-tclreadline<br>下列【新】软件包将被安装：<br>  gitk libtk8.6 tcl tcl8.6 tk tk8.6<br>升级了 0 个软件包，新安装了 6 个软件包，要卸载 0 个软件包，有 2 个软件包未被升级。<br>需要下载 1,757 kB 的归档。<br>解压缩后会消耗 4,101 kB 的额外空间。<br>您希望继续执行吗？ [Y/n] Y</p>
+<p>$ which gitk<br>/usr/bin/gitk</p>
+<pre><code>
+运行的时候, 切换到相应的库目录里面, 然后`gitk`, 例如我查看别人的库:
+![]()
+
+
+
+### htop
+资源监控器
+
+### understand
+[Scientific Toolworks Understand](http://blog.csdn.net/p942005405/article/details/53639970)
+源码查看器(和gtags, source in sight类似)
+
+
+## remarkable
+专门用于写markdown, 导出到pdf的编辑器.
+</code></pre><h1 id="安装的时候-先把python切换到2-7版本"><a href="#安装的时候-先把python切换到2-7版本" class="headerlink" title="安装的时候, 先把python切换到2.7版本"></a>安装的时候, 先把python切换到2.7版本</h1><p>$ add remarkable<br>正在读取软件包列表… 完成<br>正在分析软件包的依赖关系树<br>正在读取状态信息… 完成<br>将会同时安装下列软件：<br>  gir1.2-javascriptcoregtk-3.0 gir1.2-soup-2.4 gir1.2-webkit-3.0 libjavascriptcoregtk-3.0-0 libqt5xmlpatterns5<br>  libwebkitgtk-3.0-0 libyaml-0-2 python3-markdown python3-pygments python3-yaml wkhtmltopdf<br>下列【新】软件包将被安装：<br>  gir1.2-javascriptcoregtk-3.0 gir1.2-soup-2.4 gir1.2-webkit-3.0 libjavascriptcoregtk-3.0-0 libqt5xmlpatterns5<br>  libwebkitgtk-3.0-0 libyaml-0-2 python3-markdown python3-pygments python3-yaml remarkable wkhtmltopdf<br>升级了 0 个软件包，新安装了 12 个软件包，要卸载 0 个软件包，有 5 个软件包未被升级。<br>需要下载 12.3 MB 的归档。<br>解压缩后会消耗 53.3 MB 的额外空间。<br>您希望继续执行吗？ [Y/n] Y</p>
+<h1 id="安装成功"><a href="#安装成功" class="headerlink" title="安装成功"></a>安装成功</h1><p>$ which remarkable<br>/usr/bin/remarkable</p>
+<pre><code>配置一下
+</code></pre><h2 id="remarkable-u-could-add-amp-to-run"><a href="#remarkable-u-could-add-amp-to-run" class="headerlink" title="remarkable (u could add &amp; to run)"></a>remarkable (u could add &amp; to run)</h2><p>alias md=’nohup remarkable’</p>
+<pre><code>然后运行一下, 功能正常
+</code></pre><p>$ md read.md &amp;</p>
+<pre><code>
+
+
+
+### vistual studio code
+我原来是用remarkable打开markdown文件, 后来发现这个vistual studio code越来越强大, 就直接用它了.
+直接去[官网](https://code.visualstudio.com/)下载deb安装包, 安装即可.
+</code></pre><p>$ sudo dpkg -i code_1.15.1-1502903936_amd64.deb<br>$ which code<br>/usr/bin/code<br>``</p>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>当初把 Mac pro 15 卖掉的原因就是, 我已经非常熟悉Ubuntu了, 没必要在改变习惯, 使用homebrew等其他软件, 并且机器的配置文件位置我也习惯了. 所以即便是换系统, 也会和Ubuntu搭边儿, 正好deepin, 感觉不错哦.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Deepin Linux">Deepin Linux</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Deepin Linux">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

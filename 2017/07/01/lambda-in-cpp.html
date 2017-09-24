@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>lambda-in-cpp | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="lambda表达式, 感觉不错">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lambda-in-cpp">
+<meta property="og:url" content="localhost:4000/2017/07/01/lambda-in-cpp.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="lambda表达式, 感觉不错">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/lambda1.jpg">
+<meta property="og:updated_time" content="2017-09-24T05:03:11.719Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="lambda-in-cpp">
+<meta name="twitter:description" content="lambda表达式, 感觉不错">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/lambda1.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#闭包"><span class="toc-number">2.1.</span> <span class="toc-text">闭包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命名"><span class="toc-number">2.2.</span> <span class="toc-text">命名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#详细语法"><span class="toc-number">2.3.</span> <span class="toc-text">详细语法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>lambda-in-cpp</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-01</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>你知道的, 像函数指针, 函数对象(functor)这类都是非常方便的用于回调, 由于解耦的方式; 那么为什么还要弄一个lambda?</p>
+<blockquote>
+<p>因为这是 C++, 这理由充分不?</p>
+</blockquote>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/lambda1.jpg" alt="post-cover"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>函数指针, 灵活, 但是危险, 因为没有类型安全检查, 或者你可以按照自己的意愿进行强转.<br>函数对象, 或者仿函数, 个人觉得麻烦, 虽然我可以按照面向对象的方式传递一个对象, 但是我为之付出的代价是 <code>operator()()</code> 以及定义一个类.</p>
+<p>其实我只是想传递一个代码块儿, 在预定的条件触发下, 做一些我指定的操作, 那为什么不弄个匿名函数呢? lambda现身了, 好听的 <code>函数式编程</code> 来了.</p>
+<p>最初体验lambda表达式时在 groovy 这门 <code>domain specific language</code> 里, 不过它语法太过简单(没有太多强制书写rules), 所以可读性差(特别是代码复杂的时候).</p>
+<p>然后到了 c++ 这里, 其实也差不多, 也就这个样了, 来看看 C++ 中的语法和使用吧.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><p>直接上代码: (简单的案例代码)<br>(注意编译方式 <code>g++ -std=c++11 -g -Wall main.cpp -o main</code>)</p>
+<pre><code class="c++">#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+#include &lt;functional&gt;
+#include &lt;vector&gt;
+
+
+
+int main(void)
+{
+  std::vector&lt;int&gt; v{1,2,3,4,5,6};
+  int x = 5;
+
+
+  //std::vector&lt;int&gt;::iterator 
+  auto new_end = std::remove_if(v.begin(), v.end(), 
+                [x](int n) { return n &lt; x; });
+  auto old_end = v.end();
+
+  v.erase(new_end, old_end);
+
+  std::cout &lt;&lt; &quot;v: &quot;;
+  for (auto i: v) {
+    std::cout &lt;&lt; i &lt;&lt; &#39; &#39;;
+  }
+  std::cout &lt;&lt; std::endl;
+
+
+  return 0;
+}
+</code></pre>
+<p>看到啦 </p>
+<pre><code class="c++">[x](int n){
+ return n&lt;x;
+}
+</code></pre>
+<p>这段匿名 <code>闭包(closure)</code> 替代了原来的 <code>一元谓词函数</code> .</p>
+<h2 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h2><p>lambda表达式其实就是一段匿名的闭包逻辑, 也可以称为匿名函数.<br>但是它能不能被命名呢? 可以, 如果你要多次使用这样的闭包逻辑的话(但是这是愚蠢的, 如果你要名字, 可以直接写一个函数呀)</p>
+<ul>
+<li>方法1 : auto<br>使用 <code>auto</code> 自行推断多好.<pre><code class="c++">auto func = [](int i) { return ++i; };
+std::cout &lt;&lt; &quot;func: &quot; &lt;&lt; func(6) &lt;&lt; std::endl;
+</code></pre>
+</li>
+<li>方法2 : std::function<br>利用可调用函数对象的形式绑定<pre><code class="c++">std::function&lt;int(int)&gt; func = [](int i) { return ++i; };
+std::cout &lt;&lt; &quot;func: &quot; &lt;&lt; func(6) &lt;&lt; std::endl;
+</code></pre>
+</li>
+</ul>
+<p>果然还是觉得很傻, 劝你不要这样, 除非吧, 你要用 <code>std::function</code> 统一调用的形式.</p>
+<h2 id="详细语法"><a href="#详细语法" class="headerlink" title="详细语法"></a>详细语法</h2><p>详细语法你可以参考 cppreference手册, 我这里简单的说吧.</p>
+<p>完整的语法:</p>
+<pre><code class="c++">[ capture ] ( params ) mutable exception attribute -&gt; ret { body }
+</code></pre>
+<p>但是其中很多部分都是可以省略的, 就像我喜欢省略返回值类型一样:</p>
+<pre><code class="c++">[ capture ] ( params ) -&gt; ret { body }   //省略限定
+[ capture ] ( params ) { body }  //省略返回值类型
+[ capture ] { body }  //参数,返回值都省略
+</code></pre>
+<p>劝你还是写完整的吧.</p>
+<p>详细说明:</p>
+<ul>
+<li>省略限定时, 该类型的表达式不能改捕获 “capture” 列表中的值; 相当于一个const的闭包(默认就是不改变捕获对象的, 因为捕获对象属于外部域)</li>
+<li>省略返回值时, 按照如下规则推断:<ul>
+<li>如果包含了 return 语句, 则该 lambda 表达式的返回类型由 return 语句的返回类型确定</li>
+<li>如果没有 return 语句,则类似 void f(…) 函数</li>
+</ul>
+</li>
+<li>省略了参数列表，类似于无参函数 f()</li>
+</ul>
+<p>限定列表的说明:</p>
+<ul>
+<li>mutable 修饰符说明 lambda 表达式体内的代码可以修改被捕获的变量，并且可以访问被捕获对象的 non-const 方法</li>
+<li>exception 说明 lambda 表达式是否抛出异常(noexcept)，以及抛出何种异常，类似于void f() throw(X, Y)</li>
+<li>attribute 用来声明属性</li>
+</ul>
+<p>capture列表说明: (就相当于外部传递给内部的实参)</p>
+<ul>
+<li><code>[a,&amp;b]</code> a变量以值的方式呗捕获，b以引用的方式被捕获</li>
+<li><code>[this]</code> 以值的方式捕获 this 指针</li>
+<li><code>[&amp;]</code> 以引用的方式捕获所有的外部自动变量</li>
+<li><code>[=]</code> 以值的方式捕获所有的外部自动变量</li>
+<li><code>[]</code> 不捕获外部的任何变量</li>
+</ul>
+<p>params 指定 lambda 表达式的参数, 就相当于形参呀. </p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>其实 lambda 表达式本身没有多少内容, 但是带来的改变却很大.<br>然而 C++ 做同一件事儿的方式从来都是多种多样的, 就看你怎么选了.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="lambda-in-cpp">lambda-in-cpp</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="lambda-in-cpp">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

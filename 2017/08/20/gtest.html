@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Gtest | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="推荐自动化测试框架GoogleTest">
+<meta name="keywords" content="cpp,开发管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gtest">
+<meta property="og:url" content="localhost:4000/2017/08/20/gtest.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="推荐自动化测试框架GoogleTest">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/test_case.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/gtest_windows.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/gtest_include.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/gtest_lib.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/gtest_linker_input.jpg">
+<meta property="og:updated_time" content="2017-09-24T07:16:11.223Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Gtest">
+<meta name="twitter:description" content="推荐自动化测试框架GoogleTest">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/test_case.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#介绍"><span class="toc-number">2.1.</span> <span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#框架"><span class="toc-number">2.1.1.</span> <span class="toc-text">框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#架构"><span class="toc-number">2.1.2.</span> <span class="toc-text">架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优劣势"><span class="toc-number">2.1.3.</span> <span class="toc-text">优劣势</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.2.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux平台"><span class="toc-number">2.2.1.</span> <span class="toc-text">Linux平台</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#window平台"><span class="toc-number">2.2.2.</span> <span class="toc-text">window平台</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置环境"><span class="toc-number">2.2.3.</span> <span class="toc-text">配置环境</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主要内容"><span class="toc-number">2.3.</span> <span class="toc-text">主要内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#主函数"><span class="toc-number">2.3.1.</span> <span class="toc-text">主函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#断言宏"><span class="toc-number">2.3.2.</span> <span class="toc-text">断言宏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#事件化机制"><span class="toc-number">2.3.3.</span> <span class="toc-text">事件化机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参数化"><span class="toc-number">2.3.4.</span> <span class="toc-text">参数化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#死亡测试"><span class="toc-number">2.3.5.</span> <span class="toc-text">死亡测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行参数"><span class="toc-number">2.3.6.</span> <span class="toc-text">运行参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内部实现"><span class="toc-number">2.4.</span> <span class="toc-text">内部实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#研发测试"><span class="toc-number">2.5.</span> <span class="toc-text">研发测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Gtest</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-08-20</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/开发管理/">开发管理</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>以前写过一个 <a href="http://www.merlinblog.site/2017/07/06/tdd.html" target="_blank" rel="external">TDD</a>, 当你的用例全部通过了测试, 你的代码写就写完了.</p>
+<p>如果你只是一个人编码或者只有少数的测试用例, 那么就不会觉得一个个测试去维护的痛苦; 而一个小组的人, 所有人提交上来的代码, 都要先跑一下相关的测试用例, 才能上传, 此时就需要一个自动化的测试框架.</p>
+<p>这方面有CppUnit, Gtest, 不过Gest优势明显. 本文主要总结Gtest(gooel mock暂时不涉及, 文本也不会教你如何去写测试用例). (尽管gtest-runner这种带有GUI的框架, 但是Gtest是其根本)</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>Google test:</p>
+<p>下面简称 gtest, 比较老牌的用于自动化继承测试的框架, 全平台支持.<br>采用成熟框架的好处是不用维护测试框架.</p>
+<p>测试框架, 可以结合CLog系统一起使用吗.</p>
+<p>使用gtest的成熟项目有:</p>
+<ul>
+<li>Chromium</li>
+<li>LLVM</li>
+<li>Protocol Buffers</li>
+<li>Open CV</li>
+</ul>
+<p>使用gtest应该不少于使用cmake的.</p>
+<p>repo地址: <a href="https://github.com/google/googletest" target="_blank" rel="external">https://github.com/google/googletest</a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h3><p>测试框架帮我们提供了 case 的管理，执行，断言集，运行参数，全局事件工作，所有的这些使得我们只需关注：于对于特定的输入，被测对象的返回是否正常. (但是编写测试用例还是我们自己做). 当然结合单元测试, 还有一些开发方法(Approach to Unit Testing):</p>
+<ul>
+<li>Test-driven development</li>
+<li>Extreme programming</li>
+</ul>
+<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>该部分参考wiki.<br>一般的测试框架的基本架构:(下图中先忽略TestSuite, 下图并不太完整)<br><img src="http://omotkhw3y.bkt.clouddn.com/test_case.jpg" alt=""></p>
+<p>如上图所示，单测框架中通常包括TestRunner, Test, TestResult, TestCase, TestSuite, TestFixture六个组件。</p>
+<ul>
+<li>TestRuner：负责驱动单元测试用例的执行，汇报测试执行的结果, 从而简化测试(主调程序)</li>
+<li>TestFixture：以测试套件的形式提供setUp()和tearDown()方法, 保证两个test case之间的执行是相互独立, 互不影响的.(前置条件)</li>
+<li>TestResult：这个组件用于收集每个test case的执行结果</li>
+<li>Test：作为TestSuite和TestCase的父类暴露run()方法为TestRunner调用</li>
+<li>TestCase：暴露给用户的一个类，用户通过继承TestCase，编写自己的测试用例逻辑</li>
+<li>TestSuite：提供suite功能管理testCase</li>
+<li>Assertions: 断言预测.(预言正确,继续执行; 语言错误,抛出异常,终止执行)</li>
+<li>Test Execution: 独立测试子程序或者套件程序</li>
+<li>Test Result Formatter: 产生人可读的规整日志还是XML.</li>
+</ul>
+<p>正因为相似的体系结构，所以大多数单元测试框架都提供了类似的功能和使用方法。</p>
+<p>那么在单测中引入单元测试框架会带来什么好处，在现有单元测试框架下还会存在什么样不能解决的问题呢？</p>
+<h3 id="优劣势"><a href="#优劣势" class="headerlink" title="优劣势"></a>优劣势</h3><p>优势</p>
+<p>降低编写单元测试的难度:<br>在单元测试中引入单测框架使得编写单测用例时，不需要再关注于如何驱动case的执行，如何收集结果，如何管理case集，只需要关注于如何写好单个测试用例即可；同时，在一些测试框架中通过提供丰富的断言集，公用方法，以及运行参数使得编写单个testcase的过程得到了最大的简化。</p>
+<p>gtest在xUnit架构的基础上增加了很多特性:</p>
+<pre><code>1. Test discovery
+2. A rich set of assertions (including User-defined)
+3. Death tests
+4. Fatal and non-fatal failures
+5. value/type parameterized tests
+6. various options for running the tests
+7. XML test report generation
+</code></pre><p>当我没有用过的时候, 我也不知道它到底在说啥, 不过用多了就好了.<br>(你可以参考一下docs目录下的相关文档)</p>
+<p>劣势</p>
+<p>单元测试本身不能解决如何编写的问题: (反而增加了系统复杂度)<br>我在单元测试框架中写一个TestCase，与我单独写一个cpp文件在main()方法里写测试代码有什么本质却别吗？用了单元测试框架，并没有解决我在对复杂系统做单测时遇到的问题。<br>没错，对于单个case这两者从本质上说是没有区别的。单元测试框架本身并没有告诉你如何去写TestCase，在这一点上他是没有提供任何帮助的。所以对于一些复杂的场景，只用单元测试框架是有点多少显得无能为力的。</p>
+<p>适用场景有限:<br>使用单元测试框架往往适用于以下场景的测试：单个函数，一个class，或者几个功能相关class的测试，对于纯函数测试，接口级别的测试尤其适用。但是，对于一些复杂场景, 如:</p>
+<ul>
+<li>被测对象依赖复杂，甚至无法简单new出这个对象</li>
+<li>对于一些failure场景的测试</li>
+<li>被测对象中涉及多线程合作</li>
+<li>被测对象通过消息与外界交互的场景<br>(gtest只是一定程度上解决了)<br>单纯依赖单测框架是无法实现单元测试的，而从某种意义上来说，这些场景反而是测试中的重点。以分布式系统的测试为例，class 与 function级别的单元测试对整个系统的帮助不大，当然，这种单元测试对单个程序的质量有帮助；分布式系统测试的要点是测试进程间的交互：一个进程收到客户请求，该如何处理，然后转发给其他进程；收到响应之后，又修改并应答客户；同时分布式系统测试中通常更关注一些异常路径的测试，这些场景才是测试中的重点，也是难点所在。(Mock方法的引入通常能帮助我们解决以上场景中遇到的难题)</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="Linux平台"><a href="#Linux平台" class="headerlink" title="Linux平台"></a>Linux平台</h3><p>下载源码, 编译安装:</p>
+<pre><code class="bash">$ git clone https://github.com/google/googletest
+$ cmake .
+$ make 
+$ sudo make install
+</code></pre>
+<p>当你下载完源码, 进入 <code>googletest目录</code>, 在linux平台下, 只有4个目录是需要的:</p>
+<ul>
+<li>include</li>
+<li>make</li>
+<li>samples</li>
+<li>src</li>
+</ul>
+<p>安装日志大致如下:</p>
+<pre><code>Install the project...
+-- Install configuration: &quot;&quot;
+-- Installing: /usr/local/lib/libgtest.a
+-- Installing: /usr/local/lib/libgtest_main.a
+-- Installing: /usr/local/include/gtest
+-- Installing: /usr/local/include/gtest/gtest-typed-test.h
+-- Installing: /usr/local/include/gtest/gtest-death-test.h
+-- Installing: /usr/local/include/gtest/gtest-message.h
+-- Installing: /usr/local/include/gtest/gtest-param-test.h
+-- Installing: /usr/local/include/gtest/gtest-test-part.h
+-- Installing: /usr/local/include/gtest/gtest-printers.h
+-- Installing: /usr/local/include/gtest/gtest_pred_impl.h
+-- Installing: /usr/local/include/gtest/gtest.h
+-- Installing: /usr/local/include/gtest/gtest-param-test.h.pump
+-- Installing: /usr/local/include/gtest/gtest_prod.h
+-- Installing: /usr/local/include/gtest/internal
+-- Installing: /usr/local/include/gtest/internal/gtest-param-util-generated.h.pump
+-- Installing: /usr/local/include/gtest/internal/gtest-tuple.h.pump
+-- Installing: /usr/local/include/gtest/internal/gtest-internal.h
+-- Installing: /usr/local/include/gtest/internal/gtest-filepath.h
+-- Installing: /usr/local/include/gtest/internal/custom
+-- Installing: /usr/local/include/gtest/internal/custom/gtest-printers.h
+-- Installing: /usr/local/include/gtest/internal/custom/gtest.h
+-- Installing: /usr/local/include/gtest/internal/custom/gtest-port.h
+-- Installing: /usr/local/include/gtest/internal/gtest-type-util.h
+-- Installing: /usr/local/include/gtest/internal/gtest-linked_ptr.h
+-- Installing: /usr/local/include/gtest/internal/gtest-death-test-internal.h
+-- Installing: /usr/local/include/gtest/internal/gtest-param-util-generated.h
+-- Installing: /usr/local/include/gtest/internal/gtest-tuple.h
+-- Installing: /usr/local/include/gtest/internal/gtest-string.h
+-- Installing: /usr/local/include/gtest/internal/gtest-port-arch.h
+-- Installing: /usr/local/include/gtest/internal/gtest-param-util.h
+-- Installing: /usr/local/include/gtest/internal/gtest-type-util.h.pump
+-- Installing: /usr/local/include/gtest/internal/gtest-port.h
+-- Installing: /usr/local/include/gtest/gtest-spi.h
+</code></pre><p>主要是安装:<br><code>/usr/local/lib/</code> 库文件 libgtest.a 和 <code>/usr/local/include/gtest</code> 相关头文件.</p>
+<h3 id="window平台"><a href="#window平台" class="headerlink" title="window平台"></a>window平台</h3><p>window平台更加简单, 而且不用你编写makefile文件, 你需要关心两件事儿:</p>
+<ul>
+<li>如果把gtest编译成静态库</li>
+<li>如果在你的单元测试项目中引用</li>
+</ul>
+<p>请去下载　release 版本: <a href="https://github.com/google/googletest/releases" target="_blank" rel="external">https://github.com/google/googletest/releases</a></p>
+<p>下面给出两种方法(都是编译静态库), 它们针对性不同.</p>
+<p>一、 直接利用源码目录中的 msvc 工程<br>首先把源码加压到一个合适的位置, 因为里面的源文件要被引用到的, 打开 <code>D:\googletest-release-1.7.0\msvc\gtest.sln</code> solution文件.<br><img src="http://omotkhw3y.bkt.clouddn.com/gtest_windows.jpg" alt="静态库"></p>
+<p>可以看到, 当你打开这个工程的时候, 里面的4个项目全局是静态库, 话不多说, 编译吧, debug&amp;release版本各一份(用于项目工程的时候, 两份lib都要拷贝). 很幸运, 没有报错.</p>
+<p>(如果报错 <code>error C2977 &quot;std::tuple&quot; too many template arguments</code> 解决方法就是在每隔工程（project）的属性中的C++  –&gt; Preprocessor （预处理）–&gt; preprocessor defination （预处理定义）中增加 <code>_VARIADIC_MAX=10</code>)</p>
+<p>把编译出的release版本的gtest.lib, gtest_main.lib和debug版本的gtestd.lib, gtest_maind.lib 都放到gtest根目录的lib文件夹下(lib和include位于同一级)</p>
+<p>为了方便使用, 配置环境变量 <code>GTEST = D:\Program Files\gtest-1.6.0</code> ; 当然你不配置, 一会儿引用的时候, 选择正确的路径就可以了. 也就是说, 这个工程, 完全就是为了创建这个库的. 后面你再创建项目, 然后引用gtest的头文件和库即可.<br>(这一种也是比较推荐的)</p>
+<p>二、把gtest作为静态库子项目包含进入你的正式项目</p>
+<p>这么做, 可以在unit test项目里面直接引用gtest静态库项目, 和你的主项目, 并且编译release或者debug版本都很方便, 灵活.</p>
+<hr>
+<p>下面我以第一种方式的基础, 测试一下, 是否安装成功.</p>
+<ul>
+<li>新建一个win32控制台项目(解决方案), 选择空项目(不要预编译头), 例如叫”MainProject”, 这个项目里的源码是要被测试的</li>
+<li><p>然后在”MainProject”中添加相关的自己的源码, 下面我给很简单的例子:</p>
+<pre><code class="c++">//sample.h
+#pragma once  
+int fun(int a, int b);  
+
+/*--------------------*/
+
+//sample.cpp
+#include&quot;sample.h&quot;  
+int fun(int a, int b)    
+{    
+  return (a-b);    
+}
+</code></pre>
+<p>很简单的俩文件.</p>
+</li>
+<li>修改你的MainProject, 不管它原来是哪种类型的项目;测试的时候修改为静态库,并且运行库设置为MTd<br><code>项目属性 -&gt; 配置属性 -&gt; C/C++ -&gt; 代码生成 -&gt; 运行库</code> 为静态库<code>多线程调试(/MTd)</code></li>
+<li>然后在该解决方案里, 再添加一个项目”GTest”,也是win32控制台项目(不要预编译头), 空项目;</li>
+<li>配置项目”Gtest”的相关头文件和库文件路径, 并引用项目”MainProject”(在添加-&gt;引用里面可以引用).<br><img src="http://omotkhw3y.bkt.clouddn.com/gtest_include.jpg" alt="include"><br><img src="http://omotkhw3y.bkt.clouddn.com/gtest_lib.jpg" alt="lib"><br><img src="http://omotkhw3y.bkt.clouddn.com/gtest_linker_input.jpg" alt="linker_input"><br>当然如果你配置了Gtest环境变量, 可以直接使用 <code>$(Gtest)</code> 进行目录引用</li>
+<li>配置GTest运行库<code>项目属性 -&gt; 配置属性 -&gt; C/C++ -&gt; 代码生成 -&gt; 运行库</code> 为静态库<code>多线程调试(/MTd)</code></li>
+<li>在Gtest中添加相关的测试用例文件吧<br>```c++<br>#include <gtest gtest.h=""><br>#include “../MainProject/sample.h”</gtest></li>
+</ul>
+<p>//包含头文件的时候, 一定注意, 当前是在Gtest的目录下</p>
+<p>TEST(fun, case1)<br>{<br>    EXPECT_LT(-2, fun(1, 2));<br>    EXPECT_EQ(-1, fun(1, 2));</p>
+<pre><code>ASSERT_LT(-2, fun(1, 2));
+ASSERT_EQ(-1, fun(1, 2));
+</code></pre><p>}</p>
+<p>int main(int argc, char* argv[])<br>{<br>    ::testing::InitGoogleTest(&amp;argc, argv);<br>    return RUN_ALL_TESTS();<br>}</p>
+<pre><code>运行一下:
+![run](http://omotkhw3y.bkt.clouddn.com/gtest_run.jpg)
+
+
+补充VStudio的坑:
+
+&gt; 在一个vs解决方案中，一个可执行项目依赖多个lib项目的情况下，经常出现此类问题，原因在默认运行时库的引用上。一般情况下，我会首先打开各个项目的属性查看如下选项：项目--属性--配置属性--C/C++--代码生成--运行时库（有/MT，/MTd，/MD，/MDd四个选项, M代表Multi-thead, T代表static, D代表Dynamic）必须查看所有项目使用的库都是相同的，不同的话就修改成相同的吧
+
+
+
+
+
+下面的讲解, 都是基于Linux平台了.
+
+## Linux下配置
+
+跑一下原生的sample, 然后配置自己的环境.
+
+### 原生sample
+
+```bash
+$ cd make
+$ cat Makefile
+</code></pre><p>发现这个Makefile是用来编译sample目录下 <code>TESTS = sample1_unittest</code> 的, 所以可以跑一下这个demo:</p>
+<pre><code class="bash">$ make
+g++ -isystem ../include -g -Wall -Wextra -pthread -c ../samples/sample1.cc
+g++ -isystem ../include -g -Wall -Wextra -pthread -c ../samples/sample1_unittest.cc
+g++ -isystem ../include -I.. -g -Wall -Wextra -pthread -c \
+            ../src/gtest-all.cc
+g++ -isystem ../include -I.. -g -Wall -Wextra -pthread -c \
+            ../src/gtest_main.cc
+ar rv gtest_main.a gtest-all.o gtest_main.o
+ar: creating gtest_main.a
+a - gtest-all.o
+a - gtest_main.o
+g++ -isystem ../include -g -Wall -Wextra -pthread -lpthread sample1.o sample1_unittest.o gtest_main.a -o sample1_unittest
+$ ls
+gtest-all.o  gtest_main.a  gtest_main.o  Makefile  sample1.o  sample1_unittest  sample1_unittest.o
+</code></pre>
+<p>运行一下可执行文件即可 <code>./sample1_unittest</code> :</p>
+<pre><code>$ ./sample1_unittest
+Running main() from gtest_main.cc
+[==========] Running 6 tests from 2 test cases.
+[----------] Global test environment set-up.
+[----------] 3 tests from FactorialTest
+[ RUN      ] FactorialTest.Negative
+[       OK ] FactorialTest.Negative (0 ms)
+[ RUN      ] FactorialTest.Zero
+[       OK ] FactorialTest.Zero (0 ms)
+[ RUN      ] FactorialTest.Positive
+[       OK ] FactorialTest.Positive (0 ms)
+[----------] 3 tests from FactorialTest (0 ms total)
+
+[----------] 3 tests from IsPrimeTest
+[ RUN      ] IsPrimeTest.Negative
+[       OK ] IsPrimeTest.Negative (0 ms)
+[ RUN      ] IsPrimeTest.Trivial
+[       OK ] IsPrimeTest.Trivial (0 ms)
+[ RUN      ] IsPrimeTest.Positive
+[       OK ] IsPrimeTest.Positive (0 ms)
+[----------] 3 tests from IsPrimeTest (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 6 tests from 2 test cases ran. (1 ms total)
+[  PASSED  ] 6 tests.
+</code></pre><h3 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h3><p>下面配置自己的开发环境, 以便跑自己的用例, 操作步骤如下:</p>
+<ul>
+<li>创建自己的测试目录</li>
+<li>书写自己的makefile文件</li>
+<li>书写自己的测试用例</li>
+</ul>
+<p>创建自己的测试工程目录:</p>
+<pre><code class="bash">$ mkdir -p test/gtest_test
+$ cd test/gtest_test
+$ mkdir src out
+</code></pre>
+<p>其中src目录是书写测试用例的目录, out目录是中间产物编译输出目录; 其中当前目录的 <code>run_test</code> 是唯一的(执行所有测试的)可执行文件.</p>
+<p>创建并编写makefile:<br>(比源码中的makefile精简很多, 因为没有必要重新编译 libgtest_main.a)</p>
+<pre><code class="bash">$ cd test/gtest_test
+$ touch makefile
+</code></pre>
+<p>makefile 源码如下:</p>
+<pre><code class="makefile">USER_DIR = .
+OUT_DIR = $(USER_DIR)/out
+GTEST_DIR_INCLUDE = /usr/local/include
+
+CPPFLAGS += -isystem -I$(GTEST_DIR_INCLUDE)
+CXXFLAGS += -g -Wall -Wextra -pthread
+
+TESTS = run_test
+
+#gtest lib: libgtest_main.a
+GTEST_LIB = /usr/local/lib/libgtest.a
+
+## our src file ./src/
+USER_SRCS =$(foreach d,$(USER_DIR)/src,$(wildcard $(d)/*.cpp))
+OBJS =$(patsubst %.cpp,%.o,$(USER_SRCS)) # %.o
+
+#$(warning $(USER_SRCS))
+#$(warning $(OBJS))
+
+###################################################
+
+all : $(TESTS)
+
+$(TESTS) : $(OBJS)
+     $(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -lpthread $(GTEST_LIB) -o $@
+     mv $^ $(OUT_DIR)
+
+# OBJS
+#$(OBJS) : $(USER_SRCS)
+./src/%.o : ./src/%.cpp
+      $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $&lt; -o $@
+
+
+.PHONY : clean
+clean :
+      rm -f $(TESTS) $(OUT_DIR)/*.o $(OBJS)
+</code></pre>
+<p>在 src 目录下建立自己的测试用例:</p>
+<p>建立相关的文件</p>
+<pre><code class="bash">$ cd src
+$ touch sqrt.h sqrt.cpp  sqrt_unittest.cpp
+</code></pre>
+<p>下面依次编写相关代码:<br>sqrt.h</p>
+<pre><code class="c++">#pragma once
+
+int sqrt(int x);
+</code></pre>
+<p>sqrt.cpp</p>
+<pre><code class="c++">#include &quot;sqrt.h&quot;
+
+//不借助库函数
+//利用 x*y, 仅当x=y是最大.
+int sqrt(int x)
+{
+  if(x&lt;=0) return 0;
+  if(x==1) return 1;
+
+  int small = 0, large = x, tmp = x/2;
+
+  /* small----(samll+large)/2----large*/
+  while(small &lt; large) {
+    int a = x/tmp;
+    int b = x/(tmp+1);
+
+    if(a==tmp) return a;
+    if(b==temp+1) return b;
+
+    if(tmp&lt;a &amp;&amp; tmp+1&gt;b) {
+      return tmp;
+    } else if(tmp&lt;a &amp;&amp; tmp+1&lt;b) {
+      small = tmp + 1;
+      tmp = (small + large)/2;
+    } else {
+      large = tmp;
+      tmp = (small + large)/2;
+    }
+  }
+
+  return -1;
+}
+</code></pre>
+<p>sqrt_unittest.cpp<br>(注意文件名, <code>xxx_unittest.cpp</code> 这个文件名并不是固定, 取成别的也无所谓, 只是这样更容易辨认哪一个文件是在测哪个函数而已)</p>
+<pre><code class="c++">#include &quot;sqrt.h&quot;
+#include &lt;gtest/gtest.h&gt;
+
+TEST(SQRTTest, Zero)
+{
+  EXPECT_EQ(0, sqrt(0));
+}
+
+TEST(SQRTTest, Positive)
+{
+  EXPECT_EQ(100, sqrt(10000));
+  EXPECT_EQ(1000, sqrt(1000008));
+  EXPECT_EQ(99, sqrt(9810));
+}
+
+
+TEST(SQRTTest, Negative)
+{
+  int i = -1;
+  EXPECT_EQ(0, sqrt(i));
+}
+
+int main(int argc, char* argv[])
+{
+  ::testing::InitGoogleTest(&amp;argc, argv);
+
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+<p>编译运行一下:</p>
+<pre><code class="bash">$ make
+g++ -isystem -I/usr/local/include -g -Wall -Wextra -pthread -c src/sqrt.cpp -o src/sqrt.o
+g++ -isystem -I/usr/local/include -g -Wall -Wextra -pthread -c src/sqrt_unittest.cpp -o src/sqrt_unittest.o
+g++ -isystem -I/usr/local/include -g -Wall -Wextra -pthread src/sqrt.o src/sqrt_unittest.o -lpthread /usr/local/lib/libgtest.a -o run_test
+mv src/sqrt.o src/sqrt_unittest.o ./out
+
+$ ./run_test 
+[==========] Running 3 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 3 tests from SQRTTest
+[ RUN      ] SQRTTest.Zero
+[       OK ] SQRTTest.Zero (0 ms)
+[ RUN      ] SQRTTest.Positive
+[       OK ] SQRTTest.Positive (0 ms)
+[ RUN      ] SQRTTest.Negative
+[       OK ] SQRTTest.Negative (0 ms)
+[----------] 3 tests from SQRTTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test case ran. (0 ms total)
+[  PASSED  ] 3 tests.
+</code></pre>
+<p>下面开始进行主要内容介绍.</p>
+<hr>
+<h2 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h2><h3 id="主函数"><a href="#主函数" class="headerlink" title="主函数"></a>主函数</h3><p>在包含<code>gtest/gtest.h</code>的源文件中, 要想让Runner运行测试用例, 一般都是这样的套路:</p>
+<pre><code class="c++">#include &lt;gtest/gtest.h&gt;
+
+//若干测试
+
+//主函数
+int main(int argc, char* argv[])
+{
+  ::testing::InitGoogleTest(&amp;argc, argv);
+
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+<p>“::testing::InitGoogleTest(&amp;argc, argv)” : 初始化命令行参数(gtest的测试案例允许接收一系列的命令行参数).<br>“RUN_ALL_TESTS()” : 运行所有测试案例.</p>
+<p>关键是要调用 宏函数 <code>RUN_ALL_TEST()</code>.</p>
+<h3 id="断言宏"><a href="#断言宏" class="headerlink" title="断言宏"></a>断言宏</h3><p>断言的宏可以理解为分为两类:</p>
+<ul>
+<li>ASSERT_* 系列的断言，当检查点失败时，退出当前函数(注意:并非退出当前案例)</li>
+<li>EXPECT_* 系列的断言，当检查点失败时，继续往下执行</li>
+</ul>
+<p>例如:</p>
+<pre><code>// int型比较，预期值：3，实际值：Add(1, 2)
+EXPECT_EQ(3, Add(1, 2));
+</code></pre><p>假如你的Add(1, 2) 结果为4的话，会在结果中输出:</p>
+<pre><code>error: Value of: Add(1, 2)
+  Actual: 4
+Expected:3
+</code></pre><p>如果想输出更具体的信息, 可以在断言宏的调用后面, 直接输出.</p>
+<pre><code class="c++">for (int i = 0; i &lt; x.size(); ++i)
+{
+    //出错是, 可以知道x[i], y[i] 但是无法知道 i, 所以添加 &lt;&lt; 输出信息
+    EXPECT_EQ(x[i], y[i]) &lt;&lt; &quot;Vectors x and y differ at index &quot; &lt;&lt; i;
+}
+</code></pre>
+<p>输出</p>
+<pre><code>error: Value of: y[i]
+  Actual: 4
+Expected: x[i]
+Which is: 3
+Vectors x and y differ at index 2
+</code></pre><hr>
+<p>下面详细介绍各种宏:</p>
+<p>布尔值检查</p>
+<pre><code>Fatal assertion                  Nonfatal assertion    Verifies
+ASSERT_TRUE(condition);          EXPECT_TRUE(condition);    condition is true
+ASSERT_FALSE(condition);      EXPECT_FALSE(condition);    condition is false
+</code></pre><p>我通常用true的这一组.</p>
+<p>带参数的谓词断言宏:<br>在布尔检查的时候, 没有传入参数, 下面这一组可以传入参数.</p>
+<pre><code>//pred1(val1) returns true
+ASSERT_PRED1(pred1, val1);    EXPECT_PRED1(pred1, val1);
+
+//pred2(val1, val2) returns true
+ASSERT_PRED2(pred2, val1, val2);  EXPECT_PRED2(pred2, val1, val2);
+</code></pre><p>(一般最多能传入5个参数)<br>可以看到, 传入参数时, 这里的输出信息也会比较丰富了.</p>
+<p>使用案例:</p>
+<pre><code class="c++">bool MutuallyPrime(int m, int n)
+{
+    return Foo(m , n) &gt; 1;
+}
+
+
+TEST(PredicateAssertionTest, Demo)
+{
+    int m = 5, n = 6;
+    EXPECT_PRED2(MutuallyPrime, m, n);
+}
+</code></pre>
+<p>当失败时，返回错误信息：</p>
+<pre><code>error: MutuallyPrime(m, n) evaluates to false, where
+m evaluates to 5
+n evaluates to 6
+</code></pre><p>对于这样的宏, 输出信息仍不满意可以使用 <code>XXX_PRED_FORMAT1</code>, 例如:</p>
+<pre><code class="c++">testing::AssertionResult 
+AssertFoo(const char* m_expr, const char* n_expr, const char* k_expr, 
+                  int m,              int n,              int k) 
+{
+    if (Foo(m, n) == k)
+        return testing::AssertionSuccess();
+    testing::Message msg;
+    msg &lt;&lt; m_expr &lt;&lt; &quot; 和 &quot; &lt;&lt; n_expr &lt;&lt; &quot; 的最大公约数应该是：&quot; &lt;&lt; Foo(m, n) &lt;&lt; &quot; 而不是：&quot; &lt;&lt; k_expr;
+    return testing::AssertionFailure(msg);
+}
+
+TEST(AssertFooTest, HandleFail)
+{
+    EXPECT_PRED_FORMAT3(AssertFoo, 3, 6, 2);
+}
+</code></pre>
+<p>运行失败时:</p>
+<pre><code>error: 3 和 6 的最大公约数应该是：3 而不是：2
+</code></pre><p>数值型数据检查:</p>
+<pre><code>Fatal assertion                            Nonfatal assertion            Verifies
+ASSERT_EQ(expected, actual);        EXPECT_EQ(expected, actual);    expected == actual
+ASSERT_NE(val1, val2);            EXPECT_NE(val1, val2);        val1 != val2
+ASSERT_LT(val1, val2);            EXPECT_LT(val1, val2);        val1 &lt; val2
+ASSERT_LE(val1, val2);            EXPECT_LE(val1, val2);        val1 &lt;= val2
+ASSERT_GT(val1, val2);            EXPECT_GT(val1, val2);        val1 &gt; val2
+ASSERT_GE(val1, val2);            EXPECT_GE(val1, val2);        val1 &gt;= val2
+</code></pre><p>就是通常所说的比较值.</p>
+<p>更加进阶的是 浮点数检查:</p>
+<pre><code>//the two float values are almost equal
+ASSERT_FLOAT_EQ(expected, actual);    EXPECT_FLOAT_EQ(expected, actual);
+
+//the two double values are almost equal
+ASSERT_DOUBLE_EQ(expected, actual);    EXPECT_DOUBLE_EQ(expected, actual);
+</code></pre><p>字符串检查:</p>
+<pre><code>the two C strings have the same content:
+    ASSERT_STREQ(expected_str, actual_str);    
+    EXPECT_STREQ(expected_str, actual_str);
+
+the two C strings have different content:
+    ASSERT_STRNE(str1, str2);
+    EXPECT_STRNE(str1, str2);
+
+//忽略大小写的一般不常用.
+
+the two C strings have different content, ignoring case:
+    ASSERT_STRCASENE(str1, str2);
+    EXPECT_STRCASENE(str1, str2);
+
+
+the two C strings have the same content, ignoring case:
+    ASSERT_STRCASEEQ(expected_str, actual_str);
+    EXPECT_STRCASEEQ(expected_str, actual_str);
+</code></pre><p><em>STREQ</em>和<em>STRNE</em>同时支持char<em>和wchar_t</em>类型的:</p>
+<pre><code class="c++">TEST(StringTest, StringCmpTest)
+{
+    char* pszCoderZh = &quot;CoderZh&quot;;
+    wchar_t* wszCoderZh = L&quot;CoderZh&quot;;
+    std::string strCoderZh = &quot;CoderZh&quot;;
+    std::wstring wstrCoderZh = L&quot;CoderZh&quot;;
+
+    EXPECT_STREQ(&quot;CoderZh&quot;, pszCoderZh);
+    EXPECT_STREQ(L&quot;CoderZh&quot;, wszCoderZh);
+
+    EXPECT_STRNE(&quot;CnBlogs&quot;, pszCoderZh);
+    EXPECT_STRNE(L&quot;CnBlogs&quot;, wszCoderZh);
+
+
+    //忽略大小写的
+    EXPECT_STRCASEEQ(&quot;coderzh&quot;, pszCoderZh);
+    //EXPECT_STRCASEEQ(L&quot;coderzh&quot;, wszCoderZh);    不支持
+
+    EXPECT_STREQ(&quot;CoderZh&quot;, strCoderZh.c_str());
+    EXPECT_STREQ(L&quot;CoderZh&quot;, wstrCoderZh.c_str());
+}
+</code></pre>
+<p>直接返回的宏:</p>
+<ul>
+<li>直接返回成功：SUCCEED();</li>
+<li>FAIL(); //assert 返回失败</li>
+<li>ADD<em>FAILURE(); //expect 返回失败 (EXPECT</em>*即使返回失败, 也继续执行)</li>
+</ul>
+<p>异常检查:</p>
+<pre><code>//抛出指定异常:
+ASSERT_THROW(statement, exception_type);    EXPECT_THROW(statement, exception_type);
+
+//抛出任何异常:
+ASSERT_ANY_THROW(statement);    EXPECT_ANY_THROW(statement);
+
+//不抛出异常:
+ASSERT_NO_THROW(statement);    EXPECT_NO_THROW(statement);
+</code></pre><p>例如:</p>
+<pre><code class="c++">int Foo(int a, int b)
+{
+    if (a == 0 || b == 0)
+    {
+        throw &quot;don&#39;t do that&quot;;
+    }
+    int c = a % b;
+    if (c == 0)
+        return b;
+    return Foo(b, c);
+}
+
+
+TEST(FooTest, HandleZeroInput)
+{
+    EXPECT_ANY_THROW(Foo(10, 0));
+    EXPECT_THROW(Foo(0, 5), char*);
+}
+</code></pre>
+<p>当然还有其他宏, 不过没有必要一个个列举, 具体可以参考文末的参考资料.</p>
+<h3 id="事件化机制"><a href="#事件化机制" class="headerlink" title="事件化机制"></a>事件化机制</h3><p>事件化机制, 一般就是在 Test Case 之前, 或者之后做一些操作.</p>
+<p>总结一下gtest的事件一共有3种:</p>
+<ul>
+<li>全局的, 所有案例执行前后</li>
+<li>TestSuite级别的, 在某一批案例中第一个案例前, 最后一个案例执行后</li>
+<li>TestCase级别的, 每个TestCase前后</li>
+</ul>
+<p>(TestSuite和TestCase都是用TEST_F宏)</p>
+<p>下面一个个讲解一下:</p>
+<p>全局事件.</p>
+<p>要实现全局事件, 必须写一个类, 继承 <code>testing::Environment</code> 类, 实现里面的SetUp和TearDown方法.</p>
+<ul>
+<li>SetUp()方法在所有案例执行前执行</li>
+<li>TearDown()方法在所有案例执行后执行</li>
+</ul>
+<p>但是, 我们还需要告诉gtest添加这个全局事件, 我们需要在main函数中通过 <code>testing::AddGlobalTestEnvironment</code> 方法将事件注册进来(当然可以多个).</p>
+<p>案例:</p>
+<pre><code class="c++">#include &lt;gtest/gtest.h&gt;
+#include &lt;iostream&gt;
+
+
+class FooEnvironment : public testing::Environment
+{
+public:
+  virtual void SetUp()
+  {
+    std::cout &lt;&lt; &quot;Foo FooEnvironment SetUP&quot; &lt;&lt; std::endl;
+  }
+
+  virtual void TearDown()
+  {
+    std::cout &lt;&lt; &quot;Foo FooEnvironment TearDown&quot; &lt;&lt; std::endl;
+  }
+};
+
+bool returnTest(int a)
+{
+  return a==1?true:false;
+}
+
+
+TEST(TestSuite, True)
+{
+  EXPECT_TRUE(returnTest(1));
+}
+
+
+TEST(TestSuite, False)
+{
+  ASSERT_TRUE(returnTest(0));
+}
+
+
+int main(int argc, char* argv[])
+{
+  testing::AddGlobalTestEnvironment(new FooEnvironment);
+
+  testing::InitGoogleTest(&amp;argc, argv);
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+<p>运行结果:</p>
+<pre><code>[==========] Running 2 tests from 1 test case.
+[----------] Global test environment set-up.
+Foo FooEnvironment SetUP
+[----------] 2 tests from TestSuite
+[ RUN      ] TestSuite.True
+[       OK ] TestSuite.True (1 ms)
+[ RUN      ] TestSuite.False
+src/globalpara_unittest.cpp:33: Failure
+Value of: returnTest(0)
+  Actual: false
+Expected: true
+[  FAILED  ] TestSuite.False (0 ms)
+[----------] 2 tests from TestSuite (1 ms total)
+[----------] Global test environment tear-down
+Foo FooEnvironment TearDown
+
+[==========] 2 tests from 1 test case ran. (1 ms total)
+[  PASSED  ] 1 test.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] TestSuite.False
+
+ 1 FAILED TEST
+</code></pre><p>特别注意, 继承的是 <code>testing::Environment</code> , 实现 <code>SetUp()</code> 和 <code>TearDown()</code> .</p>
+<p>TestSuite事件</p>
+<p>这种事件是针对特定的TestSuit里面的TestCase的. 需要写一个类，继承testing::Test，然后实现两个 <code>静态</code> 方法:</p>
+<ul>
+<li>static void SetUpTestCase() 方法在第一个TestCase之前执行</li>
+<li>static void TearDownTestCase() 方法在最后一个TestCase之后执行</li>
+</ul>
+<pre><code class="c++">//类的名字就是TestSuite的名字
+class FooTest : public testing::Test {
+ protected:
+  static void SetUpTestCase() {
+    shared_resource_ = new ;
+  }
+
+  static void TearDownTestCase() {
+    delete shared_resource_;
+    shared_resource_ = NULL;
+  }
+
+  // Some expensive resource shared by all tests.
+  static T* shared_resource_;
+};
+
+
+//注意这里使用的是TEST_F宏
+TEST_F(FooTest, Test1)
+{
+    // you can refer to shared_resource here 
+}
+
+TEST_F(FooTest, Test2)
+{
+    // you can refer to shared_resource here 
+}
+</code></pre>
+<p>因为是针对一个TestSuite里面的所有用例, 所以不用具体的宏, 而是使用的 <code>TEST_F</code> 宏, 但是你可以在<code>TEST_F</code>里面, 再使用具体的宏.</p>
+<p>最后一个 TestCase事件.<br>TestCase事件是挂在每个案例执行前后的, 实现方式和上面的几乎一样, 不过需要实现的是SetUp方法和TearDown方法:</p>
+<ul>
+<li>SetUp()方法在每个TestCase之前执行</li>
+<li>TearDown()方法在每个TestCase之后执行</li>
+</ul>
+<p>也就是说, 其实它还是绑定在 TestSuite 类里面, 即 TestSuite 的那个类要继承 <code>testing::Test</code> , 只不过执行时机是每一个用例跑起来的时候, 执行的不再是相关的静态方法了, 而是<code>Setup</code>和<code>TearDown</code> .</p>
+<p>因为具体的执行还是和TestSuite类有关, 所以当你写测试用例的时候, 还是要写 <code>TEST_F</code> 宏:</p>
+<pre><code class="c++">class FooCalcTest:public testing::Test
+{
+protected:
+    virtual void SetUp()
+    {
+        m_foo.Init();
+    }
+    virtual void TearDown()
+    {
+        m_foo.Finalize();
+    }
+
+    FooCalc m_foo;
+};
+
+TEST_F(FooCalcTest, HandleNoneZeroInput)
+{
+    EXPECT_EQ(4, m_foo.Calc(12, 16)); 
+}
+
+TEST_F(FooCalcTest, HandleNoneZeroInput_Error)
+{
+    EXPECT_EQ(5, m_foo.Calc(12, 16));
+}
+</code></pre>
+<p>注意, 上面demo中 <code>TEST_F</code> 里面的测试并没有太多实在的意义.</p>
+<p>所有的事件, 一般都是做一些资源的分配, 共享, 释放等工作的, 或者共享执行的某一个方法; 只不过它们针对的测试对象, 时间不太一样. (关于事件的使用技巧, 见下文)</p>
+<p>补充:</p>
+<p>TEST与TEST_F之间的区别:</p>
+<p>首先注意, TestSuite事件和TestCase事件都会使用TEST_F宏, 但是需要重写的virtual方法不同:</p>
+<ul>
+<li>SetUp(), TearDown() 适用于TestCase事件(也就是需要在个TestCase执行之前以及之后做事情, 才需要实现这两个方法)</li>
+<li>SetUpTestCase()和TearDownTestCase()针对TestSuite, 也就是只在第一个TestCase之前和最后一个TestCase之后才执行.</li>
+</ul>
+<p>TEST_F比TEST强一些的地方在于TEST_F实际上会生成一个新类(类名用于TEST_F的第一个参数), 该类有SetUp和TearDown函数, SetUpTestCase和TearDownTestCase函数; 根据需求不同, 实现不同的函数.</p>
+<p>同一个TestCase文件中不能混合使用TEST与TEST_F, 也就是说排他.<br>For each TestCase defined with TEST_F(), Google Test will:</p>
+<ul>
+<li>Create a fresh test fixture at runtime (test fixture针对TestSuite中每一个独立的TestCase)</li>
+<li>Immediately initialize it via SetUp()</li>
+<li>Run the test</li>
+<li>Clean up by calling TearDown()</li>
+<li>Delete the test fixture. Note that different tests in the same test case have different test fixture objects, and Google Test always deletes a test fixture before it creates the next one. Google Test does not reuse the same test fixture for multiple tests. Any changes one test makes to the fixture do not affect other tests.</li>
+</ul>
+<h3 id="参数化"><a href="#参数化" class="headerlink" title="参数化"></a>参数化</h3><p>同一个函数, 多个不同的参数进行调用, 如果没有参数化测试机制, 你的调用可能是这样的.</p>
+<pre><code class="c++">TEST(IsPrimeTest, HandleTrueReturn)
+{
+    EXPECT_TRUE(IsPrime(3));
+    EXPECT_TRUE(IsPrime(5));
+    EXPECT_TRUE(IsPrime(11));
+    EXPECT_TRUE(IsPrime(23));
+    EXPECT_TRUE(IsPrime(17));
+}
+</code></pre>
+<p>即同一个函数 <code>IsPrime</code> 多次进行调用, 就必须写相应的语句, 但是一旦需要测试的参数范围太大, 那么这么做显然不是了.</p>
+<p>gtest就提供了参数化调用机制, 有了参数化机制, 你的调用可以用一个语句, 完成上面的多次调用.</p>
+<p>首先添加一个类, 继承 <code>testing::TestWithParam&lt;T&gt;</code>, 其中T就是你需要参数化的参数类型, 比如上面的例子, 我需要参数化一个int型的参数:</p>
+<pre><code class="c++">//继承的时候, 要实例化模板参数
+class IsPrimeParamTest : public::testing::TestWithParam&lt;int&gt;
+{
+
+};
+</code></pre>
+<p>然后, 再用宏 <code>TEST_P</code> 进行测试: (p代表parameterized)</p>
+<pre><code class="c++">TEST_P(IsPrimeParamTest, HandleTrueReturn)
+{
+    //拿到具体的参数
+    int n =  GetParam();
+    //进行具体的测试
+    EXPECT_TRUE(IsPrime(n));
+}
+</code></pre>
+<p>然后在主函数初始化的时候, 传入参数列表(范围):</p>
+<pre><code class="c++">//testing::Values()生成参数
+INSTANTIATE_TEST_CASE_P(TrueReturn, IsPrimeParamTest, 
+            testing::Values(3, 5, 11, 23, 17));
+</code></pre>
+<p>其中第一个参数 <code>TrueReturn</code> 可以任取, 代表参数化测试的名称, 或称之为prefix(实际名称是:prefix/test_case_name.test.name/index, 其中index是参数的编号, 从0开始); 但是第二个必须是参数化的类名; 第三个参数是参数生成器.</p>
+<p>参数生成函数还有:</p>
+<pre><code>//注意名字空间 testing::
+
+Range(begin, end[, step]): 范围在begin~end之间, 步长为step, 不包括end
+
+Values(v1, v2, ..., vN): v1,v2到vN的值
+
+ValuesIn(container) 或 ValuesIn(begin, end) : 从一个C类型的数组或是STL容器或是迭代器中取值
+
+Bool() : 取false 和 true 两个值
+
+Combine(g1, g2, ..., gN) : 
+它将g1,g2,...gN进行排列组合.
+g1,g2,...gN本身是一个参数生成器, 每次分别从g1,g2,..gN中各取出一个值, 
+组合成一个元组(Tuple)作为一个参数.
+说明：这个功能只在提供了&lt;tr1/tuple&gt;头的系统中有效.
+gtest会自动去判断是否支持tr/tuple, 如果你的系统确实支持;
+而gtest判断错误的话, 你可以重新定义宏GTEST_HAS_TR1_TUPLE=1.
+</code></pre><p>类型参数<br>不过对于不同数据类型的, 同一调用. (相对同类型不同值的测试, 这个类型化参数复杂一点儿).</p>
+<p>首先定义一个模版类，继承testing::Test,</p>
+<pre><code class="c++">template &lt;typename T&gt;
+class FooTest : public testing::Test {
+ public:
+
+  typedef std::list&lt;T&gt; List;
+
+  static T shared_;
+  T value_;
+};
+</code></pre>
+<p>接着我们定义需要测试到的具体数据类型, 比如下面定义了需要测试 char, int 和 unsigned int :</p>
+<pre><code class="c++">typedef testing::Types&lt;char, int, unsigned int&gt; MyTypes;
+
+TYPED_TEST_CASE(FooTest, MyTypes);
+</code></pre>
+<p>然后使用 <code>TYPED_TEST</code> 宏进行测试案例:</p>
+<pre><code class="c++">TYPED_TEST(FooTest, DoesBlah) {
+  // Inside a test, refer to the special name TypeParam to get the type
+  // parameter.  Since we are inside a derived class template, C++ requires
+  // us to visit the members of FooTest via &#39;this&#39;.
+  TypeParam n = this-&gt;value_;
+
+  // To visit static members of the fixture, add the &#39;TestFixture::&#39;
+  // prefix.
+  n += TestFixture::shared_;
+
+  // To refer to typedefs in the fixture, add the &#39;typename TestFixture::&#39;
+  // prefix.  The &#39;typename&#39; is required to satisfy the compiler.
+  typename TestFixture::List values;
+  values.push_back(n);
+
+}
+</code></pre>
+<p>上面的例子看上去也像是类型的参数化，但是还不够灵活，因为需要事先知道类型的列表。gtest还提供一种更加灵活的类型参数化的方式，允许你在完成测试的逻辑代码之后再去考虑需要参数化的类型列表，并且还可以重复的使用这个类型列表. 下面也是官方的例子:</p>
+<pre><code class="c++">template &lt;typename T&gt;
+class FooTest : public testing::Test {
+
+};
+
+TYPED_TEST_CASE_P(FooTest);
+</code></pre>
+<p>然后使用的是 <code>TYPED_TEST_P</code> 完成具体的测试用例:</p>
+<pre><code class="c++">TYPED_TEST_P(FooTest, DoesBlah) {
+  // Inside a test, refer to TypeParam to get the type parameter.
+  TypeParam n = 0;
+
+}
+
+TYPED_TEST_P(FooTest, HasPropertyA) 
+{ 
+  //...  
+}
+</code></pre>
+<p>接着使用REGISTER_TYPED_TEST_CASE_P宏注册:</p>
+<pre><code>// 第一个参数是TestSuite的名称, 也是相关类的名称, 后面的参数是TestCase
+REGISTER_TYPED_TEST_CASE_P(FooTest, DoesBlah, HasPropertyA);
+</code></pre><p>接着指定需要的类型列表: (相当于参数生成器)</p>
+<pre><code>typedef testing::Types&lt;char, int, unsigned int&gt; MyTypes;
+//第一个参数是类型参数化测试的名称, 相当于Prefix, 第二个是参数化类的名称;
+//第三个参数是自定义的参数生成器
+INSTANTIATE_TYPED_TEST_CASE_P(My, FooTest, MyTypes);
+</code></pre><p>总结起来, 这个类型参数化测试是结合的在testing::Test的子类中, 指定的具体的模板参数的特化, 从而在宏 <code>TYPED_TEST_P</code> 完成具体的类型参数测试.</p>
+<p>(相比类型化参数测试, 不同值的参数化测试更加重要一些)</p>
+<h3 id="死亡测试"><a href="#死亡测试" class="headerlink" title="死亡测试"></a>死亡测试</h3><p>某些情况下, 程序会执行奔溃, 但是即使死亡(奔溃), 也应该按照我们预定的方式, 走相应的流程, 这个测试就是看能够在奔溃的时候能否按照预期执行.</p>
+<p>相关的宏:</p>
+<pre><code>statement crashes with the given error:
+ASSERT_DEATH(statement, regex); 
+EXPECT_DEATH(statement, regex);
+
+
+statement exits with the given error and its exit code matches predicate:
+ASSERT_EXIT(statement, predicate, regex);
+EXPECT_EXIT(statement, predicate, regex);
+</code></pre><p>上面的宏涉及到的正则表达式, 在Linux平台下, 都是POSIX风格的; 而在window下, 则是gtest自己实现的简单正则(意思是少了很多功能). gtest定义两个宏, 用来表示当前系统支持哪套正则表达式风格: </p>
+<ol>
+<li>POSIX风格：GTEST_USES_POSIX_RE = 1 </li>
+<li>Simple风格：GTEST_USES_SIMPLE_RE=1</li>
+</ol>
+<p>下面分别说明一下:<br><code>XXX_DEATH(statement, regex)</code> statement是被测试的代码语句, regex是一个正则表达式, 用来匹配异常时在stderr中输出的内容; 例如下面的例子:</p>
+<pre><code class="c++">void Foo()
+{
+    int *pInt = 0; //野指针
+     *pInt    = 42;
+}
+
+TEST(FooDeathTest, Demo)
+{
+    EXPECT_DEATH(Foo(), &quot;&quot;);
+}
+</code></pre>
+<p>注意, 凡是涉及到死亡测试的, 名字后缀都要带上 “DeathTest”, 就像本例中的 <code>FooDeathTest</code> . 并且gtest会优先运行死亡测试案例.<br>( XXX_DEATH 其实是对 XXX_EXIT 进行的一次包装，XXX_DEATH的 predicate 判断进程是否以非0退出码退出或被一个信号杀死)</p>
+<p><code>XXX_EXIT(statement, predicate, regex)</code>  statement是被测试的代码语句, predicate 在这里必须是一个委托接, 收int型参数并返回bool, 并且只有当返回值为true时, 死亡测试案例才算通过. regex是一个正则表达式，用来匹配异常时在stderr中输出的内容.<br>gtest提供了一些常用的 predicate :</p>
+<pre><code>//如果程序正常退出并且退出码与exit_code相同则返回 true
+testing::ExitedWithCode(exit_code)
+
+//如果程序被signal_number信号kill的话就返回true
+testing::KilledBySignal(signal_number)  // Windows下不支持
+</code></pre><pre><code>TEST(ExitDeathTest, Demo)
+{
+    EXPECT_EXIT(_exit(1),  testing::ExitedWithCode(1),  &quot;&quot;);
+}
+</code></pre><p><code>XXX_DEBUG_DEATH</code>, debug版本下的死亡测试:</p>
+<pre><code class="c++">#ifdef NDEBUG
+//release
+#define EXPECT_DEBUG_DEATH(statement, regex) \
+  do { statement; } while (false)
+
+#define ASSERT_DEBUG_DEATH(statement, regex) \
+  do { statement; } while (false)
+
+//debug  
+#else
+
+#define EXPECT_DEBUG_DEATH(statement, regex) \
+  EXPECT_DEATH(statement, regex)
+
+#define ASSERT_DEBUG_DEATH(statement, regex) \
+  ASSERT_DEATH(statement, regex)
+
+#endif  // NDEBUG for EXPECT_DEBUG_DEATH
+</code></pre>
+<p>可以看到, 在Debug版和Release版本下, XXX_DEBUG_DEATH的定义不一样. 因为很多异常只会在Debug版本下抛出, 而在Realease版本下不会抛出, 所以针对Debug和Release分别做了不同的处理. 例如:</p>
+<pre><code class="c++">
+int DieInDebugElse12(int* sideeffect) 
+{
+    if (sideeffect) *sideeffect = 12;
+#ifndef NDEBUG
+    GTEST_LOG_(FATAL, &quot;debug death inside DieInDebugElse12()&quot;);
+#endif  // NDEBUG
+    return 12;
+}
+
+TEST(TestCase, TestDieOr12WorksInDgbAndOpt)
+{
+    int sideeffect = 0;
+    // Only asserts in dbg.
+    EXPECT_DEBUG_DEATH(DieInDebugElse12(&amp;sideeffect), &quot;death&quot;);
+
+    #ifdef NDEBUG
+    // opt-mode has sideeffect visible.
+    EXPECT_EQ(12, sideeffect);
+    #else
+    // dbg-mode no visible sideeffect.
+    EXPECT_EQ(0, sideeffect);
+    #endif
+}
+</code></pre>
+<p>死亡测试的运行方式:</p>
+<ul>
+<li>testing::FLAGS_gtest_death_test_style = “fast”; (默认方式)</li>
+<li>testing::FLAGS_gtest_death_test_style = “threadsafe”;</li>
+</ul>
+<p>(可以为单个测试设置, 或者main函数中为所有的死亡测试设置) 例如:</p>
+<pre><code class="c++">TEST(MyDeathTest, TestOne) {
+  testing::FLAGS_gtest_death_test_style = &quot;threadsafe&quot;;
+  // This test is run in the &quot;threadsafe&quot; style:
+  ASSERT_DEATH(ThisShouldDie(), &quot;&quot;);
+}
+
+TEST(MyDeathTest, TestTwo) {
+  // This test is run in the &quot;fast&quot; style:
+  ASSERT_DEATH(ThisShouldDie(), &quot;&quot;);
+}
+
+int main(int argc, char** argv) {
+  testing::InitGoogleTest(&amp;argc, argv);
+  testing::FLAGS_gtest_death_test_style = &quot;fast&quot;;
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+<p>总的来说, 死亡测试主要是对奔溃结果进行检查; 借助<code>XXX_DEATH(statement, regex)</code>, <code>XXX_EXIT(statement, predicate, regex)</code> 可以很简单的编写相关的死亡测试.</p>
+<h3 id="运行参数"><a href="#运行参数" class="headerlink" title="运行参数"></a>运行参数</h3><p>通过, 命令行给相关测试传递运行参数(毕竟最后生成的就是一个可行性文件), 或者运行测试的时候给定命令行选项(例如以XML形式输出测试结果)等. gtest为我们提供了一系列的运行参数(环境变量、命令行参数或代码里指定), 使得我们可以对案例的执行进行一些有效的控制.</p>
+<p>前面提到，对于运行参数，gtest提供了三种设置的途径：</p>
+<ul>
+<li>系统环境变量</li>
+<li>命令行参数</li>
+<li>代码中指定FLAG</li>
+</ul>
+<p>优先级原则是:</p>
+<pre><code>命令行参数 &gt; 代码中指定FLAG &gt; 系统环境变量
+</code></pre><p>(其实是由于后设置的会覆盖最开始的; 所以产生了上面的优先级顺序)</p>
+<p>测试程序的入口, 都会处理这些命令行参数.</p>
+<pre><code class="c++">int main(int argc, char* argv[])
+{
+    testing::InitGoogleTest(&amp;argc, argv);
+    return RUN_ALL_TESTS();
+}
+</code></pre>
+<p>也可以使用 <code>可以使用testing::GTEST_FLAG</code> 这个宏来设置相关的FLAG, 比如相对于命令行参数 <code>--gtest_output</code>, 可以使用 <code>testing::GTEST_FLAG(output) = &quot;xml:&quot;</code> 来设置. </p>
+<p>同时推荐将这句放置 InitGoogleTest 之前, 这样就可以使得对于同样的参数, 命令行参数优先级高于代码中指定, 即:</p>
+<pre><code class="c++">int main(int argc, char* argv[])
+{
+    testing::GTEST_FLAG(output) = &quot;xml:&quot;;
+    testing::InitGoogleTest(&amp;argc, argv);
+
+    return RUN_ALL_TESTS();
+}
+</code></pre>
+<p>指定系统环境变量的方式.</p>
+<p>如果设置系统环境变量给gtest参数, 必须注意的是:</p>
+<ul>
+<li>系统环境变量全大写, 比如对于–gtest_output，响应的系统环境变量为: GTEST_OUTPUT</li>
+<li>有一个命令行参数例外, 那就是–gtest_list_tests, 它是不接受系统环境变量的.(只是用来罗列测试案例名称)</li>
+</ul>
+<p>(个人不建议, 使用环境变量的方式; 这样会扰乱开发环境)</p>
+<p>三种方式中, 最推荐运行时指定, 其他方式总会有这样或者那样的问题(比如代码中设置FLAG, 有些异常就是捕获不到).</p>
+<p>参数列表<br>好比我现在已经编译了一个google test的测试执行文件, 那么给定相关的参数会得到不同的效果, 其中可以使用的参数如下:</p>
+<pre><code>./run_test --help
+This program contains tests written using Google Test. You can use the
+following command line flags to control its behavior:
+
+Test Selection:
+  --gtest_list_tests 将不会执行里面的测试案例，而是输出一个案例的列表
+      List the names of all tests instead of running them. The name of
+      TEST(Foo, Bar) is &quot;Foo.Bar&quot;.
+
+  --gtest_filter=POSTIVE_PATTERNS[-NEGATIVE_PATTERNS] 根据给定的表达式,选择运行的案例
+      Run only the tests whose name matches one of the positive patterns but
+      none of the negative patterns. &#39;?&#39; matches any single character; &#39;*&#39;
+      matches any substring; &#39;:&#39; separates two patterns.
+
+  --gtest_also_run_disabled_tests 禁止的测试是指, 名称中添加DISABLED前缀
+      Run all disabled tests too. 例如:
+    // Tests that Foo does Abc.
+    TEST(FooTest, DISABLED_DoesAbc) {  }
+
+    class DISABLED_BarTest : public testing::Test {  };
+
+    // Tests that Bar does Xyz.
+    TEST_F(DISABLED_BarTest, DoesXyz) {  }
+
+
+Test Execution:
+  --gtest_repeat=[COUNT] 设置案例重复运行次数
+      Run the tests repeatedly; use a negative count to repeat forever.
+
+  --gtest_shuffle
+      Randomize tests&#39; orders on every iteration.
+
+  --gtest_random_seed=[NUMBER]
+      Random number seed to use for shuffling test orders (between 1 and
+      99999, or 0 to use a seed based on the current time).
+
+Test Output:
+  --gtest_color=(yes|no|auto) 默认是彩色输出
+      Enable/disable colored output. The default is auto.
+  --gtest_print_time=0 输出命令行时是否打印每个测试案例的执行时间, 默认是不打印的
+      Don&#39;t print the elapsed time of each test.
+
+  --gtest_output=xml[:DIRECTORY_PATH/|:FILE_PATH]
+      Generate an XML report in the given directory or with the given file
+      name. FILE_PATH defaults to test_details.xml.
+
+  --gtest_stream_result_to=HOST:PORT
+      Stream test results to the given server.
+
+Assertion Behavior:
+  --gtest_death_test_style=(fast|threadsafe)
+      Set the default death test style.
+
+  --gtest_break_on_failure 调试模式下，当案例失败时停止，方便调试
+      Turn assertion failures into debugger break-points.
+
+  --gtest_throw_on_failure 当案例失败时以C++异常的方式抛出
+      Turn assertion failures into C++ exceptions.
+
+  --gtest_catch_exceptions=0 是否捕捉异常(默认是不捕捉异常的)
+      不捕捉的话, 可能会弹出一个对话框(阻碍测试); 
+      所以有时候还是要捕捉一下, 就设置一个非0值.
+      Do not report exceptions as test failures. Instead, allow them
+      to crash the program or throw a pop-up (on Windows).
+
+Except for --gtest_list_tests, you can alternatively set the corresponding
+environment variable of a flag (all letters in upper-case). For example, to
+disable colored text output, you can either specify --gtest_color=no or set
+the GTEST_COLOR environment variable to no.
+
+For more information, please read the Google Test documentation at
+https://github.com/google/googletest/. If you find a bug in Google Test
+(not one in your own code or tests), please report it to
+&lt;googletestframework@googlegroups.com&gt;.
+</code></pre><p>XML 报告的输出格式如下:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;testsuites tests=&quot;3&quot; failures=&quot;1&quot; errors=&quot;0&quot; time=&quot;35&quot; name=&quot;AllTests&quot;&gt;
+  &lt;testsuite name=&quot;MathTest&quot; tests=&quot;2&quot; failures=&quot;1&quot;* errors=&quot;0&quot; time=&quot;15&quot;&gt;
+    &lt;testcase name=&quot;Addition&quot; status=&quot;run&quot; time=&quot;7&quot; classname=&quot;&quot;&gt;
+      &lt;failure message=&quot;Value of: add(1, 1)  Actual: 3 Expected: 2&quot; type=&quot;&quot;/&gt;
+      &lt;failure message=&quot;Value of: add(1, -1)  Actual: 1 Expected: 0&quot; type=&quot;&quot;/&gt;
+    &lt;/testcase&gt;
+    &lt;testcase name=&quot;Subtraction&quot; status=&quot;run&quot; time=&quot;5&quot; classname=&quot;&quot;&gt;
+    &lt;/testcase&gt;
+  &lt;/testsuite&gt;
+  &lt;testsuite name=&quot;LogicTest&quot; tests=&quot;1&quot; failures=&quot;0&quot; errors=&quot;0&quot; time=&quot;5&quot;&gt;
+    &lt;testcase name=&quot;NonContradiction&quot; status=&quot;run&quot; time=&quot;5&quot; classname=&quot;&quot;&gt;
+    &lt;/testcase&gt;
+  &lt;/testsuite&gt;
+&lt;/testsuites&gt;
+</code></pre><p>即使使用<code>--gtest_filter</code> 参数过滤时, 输出的xml报告中还是会包含所有测试案例的信息, 只不过那些不被执行的测试案例的status值为“notrun”.</p>
+<h2 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a>内部实现</h2><p>内部的关键技术是什么?<br>主要宏注册.一个没有反射(reflection)的测试框架, 必须多做一些工作, 让框架知道相关测试类&amp;用例的存在.那就是宏注册, 以往的CppUnit, CxxTest要么是人工写(每添加一个测试, 就要进行相应的宏注册), 要么是写专门的(Python,Perl)脚本, 通过这个脚本扫描自己编写的文件, 生成一些新的文件. 但是boost::test和gtest则是通过展开宏进行宏注册, 也就是放在预处理阶段.</p>
+<p>主要是宏注册, 然后继承testing::Test类, 之后通过工厂方法创建TestInfo, 并注册给框架gtest.cc里的<code>MakeAndRegisterTestInfo()</code>有一句 <code>GetUnitTestImpl()-&gt;AddTestInfo（xx）</code> , 之后让TestRunner进行调用.</p>
+<pre><code class="c++">//namespace internal:
+TestInfo* MakeAndRegisterTestInfo(
+    const char* test_case_name,
+    const char* name,
+    const char* type_param,
+    const char* value_param,
+    TypeId fixture_class_id,
+    SetUpTestCaseFunc set_up_tc,
+    TearDownTestCaseFunc tear_down_tc,
+    TestFactoryBase* factory) {
+  TestInfo* const test_info =
+      new TestInfo(test_case_name, name, type_param, value_param,
+                   fixture_class_id, factory);
+  GetUnitTestImpl()-&gt;AddTestInfo(set_up_tc, tear_down_tc, test_info); //关键
+  return test_info;
+}
+</code></pre>
+<p>简单说一下.</p>
+<p>先写一个简单的测试文件:</p>
+<pre><code class="c++">#include &lt;gtest/gtest.h&gt;
+
+TEST(TestSuite, Negative)
+{
+    EXPECT_EQ(1,1);
+}
+</code></pre>
+<p>然后用g++展开一下, </p>
+<pre><code>g++ -E main.cpp -o main.i -I/usr/local/include
+</code></pre><p>得到结果如下(展开的代码非常多, 6万多行, 找到TestSuite_Negative_Test; 最好过滤掉带井号的行)</p>
+<pre><code class="c++"># 2 &quot;main.cpp&quot; 2
+
+class
+# 3 &quot;main.cpp&quot;
+TestSuite_Negative_Test
+# 3 &quot;main.cpp&quot; 3
+: public ::testing::Test { public:
+# 3 &quot;main.cpp&quot;
+TestSuite_Negative_Test
+# 3 &quot;main.cpp&quot; 3
+() {} private: virtual void TestBody(); static ::testing::TestInfo* const test_info_ __attribute__ ((unused));
+# 3 &quot;main.cpp&quot;
+TestSuite_Negative_Test
+# 3 &quot;main.cpp&quot; 3
+(
+# 3 &quot;main.cpp&quot;
+TestSuite_Negative_Test
+# 3 &quot;main.cpp&quot; 3
+const &amp;); void operator=(
+# 3 &quot;main.cpp&quot;
+TestSuite_Negative_Test
+# 3 &quot;main.cpp&quot; 3
+const &amp;);};::testing::TestInfo* const
+# 3 &quot;main.cpp&quot;
+TestSuite_Negative_Test
+# 3 &quot;main.cpp&quot; 3
+::test_info_ = ::testing::internal::MakeAndRegisterTestInfo(
+# 3 &quot;main.cpp&quot;
+&quot;TestSuite&quot;
+# 3 &quot;main.cpp&quot; 3
+,
+# 3 &quot;main.cpp&quot;
+&quot;Negative&quot;
+# 3 &quot;main.cpp&quot; 3
+, __null, __null, ::testing::internal::CodeLocation(&quot;main.cpp&quot;, 3), (::testing::internal::GetTestTypeId()), ::testing::Test::SetUpTestCase, ::testing::Test::TearDownTestCa\
+se, new ::testing::internal::TestFactoryImpl&lt;
+# 3 &quot;main.cpp&quot;
+TestSuite_Negative_Test
+# 3 &quot;main.cpp&quot; 3
+</code></pre>
+<p>差不多已经看到我说的那个样子了(当然你也可以尝试定义自己的宏函数, 宏类; 个人觉得意义不大, 还不如直接去看别人的源码写分析).</p>
+<p>关于gtest源码内容一览:</p>
+<ul>
+<li>预处理技术分析(我已经简单分析了)</li>
+<li>自动调度机制</li>
+<li>结果统计机制</li>
+<li>监听机制</li>
+<li>断言使用方法和解析</li>
+<li>自定义输出技术</li>
+<li>死亡测试技术</li>
+<li>私有属性-方法测试</li>
+<li>参数填充技术</li>
+<li>模板类测试技术</li>
+</ul>
+<p>以后有时间, 单独开贴再写(主要是在预处理部分, <code>.i</code>文件), <a href="">Gtest源码剖析</a></p>
+<p>搞懂了Gtest内部实现, 其实自己也可以尝试着写相关的测试框架(这部分纯属扩展).</p>
+<h2 id="研发测试"><a href="#研发测试" class="headerlink" title="研发测试"></a>研发测试</h2><p>在Google, 质量并不等于测试. “质量不是被测试出来的” 这句老话是再正确不过了. 虽然质量并不是测试出来的, 但我们有同样的证据表明, 没有测试, 你不可能开发出任何有质量的东西. 一个人怎么可能在没有测试的情况下认定你的工程具有高质量?</p>
+<p>对于这种难题，最简单的解决办法就是: 禁止对开发工作开方便之门，以独立自由之精神进行测试。<code>测试和开发工作需要同步进行</code>. 编写一点, 测试一点. 再编写一点, 再测试一点. 更好的方法是制定测试计划或者你开发之前先把计划做好.  (<code>但是这对开发人员的要求很高</code>)</p>
+<p>测试并不是一个独立的工作, 它是开发工作的一部分, 伴随着整个开发过程. 质量不等于测试, 为了质量, 需要你把开发工作和测试结合到一起, 搅拌它们, 直到分不清你我为止.</p>
+<blockquote>
+<p>在Google，这是我们明确的目标：把开发和测试融合，你不能单独进行任何一项工作。做一点，测试一点。再做一点，再测试一点。关键就是看谁在做测试。因为在Google，专职测试人员是出奇的少，所以唯一可行的方法就是使用开发人员。还有比这些实际开发了这些程序的人员更合适做测试的吗? 还有比程序的作者更适合去发现bug的吗? 是谁具有更多的愿望在程序第一次写出时避免bug? Google之所以安排这么少的专职测试人员的原因就是，开发者负责质量。事实上，坚持使用大型测试机构的团队通常会开发出有问题的东西。测试机构庞大，这是一个信号表明编码/测试工作的融和有问题。增加测试人员并不能解决任何问题。这就是说，质量措施更多的应该是一种预防行为，而不是一种发现过程。<code>质量属于开发问题，而不是测试问题</code>。通过把测试工作一定程度的融合到开发过程中，我们极大的降低了一些本来被认为会写很多有问题的代码的人的出错机会。我们不仅避免了大量的客户方的问题，我们还非常有效的降低了测试人员提出的、其实不是bug的bug。在Google，测试工作的目标就是检查这些预防工作是否在有效的运行。测试工程部一直在寻找这种作为bug创造者的软件工程师和作为bug预防者的测试软件工程师之间的联合能达到的效果的证据，一旦这个方法出现问题，他们就会拉响警笛。</p>
+<p>　这种开发和测试的结合随处可见，从代码审查注释上写的“你的测试呢?”到厕所里的给开发者的最好的测试实践方法的宣传画——这是我们臭名昭著的厕所测试指导方针。测试是开发工作中是必不可少的，开发和测试的联姻是孕育质量的过程。软工就是测试者，测试软工就是测试者，测试工程师就是测试者。</p>
+</blockquote>
+<p>个人点评: 关于作者所说的, “这是我们明确的目标：把开发和测试融合，你不能单独进行任何一项工作。做一点，测试一点。再做一点，再测试一点。关键就是看谁在做测试”, 我想这是一个非常理想的情况, 实际上当前的许多大公司也没有做到, 其实也很难做到. 但是有理想总是好的, 慢慢靠近也不错.</p>
+<p>其实可以参考一下TDD和XP或者敏捷等开发方法, 里面也有涉及到相关内容.</p>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>当初玩gtest也是因为tdd的原因, 毕竟一个认真负责的开发者, 就应该保证自己代码的质量, 编码和测试是分不开的.</p>
+<p>本文又花了很大的篇幅,  记录了整个Gtest的探索过程(当然还有源码剖析一部分没有写后续补上), 希望这些时间没有白费.</p>
+<p>当然最后也强烈推荐一下 <code>测试驱动开发方法</code>, 即 <a href="http://www.merlinblog.site/2017/07/06/tdd.html" target="_blank" rel="external">tdd</a> .</p>
+<p>(btw: gtest中有很重要的一部分, 是和google mock相关的, 这里没有谈到; 以后专门再说)</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li>玩转Google开源C++单元测试框架Google Test系列  (不过它是window平台, 我选用的是linux平台)</li>
+<li>官方文档(docs目录): Primer.md , AdvancedGuide.md , FAQ.md</li>
+<li><a href="http://baidutech.blog.51cto.com/4114344/743740/" target="_blank" rel="external">http://baidutech.blog.51cto.com/4114344/743740/</a></li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Gtest">Gtest</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Gtest">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

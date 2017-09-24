@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>life, let others live | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="再一次学习和思考叔本华哲学">
+<meta name="keywords" content="思考">
+<meta property="og:type" content="article">
+<meta property="og:title" content="life, let others live">
+<meta property="og:url" content="localhost:4000/2017/07/17/life-and-let-others-live.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="再一次学习和思考叔本华哲学">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/lifelife.jpg">
+<meta property="og:updated_time" content="2017-09-24T06:02:32.011Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="life, let others live">
+<meta name="twitter:description" content="再一次学习和思考叔本华哲学">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/lifelife.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#格言和建议"><span class="toc-number">2.1.</span> <span class="toc-text">格言和建议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#人生阶段"><span class="toc-number">2.2.</span> <span class="toc-text">人生阶段</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>life, let others live</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-17</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/思考/">思考</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>有人说 <code>叔本华</code> 比起 <code>黑格尔</code> 之流是不入流的学派; 首先我要说, 我不了解黑格尔哲学, 然后也不想加入任何学派之争; 我所关心的就是, 我所得到的, 受到的启发等等.关于 “叔本华哲学” , 这里我也只是接触了点儿皮毛, 并且我也没有过多精力全部耗在这里; 但他的理论确确实实对我的生活, 心智产生了很大的作用.</p>
+<p>总结起来就是:</p>
+<blockquote>
+<p>生活, 也让别人生存.</p>
+</blockquote>
+<p>我翻译成: <code>life, and let others live</code><br>(我过好我的生活, 也让别人生存; 本质上, 你无法改变别人的品性 and so on)</p>
+<p>本文主要告诉你, 怎么样做, 怎么样思考, 才能拥有成熟的心智; 并且这是一个长期的过程, 不要过分指望或者依赖本文, 一切都是你自己的思考. 由于笔者水平实在有限, 如有偏颇之处, 还望不吝赐教, 感谢.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/lifelife.jpg" alt="life"></p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>已经在前面一篇文章说过, 一个人内存丰富, 对于外在的依赖越少, 那么这个人越容易得到幸福.<br>但是我们毕竟处在一个群居的社会中, 不可能完全让你去独处, 总是免不了和世人打交道, 这个时候就会用到一些处世的技巧.</p>
+<p>叔本华的《人生的智慧》在第5章 <code>建议和格言</code> 集中说了这些技巧和思维方式(态度), 并且在第六章, 作者接着以自己的认识介绍了 <code>人生的各个阶段</code> , 虽然我并不是完全认同, 但是也极具参考价值, 特别他对于人生青年, 中年所应该拥有的生活态度.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>以前在读卡耐基《人性的弱点》时, 它说了好几个观点, 但是并没有一套完整的体系去说为什么这样做(或者没有深入说明原因), 例如:</p>
+<ul>
+<li>讲别人感兴趣的话题, 不要总讲自己</li>
+<li>不要和别人争辩, 因为你永远不会真正赢</li>
+<li>show them more respect (让别人觉得受到了尊重)</li>
+<li>等等</li>
+</ul>
+<p>现在通过叔本华的一套理论体系, 可以知道, 其实很多时候, 你满足的了别人虚荣心的同时, 自己的也得到了一份安宁, 也就更加容易快乐和幸福.</p>
+<p>这里我并不会像原著里面那样分条逐个的去叙述(原著中 “建议和格言” 有53节), 但是我会在这里说一些核心观点(作者说话并不是很直接, 他鼓励我们思考, 但我还是直接白话出来吧).</p>
+<h2 id="格言和建议"><a href="#格言和建议" class="headerlink" title="格言和建议"></a>格言和建议</h2><ul>
+<li>幸福不在于有过多少欢愉, 而是避过多少痛苦(缺乏痛苦的程度是衡量一个人生活是否幸福的标准)(烦恼越少,越微不足道,它也就生活的越幸福)–核心观点: 幸福是否定的</li>
+<li>我们应该把快乐, 财富, 地位, 荣誉等等的期望调至一个适宜的尺度(因为正是对幸福快乐, 荣耀排场的渴求和争取带来了巨大的不幸)</li>
+<li>我们要提醒自己 <code>不要向生活提出太多的要求, 因为如果这样做, 我们幸福所依靠的基础就变得太广了, 容易倒塌</code> </li>
+<li>活在当下, 把握当下的快乐(当我们完成计划中的目标时, 或者我们已经没有能力再享有这些财富了, 即为别人白干了一场, 或者取得的成果已经不再适合我们的需求了) (当下的重要性甚少在当下就被我们认识清楚, 而只能是过了很长一段时间以后)</li>
+<li>让自己的内在个性, 爱好, 天赋, 引导我们(我们的行事自始至终都有其必然性, 我们每一刻都做着在那一刻认为合理和适当的事情), 行动计划应该由内心决定, 而不是外界物质.</li>
+<li>审视自己的目标和打算(计划)时, 应该以生命的整体长度来考虑 (关注现在和计划未来, 两者达到平衡)</li>
+<li>不为过去的事情而痛苦, 不为将来的事情而忧心 (还是专注于当下)</li>
+<li>未来的灾祸几乎总是要发生, 先提前做好准备, 等它发生时, 也就相对可以平静和泰然一些.</li>
+<li>局限和节制有助于我们的幸福, 比如眼光, 欲望, 愿望等(限制我们的活动范围就能够消除刺激我们意欲的外在动因, 而精神上的可制约则可以消除内在动因)–所谓 潘多拉的魔盒, 不要开</li>
+<li>要过一种深思熟虑的生活, 就要反省(从生活经验中汲取一切有益的教训), 此外还要把我们以前对事情的判断和现在看法, 以前定下的计划和最终得到的结果及满足互相比较. (时间过去太久时, 可以回想当时由这些事境所引发的意见和看法)</li>
+<li>我的快乐取决于我(老实说, 这个比较难) (原话在第九节: 能够自得其乐, 感觉到万物皆备于我; 我拥有就在我自身)</li>
+<li>鼓励独处 (人们聚会的场面越大, 就越容易变得枯燥乏味; 只有当你一个人独处的时候, 他才可以完全成为自己)</li>
+<li>有才的人被孤立很正常(高贵天赋的人, 往往缺乏对人情世故的了解)</li>
+<li>为计划留下余地(运气成分不受控制)</li>
+<li>事情如果已经发生了, 就不要再去伤心了, 想本来可以如何如何; (凡是涉及痛苦和快乐的事情, 都要紧紧扣住思绪, 不要胡思乱想)</li>
+<li>看到某样物品, 不要去想”如果我得到他会如何”, 而要去想, “如果我失去某样物品会如何” (更多的应该感激, 某样灾祸没有发生; 而不是某样幸运没有降临)</li>
+<li>身体健康是幸福的首要规则</li>
+<li>不要向你朋友透露太多秘密(敌人相反是诚实的, 他会指责你的缺点)</li>
+<li>不要和蠢人谈话, 尽量避开他们; 对于愚蠢也不要动怒</li>
+<li>注意力不集中的人可能是头脑空洞的人</li>
+<li>喜欢处于主观(可能是私心), 尊敬处于客观(尊敬别人能给别人内心满足, 是价值使然)</li>
+<li>大部分人都只对自己感兴趣 (谈话总是往他们自身扯, 插不上嘴; 不能喝他们争辩, 特别是不要伤害他们的虚荣心)</li>
+<li>大众舆论欢迎的东西不一定正确, 但是大家喜欢追捧</li>
+<li>不要太多迁就别人, 这样会让他们更加肆意妄为(他们会越界)</li>
+<li>从小事的处理方式看, 看一个人的性格(让它继续暴露下去)</li>
+<li>刚认识不久的人, 不要给予太高的评价, 不然后面可能会失望</li>
+<li>对于人性中的丑陋, 自己性格中的劣根性, 不要任其发展, 更多的是注意遮丑, 但不必伪装(也就是自己不太好的地方自己注意下, 而不要说自己这方面没有问题或者冒充优越, 这就不好了)</li>
+<li>人通常只会注意到别人的缺点, 往往忽略的自己的问题; 所以如果看到别人的缺点, 不要动怒, 要想一想自己身上有没有类似的问题</li>
+<li>交往除了精神基础, 也还需要物质利益基础</li>
+<li>检验一个朋友, 关键是看他对你的痛苦是否感同身受, 而不是你快乐的时候他是否快乐</li>
+<li>显示自己的聪明和思想不仅不能博得别人的欢迎, 相反可能引来嫉妒和憎恨 (记得收敛才华) (第34节)</li>
+<li>待人礼貌虽然需要我们更多的关注别人, 但是这样可以更好的避免别人的职责和嫉妒或者憎恨, 减少敌视 (待人礼貌不是卑躬屈膝)</li>
+<li>判断自己该做什么, 不该做什么都不应以别人为榜样, 因为所处的位置, 境况, 关系都不相同, 人的个性也不相同. 独到的见解是必不可少的, 关键还是看和自身是否相吻合.</li>
+<li>不争辩, 不驳斥别人, 哪怕处于善意. (切记一本正经的教育别人)</li>
+<li>更不要去指责别人(否则别指望全身而退) </li>
+<li>冷静, 不带激情的表达自己的看法(使人信服不需要太过激动)</li>
+<li>别人说谎的时候, 不要去拆穿, 让他说; 当他想掩饰的时候, 就要表示出不相信的样子, 让他暴露出更多细节</li>
+<li>不要夸赞自己 (容易引发虚荣心)</li>
+<li>注意别人的行为表现, 并牢记于心, 以此确定这人的价值 (认的性格是很难改变的)</li>
+<li>不要对人怀有敌意( <code>不爱也不恨</code> , <code>不要说话也不要相信</code>)</li>
+<li>不要再言辞或者表情上露出愤怒, 憎恨(这样做不仅徒劳, 而且不智和危险, 并且可笑和俗套) — 在行动上就会自然体现, 不需要你可以去说或者表露</li>
+<li>说话不要加重语气</li>
+<li>沉默是金</li>
+<li>沉浮不定, 所以快乐的时候要时常想想落魄痛苦的情景, 信任时想象一下背叛的情景(几乎所有的优势都是短暂的, 所以要考虑时间在表象上的作用)</li>
+<li>凡是今天透支的, 必定在明天付出巨大的太假, 所以不要急躁 (不要欠时间的高利贷)</li>
+<li>为还未到来的危险, 做准备买保险</li>
+<li>做事儿既不要犹豫不决, 举棋不定; 也不要匆忙急躁</li>
+<li>灾祸该发生的总是要发生, 不妨大胆些</li>
+</ul>
+<p>一口气居然写了几乎全部的内容, 所以下面说 <code>人生的阶段</code>, 就简明扼要的说.</p>
+<h2 id="人生阶段"><a href="#人生阶段" class="headerlink" title="人生阶段"></a>人生阶段</h2><p>童年, 青年, 成年, 老年; 这里只说 成年.</p>
+<p>人在36岁之后, 身体机能, 智力水平就开始衰退了(但是还是在峰值上), 这个时候人的精神智力, 丰富的阅历做了相应的弥补.<br>但是如果这个时候, 人身体不好, 智力, 认识力水平不够, 那么, 就会显得稍稍可怜, 或者悲惨了.</p>
+<p>36岁之前只管大胆开拓, 因为这个时期恢复力良好, 所以不用担心, 努力在身体, 认识力, 以及物质财富上做开拓即可.</p>
+<p>简单的说: 36岁之前是储蓄期, 你需要储备足够的本金, 以备36岁之后吃利息. </p>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>其实对于我个人而言, 我感触最大的就是, 如果去除很多虚荣心的部分, 比方说, 面子, 排场, 别人需要特别尊重我, 之后, 发现自己快乐非常多, 并且买东西, 穿衣服, 出行游玩等方面做选择再没有许多烦恼. 或者烦恼本身就是庸人自扰吧, 真的谢谢 <code>叔本华</code> .</p>
+<p>再者就是不为将来而忧虑, 专注于当下, 做好准备.</p>
+<p>最后则是, 生活应该勤俭, 极简最好, 以减少对于外界物质的依赖.</p>
+<p>这本书, 我会反复再读, 因为这些哲学, 理解是一方面, 真正用于自己的生活, 还需要一段时间的磨练.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="life, let others live">life, let others live</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="life, let others live">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

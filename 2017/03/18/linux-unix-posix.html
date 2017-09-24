@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Posix标准一览 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="介绍一下类nix下的内战, 以及各种Posixb标准">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Posix标准一览">
+<meta property="og:url" content="localhost:4000/2017/03/18/linux-unix-posix.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="介绍一下类nix下的内战, 以及各种Posixb标准">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/boost_platform.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/libstdcpp.png">
+<meta property="og:updated_time" content="2017-09-23T08:20:09.410Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Posix标准一览">
+<meta name="twitter:description" content="介绍一下类nix下的内战, 以及各种Posixb标准">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/boost_platform.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Posix"><span class="toc-number">2.1.</span> <span class="toc-text">Posix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SUSv3-Berkerly-BSD"><span class="toc-number">2.2.</span> <span class="toc-text">SUSv3,Berkerly,BSD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LSB"><span class="toc-number">2.3.</span> <span class="toc-text">LSB</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Posix标准一览</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-03-18</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/linux/">linux</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>Unix, BSD, SUS, LSB以及POSIX各种理论东西，其实很烦的好伐，统一干掉</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>关于Linux/Unix一些开发中可能要了解的理论内容:</p>
+<p>我曾经在学习系统编程的时候， 发现各种不同的调用时，总是要涉及标准(man page)，当时其实是不在意的，因为不知道有啥区别, 打个比方：man wait </p>
+<pre><code>NAME
+       wait, waitpid, waitid - wait for process to change state
+
+SYNOPSIS
+       #include &lt;sys/types.h&gt;
+       #include &lt;sys/wait.h&gt;
+
+       pid_t wait(int *wstatus);
+
+       pid_t waitpid(pid_t pid, int *wstatus, int options);
+
+       int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
+                       /* This is the glibc and POSIX interface; see
+                          NOTES for information on the raw system call. */
+
+   Feature Test Macro Requirements for glibc (see feature_test_macros(7)):
+
+       waitid():
+           _XOPEN_SOURCE
+               || /* Since glibc 2.12: */ _POSIX_C_SOURCE &gt;= 200809L
+               || /* Glibc versions &lt;= 2.19: */ _BSD_SOURCE
+</code></pre><p><code>200809L</code>就是指的一个标准。</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="Posix"><a href="#Posix" class="headerlink" title="Posix"></a>Posix</h2><p>POSIX，即Portable Operating System Interface，可移植操作系统接口。IEEE最初开发POSIX标准，是为了提高UNIX环境下应用程序的可移植性。然而POSIX并不局限于UNIX。许多其它操作系统，例如DEC OpenVMS和Microsoft Windows NT都支持POSIX标准。</p>
+<p>POSIX现在已经发展成为一个非常庞大的标准族，某些部分正处于开发过程中。POSIX定义了一个接口，而非一种实现，所以并不区分系统调用和库函数。标准中所有的例程都是宏和函数。POSIX接口连接了OS和应用程序。符合POSIX接口的OS和应用程序可以无缝交流。</p>
+<p>Linux基本逐步上实现了POSIX兼容，但并没有参加正式的POSIX认证。如Linux的线程实现版本和POSIX标准之间还是存在着细微的差别，最明显的是关于信号处理部分。微软的Windows NT至少部分实现了POSIX兼容。<br>(下面只谈论<code>Posix1.</code> 而不谈论<code>Posix2.</code>，因为用的少)</p>
+<h2 id="SUSv3-Berkerly-BSD"><a href="#SUSv3-Berkerly-BSD" class="headerlink" title="SUSv3,Berkerly,BSD"></a>SUSv3,Berkerly,BSD</h2><p>200809L就是指的一个标准，一般是指SUSv4或者POSIX.1-2008  (可以理解成同一标准的两种称谓)。<br>一般系统编程(或者在Linux下进行开发)，为了兼容不同的Linux或者Unix系统，就要看看这些标准；个人把SUSv3或者POSIX.1-2001视为逐流标准(遵循这个标准的函数/系统调用封装函数，一般可以随便用而不用担心兼容性问题， 因为类nix系统一般遵循POSIX标准)</p>
+<p>不管类nix中有都多少名称，例如BSD啊，Berkerly啊，抓住POSIX标准就可以了。因为平台太多，没精力逐个对付啊；看下boost是怎么在定义的平台：<br><img src="http://omotkhw3y.bkt.clouddn.com/boost_platform.png" alt="boost_platform"><br>补充，你看看CPP这些宏是怎么定义的，来看一下Boost怎么定义的<br><img src="http://omotkhw3y.bkt.clouddn.com/libstdcpp.png" alt="__cplus"></p>
+<h2 id="LSB"><a href="#LSB" class="headerlink" title="LSB"></a>LSB</h2><p>Linux Standard Base，为什么会有一个Linux标准？<br>因为Linux本质上和Unix相同，但是发展到后面也是存在差别的，特别是Linux会有自己的许多方便的定义。<br>(包括像系统调用，不同系统提供的系统调用服务例程或者实现方式不一样)</p>
+<p>但是，你可以把LSB看做是POSIX和SUS的超集(父集)，就像Linux的IPC通信，既借鉴了<code>System V</code>的“Shared Memory”, “Semaphore”, “Message Queues”, 又借鉴了<code>Berkerly</code>的“Signals, Pipes”。</p>
+<p>需要了解更多么？<br>谁知道呢？</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="">《Unix/Linux系统编程手册(上册)》</a> chapter 1</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这是我在Linux系统编程时曾经遇到的问题， 个人因为觉得烦不过，就草草的翻看了一下理论； 总的来说，你不用去看wiki了，核心的遵循一下<code>POSIX1.2001</code>或者比较新的<code>POSIX1.2008</code>即可</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)</p>
+<p>Saturday, 18. March 2017 10:08AM </p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="Posix标准一览">Posix标准一览</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="Posix标准一览">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+

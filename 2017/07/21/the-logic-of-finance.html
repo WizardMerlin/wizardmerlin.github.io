@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>金融的逻辑? | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="关于金融的逻辑的分析, 思考.the-logic-of-the-finance.">
+<meta name="keywords" content="交易,思考">
+<meta property="og:type" content="article">
+<meta property="og:title" content="金融的逻辑?">
+<meta property="og:url" content="localhost:4000/2017/07/21/the-logic-of-finance.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="关于金融的逻辑的分析, 思考.the-logic-of-the-finance.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/thelogicoffinannce.jpg">
+<meta property="og:updated_time" content="2017-09-24T06:20:10.007Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="金融的逻辑?">
+<meta name="twitter:description" content="关于金融的逻辑的分析, 思考.the-logic-of-the-finance.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/thelogicoffinannce.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="../../../css/common.css">
+<link rel="stylesheet" href="../../../css/nav.css">
+<link rel="stylesheet" href="../../../css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="../../../index.html">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="../../../atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="../../../css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#金融的核心论"><span class="toc-number">2.1.</span> <span class="toc-text">金融的核心论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#价值"><span class="toc-number">2.2.</span> <span class="toc-text">价值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#信用"><span class="toc-number">2.3.</span> <span class="toc-text">信用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#国家发展"><span class="toc-number">2.4.</span> <span class="toc-text">国家发展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#财富"><span class="toc-number">2.5.</span> <span class="toc-text">财富</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#风险"><span class="toc-number">2.6.</span> <span class="toc-text">风险</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">2.7.</span> <span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>金融的逻辑?</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-21</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/交易/">交易</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/思考/">思考</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>金融的逻辑到底是个啥? </p>
+<p>个人认为, 金融的本质就是交易, 是价值交换工具的总称(金融不过是交换工具的总称).</p>
+<p>从金融的核心, 本质往外推; 不拘泥于形式, 主要讨论思维框架. 本文不涉及政治, 政府, 道德等问题, 纯碎的谈读书体会. (btw: 本文中思维, 理论化东西过多, 不能在交易方面提供技术指导)</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/thelogicoffinannce.jpg" alt="post-cover"><br><a id="more"></a></p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>首先这本书的逻辑性, 连贯性比较差, 应该是写给懂的人看的, 所以当我第一遍看的时候, 确实没有看出来什么名堂, 思考也不深.</p>
+<p>而今再看, 体会良多, 对于其深入和独特的思考也表示认同, 但是也有许多地方写的不是很清楚或者我理解的不是很清楚, 所以我只能有侧重的去说.</p>
+<p>整体而言, <code>不是蛮推荐</code> 这本书(第一册和第二册)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>关键词提炼:</p>
+<pre><code>财富, 货币, 通货, 市场, 股市, 证监会, 风险, 交换, 交易, (相对)价值, 效用
+</code></pre><p>样书图片:<br><img src="" alt="金融的逻辑1"></p>
+<h2 id="金融的核心论"><a href="#金融的核心论" class="headerlink" title="金融的核心论"></a>金融的核心论</h2><p>在我看来, 金融的核心, 就是 trading , 就是(跨越时空的)价值交换.<br>整个金融学, 往小了说, 就是在研究交易(交易是交换的主要形式, 当前的主要形式): 其出现的原因, 如何发展下去以及发展的结果.</p>
+<p>本质上, 金融只是交换价值时所有工具的总称.</p>
+<p>因为社会, 整个人类集体往前发展, 就需要价值交换(人类群居, 互相帮助, 所以需要交换), 但是为了交换的方便(货币是可以跨地点和时间), 就需要货币, 但是货币也只是当下的一种形式. 其他形式还有股票, 债券等.</p>
+<p>其他不要再扩展了, 因为还会扯出 市场, 价值, 劳动力, 成本等等问题. </p>
+<p>学习金融, 短期应该把目光聚焦在 <code>交易</code> 本身.</p>
+<h2 id="价值"><a href="#价值" class="headerlink" title="价值"></a>价值</h2><p>效用决定价值, 有形的或者无形的事物, 本身不存在价值.</p>
+<h2 id="信用"><a href="#信用" class="headerlink" title="信用"></a>信用</h2><p>交易的基础是信用, 因为交易需要安全保证, 交易的物品也可能不是现货, 而是以合约的形式记载的, 甚至是交易双方互相不认识, 不熟悉.<br>法律不健全的时候, 可能是亲缘关系, 共同信仰, 人格等保证, 现在各种法律体系逐渐完善, 所以也就由法律信用来保证(包括一些信用证明, 资产证明等).</p>
+<h2 id="国家发展"><a href="#国家发展" class="headerlink" title="国家发展"></a>国家发展</h2><p>国债等金融工具作为国家发展建设, 乃至制度革新的基础, 是一个国家政治制度, 权利制度, 经济制度, 文化环境等发展的主要推动力.</p>
+<h2 id="财富"><a href="#财富" class="headerlink" title="财富"></a>财富</h2><p>财富不仅仅指货币(钱); 但凡能够称为核心资本的都叫做财富.</p>
+<h2 id="风险"><a href="#风险" class="headerlink" title="风险"></a>风险</h2><p>风险不可控, 通常不是最开始借贷不评估的问题, 而是资金的提供者, 和最终资金的使用者举例太长; 或者把贷款风险通过借贷链分担到了千千万万个资本市场投资者.</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>其他章节要么是故事, 要么是闲谈的资本, 对于分析和解决问题, 思维框架的形成方面, 个人觉得没有太多意义(而且其中还谈到了朝代, 制度, 政治, 这是我竭力避免的), 就不在多说了. (额外的原因: 很多包括经济和法律, 政治制度的关系, 也不方便公开谈论, 所以就不说了)</p>
+<p>社会总是慢慢进步的, 我还是对它抱有希望和信心的.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>特别是最近我在工作中，我理解了必须进一步转变对金融工作思想认识的问题，因为现代金融不仅仅是借款这么简单了，<code>金融也是一种产业，也会创造价值</code> 。<br>这就是我读完这本书的心得体会，讲的不妥的地方请大家批评指正，谢谢大家。</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="../../../index.html" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：<a href="" target="_blank" title="金融的逻辑?">金融的逻辑?</a></span><br/>
+	<span><b>本文链接</b>：<a href="" target="_blank" title="金融的逻辑?">localhost:4000</a></span>
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="../../../css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../../js/search_core.js"></script>
+<script src="../../../js/script.js"></script>
+
+</body>
+</html>
+
