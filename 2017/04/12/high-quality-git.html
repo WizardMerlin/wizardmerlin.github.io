@@ -26,8 +26,16 @@
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git4.jpg">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git5.jpg">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git6.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git17.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git16.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git14.jpg">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git8.jpg">
-<meta property="og:updated_time" content="2017-09-25T11:10:02.662Z">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git9.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git10.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git12.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git13.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git15.jpg">
+<meta property="og:updated_time" content="2017-09-25T14:19:52.002Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="高质量Git工作">
 <meta name="twitter:description" content="试图从日常git的使用中, 记录一些心得.">
@@ -368,27 +376,33 @@ fixup bmo0dne newest commit message
 <pre><code>git checkout -- &lt;filename&gt; 用 HEAD 中的最新内容替换掉你的工作目录中的文件
 git checkout HEAD          当前所有修改的都不要了, 直接抛弃工作区的所有修改
 </code></pre><p>但是, 已经add到暂存区的, 则不受影响; 但是我暂存区也不想要了怎么办? 也就是说<code>暂存区</code>, 工作目录都不要了, 我指向恢复到上一次提交.<br>那, 你就用 <code>git reset --hard HEAD</code>吧, 或者你知道commit id, <code>git reset --hard &lt;commit id&gt;</code> , 之后你弄乱的东西全没有了.</p>
-<p>当然你也可以使用checkout切换到某个branch的commit ID</p>
+<p>当然你也可以使用checkout切换到某个branch的commit ID, 这样你没有暂存的修改可能会丢失(暂存了不怕, checkout动不了暂存区)如下图:<br><img src="http://omotkhw3y.bkt.clouddn.com/git17.jpg" alt=""></p>
 <blockquote>
 <p>总结就是, <code>checkout</code>可以恢复你的工作区, 但是暂存区它动不了; 要想暂存区也清空, 那么就<code>git reset --hard</code>吧.</p>
 </blockquote>
-<p>稍微注意下, <code>git reset HEAD -- &lt;file&gt;</code> 是把暂存区的内容放回, 但它不能清空工作区.</p>
+<p>稍微注意下, <code>git reset HEAD -- &lt;file&gt;</code> 是把暂存区的内容放回(注意参数是HEAD), 但它不能清空工作区.</p>
 <p>revert<br>撤销之前提交的一个commit， revert 命令会创建一个新的 commit id, 具体你可以通过<code>git reflog</code>查看</p>
 <pre><code>git revert HEAD  撤销当前提交(不是回退到暂存区)
 git revert &lt;commitid&gt; 回到commit id之前的那个提交点
 </code></pre><p>reset<br>这个是救命稻草, 分为软和硬(功能和revert类似, 个人觉得更加强大)</p>
-<pre><code>git reset --soft HEAD~1      撤销本地提交，上一次提交修改内容会添加到暂存区
+<pre><code>git reset --soft HEAD~1      撤销本地提交(但是不会影响你当前的缓存区和工作目录)
 
 
-git reset --hard HEAD~1      撤销一个提交(不是恢复到暂存区, 是直接没了)
+git reset --hard HEAD~1      撤销一个提交(会清空当前的缓存区和工作区, 和上次提交点保持一致, 即干净的)
 git reset --hard &lt;commit-id&gt; 撤销提交, commit-id 之后的提交都会被抛弃, 强制回到某个点
-</code></pre><p>使用reset, 最好指名是soft还是hard, 即不要这样用<code>git reset HEAD~1</code>或者<code>git reset HEAD^</code>, 不指定时操作的是暂存区, 见上面的<code>checkout</code>和下面的<code>aliases</code>.</p>
+</code></pre><p>使用reset, 最好指名是soft还是hard, 即不要这样用<code>git reset HEAD~1</code>或者<code>git reset HEAD^</code>, 不指定时操作的是暂存区(其实是mixed选项, 它会让你的缓存区同步于某一个提交, 通常都是传入HEAD, 但工作区的修改还在, 然后HEAD指向你的提供的commit点), 见上面的<code>checkout</code>和下面的<code>aliases</code>.<br>即相当于:<br><img src="http://omotkhw3y.bkt.clouddn.com/git16.jpg" alt=""></p>
+<p>只是当你传入<code>HEAD</code>的时候, 即<code>git reset HEAD &lt;filename&gt;</code>, 从库里退回到暂存区的内容为空(当前没有最新的commit, 回退到上一次, 自然为空), 看上去效果就是, <code>清空了暂存区</code>. 实际上, 如果不指定soft, 或者hard, 一般都是这种用途, 相当于 <code>unstage</code>.</p>
+<blockquote>
+<p>git reset –mixed HEAD 将你当前的改动从缓存区中移除，但是这些改动还留在工作目录中。 见下面的 aliases.</p>
+</blockquote>
+<p>响应范围总结如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/git14.jpg" alt=""><br>记住这个图即可.</p>
+<p>特别注意一下 reset 会会写历史记录, 而不像revert, 让历史记录继续向前变化一次(中和反应), 保留历史追踪.</p>
 <p>diff<br>其中注意区分一下不同:</p>
 <ul>
-<li><code>git diff &lt;commit id&gt;</code> 比较当前所在的工作区文件和指定commit id有何不同 </li>
 <li><code>git diff --cached</code> 查看暂存区和commit库的不同(不暂存, 什么都看不到)</li>
-<li><code>git diff HEAD</code> 查看工作区和commit库的不同(新建文件貌似不行, 一定是修改已经在库里的文件)</li>
+<li><code>git diff &lt;commit id&gt;</code> 比较当前所在的工作区文件和指定commit id有何不同 </li>
 </ul>
+<p>特殊的, <code>git diff HEAD</code> 查看工作区和commit库的不同(新建文件貌似不行, 一定是修改已经在追踪的文件), 一般都是和没有提交前进行比较.</p>
 <p>哦, 还有一个<code>cherry-pick</code>, 即把某一个commit摘取到当前分支:</p>
 <pre><code>git cherry-pick &lt;commit-id&gt;
 </code></pre><h3 id="非常用命令"><a href="#非常用命令" class="headerlink" title="非常用命令"></a>非常用命令</h3><p>这些命令, 一般你是用不到, 可能是你没有权限, 或者有专门的人负责了.</p>
@@ -446,7 +460,46 @@ git push origin --tags
   git config --global alias.br branch
   git config --global alias.ci commit
   git config --global alias.st status
-</code></pre><h2 id="合并之选"><a href="#合并之选" class="headerlink" title="合并之选"></a>合并之选</h2><h2 id="回滚之选"><a href="#回滚之选" class="headerlink" title="回滚之选"></a>回滚之选</h2><h2 id="Log-or-Blame"><a href="#Log-or-Blame" class="headerlink" title="Log or Blame"></a>Log or Blame</h2><h2 id="清除未跟踪的文件"><a href="#清除未跟踪的文件" class="headerlink" title="清除未跟踪的文件"></a>清除未跟踪的文件</h2><p>例如emacs产生的备份文件, <code>git clean -dxf</code>可以清除这些文件(前提是.gitignore要求忽略他们), 通常使用</p>
+</code></pre><h2 id="合并之选"><a href="#合并之选" class="headerlink" title="合并之选"></a>合并之选</h2><p>其实只有<code>rebase</code>和<code>merge</code>之争(当然你也可以选择revert自己, 先pull别人, 再进行修改; 如果你不嫌麻烦的话).</p>
+<p>rebase虽然线性, 并且提供整洁的提交; 但是它不如 merge 那样可以知道从别的分支引入了哪些提交(带有commit message), 让你可以追溯; 并且如果rebase的分支是公共分支, 那么它又会带来不小的安全性影响.<br>试想, 如果你的master分支, 要去rebase一个feature分支的某些修改, 那么rebase之后, 可能出现的结果就是, 其他基于master的分支, 之后就要强行合并了(改变一大波内容, 不仅不安全, 而且不能追踪以前的提交了). 因为别人原来是基于旧的master, 你现在整个master已经不是原来的master了, 或者说你在强行让master分支线性话. 如下图:<br><img src="http://omotkhw3y.bkt.clouddn.com/git9.jpg" alt=""></p>
+<blockquote>
+<p>绝不要在公共的分支上使用它(除非不和别人共享master)</p>
+</blockquote>
+<p>如果你想把 rebase 之后的 master 分支推送到远程仓库，Git 会阻止你这么做，因为两个分支包含冲突。但你可以传入 –force 标记来强行推送。 但这也势必造成基于这个master开发人员的重新合并.</p>
+<p>如果是自己的提交, 好比在 feature 分支上提交了三个修改, 实际上想整合成一个, 那么可以使用交互式的rebase, 即<code>git rebase -i HEAD~数字</code>.<br>如果你想用这个方法重写整个 feature 分支，<code>git merge-base</code> 命令非常方便地找出 feature 分支开始分叉的基。下面这段命令返回基提交的 ID，你可以接下来将它传给 git rebase：</p>
+<pre><code>git merge-base feature master
+</code></pre><p>这样你的feature不仅线性化, 而且整洁. 通常只是移动你的提交的话, 你想怎么改就怎么改, 甚至可以合并别人的feature, 只要保证和大家共享的master基于同一个分支即可, 见下图:(其中红色框标注了与主分支的分叉点)<br><img src="http://omotkhw3y.bkt.clouddn.com/git10.jpg" alt=""></p>
+<p>如果你去merge, 那么就会出现这样的情况, merge会保留很多信息<br><img src="http://omotkhw3y.bkt.clouddn.com/git12.jpg" alt=""><br>相对于主分支来说, 它更希望看到你最好一个功能提交一个commit, 然后你内部的什么合并什么的, 它不关心;</p>
+<p>所以使用rebase, 或者 rebase -i稍微整理一下, 才是上策.<br><img src="http://omotkhw3y.bkt.clouddn.com/git13.jpg" alt=""></p>
+<blockquote>
+<p>总之: 来自其他开发者的任何更改都应该用 git merge 而不是 git rebase 来并入。</p>
+</blockquote>
+<p>(其实你看看 github 针对 pull request 都是用的啥就知道了)</p>
+<h2 id="回滚之选"><a href="#回滚之选" class="headerlink" title="回滚之选"></a>回滚之选</h2><p>关于回滚或者重置, 其实上面说 <code>reset</code> , <code>checkout</code>, <code>revert</code> 的时候, 就比较过了. 这里再集中说一下. 其实主要是reset, checkout; 因为没有谁会让你随便去回滚某个commit的, 我们更多的是针对某个文件的恢复. 但是注意, reset用于修改提交时, 它会修改历史, 而revert会重新产生一个新提交来中和以前的提交, 即它会保留历史记录, 因而主分支这种公共共享分支, 一般会用revert的. 对个人而言, reset修改提交反而会比较多.</p>
+<p>值得补充的是<code>git checkout &lt;branchname&gt;</code>的时候, 如果你当前工作区有内容, Git会强制你暂存或者提交, 不然就会丢失. 也就是说, git checkout会改变仓库分支和当前工作目录, 至于暂存区, 它影响不了.</p>
+<p>并且当你在分离HEAD之后, 例如<code>git checkout HEAD~2</code>之后所做的任何修改, 都会在匿名分支上, 所以当你要在分离的HEAD上进行开发之前, 请先建立分支(不然你一旦切换到其他分支, 该部分开发内容将丢失), 下面是<code>分离的HEAD</code>.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/git15.jpg" alt=""></p>
+<p>但是如果你是<code>git checkout HEAD~2 foo.py</code>那么HEAD引用是不会改变的, 只是 foo.py 同步到了倒数第二个提交中的 foo.py.</p>
+<p>总结起来就是, <code>git checkout -- &lt;file&gt;</code> 或者 <code>git chekcout HEAD &lt;file&gt;</code> 放弃当前工作区某个文件没有缓存的修改, 只是某个文件.</p>
+<p>所有文件的话, 请用 <code>git checkout HEAD &lt;file&gt;</code> 或者 <code>git reset HEAD --hard</code>.</p>
+<h2 id="Log-or-Blame"><a href="#Log-or-Blame" class="headerlink" title="Log or Blame"></a>Log or Blame</h2><p>这里要说的是, 如果有图形化工具, 如<code>gitk</code>, 请用图形化工具, 然后本条略过.</p>
+<p>git log常用的参数如下:</p>
+<ul>
+<li><code>-p</code>          提交所有的删改都会被输出</li>
+<li><code>--stat</code>      显示每次提交的文件增删数量</li>
+<li><code>--oneline</code> 或者 <code>--oneline=pretty</code></li>
+<li><code>--decorate</code> 显示指向这个提交的所有引用（比如说分支、标签等）, 即查看响应范围</li>
+<li><code>git shortlog</code> 它把每个提交按作者分类，显示提交信息的第一行。这样可以容易地看到谁做了什么。</li>
+<li><code>--graph --graph --oneline --decorate</code> 显示一个图形化界面</li>
+<li><code>-&lt;num&gt;</code> 显示最近N此提交.</li>
+<li><code>--after=&quot;2014-7-1&quot; --before=&quot;2014-7-4&quot;</code>, 还有<code>--since</code>, <code>--until</code><br><code>&lt;since&gt;..&lt;until&gt;</code></li>
+<li><code>--author=&quot;John&quot;</code></li>
+<li><code>--grep=&quot;JRA-224:&quot;</code></li>
+<li><code>master..feature</code> 查取分支差异</li>
+<li><code>--merges</code> 返回合并的两个父节点</li>
+<li><code>--no-merges</code> 过滤merge节点</li>
+</ul>
+<h2 id="清除未跟踪的文件"><a href="#清除未跟踪的文件" class="headerlink" title="清除未跟踪的文件"></a>清除未跟踪的文件</h2><p>例如emacs产生的备份文件, <code>git clean -dxf</code>可以清除这些文件(前提是.gitignore要求忽略他们), 通常使用</p>
 <pre><code>git clean -df
 </code></pre><p>表示保留ignore文件</p>
 <h1 id="大仓库"><a href="#大仓库" class="headerlink" title="大仓库"></a>大仓库</h1><p>有些库非常大, 但是它又是一个逻辑主体, 不能使用repo, 例如:</p>
