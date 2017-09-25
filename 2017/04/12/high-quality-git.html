@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>高质量Git工作 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="试图从日常git的使用中, 记录一些心得.">
+<meta name="keywords" content="开发管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高质量Git工作">
+<meta property="og:url" content="www.merlinblog.site/2017/04/12/high-quality-git.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="试图从日常git的使用中, 记录一些心得.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git11.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git1.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git2.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git3.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git7.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git4.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git5.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git6.jpg">
+<meta property="og:updated_time" content="2017-09-25T10:04:02.166Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高质量Git工作">
+<meta name="twitter:description" content="试图从日常git的使用中, 记录一些心得.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/git11.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#新手的Git"><span class="toc-number">1.</span> <span class="toc-text">新手的Git</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#工作中的Git"><span class="toc-number">2.</span> <span class="toc-text">工作中的Git</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单的工作流"><span class="toc-number">2.1.</span> <span class="toc-text">简单的工作流</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#本地端"><span class="toc-number">2.1.1.</span> <span class="toc-text">本地端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HEAD"><span class="toc-number">2.1.2.</span> <span class="toc-text">HEAD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#远程端"><span class="toc-number">2.1.3.</span> <span class="toc-text">远程端</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正常的工作流"><span class="toc-number">2.2.</span> <span class="toc-text">正常的工作流</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用命令详解"><span class="toc-number">2.2.1.</span> <span class="toc-text">常用命令详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非常用命令"><span class="toc-number">2.2.2.</span> <span class="toc-text">非常用命令</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#命令技巧"><span class="toc-number">3.</span> <span class="toc-text">命令技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#aliases"><span class="toc-number">3.1.</span> <span class="toc-text">aliases</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#大仓库"><span class="toc-number">4.</span> <span class="toc-text">大仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#大量历史记录的库"><span class="toc-number">4.1.</span> <span class="toc-text">大量历史记录的库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#浅克隆"><span class="toc-number">4.1.1.</span> <span class="toc-text">浅克隆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤分支"><span class="toc-number">4.1.2.</span> <span class="toc-text">过滤分支</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有巨大二进制资产的库"><span class="toc-number">4.2.</span> <span class="toc-text">有巨大二进制资产的库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#子模块"><span class="toc-number">4.2.1.</span> <span class="toc-text">子模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#git三方扩展"><span class="toc-number">4.2.2.</span> <span class="toc-text">git三方扩展</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他参考"><span class="toc-number">5.</span> <span class="toc-text">其他参考</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>高质量Git工作</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-04-12</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/开发管理/">开发管理</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>当稳定性和可维护性开始成为一个优先考虑的事情后，清理提交、坚持分支策略和提交信息的规范性就变得很重要。</p>
+</blockquote>
+<p>分支管理, 项目管理, 仓库管理一直是一个大问题, 本文尝试从最基本的使用开始, 分享一些心得体会, 比如库大了可以使用子模块等.</p>
+<a id="more"></a>
+<h1 id="新手的Git"><a href="#新手的Git" class="headerlink" title="新手的Git"></a>新手的Git</h1><p>我是从新手走过来的, 我知道新手最喜欢用什么, 如下:</p>
+<pre><code class="shell">git add --all
+git commit -am &quot;&lt;message&gt;&quot;
+git push origin master
+</code></pre>
+<p>工作流, 本地一般是这样:<br><img src="http://omotkhw3y.bkt.clouddn.com/git11.jpg" alt=""></p>
+<p>一个人玩, 足够了(因为库的维护, 分支的管理, 都不用你操心). 之后进阶就需要了解更多的常用命令. 是的, <code>不用学, 只管用就对了</code>.<br>(当然看看前辈们分享的经验更好)</p>
+<p>忘了说了, 可能你需要先配置你的环境, 比如ssh keys, 然后上传到服务器的列表之类的:</p>
+<pre><code>ssh-keygen -t rsa -C &quot;youremail@example.com&quot;
+</code></pre><p>一直回车，将自动生成id_rsa和id_rsa.pub文件。使用以下命令验证连接是否成功.<br>或者你验证github:</p>
+<pre><code>ssh -T git@github.com
+</code></pre><p>不过, 我一般都是用 HTTPS 去拉去或者上传的(怕长久不输密码, 忘记了)</p>
+<p>当然一般不会出现让你去为某个项目配置用户信息的, 所以你配置<code>user.name</code>, <code>user.email</code>的时候, 放心<code>--global</code>.<br>但是如果要为当前项目<code>.git/config</code>配置, 可以这样:</p>
+<pre><code>git config user.name &quot;Your Name&quot;
+git config user.email &quot;your@email.com&quot;
+</code></pre><h1 id="工作中的Git"><a href="#工作中的Git" class="headerlink" title="工作中的Git"></a>工作中的Git</h1><h2 id="简单的工作流"><a href="#简单的工作流" class="headerlink" title="简单的工作流"></a>简单的工作流</h2><p>大概是这样的, 见下图<br><img src="http://omotkhw3y.bkt.clouddn.com/git1.jpg" alt=""></p>
+<h3 id="本地端"><a href="#本地端" class="headerlink" title="本地端"></a>本地端</h3><p>相比远程端, 本地端更容易玩的很6, 而远程端涉及到 teamwork, 所以冲突会有一些, 先说本地端.</p>
+<ul>
+<li>Workspace：工作区</li>
+<li>Index / Stage：暂存区</li>
+<li>Repository：仓库区(或本地仓库) 又称为history</li>
+<li>Remote：远程仓库</li>
+</ul>
+<p>其实很长一段时间, 我也没有弄清楚<code>暂存区</code>和<code>本地仓库</code>是怎么回事儿.</p>
+<blockquote>
+<p>暂存区和本地仓库是怎么回事儿呢?</p>
+</blockquote>
+<p>既然git是版本管理工具, 那么看看它怎么管理和追踪记录文件的就知道两者的区别了(stupid way tracing file).<br>去查看一下<code>git init</code>出来的work库(注意不是<code>--bare</code>的裸库, 裸库你是提交不了内容的, 没有工作区, 它仅仅是追踪作用), 即<code>.git</code>目录:</p>
+<pre><code>$&gt;tree -L 1
+.
+|-- HEAD             # git项目当前处在哪个分支里的提交点
+|-- config             # 项目的配置信息,git config命令会改动它
+|-- description      # 项目的描述信息
+|-- hooks/             # 系统默认钩子脚本目录
+|-- index             # 索引文件
+|-- logs/             # 各个refs的历史信息
+|-- objects/         # Git本地仓库的所有对象 (commits, trees, blobs, tags) 
+|-- refs/             # 标识你项目里的每个分支指向了哪个提交(commit)。
+</code></pre><p>看到<code>index</code>文件, .git目录下的index文件, 暂存区会记录 git add 添加文件的相关信息(文件名、大小、timestamp…)，不保存文件实体, 通过id指向每个文件实体。<br>也就是说, 暂存区其实只是在标记你工作区, 也就是工作目录的文件, 但是并没有保存文件实体.(可以使用 git status 查看暂存区的状态, 暂存区标记了你当前工作区中，哪些内容是被git管理的)</p>
+<p>但是本地残酷就不一样了, git commit 后同步index的目录树到本地仓库, 此时<code>objects</code>子目录会记录当前文件实体, 怎么记录? 一种压缩格式拷贝记录(stupid way), 并且refs保留索引标志(相当于指向).</p>
+<p>总结起来, 就一句话:</p>
+<blockquote>
+<p>任何对象都是在工作区中诞生和被修改, 任何修改都是从进入index区才开始被版本控制, 只有把修改提交到本地仓库，该修改才能在仓库中留下痕迹.</p>
+</blockquote>
+<h3 id="HEAD"><a href="#HEAD" class="headerlink" title="HEAD"></a>HEAD</h3><p>但是本地端, 还没有完, 我还没有说 <code>HEAD</code>, 一般<code>reset</code>, <code>revert</code>等, 都喜欢用 <code>HEAD</code> 操作, 有时候用commit id和用 HEAD效果一样.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/git2.jpg" alt=""><br>HEAD，它始终指向当前所处分支的最新的提交点。你所处的分支变化了，或者产生了新的提交点，HEAD就会跟着改变。<br>好吧, 我还是强调一下:(因为它后面出现频率稍高)</p>
+<blockquote>
+<p>HEAD指向的是本地仓库的最新提交点</p>
+</blockquote>
+<h3 id="远程端"><a href="#远程端" class="headerlink" title="远程端"></a>远程端</h3><p>与协作者分享本地的修改，可以把它们push到远程仓库来共享. 但实际上就只是多了一个<code>git push</code>, 命令, 如下:</p>
+<pre><code>git push &lt;remote&gt; &lt;branch&gt;    上传某个分支上去
+git push &lt;remote&gt; --force     本地分支比远端新, 或者与远端同一个妈, 但当前分支的最新提交点不一致; 强行推
+git push &lt;remote&gt; --all      上传所有分支
+</code></pre><p>但是值得提醒的是, 远端就会涉及到权限, 也就是说, <code>可能需要review</code>.</p>
+<blockquote>
+<p>如果只是这么简单的工作流, 那么你基本只能在小公司了, 大公司, 项目数&amp;分支数, 非常多, 这些命令不用想太多, 肯定不够.</p>
+</blockquote>
+<h2 id="正常的工作流"><a href="#正常的工作流" class="headerlink" title="正常的工作流"></a>正常的工作流</h2><p>正常工作流, 就是日常工作中, 最常用的, 再上面的基础上, 还要加上很多命令:</p>
+<ul>
+<li>branch/checkout</li>
+<li>rebase/merge</li>
+<li>cherry-pick</li>
+<li>reset/revert</li>
+<li>log/reflog/blame</li>
+<li>diff</li>
+<li>push/fetch/pull</li>
+<li>remote</li>
+</ul>
+<blockquote>
+<p>当然创建分支, 发布release, 打标签, 可能还轮不到你(会有专门的人负责, 他们一般还负责追踪软件进度)</p>
+</blockquote>
+<p>但是即便就这些命令, 也是会有选择和偏好的(甚至, 一般项目组或者上面都是有规定的, 哪些命令哪些时候是禁止使用的).<br>不管怎么说, 现在的工作流也是可控的&amp;不复杂的, 见下图:<br><img src="http://omotkhw3y.bkt.clouddn.com/git3.jpg" alt=""></p>
+<p>当然也会有人口味不同, 喜欢用不同的命令, 比如<code>git log</code>:(我不喜欢用git blame, 感觉像是摊上事儿了)</p>
+<pre><code> git log             从最新提交开始显示所有提交历史
+
+ git log -p &lt;file&gt;   显示指定文件的所有修改
+ git blame &lt;file&gt;    谁，在什么时间，修改了文件的那些内容
+</code></pre><p>根据我的经验, 把常用命令滤一遍.</p>
+<h3 id="常用命令详解"><a href="#常用命令详解" class="headerlink" title="常用命令详解"></a>常用命令详解</h3><p>给你一个笼统的图(具体的命令不是很详细)<br><img src="http://omotkhw3y.bkt.clouddn.com/git7.jpg" alt=""></p>
+<p>详细说说:</p>
+<hr>
+<p>git add</p>
+<pre><code>git add .
+git add &lt;dir&gt;
+git add &lt;file1&gt; [&lt;file2&gt;] ...
+</code></pre><p>提交目录时, 会主动检查子目录的(包括子目录).</p>
+<p>下面是<code>commit</code></p>
+<pre><code>git commit -m &lt;message&gt;
+git commit &lt;file1&gt; -m &lt;message&gt;
+git commit --amend -m &lt;message&gt;  使用一次新的commit代替上一次提交.
+</code></pre><p>通常 <code>--amend</code> 代替上一次提交的时候, 不用再<code>-m</code>, 直接使用上次的 commit message 即可.</p>
+<blockquote>
+<p>实际上, 只要是review才能入库的代码, 最好不要-m选项, 而是认真按照规范写commit message.</p>
+</blockquote>
+<p>branch 和 checkout<br><img src="http://omotkhw3y.bkt.clouddn.com/git4.jpg" alt=""></p>
+<p>其实你不指定, 追踪的远程分支, 也会在push的时候自动要求你指定.</p>
+<p>再就是<code>merge</code>, 即 merge from: <code>git merge &lt;branch&gt;</code>; 但是merge不好的一点在于, 会产生新的节点(例如下图master分支的M节点):</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/git5.jpg" alt=""></p>
+<p>这还不是最惨的, 最惨的是, <code>merge一般都会冲突</code>, 即merge前的俩commitx修改了同一文件的同一区域, 需要你手动解决冲突文件后再提交.<br>所以一般公司都会推荐使用<code>rebase</code>.</p>
+<p>rebase<br><img src="http://omotkhw3y.bkt.clouddn.com/git6.jpg" alt=""></p>
+<p>checkout<br>这个命令也比较好理解, 我修改了工作区文件, MD改坏了, 不要了, 回到最初拿到库的状态.</p>
+<pre><code>git checkout -- &lt;filename&gt; 用 HEAD 中的最新内容替换掉你的工作目录中的文件
+git checkout HEAD          当前所有修改的都不要了, 直接抛弃工作区的所有修改
+</code></pre><p>但是, 已经add到暂存区的, 则不受影响; 但是我暂存区也不想要了怎么办? 也就是说<code>暂存区</code>, 工作目录都不要了, 我指向恢复到上一次提交.<br>那, 你就用 <code>git reset --hard HEAD</code>吧, 或者你知道commit id, <code>git reset --hard &lt;commit id&gt;</code> , 之后你弄乱的东西全没有了.</p>
+<p>当然你也可以使用checkout切换到某个branch的commit ID</p>
+<p>revert<br>撤销之前提交的一个commit， revert 命令会创建一个新的 commit id, 具体你可以通过<code>git reflog</code>查看</p>
+<pre><code>git revert HEAD  撤销当前提交(不是回退到暂存区)
+git revert &lt;commitid&gt; 回到commit id之前的那个提交点
+</code></pre><p>reset<br>这个是救命稻草, 分为软和硬(功能和revert类似, 个人觉得更加强大)</p>
+<pre><code>git reset --soft HEAD~1      撤销本地提交，上一次提交修改内容会添加到暂存区
+
+
+git reset --hard HEAD~1      撤销一个提交(不是恢复到暂存区, 是直接没了)
+git reset --hard &lt;commit-id&gt; 撤销提交, commit-id 之后的提交都会被抛弃, 强制回到某个点
+</code></pre><p>使用reset, 最好指名是soft还是hard, 即不要这样用<code>git reset HEAD~1</code>或者<code>git reset HEAD^</code>, 虽然默认是soft.</p>
+<p>diff<br>其中注意区分一下不同:</p>
+<ul>
+<li><code>git diff</code> 查看工作区和暂存区的差别</li>
+<li><code>git diff --cached</code> 查看暂存区和commit库的不同</li>
+<li><code>git diff HEAD</code> 查看工作区和commit库的不同</li>
+</ul>
+<p>哦, 还有一个<code>cherry-pick</code>, 即把某一个commit摘取到当前分支:</p>
+<pre><code>git cherry-pick &lt;commit-id&gt;
+</code></pre><h3 id="非常用命令"><a href="#非常用命令" class="headerlink" title="非常用命令"></a>非常用命令</h3><p>这些命令, 一般你是用不到, 可能是你没有权限, 或者有专门的人负责了.</p>
+<p>比如 <code>init</code> , <code>remote</code>, <code>tag</code>等, 但总有一天你会用到的:</p>
+<p>init</p>
+<pre><code>git init
+git init --bare
+</code></pre><p>使用裸库建立的仓库的, 一般是在远端服务器上, 只给大家共享(你不能在此目录进行修改文件,或者提交文件啥的).</p>
+<p>remote远端管理</p>
+<pre><code>显示远端信息(默认会显示origin)
+git remote show &lt;remote_name&gt;
+
+显示远端仓库的地址url
+git remote -v
+
+设置远端仓库的url/或者添加url (如果远端仓库存在多个url的话)
+git remote set-url origin git@github.com:einverne/repo.git
+git remote set-url --add origin https://github.com/einverne/dotfiles.git
+
+
+删除远端仓库, 例如origin
+git remote rm origin
+
+删除远端仓库某分支, 例如orgin的某个分支(本地仓库, 直接 git branch -d即可)
+git push origin --delete &lt;branchname&gt;
+git push origin :&lt;branch name&gt;
+
+将本地分支推送到远端仓库(可以只推送一个)
+git push &lt;remote name&gt; &lt;local-branch-name&gt;
+</code></pre><p>当然删除分支, 一般你也没有权限; 重命名也是<code>git branch -m &lt;old-name&gt; &lt;new-name&gt;</code>.</p>
+<p>打标签<br>一般打标签, 也是项目管理人员在做:</p>
+<pre><code>创建标签
+git tag -a &lt;tagname&gt; &lt;commit id&gt;
+
+显示标签
+git show &lt;tagname&gt;
+
+推送特定tag
+git push origin &lt;tagname&gt;
+
+推送所有tags
+git push origin --tags
+</code></pre><h1 id="命令技巧"><a href="#命令技巧" class="headerlink" title="命令技巧"></a>命令技巧</h1><p>我个人有一点<code>偷懒</code>的技巧:</p>
+<h2 id="aliases"><a href="#aliases" class="headerlink" title="aliases"></a>aliases</h2><p>比如, 放到缓存区, 移出缓存区:</p>
+<pre><code>git config --global alias.unstage &#39;reset HEAD --&#39;
+</code></pre><p>以后直接用<code>git add &lt;file&gt;</code>来将文件加入暂存区，使用<code>git unstage &lt;file&gt;</code>来将文件移出.<br>其他还有:</p>
+<pre><code>  git config --global alias.co checkout  
+  git config --global alias.br branch
+  git config --global alias.ci commit
+  git config --global alias.st status
+</code></pre><h1 id="大仓库"><a href="#大仓库" class="headerlink" title="大仓库"></a>大仓库</h1><p>有些库非常大, 但是它又是一个逻辑主体, 不能使用repo, 例如:</p>
+<ul>
+<li>项目累积了非常长的历史 (git log你就知道了)</li>
+<li>项目包括了巨大的二进制资产，需要与代码一起跟踪配对</li>
+</ul>
+<p>我工作中, 没必要拉取所有的分支, 所有的记录或者文件, 这个时候一般需要特殊处理一下.</p>
+<h2 id="大量历史记录的库"><a href="#大量历史记录的库" class="headerlink" title="大量历史记录的库"></a>大量历史记录的库</h2><h3 id="浅克隆"><a href="#浅克隆" class="headerlink" title="浅克隆"></a>浅克隆</h3><p>这是简单的的解决办法, 克隆所有的分支的近depth次提交</p>
+<pre><code>git clone --depth depth remote-url
+</code></pre><p>当然, 也支持只克隆一个分支:</p>
+<pre><code>git clone URL --branch branch_name --single-branch [folder]
+</code></pre><h3 id="过滤分支"><a href="#过滤分支" class="headerlink" title="过滤分支"></a>过滤分支</h3><p>filter-branch (过滤分支)这个命令可以根据预先定义的模式对项目历史进行过滤、 整理 、修改，甚至跳过一些文件:</p>
+<pre><code>git filter-branch --tree-filter &#39;rm -rf /path/to/spurious/asset/folder&#39; HEAD
+</code></pre><p>但是, 这么做就已经重新写了整个项目的历史记录, 不再是原库了. 如果原库更新, 你还得重新更新.</p>
+<blockquote>
+<p>这个操作危险系数大, 建议还是浅克隆吧</p>
+</blockquote>
+<h2 id="有巨大二进制资产的库"><a href="#有巨大二进制资产的库" class="headerlink" title="有巨大二进制资产的库"></a>有巨大二进制资产的库</h2><p>简单来说, 这种库资源size太大了, 而Git又是采用stupid拷贝的方式记录.</p>
+<p>git 在处理二进制资产的时候并不是特别差劲，但它也不会干得特别好。默认情况下，git 会完整压缩存储二进制资产的所有后续版本，如果你有很多二进制资产的情况下，这显然不是最佳方案。 处理的时候, 要进行调整分类:</p>
+<blockquote>
+<p>对于变化显著的二进制文件 - 这是指不仅只有元数据头变化 - 这时增量压缩可能没什么作用，建议对这些文件关闭 delta 选项，以避免不必要的增量压缩并重新打包</p>
+<p>对于上述情形，就像某些文件通过 zlib 压缩并不会有多好的效果，你使用 core.compression 0 或 core.loosecompression 0 来关闭压缩功能一样；这是一个全局设置，它会对其它压缩效果不错的非二进制文件带来负面影响。因此建议你把二进制资产放在单独的库中。</p>
+<p>一定要记住 git gc 将“重复的”松散的对象变成一个单独的包文件，除非以任何方式压缩文件都不会使生成的包文件有显著差异。</p>
+<p>探索调整 core.bigFileThreshold 带来的效果。任何大于 512 MiB 都不会采用 delta 压缩 - 如果没有设置 .gitattributes 的话 - 所以这样的调整值得一试。</p>
+</blockquote>
+<h3 id="子模块"><a href="#子模块" class="headerlink" title="子模块"></a>子模块</h3><p>这里其实是借用了<code>repo</code>工具的思想.</p>
+<blockquote>
+<p>把它们拆分到一个单独的库，然后在主项目是通过把它拉取为 子模块 。使用这种方法你可以控制资产的更新。需要了解子模块，可以看看： 核心概念与技巧 和 另一个选择 。如果你想继续使用子模块的方法，你可能需要检查 项目依赖 的复杂性。我提到的方法对解决大型二进制文件问题会有所帮助。</p>
+</blockquote>
+<p>关于子模块的参考如下:</p>
+<p>在已有库中, 添加子模块</p>
+<pre><code>git submodule add [url] [path]
+</code></pre><p>例如: <code>git submodule add git://github.com/wizardmerlin/xxx.git src/main/proj/xxxx</code></p>
+<p>初始化子模块：<code>git submodule init</code>    只在首次检出仓库时运行一次就行<br>更新子模块：<code>git submodule update</code>   每次更新或切换分支后都需要运行一下</p>
+<p>删除子模块</p>
+<ul>
+<li>git rm –cached [path]</li>
+<li>编辑“.gitmodules”文件，将子模块的相关配置节点删除掉</li>
+<li>编辑“ .git/config”文件，将子模块的相关配置节点删除掉</li>
+<li>手动删除子模块残留的目录(就是你 add 的 path)</li>
+</ul>
+<h3 id="git三方扩展"><a href="#git三方扩展" class="headerlink" title="git三方扩展"></a>git三方扩展</h3><p>git 中处理二进制可以依靠第三方扩展, 比如<code>git-annex</code>. 它可以使用 git 管理二进制文件，但不需要把文件内容检入库中。git-annex 使用一个特殊的键值库来保存文件，然后将符号链接像普通文件一样检入 git 库中进行版本管理。 <a href="https://git-annex.branchable.com/git-annex/" target="_blank" rel="external">参考</a></p>
+<p>第二个扩展是 git-bigfiles ，一个 git 分支， 适合于使用 git 分享项目大文件的人 。</p>
+<h1 id="其他参考"><a href="#其他参考" class="headerlink" title="其他参考"></a>其他参考</h1><p>给你一个写的更加啰嗦(详细)的参考: <a href="http://www.cnblogs.com/kenshinobiy/p/4543976.html" target="_blank" rel="external">http://www.cnblogs.com/kenshinobiy/p/4543976.html</a></p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：高质量Git工作</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/04/12/high-quality-git.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
