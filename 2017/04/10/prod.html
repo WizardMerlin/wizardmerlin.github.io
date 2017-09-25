@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>《专业主义》 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="我上学的时候就读过大前研一的这本书, 而今再读, 体会完全不一样了">
+<meta name="keywords" content="思考">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《专业主义》">
+<meta property="og:url" content="www.merlinblog.site/2017/04/10/prod.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="我上学的时候就读过大前研一的这本书, 而今再读, 体会完全不一样了">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/prod1.jpg">
+<meta property="og:updated_time" content="2017-09-25T02:48:11.387Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《专业主义》">
+<meta name="twitter:description" content="我上学的时候就读过大前研一的这本书, 而今再读, 体会完全不一样了">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/prod1.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#专业"><span class="toc-number">1.</span> <span class="toc-text">专业</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#专业能力"><span class="toc-number">2.</span> <span class="toc-text">专业能力</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#精髓摘录"><span class="toc-number">3.</span> <span class="toc-text">精髓摘录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#体会"><span class="toc-number">4.</span> <span class="toc-text">体会</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>《专业主义》</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-04-10</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/思考/">思考</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>书中着重阐述了真正的专家必须具备的四种能力：先见能力、构思能力、讨论的能力、适应矛盾的能力，以丰富的案例和深刻的洞见警示人们重新思考专业的内涵与效用，培养并吸纳专业人才。</p>
+</blockquote>
+<p>但是, 这本书, 按它的章节划分, 观点比较泛, 看上去<code>不像一本好书的样子</code>, 所以本文主要围绕它的核心观点, <code>四种专业能力</code>展开, 再谈谈自己的体会.<br>个人觉得书写得还不错值得有一定工作年限了的人去阅读.<br><img src="http://omotkhw3y.bkt.clouddn.com/prod1.jpg" alt=""><br>补充一点, 这本书被归为”管理学”范畴, 也就是说, 它本来是写给企业管理者, 给他们寻找专业人才做参考的; 但是正是这个原因, 也给被雇佣者一种方向和地图.</p>
+<a id="more"></a>
+<h1 id="专业"><a href="#专业" class="headerlink" title="专业"></a>专业</h1><p>首先, 作者肯定是一位<code>专业人士</code>.</p>
+<blockquote>
+<p>大前研一，早稻田大学理工系毕业后，获得东京工业大学硕士学位，麻省理工学院博士学位。曾任麦肯锡咨询公司日本分社社长、公司董事、国际著名企业顾问。</p>
+</blockquote>
+<p>说明这并不是, 仅仅是一位理论派, 人家是专业顾问级别. <code>多看大师</code>的作品, 少看不知名作家的著作.</p>
+<p>我以往认为的专业是, 在某个领域深耕, 理解行业, 并有自己的理解和见解. 但是作者提出的意见更加专业:</p>
+<pre><code>当你说来中国做生意时，你不能笼统说进入中国，而要说进入中国的哪一个区，因为东北地区和广东、福建的区别是非常大的。
+你必须了解中国各地区的特点，如果你处于某一特定行业，那么我可能会建议你去长江三角洲而不是珠江三角洲，因为长江三角洲可能更适合你所处的行业。
+</code></pre><p>也就是说, 专业和行业并不是对等的, 并不是指<code>领域内专家</code>, 而是具有专业能力的人, 简单来说是具有<code>洞察力</code>,<code>判断力</code>和<code>合作能力</code>的跨界专业人才, 即<code>professional</code>而非<code>specialist</code>. 但就是这样也对人才提出了更高的要求, 不仅仅是<code>special in</code>专于某个领域, 而是有通用的专业能力, 几乎可以专业于所有行业(通过主观努力和学习).</p>
+<h1 id="专业能力"><a href="#专业能力" class="headerlink" title="专业能力"></a>专业能力</h1><p>作者所说的四种能力: </p>
+<blockquote>
+<p>先见能力、构思能力、讨论的能力、适应矛盾的能力.</p>
+</blockquote>
+<p>其实也不是什么新鲜能力, 通俗来说, 就是观察能力, 独立思考能力, 沟通协商能力, 以及抗压面对挫折冷静应对的能力, 包括坚守规则&amp;原则能力.</p>
+<p>除了<code>适应矛盾</code>的能力, 个人比较欣赏的是 <code>先见能力</code>.</p>
+<blockquote>
+<p>如今需要的不再是程度与规模，而是方向，是克服眼前困难的思路与勇气，是在没有道路的地方找到道路的能力，是能看到别人看不见的东西的预见力</p>
+<blockquote>
+<p>人的大脑有一种习性，那就是“只能看到想看的东西”，因此我们需要特别注意从成功的体验中得到的知识和理论。</p>
+</blockquote>
+</blockquote>
+<p>专家要控制自己的情感，并靠理性而行动。他们不仅具备较强的专业知识和技能以及较强的理念，而且无一例外地将顾客放在第一位，具有永不衰竭的好奇心和进取心，严格遵守纪律。<br>以上条件全部具备的人才，我们才把他们称为专家。</p>
+<h1 id="精髓摘录"><a href="#精髓摘录" class="headerlink" title="精髓摘录"></a>精髓摘录</h1><p>下面是原文的一些精华语句:</p>
+<pre><code>1.亚里士多德在《诡辩驳议》的开头这样写道：“诡辩性质的驳斥看上去像是驳斥，但是这种言论实际上只不过是荒谬的推理（谬论）而已”。
+
+2.反驳的目的并不在于击倒对方，而是为了加深相互之间的理解。这主要有两种情况：一种是“论证型的反驳”，指的是驳倒支撑对方主张的论据。
+  另一种是“主张型的反驳”，指的是提出与对方主张相反的主张。
+
+3.应该固守的时候则不惜退出；应该前进的时候则不惜付出努力；应该进攻的时候则发起猛烈的攻击——松下幸之助《经营的奥妙》
+
+4.反驳的目的在于使讨论进行得彻底而充分，而并不在于为对方设置圈套。把针锋相对的意见摆到参加讨论的面前，制造紧张的气氛，使环境变得有利于引导出正确答案。
+
+5.如今需要的不再是程度与规模，而是方向，是克服眼前困难的思路与勇气，是在没有道路的地方找到道路的能力，是能看到别人看不见的东西的预见力。
+
+6.有些组织在改变战略以及把预见到的东西转变成构思的过程中花费了过多的时间，这样的组织即使是经历磨难的大企业也是无法生存下去。
+
+7.“只有偏执狂才能生存”——英特尔前首席执行官安迪·格鲁夫，偏执狂这个词一般给人一种病态，盲信的印象，但格鲁夫指的是对组织，对他人的思想或行动抱怀疑态度，
+  这种怀疑的态度是积极的，同时也是偏执的。
+
+8.企业的成功在于灵活操纵不合理与合理这两个方面的因素，并把不合理的因素转变为经济效益。这两种矛盾互不相容，但由此产生的变化却是丰富多彩的。
+
+9.只有对自己所描绘的蓝图充满自信，随时准备重新审视或放弃自己的构思，才有能力作出决策。
+
+10.所有的一切都在发生巨变，在这样的社会中，要想经得起变化就必须经常客观地审视自己，改变自己。自我变革没有止境，它通过由先见到构思，再由构思到先见的不断循环得以实现。
+
+11.我们所具有的姿态是从一开始就与世界的主要市场保持等距离，也就是说，重要的是从起始阶段就把多个市场置于自己的视野中，据此来构思事业。
+
+12.人的大脑有一种习性，那就是“只能看到想看的东西”，因此我们需要特别注意从成功的体验中得到的知识和理论。
+
+13.专家要控制自己的情感，并靠理性而行动。他们不仅具备较强的专业知识和技能以及较强的理念，而且无一例外地将顾客放在第一位，具有永不衰竭的好奇心和进取心，严格遵守纪律。
+   以上条件全部具备的人才，我们才把他们称为专家。
+</code></pre><h1 id="体会"><a href="#体会" class="headerlink" title="体会"></a>体会</h1><p>为什么我上学的时候读这本书, 体会不深? 我想是没有被<code>甲方</code>的各种傻B需求和要求气爆炸吧?  这就是讲专业主义的必要性!</p>
+<pre><code>麦肯锡公司的价值观是“把客户的利益放在第一位”，无论是有经验的人还是新人，都要彻底贯彻这一价值观。
+严禁从个人或公司的利益出发而做出决策。如果打破这条戒律，不管你是多大规模工程的负责人，都会失去周围人的信任，不仅受到轻视，还会因此被解雇。
+</code></pre><p>除了洞察能力, 我体会最深的就是<code>适应矛盾</code>的适应环境的能力, 不要因为受不了, 就果断放弃, 那样会失去很多机会.</p>
+<hr>
+<p>最后补充一下, 作者有一些观点, 过分强调了得失和利益, 我还是不太认同的, 不展开了.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：《专业主义》</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/04/10/prod.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
