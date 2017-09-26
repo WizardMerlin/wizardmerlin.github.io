@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="www.merlinblog.site/"/>
-  <updated>2017-09-24T10:35:48.706Z</updated>
+  <updated>2017-09-26T02:17:08.314Z</updated>
   <id>www.merlinblog.site/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="www.merlinblog.site/2017/09/12/cpp-resource-manage.html"/>
     <id>www.merlinblog.site/2017/09/12/cpp-resource-manage.html</id>
     <published>2017-09-12T02:24:19.000Z</published>
-    <updated>2017-09-24T10:35:48.706Z</updated>
+    <updated>2017-09-26T02:17:08.314Z</updated>
     
-    <content type="html"><![CDATA[<p>C++中谈资源管理, 已经不是一天两天的事儿了, 感觉心好累. 看看大佬们为了资源管理(偷懒), 都做哪些事儿.</p><p>由于以前已经写了好多篇了, 这里算作汇总吧:</p><ul><li>RAII</li><li>PIMPL</li><li>智能指针(引用计数,标记擦除)</li><li>GC</li><li>malloc/free</li><li>new/delete</li><li>分配器</li><li>内存池</li></ul><a id="more"></a><h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr><p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>]]></content>
+    <content type="html"><![CDATA[<p>C++中谈资源管理, 已经不是一天两天的事儿了, 感觉心好累. 看看大佬们为了资源管理(偷懒), 都做哪些事儿.</p><p>由于以前已经写了好多篇了, 这里算作汇总吧:</p><ul><li>RAII</li><li>PIMPL</li><li>智能指针(引用计数,标记擦除)</li><li>GC</li><li>对齐问题</li><li>malloc/free</li><li>new/delete (placement new)</li><li>分配器</li><li>内存池</li></ul><a id="more"></a><h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr><p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>]]></content>
     
     <summary type="html">
     

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>谈谈后端开发 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="我看到群里好多人, 特别是新手(刚毕业的)动不动就问后台开发有没有前途.">
+<meta name="keywords" content="思考">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谈谈后端开发">
+<meta property="og:url" content="www.merlinblog.site/2017/05/26/back-end-work.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="我看到群里好多人, 特别是新手(刚毕业的)动不动就问后台开发有没有前途.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/back-end.jpg">
+<meta property="og:updated_time" content="2017-09-26T03:00:29.866Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="谈谈后端开发">
+<meta name="twitter:description" content="我看到群里好多人, 特别是新手(刚毕业的)动不动就问后台开发有没有前途.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/back-end.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#为何有此一文"><span class="toc-number">1.</span> <span class="toc-text">为何有此一文</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#用心概述"><span class="toc-number">2.</span> <span class="toc-text">用心概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux-Cpp"><span class="toc-number">2.1.</span> <span class="toc-text">Linux+Cpp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-Spring"><span class="toc-number">2.2.</span> <span class="toc-text">Java+Spring?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LAMP"><span class="toc-number">2.3.</span> <span class="toc-text">LAMP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他不入流的"><span class="toc-number">2.4.</span> <span class="toc-text">其他不入流的</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#日常工作"><span class="toc-number">3.</span> <span class="toc-text">日常工作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#分工与细化"><span class="toc-number">3.1.</span> <span class="toc-text">分工与细化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#半夜上线"><span class="toc-number">3.2.</span> <span class="toc-text">半夜上线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#立即响应"><span class="toc-number">3.3.</span> <span class="toc-text">立即响应</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#薪资待遇"><span class="toc-number">4.</span> <span class="toc-text">薪资待遇</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#技能点"><span class="toc-number">5.</span> <span class="toc-text">技能点</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>谈谈后端开发</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-05-26</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/思考/">思考</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>如果你只是说的 Web 时代的后台开发, 那么多半会碰到前端 JSP，Java，JS，CSS，HTML 等, 后端 Java, C++等. 实际上, 很多招聘人员自己根本分不清.</p>
+</blockquote>
+<h1 id="为何有此一文"><a href="#为何有此一文" class="headerlink" title="为何有此一文"></a>为何有此一文</h1><p>总在群里被问道, 各种烦人的 <code>学这个有前途嘛?</code>, <code>我要不要学?</code>…</p>
+<p>其实不是烦, 因为我也经历过这个时期, 但是怎么说呢? 就我现在的观点来看:</p>
+<blockquote>
+<p>不是你要去学什么? 而是你进了哪一行, 并且决心做下去, 那么这一行需要啥, 你都要学; 而且尽量做到最好.</p>
+</blockquote>
+<h1 id="用心概述"><a href="#用心概述" class="headerlink" title="用心概述"></a>用心概述</h1><p>不过在现在这个全面移动时代, 全面云时代, 半智能时代, 后台开发已经变得非常非常的庞大了, 不在仅仅只是Web层面, 包含更多的内容, 但是根本性的几个东西没有变:</p>
+<ul>
+<li>服务器</li>
+<li>网络</li>
+<li>存储(包括数据库, 分布式)</li>
+<li>公司的业务</li>
+</ul>
+<p>是的, 根据工作的领域, 书写的业务代码也不一样.在腾讯, 我了解到同学说后端(台)开发和服务器开发是一个意思, 但是显然<code>后端的范畴大过服务器</code>:</p>
+<ul>
+<li>一般后台开发指的是运行在服务器的程序，比如java/php/.net等等．你只需要会写java/php等代码就行</li>
+<li>服务器端开发可能是其他的高性能数据处理，分部式应用等等，这就需要有linux, c/c++ ,tcp/ip等知识才行</li>
+</ul>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/back-end.jpg" alt="post-cover"></p>
+<blockquote>
+<p>其实主要看你所在的公司的业务领域, 游戏?数据分析?专注存储?还是搞金融?</p>
+</blockquote>
+<p>就我的实际体验(面过的单位), 越是薪水高的, 对你解决问题的能力要求越高(而不是某个知识点技能点)</p>
+<h2 id="Linux-Cpp"><a href="#Linux-Cpp" class="headerlink" title="Linux+Cpp"></a>Linux+Cpp</h2><p>这种后台其实一句话就能概括: 在Linux下进行 C++ 网络开发(IO, IPC, TCP), 数据库操作.</p>
+<p>一般不会让你用 C++ 写Web, 但是即便要你写, 了解一下HTPP(get/post), cookie/session, CGI等技术也就差不多了.</p>
+<p>这里不展开了, 虽说就是普通的网络编程, 但是一旦展开内容不少. 有人认为很难? 其实也没有, 比如我问你</p>
+<pre><code>muxtex和spin_lock的区别?
+dynamic_cast怎么实现呢?
+</code></pre><blockquote>
+<p>我没有展开, 是怕吓到你(可能2-3年内都非常辛苦); 如果我有文章写面经, 你就知道要学很多东西了, 哦关键还是理解&amp;吸收&amp;转换;</p>
+<blockquote>
+<p>特别如果你在金融业, 那么对你的数值运算代码, 主要是浮点型; 实时代码要求比较多.</p>
+</blockquote>
+</blockquote>
+<h2 id="Java-Spring"><a href="#Java-Spring" class="headerlink" title="Java+Spring?"></a>Java+Spring?</h2><p>这个里面的轮子是最多的, 各种框架满天飞. 如果说C/C++各种库的依赖搞得烦死人, 那么在这里你就会遇到各种jar包版本混乱, 不兼容等问题.</p>
+<p>在这里, 你想处理海量数据, 跑很多服务器, 呵呵. 因为java简单, 所以会更加偏业务, 所以如果不是BAT或者fotune 500之类的, 对你的要求也没有那么高. 我有同学就是天天在写业务代码.</p>
+<blockquote>
+<p>但是这并不表示你要学的东西少, 相反, 由于框架多, 在初期要的东西并不比C++那一波少.</p>
+</blockquote>
+<p>现在Java后端发展到现在, 已经不是简单的spring或者spring mvc了, 云时代的要求, 可能会让你去写map reduce程序, 用Hbase等.</p>
+<p>但是, 基本上你是离不开Web的范畴的.</p>
+<h2 id="LAMP"><a href="#LAMP" class="headerlink" title="LAMP"></a>LAMP</h2><p>这个基本就是Web后台开发了, 服务端开发，特别是Web开发，基本上全是处理HTTP请求的处理。根据具体用途分为两种：Web页面开发和API接口开发。Web页面开发也完全可以看成是API接口开发，只是它的两个主要部分，页面和ajax请求，一个是返回html，另外一个可以返回html，也可以返回其他格式的而已。API接口开发是针对有客户端产品而言的。可能是移动设备，可能是PC应用等。</p>
+<p>应用框架一般使用的是LNMP或者LAMP，基本的框架就是前端N台Web服务机 + cgi访问PHP + php访问mysql。</p>
+<p>web服务器现在nginx是越来越多使用，nginx比较apache的优势就在于轻便和静态页面的高并发性能。一般拿到设备先需要考虑下单机可承受的qps大概多少，方法大致就是先只考虑内存，计算同时能开启多少个php-cgi，比如一个4G内存的机器，每个php-fpm大概占用20M内存，所以差不多能开启200个php-cgi进程（一般会留些空余的），每个进程同一个时间只能跑一个php程序，所以假设每个php程序跑0.1s，1s就能处理10个请求，所以单机qps大概会是2000。当然，一般不会开启到这么极致的程度，有几个原因：<br>1 需要考虑到其他进程使用内存的情况<br>2 考虑到如果一旦全部内存都使用完了，是否启用swap，如果没有的话，那机器是否就立即当机<br>3 还需要考虑到CPU和带宽的使用情况。CPU对一些比如加解密，视频转码等操作比较耗时，这个时候如果没有使用队列，那么每个请求的时间就会加长。</p>
+<p>其他的还要涉及到<code>文件服务器</code>, <code>web页面</code>, <code>API开发</code>, 当然还有一些列用户要求的非功能需求开发, 比如<code>调用统计</code>, <code>日志处理</code>等.</p>
+<h2 id="其他不入流的"><a href="#其他不入流的" class="headerlink" title="其他不入流的"></a>其他不入流的</h2><blockquote>
+<p>我有点名说Golang么?</p>
+</blockquote>
+<p>现在我身边的人对于Go语言褒贬不一, 有人认为是后端神器, 有人觉得就是Google的小组语言. 我个人的观点: 看你公司怎么来.</p>
+<p>如果你是负责人, 要你选: 选你熟悉的语言.</p>
+<p>(据说Go把许多后端代码进行很好的简化, 还引入了<code>协程</code>, 很神奇?)</p>
+<h1 id="日常工作"><a href="#日常工作" class="headerlink" title="日常工作"></a>日常工作</h1><h2 id="分工与细化"><a href="#分工与细化" class="headerlink" title="分工与细化"></a>分工与细化</h2><p>大公司的分工就比较细了, 可能你只负责<code>Restful Api</code> , <code>存储</code>, <code>日志</code> 等某一块. 对个人来说，服务器端开发却使终是一块迷雾环绕的大山，在这座大山上，你对你走过的路线很熟悉，而那些你没有接触过的服务器端技术，你使终是不清楚的。</p>
+<blockquote>
+<p>从这一点来说，去创业型的公司做服务器端开发又要比去大公司要好得多。</p>
+</blockquote>
+<h2 id="半夜上线"><a href="#半夜上线" class="headerlink" title="半夜上线"></a>半夜上线</h2><blockquote>
+<p>恐怕会有人觉得我在开玩笑</p>
+</blockquote>
+<p>7x24的服务, 绝对不是开玩笑; 如果服务中断, 或者在夜里出了什么大问题, 比如晚上12点上网高峰, 那么一般会在夜里2-3点进行维护.</p>
+<p>如果碰上大升级, 要上线, 可能要通宵加班, 我这里引用网友的描述:</p>
+<blockquote>
+<p>上线出问题怎么办？在网易，我们一般是两种做法：</p>
+<blockquote>
+<p>在线调试和修改 Bug，通常顺利的话，到早上 7，8 点的时候一般就能搞定了。<br>在线调试和修改 Bug，如果不顺利的话，到早上 7，8 点的时候回滚数据。<br>然后，我们需要回家休息半天之后，继续在下一个凌晨 3 点上线。</p>
+</blockquote>
+</blockquote>
+<h2 id="立即响应"><a href="#立即响应" class="headerlink" title="立即响应"></a>立即响应</h2><p>服务器端的问题，只要出现，影响都是巨大的，所以服务器端的同学需要随时待命，一旦有服务器异常报警，就立即处理，以免影响到用户。所以做服务器开 发的同学手机都是开着的，在服务不稳定时，一不小心，几十条报警短信就过来了。服务器开发出去旅游什么的，一般都带着笔记本，以便出问题时能够及时响应。</p>
+<blockquote>
+<p>不管有多少客户端&amp;多少种类的, 一般公司一种类型的服务器.</p>
+</blockquote>
+<h1 id="薪资待遇"><a href="#薪资待遇" class="headerlink" title="薪资待遇"></a>薪资待遇</h1><p>从纯技术上的挑战来说，服务器端明显更大。服务器端开发动辄超过 10 人的团队，代码量稍微复杂一些就是接近百万行。而客户端一个平台的研发大多数也就在 5 人左右，代码量多在 10 万行以内。 也就是说, 很可能你一个人干两个人的活, 没跑的.</p>
+<p>C++待遇方面, 15-25W之间. 如果超过30W, 你就可能不仅仅承担服务器端的工作了. (低于10W的, 说明你不符合要求, 然后企业降级录用的你), 其他不清楚.</p>
+<blockquote>
+<p>有人说市场饱和? 我想你是招聘会去少了, 没见到抢人的吧.</p>
+</blockquote>
+<h1 id="技能点"><a href="#技能点" class="headerlink" title="技能点"></a>技能点</h1><p>后端开发工作, 对你的<code>操作系统</code>, <code>网络</code>, <code>数据结构</code>要求比较高哦. (业务知识是入行以后学习的, 这个反而好说)</p>
+<blockquote>
+<p>有人想的很简单, 以为刷完APUE就可以了; 你去看看大厂的面试就知道, <code>融会贯通</code>是需要知道很多知识然后整合的.</p>
+</blockquote>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：谈谈后端开发</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/05/26/back-end-work.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
