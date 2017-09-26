@@ -8,20 +8,22 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   
-  <title>集中谈谈C++资源管理 | Merlin&#39;s Blog</title>
+  <title>C++最终篇 | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="白话一下资源管理, 虽然以前就已经谈过很多次了.">
+  <meta name="description" content="以后全部的C++文章就在这里落脚了, C++17也在这里更新.">
 <meta name="keywords" content="cpp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="集中谈谈C++资源管理">
-<meta property="og:url" content="www.merlinblog.site/2017/09/12/cpp-resource-manage.html">
+<meta property="og:title" content="C++最终篇">
+<meta property="og:url" content="www.merlinblog.site/2017/09/14/c-plus-plus-final.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
-<meta property="og:description" content="白话一下资源管理, 虽然以前就已经谈过很多次了.">
+<meta property="og:description" content="以后全部的C++文章就在这里落脚了, C++17也在这里更新.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-26T02:17:08.314Z">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/cpp_all1.jpg">
+<meta property="og:updated_time" content="2017-09-26T06:42:34.462Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="集中谈谈C++资源管理">
-<meta name="twitter:description" content="白话一下资源管理, 虽然以前就已经谈过很多次了.">
+<meta name="twitter:title" content="C++最终篇">
+<meta name="twitter:description" content="以后全部的C++文章就在这里落脚了, C++17也在这里更新.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/cpp_all1.jpg">
   
   
     <link href="/favicon.ico" rel="ico" />
@@ -187,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#经典著作"><span class="toc-number">1.</span> <span class="toc-text">经典著作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#标准文档"><span class="toc-number">2.</span> <span class="toc-text">标准文档</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#C-17"><span class="toc-number">3.</span> <span class="toc-text">C++17</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#来自Boost"><span class="toc-number">3.1.</span> <span class="toc-text">来自Boost</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简化代码"><span class="toc-number">3.2.</span> <span class="toc-text">简化代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法部分"><span class="toc-number">3.3.</span> <span class="toc-text">算法部分</span></a></li></ol></li></ol>
     	</div>
 	
 
@@ -203,13 +205,13 @@ function tmpfobid()
     <div class="container post-box">
         <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
             <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
-                <strong>集中谈谈C++资源管理</strong>
+                <strong>C++最终篇</strong>
             </div>
  
             <div class="is-flex align-center" style="margin-top:10px;">
                 <span style="padding:0 10px;">post time:</span>
 				
-                <span class="post-date">2017-09-12</span>
+                <span class="post-date">2017-09-14</span>
             </div>
 			
             
@@ -224,21 +226,70 @@ function tmpfobid()
 
 
         <div class="content" style="overflow: auto; align:center;">
-            <p>C++中谈资源管理, 已经不是一天两天的事儿了, 感觉心好累. 看看大佬们为了资源管理(偷懒), 都做哪些事儿.</p>
-<p>由于以前已经写了好多篇了, 这里算作汇总吧:</p>
+            <p>这里集中说一说, 就当汇总吧; <code>以后C++更新的新内容全部在此</code>. 更新列表, 如下:</p>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2017-8-26</td>
+<td>初稿:C++标准文档</td>
+</tr>
+<tr>
+<td>2017-9-14</td>
+<td>更新:C++17新特性(参考《程序员杂志》,2017.09期)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<blockquote>
+<p>从最开始的接触C++, 到现在已经 5 年了(2012-2017), 虽然自己写的关于C++的文章不多, 但是经典的东西差不多都接触过了.</p>
+<blockquote>
+<p>在今天这语言百花齐放的年代, C++标准的制定又被资金限制推迟, 一直是在追着时代跑(已经完全不能领先于时代了)</p>
+</blockquote>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/cpp_all1.jpg" alt="post-cover"></p>
+<blockquote>
+<p>C++的著作, 非常多, 鱼龙混杂. 我当年走了不少弯路; 实际上很多书可以不读.</p>
+</blockquote>
+<h1 id="经典著作"><a href="#经典著作" class="headerlink" title="经典著作"></a>经典著作</h1><p>我在最开始写 <code>Modern C++</code> 的时候, 就推荐过好基本书, 这里在集中说一说.</p>
+<p>入门我一共推荐了2本: (入门你看看《C++编程语言-十周年版》也是不错的, C++本加尼写的)</p>
 <ul>
-<li>RAII</li>
-<li>PIMPL</li>
-<li>智能指针(引用计数,标记擦除)</li>
-<li>GC</li>
-<li>对齐问题</li>
-<li>malloc/free</li>
-<li>new/delete (placement new)</li>
-<li>分配器</li>
-<li>内存池</li>
+<li>《C++语言演化》</li>
+<li>《C++ Primer(5e)》  (不要看第四版)</li>
 </ul>
-<a id="more"></a>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<p>我一共推荐4本C++的额外读物:</p>
+<ul>
+<li>《Effective Modern C++》</li>
+<li>《Effective C++ 第三版》(相比第二版有很多新东西)</li>
+<li>《More Effective C++》</li>
+<li>《Effective STL》</li>
+</ul>
+<p>后面3本是经典, 需要细读.</p>
+<p>由于我不是专门研究或者参与语法研究, 我其实不太喜欢语法来语法去, 也比较讨厌硬是把给个主题都写一遍的书, 比如<code>《Think In C++》</code>.<br>(纯粹的浪费大好的青春, 年华)</p>
+<p>还有一些, 比如<code>《Inside C++ Object Mode》</code>, 我只能说, 如果你还在上学, 请务必读一读; 如果已经工作, 呵呵, 你好闲啊.</p>
+<h1 id="标准文档"><a href="#标准文档" class="headerlink" title="标准文档"></a>标准文档</h1><p>C++真正正式公布的标准只有三个：C++98、C++03、C++11:</p>
+<ul>
+<li>C++98是第一个正式的C++标准</li>
+<li>C++03是在C++98上面进行了小幅度的修订</li>
+<li>C++11则是一次全面的<code>大进化</code>（之前称C++11为C++0x，以为会在08~09年公布，没想到拖到了11年, 原因?<code>缺钱</code>啊）<br>(你看它的标准文档就知道了, 前两个版本都是2.7M左右, C++11直接变成了14M)<blockquote>
+<p>现在貌似C++17标准也快了, 据说9月就会去开会讨论啥的. 不过C++标准的跳票也没准, 就像官方所说的, 缺乏资金推动.</p>
+</blockquote>
+</li>
+</ul>
+<p>下面给出标准库的文档, 可以参考我的github库:<br>C++98 (1998年)<br><a href="https://github.com/WizardMerlin/Gate/tree/master/appendix/98.pdf" target="_blank" rel="external">https://github.com/WizardMerlin/Gate/tree/master/appendix/98.pdf</a></p>
+<p>C++03 (2003年)<br><a href="https://github.com/WizardMerlin/Gate/tree/master/appendix/03.pdf" target="_blank" rel="external">https://github.com/WizardMerlin/Gate/tree/master/appendix/03.pdf</a></p>
+<p>C++11 (2011年)<br><a href="https://github.com/WizardMerlin/Gate/tree/master/appendix/11.pdf" target="_blank" rel="external">https://github.com/WizardMerlin/Gate/tree/master/appendix/11.pdf</a></p>
+<blockquote>
+<p>如果有时间, 这些文档是值得好好读读的, 而且是<code>一手资料</code></p>
+</blockquote>
+<h1 id="C-17"><a href="#C-17" class="headerlink" title="C++17"></a>C++17</h1><p>程序员杂志上《深入应用C++11》的作者给出了介绍, C++17其实主要是把Boost已经运用成熟的特性, 比如<code>any</code>, <code>optional</code>, <code>filesystem</code>等引入.<br>还有一些简化代码的机制, 比如<code>nested namespace</code>, <code>if init</code>, <code>dedution guide</code>等; 当然还增加了<code>并行算法</code>.</p>
+<p>下面挑选我认为比较有意义的, 记录一下.</p>
+<h2 id="来自Boost"><a href="#来自Boost" class="headerlink" title="来自Boost"></a>来自Boost</h2><h2 id="简化代码"><a href="#简化代码" class="headerlink" title="简化代码"></a>简化代码</h2><h2 id="算法部分"><a href="#算法部分" class="headerlink" title="算法部分"></a>算法部分</h2><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 
         </div>
@@ -255,8 +306,8 @@ function tmpfobid()
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：集中谈谈C++资源管理</span><br/>
-	<span><b>本文链接</b>：www.merlinblog.site/2017/09/12/cpp-resource-manage.html</span>
+	<span><b>本文标题</b>：C++最终篇</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/09/14/c-plus-plus-final.html</span>
 
   </blockquote>
 </div>
