@@ -8,20 +8,21 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   
-  <title>《Modern C++》 | Merlin&#39;s Blog</title>
+  <title>《Effective Modern C++》 | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="C++自从C++11之后, 已经全面更新了; 不像以往 C 的附庸.">
 <meta name="keywords" content="boost,cpp,stl">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《Modern C++》">
+<meta property="og:title" content="《Effective Modern C++》">
 <meta property="og:url" content="www.merlinblog.site/2017/04/06/c-plus-plus.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
 <meta property="og:description" content="C++自从C++11之后, 已经全面更新了; 不像以往 C 的附庸.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/modern_cpp.jpg">
-<meta property="og:updated_time" content="2017-09-26T03:19:13.242Z">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/effectivec11.jpg">
+<meta property="og:updated_time" content="2017-09-26T05:15:01.634Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《Modern C++》">
+<meta name="twitter:title" content="《Effective Modern C++》">
 <meta name="twitter:description" content="C++自从C++11之后, 已经全面更新了; 不像以往 C 的附庸.">
 <meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/modern_cpp.jpg">
   
@@ -192,7 +193,7 @@ function tmpfobid()
     <div class="container post-box">
         <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
             <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
-                <strong>《Modern C++》</strong>
+                <strong>《Effective Modern C++》</strong>
             </div>
  
             <div class="is-flex align-center" style="margin-top:10px;">
@@ -217,15 +218,24 @@ function tmpfobid()
 
 
         <div class="content" style="overflow: auto; align:center;">
-            <p>我的老师说，你能在编程领域走多远，很大程度上依赖你对底层语言的理解程度(不过至今我体会更多的是，你对于操作系统/软件设计的理解程度)</p>
-<blockquote>
-<p>C++是一门好用但不好学的语言，相比起Java，Ｃ，Ｇroovy等，我投入时间＆精力最多的就是这一门语言。</p>
+            <blockquote>
+<p>我的老师说，你能在编程领域走多远，很大程度上依赖你对底层语言的理解程度(不过至今我体会更多的是，你对于操作系统/软件设计的理解程度)</p>
 </blockquote>
-<p>起初我是不喜欢这门语言的，因为作者故意提高了”语法”门槛，在学习语法的过程你就要话费大量的时间，并且为了兼容Ｃ，本来设计良好的语言，活生生被搞的很尴尬。然而C++11又进行了一次换血。</p>
+<p>C++是一门好用但不好学的语言，相比起Java，Ｃ，Ｇroovy等，我投入时间＆精力最多的就是这一门语言。</p>
+<p>起初我是不喜欢这门语言的，因为作者故意提高了”语法”门槛，在学习语法的过程你就要话费大量的时间，并且为了兼容Ｃ，本来设计良好的语言，活生生被搞的很尴尬。然而C++11又进行了一次换血。<br><a id="more"></a></p>
+<p>我一共推荐4本C++的额外读物:</p>
+<ul>
+<li>Effective Modern C++</li>
+<li>Effective C++ 第三版</li>
+<li>More Effective C++</li>
+<li>Effective STL</li>
+</ul>
+<p>后面两本是经典, 需要细读, 而第一本, 也就是现在说的这本, 用熟悉即可.</p>
+<blockquote>
+<p>强烈不推荐 <code>Think In C++</code>, 也就是<code>C++编程思想</code>, 太啰嗦了, 具体以后再说.</p>
+</blockquote>
 <p><img src="http://omotkhw3y.bkt.clouddn.com/modern_cpp.jpg" alt=""></p>
-<a id="more"></a>
-<hr>
-<p>其实等你真正学完之后，回过头来仔细看看，不难发现，其实Ｃ++核心没有多少(从用的角度来看)：</p>
+<p>其实等你真正学完之后，回过头来仔细看看，不难发现，其实<code>Ｃ++核心</code>没有多少(从用的角度来看)：</p>
 <pre><code>1. 兼容/扩展Ｃ的部分
 2. 面向对象的部分(封装，继承，多态，友元，抽象(虚函数，抽象类)) 
 3. 类型转换
@@ -257,13 +267,17 @@ function tmpfobid()
  14. 正则表达式库
  15. 语言级别线程支持
  16. 结构化绑定
-</code></pre><p>以后再补充.</p>
+</code></pre><p>也就是下面的目录:<br><img src="http://omotkhw3y.bkt.clouddn.com/effectivec11.jpg" alt=""></p>
+<p>以后再补充.</p>
 <pre><code>我个人的观点是，一个高级Ｃ++开发人员不仅仅能玩熟C++，并且还能独立造轮子(只是不屑).
-</code></pre><p>(所以c++的开发人员，一个合格的c++开发人员 (C++没有初级开发人员) ，薪水确实要高一截)　</p>
-<pre><code>另外评价一个Ｃ++高级开发人员还要看他会不会｀性能优化｀---需要编译，链接，汇编知识.
-</code></pre><p>更新再补充:</p>
+</code></pre><p>所以c++的开发人员，一个合格的c++开发人员 (C++没有初级开发人员) ，薪水确实要高一截; 另外评价一个Ｃ++高级开发人员还要看他会不会｀性能优化｀—需要编译，链接，汇编知识. 业内有这么一句话:</p>
+<blockquote>
+<p>宁可花5W招一个老手, 不花5K找一个新手.</p>
+</blockquote>
+<p>更新再补充:</p>
 <pre><code>很多老人, 其实是不care新特性的(比如说智能指针, 他们也就当玩具), 当然我觉得要紧跟时代的步伐, 努力学习新特性, 知其所以然.
-</code></pre><hr>
+</code></pre><p>需要这 4 本 书的同学, 可以邮件我.</p>
+<hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)</p>
 
         </div>
@@ -280,7 +294,7 @@ function tmpfobid()
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：《Modern C++》</span><br/>
+	<span><b>本文标题</b>：《Effective Modern C++》</span><br/>
 	<span><b>本文链接</b>：www.merlinblog.site/2017/04/06/c-plus-plus.html</span>
 
   </blockquote>
