@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Git代码规范 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="commit mesage 应该怎么写?  change log怎么写? 分支怎么命名?">
+<meta name="keywords" content="开发管理,编码规范">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git代码规范">
+<meta property="og:url" content="www.merlinblog.site/2017/05/11/code-update-rules.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="commit mesage 应该怎么写?  change log怎么写? 分支怎么命名?">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/gitrules.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/gitrules1.jpg">
+<meta property="og:updated_time" content="2017-09-26T11:00:09.542Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git代码规范">
+<meta name="twitter:description" content="commit mesage 应该怎么写?  change log怎么写? 分支怎么命名?">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/gitrules.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#提交信息"><span class="toc-number">1.</span> <span class="toc-text">提交信息</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Header"><span class="toc-number">1.1.</span> <span class="toc-text">Header</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Body"><span class="toc-number">1.2.</span> <span class="toc-text">Body</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Footer"><span class="toc-number">1.3.</span> <span class="toc-text">Footer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特殊情况"><span class="toc-number">1.4.</span> <span class="toc-text">特殊情况</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#变更日志"><span class="toc-number">2.</span> <span class="toc-text">变更日志</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分支命名"><span class="toc-number">3.</span> <span class="toc-text">分支命名</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Type"><span class="toc-number">3.1.</span> <span class="toc-text">Type</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Scope"><span class="toc-number">3.2.</span> <span class="toc-text">Scope</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Subject"><span class="toc-number">3.3.</span> <span class="toc-text">Subject</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#说明"><span class="toc-number">4.</span> <span class="toc-text">说明</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Git代码规范</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-05-11</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/开发管理/">开发管理</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/编码规范/">编码规范</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>本文主要讲述在 Git 工作流中一系列书写规范问题, 归纳起来如下:</p>
+<ul>
+<li>commit 信息怎么写</li>
+<li>change log怎么写</li>
+<li>分支名的命名规范</li>
+</ul>
+<blockquote>
+<p>commit mesage 应该怎么写?  change log怎么写? 分支怎么命名?</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/gitrules.jpg" alt="post-cover"></p>
+<h1 id="提交信息"><a href="#提交信息" class="headerlink" title="提交信息"></a>提交信息</h1><p>同一组里就会看到有些人, 直接 <code>git commit -m &quot;xxxx&quot;</code> 就提交了, 事后除了问题, 要回退版本, 就非常不友好. 所以在提交的时候, 就会要求好规范.<br>规范的提交, 给一个直接例子:</p>
+<blockquote>
+<p>refactor(sns): simplify conditional display</p>
+</blockquote>
+<p>什么意思? 下面解释一下.</p>
+<h2 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h2><p>头部分就是冒号前面的部分, 主要包括3个子部分:</p>
+<ul>
+<li>type</li>
+<li>scope</li>
+<li>subject</li>
+</ul>
+<p><code>type</code>用于说明 commit 的类别，只允许使用下面 7 个标识:</p>
+<ul>
+<li>feat: New feature 新功能</li>
+<li>fix: Fix bug 修补 bug</li>
+<li>docs: Documentation 文档</li>
+<li>style: Format 格式（不影响代码运行的变动）</li>
+<li>refactor: Refactor 重构（即不是新增功能，也不是修改 bug 的代码变动）</li>
+<li>test: Test 增加测试</li>
+<li>chore: 构建过程或辅助工具的变动</li>
+</ul>
+<p><code>scope</code>用于说明<code>受影响</code>的范围, 比如模块, 代码包等. 一般紧跟在<code>type</code>后面的圆括号内.</p>
+<p><code>subject</code>用于描述本次commit的目的, 放在冒号的后面 (第一个字母小写, 结尾不加句号)</p>
+<blockquote>
+<p>以动词开头，使用第一人称现在时，比如change，而不是changed或changes</p>
+</blockquote>
+<h2 id="Body"><a href="#Body" class="headerlink" title="Body"></a>Body</h2><p>Body 部分是对本次 commit 的详细描述，说明具体更改了哪些东西, 并且使用现代时.<br>可以分成多行, 但每一行, 都要顶头写, 可以使用<code>*</code>进行缩进.<br>例如:</p>
+<pre><code>More detailed explanatory text, if necessary. Wrap it to about 72 characters or so.
+Further paragraphs come after blank lines.
+ * Bullet points are okay, too
+</code></pre><h2 id="Footer"><a href="#Footer" class="headerlink" title="Footer"></a>Footer</h2><p>一般会用到<code>footer</code>都是比较特殊的情况, 比如关于一个<code>issue</code>, 它完全可以作为一个独立的部分.也就是说:</p>
+<blockquote>
+<p>普通的提交, 是没有Footer, 只要特殊情况才会用到<code>footer</code>, 并且本次提交中<code>header</code>,<code>body</code>的写法都会改变.</p>
+</blockquote>
+<p>例如:</p>
+<pre><code>BREAKING CHANGE: isolate scope bindings definition has changed.
+
+To migrate the code follow the example below:
+
+Before:
+
+scope: {
+  myAttr: &#39;attribute&#39;,
+}
+
+After:
+
+scope: {
+  myAttr: &#39;@&#39;,
+}
+
+The removed `inject` wasn&#39;t generaly useful for directives so there should be no code using it.
+</code></pre><p>如果当前代码与上一个版本不兼容，则 Footer 部分以<code>BREAKING CHANGE</code>开头(突破性更新)，后面是对变动的描述、以及变动理由和迁移方法。</p>
+<blockquote>
+<p>或者另外一种情况: 关闭issue;<br>此时, 你的header, body, 还是按照规范写, 但是在组后面, 写上一行. <code>Closes #234</code> 或者 <code>Closes #123, #245, #992</code></p>
+</blockquote>
+<h2 id="特殊情况"><a href="#特殊情况" class="headerlink" title="特殊情况"></a>特殊情况</h2><p>revert的情况比较特殊, </p>
+<blockquote>
+<p>如果当前 commit 用于撤销以前的 commit，则必须以 <code>revert:</code> 开头，后面跟着被撤销 Commit 的 Header</p>
+</blockquote>
+<p>例如:</p>
+<pre><code>revert: feat(pencil): add &#39;graphiteWidth&#39; option
+
+This reverts commit 667ecc1654a317a13331b17617d973392f415f02.
+</code></pre><p>Body 部分的格式是固定的，必须写成<code>This reverts commit &lt;hash&gt;.</code>， 其中的 hash 是被撤销 commit 的 SHA 标识符.</p>
+<blockquote>
+<p>如果当前 commit 与被撤销的 commit，在同一个发布（release）里面，那么它们都不会出现在 Change log 里面。(当做没发生)<br>如果两者在不同的发布，那么当前 commit，会出现在 Change log 的 Reverts 小标题下面。</p>
+</blockquote>
+<p>下面就说说, release版本时, 变更日志.</p>
+<h1 id="变更日志"><a href="#变更日志" class="headerlink" title="变更日志"></a>变更日志</h1><p>一般用于产品发布的时候, 内部详细记录. 当一个阶段的开发以后，就应该推出更新日志。</p>
+<ul>
+<li>对于开发者，这是对过去一段时间自己开发的总结；</li>
+<li>对于用户，更新日志是他们了解你开发成果的渠道。</li>
+</ul>
+<p>先看成熟产品的<code>CHANGELOG.md</code>是怎么写的:<br><img src="http://omotkhw3y.bkt.clouddn.com/gitrules1.jpg" alt=""></p>
+<blockquote>
+<p>一个好的更新日志可以清楚地展现你这一段时间的成果，应该包括你修复的 Bug、你新增的 Feature、你做的改动;<br>以及突破性变更（一般这类改动会改变用户过去的操作习惯、或者需要用户对其作出新的配置，以及其它包含不向下兼容的改动）</p>
+</blockquote>
+<p>其实规则也很简单: </p>
+<ul>
+<li>New features</li>
+<li>Changes</li>
+<li>Bugs fixed</li>
+</ul>
+<blockquote>
+<p>每个部分尽量罗列相关的 commit ，并且有指向这些 commit 的链接。</p>
+</blockquote>
+<h1 id="分支命名"><a href="#分支命名" class="headerlink" title="分支命名"></a>分支命名</h1><p>新加的功能或者特性加入主分支, 实在太过冒险，虽然出了严重的问题可以revert, 但是这应该是最坏的打算.</p>
+<p>正确做法是把有风险和较大的改动都要新建一个分支进行管理，在新的分支里进行提交。当功能已经完善以后，把分支 Pull Rquest 合并回主分支。<br>这样，就算其它分支改残了，主分支依然是合理和完美的, 而且不同的人协同开发时，可以尽量用不同的分支，互不冲突。</p>
+<p>分支的命名规范如下, 包含三个部分, 以<code>\</code>分割:</p>
+<ul>
+<li>type</li>
+<li>scope</li>
+<li>subject</li>
+</ul>
+<p>举一些简单的例子:</p>
+<blockquote>
+<p><code>fix/jsload</code> , <code>fix/comment/disqusclick</code>, <code>feat/sidebar</code> 等</p>
+</blockquote>
+<h2 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h2><p>A type is used to mark what the branch used for, 通俗说, 就是分支的工作类型.<br>There are some examples: (后面跟的是解释)</p>
+<ul>
+<li>feat: New Feature</li>
+<li>fix: Fix a bug</li>
+<li>docs: About Documentiations</li>
+<li>style: Format (And it won’t affect the code running)</li>
+<li>refactor: Refactor(No new feature will be added or no bugs will be fixed)</li>
+<li>test: Test</li>
+<li>chore: Update our tools</li>
+</ul>
+<h2 id="Scope"><a href="#Scope" class="headerlink" title="Scope"></a>Scope</h2><p>It is used to explain which parts will this branch mainly affected.</p>
+<blockquote>
+<p>一般就是指具体的某个代码模块.</p>
+</blockquote>
+<h2 id="Subject"><a href="#Subject" class="headerlink" title="Subject"></a>Subject</h2><p>该部分非必要, 除非你的模块太大了, 需要具体指定影响了哪些目标; 或者, 说明建立分支理由.</p>
+<blockquote>
+<p>该部分通常没有必要, 写了反而啰嗦</p>
+</blockquote>
+<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>本文参考了 <code>angular</code> 的提交规范: <a href="https://github.com/angular" target="_blank" rel="external">https://github.com/angular</a></p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：Git代码规范</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/05/11/code-update-rules.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
