@@ -10,20 +10,20 @@
   
   <title>开源协议怎么选 | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="25字以内">
+  <meta name="description" content="现在的开源协议多如牛毛, MIT, Apache, GPL等, 到底针对什么软件该怎么选?">
 <meta name="keywords" content="开发管理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="开源协议怎么选">
 <meta property="og:url" content="www.merlinblog.site/2017/05/13/choose-license.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
-<meta property="og:description" content="25字以内">
+<meta property="og:description" content="现在的开源协议多如牛毛, MIT, Apache, GPL等, 到底针对什么软件该怎么选?">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/background1.jpg">
-<meta property="og:updated_time" content="2017-09-26T11:02:28.802Z">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/pattern.jpg">
+<meta property="og:updated_time" content="2017-09-27T03:08:54.917Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="开源协议怎么选">
-<meta name="twitter:description" content="25字以内">
-<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/background1.jpg">
+<meta name="twitter:description" content="现在的开源协议多如牛毛, MIT, Apache, GPL等, 到底针对什么软件该怎么选?">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/pattern.jpg">
   
   
     <link href="/favicon.ico" rel="ico" />
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MIT-License"><span class="toc-number">1.</span> <span class="toc-text">MIT License</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Apache-License-2-0"><span class="toc-number">2.</span> <span class="toc-text">Apache License 2.0</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GNU-GPL-v3"><span class="toc-number">3.</span> <span class="toc-text">GNU GPL v3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GNU-LGPL-v3"><span class="toc-number">4.</span> <span class="toc-text">GNU LGPL v3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#责任问题"><span class="toc-number">5.</span> <span class="toc-text">责任问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#非软件作品"><span class="toc-number">6.</span> <span class="toc-text">非软件作品</span></a></li></ol>
     	</div>
 	
 
@@ -226,10 +226,258 @@ function tmpfobid()
 
 
         <div class="content" style="overflow: auto; align:center;">
-            <blockquote>
-<p>摘要: (120字以内)有不正确的地方, 希望您能发邮件帮忙指正一下, 谢谢(本文后续可能有修订)(本文后续可能有修订)(本文后续可能有修订)(本文后续可能有修订)(本文后续可能有修订)(本文后续可能有修订)(本文后续可能有修订).</p>
+            <p>协议,不仅仅是约定, 更是保护.</p>
+<blockquote>
+<p>你发布一篇文章, 写一段代码, 发行一个软件一般都会给<code>获取者</code>一些权利<code>permissions</code>, 一些限制<code>limitations</code>, 以及一些条件<code>conditions</code>.</p>
 </blockquote>
-<p><img src="http://omotkhw3y.bkt.clouddn.com/background1.jpg" alt="post-cover"></p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/pattern.jpg" alt="post-cover"></p>
+<p>下面我仔细说一下, 按照哪些标准来选择协议.</p>
+<h1 id="MIT-License"><a href="#MIT-License" class="headerlink" title="MIT License"></a>MIT License</h1><p>如果你发布的只是一个个零碎的代码片段, 比如说<code>C++个人精华代码</code>, 这些代码你既然公开出来, 只要使用的人时不时给你一些反馈, “这段代码在哪些情况下不太好使, 我已经改进了, 提交给您”, 也就是说用户怎么做都没有问题(包括用于商业目的), 那么你可以选择<code>MIT License</code>, 这是一个宽大, 自由(permissive)的协议.</p>
+<blockquote>
+<p>一般用于<code>代码片段</code>, 简述”随你喜欢, 怎么改都行”, 不需要作者授权</p>
+</blockquote>
+<h1 id="Apache-License-2-0"><a href="#Apache-License-2-0" class="headerlink" title="Apache License 2.0"></a>Apache License 2.0</h1><p>这个类似MIT的自由, 但是用于商业目的时, 需要作者授权(就是作者保留了所有权), 你也要在自己的作品中说明已经被授权(就是显著的标明我使用了它的代码).</p>
+<blockquote>
+<p>Contributors provide an express grant of patent rights.</p>
+</blockquote>
+<p>但是好处是, 你发布时可以不公开自己的源码, 无论什么目的(包括商业目的).</p>
+<blockquote>
+<p>一般都选这个协议的, <code>Android</code>, <code>Apache</code>, and <code>Swift</code> use the Apache License 2.0.</p>
+</blockquote>
+<h1 id="GNU-GPL-v3"><a href="#GNU-GPL-v3" class="headerlink" title="GNU GPL v3"></a>GNU GPL v3</h1><p>这个, 怎么说呢, 应该是有选择的使用的协议, 因为它要求你发布自己的软件时要公开(<code>disclose</code>)源码. 同样作者也保留了所有权.</p>
+<blockquote>
+<p>应该说这个协议本身是<code>无私</code>的, 注重<code>分享</code>和体验; 但是用你的软件开发, 到发布时我也要公开源码</p>
+</blockquote>
+<p>Android有部分源码就吃了这个亏, 后来改成了<code>Apache 2.0</code>, 可以用于商业, 专利等场景, 但是最好不要.</p>
+<p>应该说<code>GPL v3</code> 要求是比较高的, 而且有强制性(你对这个软件做了修改, 发布时也要是同样的协议; 并且声明改动内容), 所以后面搞了一个<code>LGPL v3</code></p>
+<h1 id="GNU-LGPL-v3"><a href="#GNU-LGPL-v3" class="headerlink" title="GNU LGPL v3"></a>GNU LGPL v3</h1><p><code>L</code>即 Low, 和<code>GPL v3</code>大部分方面一样, 但是降低了公开源码的标准, 即</p>
+<blockquote>
+<p>如果你的作品只是用到LGPLv3协议软件的接口(简单调用), 而没有涉及源码部分, 那么你可以在发布的时候(任何目的, 商业,专利都行), 不公开源码.</p>
+</blockquote>
+<p>这适用于, 其实你的软件非常大, 用到协议保护软件作为一个小小的支持, 只是调用了, 那么这个时候, 其实你是可以不用公开你的代码的.</p>
+<h1 id="责任问题"><a href="#责任问题" class="headerlink" title="责任问题"></a>责任问题</h1><p>上面所有的协议, 都是针对<code>开源</code>(open source), 所以你用这个协议出了什么事儿, 被协议保护的作品&amp;作者, 可是不负责的.</p>
+<p>举个例子, 你拿开源库的一段代码, 去攻击了某安全系统, 犯了事儿, (开源代码 under 某开源协议), 是不能追求作者的责任的, 一切都是你自己的选择.</p>
+<p>这就是说, 这些所有的开源协议, 保证了原作者的安全, 所以开源协议, 并不提供责任担保:(而且是明确声明了<code>Limitations</code>)</p>
+<ul>
+<li>warranty</li>
+<li>Liability</li>
+</ul>
+<p>去哪里获取, 协议的全文? <code>去Github新建一个库试试吧</code>, 下面列举我常用的 <code>Apache 2.0</code>:</p>
+<pre><code>Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      &quot;Legal Entity&quot; shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      &quot;control&quot; means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      &quot;You&quot; (or &quot;Your&quot;) shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      &quot;Source&quot; form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      &quot;Object&quot; form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      &quot;Work&quot; shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      &quot;Derivative Works&quot; shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      &quot;Contribution&quot; shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, &quot;submitted&quot;
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as &quot;Not a Contribution.&quot;
+
+      &quot;Contributor&quot; shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an &quot;AS IS&quot; BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets &quot;{}&quot;
+      replaced with your own identifying information. (Don&#39;t include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same &quot;printed page&quot; as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright {yyyy} {name of copyright owner}
+
+   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+</code></pre><h1 id="非软件作品"><a href="#非软件作品" class="headerlink" title="非软件作品"></a>非软件作品</h1><p>针对个人资料, 数据, 影像作品等, 可以用下面这些协议(License), 保证自己的权益.</p>
+<blockquote>
+<p>其实更多时候, 只是要你转载的时候注明原作者, 而已.</p>
+</blockquote>
+<p>这些协议有:</p>
+<ul>
+<li>CC0-1.0</li>
+<li>CC-BY-4.0 本站使用</li>
+<li>CC-BY-SA-4.0 (Creative Commons Attribution Share Alike 4.0)</li>
+</ul>
+<blockquote>
+<p><code>CC-BY-SA-4.0</code>和<code>CC-BY-4.0</code>类似, 都是要求声明原作者的授权, 并在自己的版本中标明; 但是前者要求你在<strong>再</strong>发布时, 要声明同样(Simila, Cpmpatible)的License.</p>
+</blockquote>
+<p>当然, 你也可以不适用写任何协议, 表示没有协议; 但是<code>All Right Reserved BY xxx</code>这个时候, 即使作者不声明任何协议, 但是它保留了协议的解释权.</p>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 
@@ -316,7 +564,7 @@ function tmpfobid()
         <br>
         Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
 		<br>
-		Articles of this site licensed under <b>CC BY 4.0<b>
+		Articles of this site licensed under <b>CC BY SA 4.0<b>
         
       </div>
     </div>
