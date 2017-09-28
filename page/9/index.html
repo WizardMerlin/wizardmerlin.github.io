@@ -172,36 +172,33 @@ function tmpfobid()
                 
 <div class="primary-container content-box is-flex-desktop clear-padding bottom-line" style="margin-bottom: 25px;">
     <div class="column  is-7-desktop">
-        <a href="/2017/06/11/advice-of-network-learning-steps.html">
+        <a href="/2017/06/13/why-not-epoll.html">
             <div class="full-height post-hover"
                  style="
-                         background-image: url('http://omotkhw3y.bkt.clouddn.com/linux-network.jpg');
+                         background-image: url('http://omotkhw3y.bkt.clouddn.com/epoll1.jpg');
                          height: 350px;
                          background-size: cover;
                          background-repeat: no-repeat;
                          ">
                     <div class=" is-flex flex-column center content has-text-centered full-height has-padding content-bg-mask">
                         <h1 class="title text-shadow" style="margin-bottom: 15px;">
-                            Linux网络学习参考
+                            深挖一下Epoll模型
                         </h1>
                         <div>
                         
                             `
                                 <span class="tag is-post-tag">网络</span>
-                            `
-                                <span class="tag is-post-tag">linux</span>
                             
                         
                         </div>
                         <p class="post-content-text is-marginless has-padding text-shadow">
                             
-结合自己的学习经历, 给出一定的步骤和规划设计, 仅供参考
+你现在用 epoll 模型么? 不用. 我用libevent. (笑)
 
-
-引子记录一下我过去学习网络编程的道路(目前还在不断探索中). 相关代码记录(或者一些基础记录), 可以参考的github库 network_life :
-https://..
+多路IO/IO复用中一种比较厉害的模型, 始终拿红黑树去理解就容易了. 现在的很多库比如libevent都是在其基础上进行的扩展和封装.
+(文章主要以TCP协议..
                         </p>
-                        <p class="date text-shadow">2017-06-11</p>
+                        <p class="date text-shadow">2017-06-13</p>
                         <button class="button is-info is-small">阅读详情</button>
                     </div>
             </div>
@@ -211,38 +208,11 @@ https://..
         <div class="full-height is-flex flex-column justify-space-between" style="min-height: 350px;">
             
                 
-<a class="post-hover" href="/2017/06/10/about-design-patterns.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/design-pattern.jpg')">
+<a class="post-hover" href="/2017/06/11/basic-socket-model.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/socket-basic.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
             <h3 class="title is-marginless text-shadow">
-                设计模式C++实现
-            </h3>
-            
-            
-            <span class="tag is-post-tag">设计模式</span>
-            
-            <span class="tag is-post-tag">cpp</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                
-没别的, 就是把设计模式过一遍, 最后还补充了Boost库中用到的几个设计模式.
-
-相关代码可..
-            </p>
-            <p class="date text-shadow is-marginless">2017-06-10</p>
-        </div>
-    </div>
-</a>
-            
-            
-                
-<a class="post-hover" href="/2017/06/04/network-io.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/poll1.jpg')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                Linux网络IO模型
+                Linux基础套接字模型
             </h3>
             
             
@@ -254,9 +224,37 @@ https://..
             <p class="sub-title text-shadow"></p>
             <p class="is-marginless text-shadow post-content-text">
                 
-每次看到有人讲server端的内容就讲的超级复杂, 要么是图形很多, 要么说半天也没有说到 k..
+现在的很多库基本是基于异步网络IO, 以及 epoll等模型的封装, 但是 epoll模型的基..
             </p>
-            <p class="date text-shadow is-marginless">2017-06-04</p>
+            <p class="date text-shadow is-marginless">2017-06-11</p>
+        </div>
+    </div>
+</a>
+            
+            
+                
+<a class="post-hover" href="/2017/06/11/advice-of-network-learning-steps.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/linux-network.jpg')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                Linux网络学习参考
+            </h3>
+            
+            
+            <span class="tag is-post-tag">网络</span>
+            
+            <span class="tag is-post-tag">linux</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                
+结合自己的学习经历, 给出一定的步骤和规划设计, 仅供参考
+
+
+引子记录一下我过去学习网络编程..
+            </p>
+            <p class="date text-shadow is-marginless">2017-06-11</p>
         </div>
     </div>
 </a>
@@ -266,38 +264,11 @@ https://..
     <div class="column is-12 is-hidden-desktop">
         
         
-<a class="post-hover" href="/2017/06/10/about-design-patterns.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/design-pattern.jpg')">
+<a class="post-hover" href="/2017/06/11/basic-socket-model.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/socket-basic.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
             <h3 class="title is-marginless text-shadow">
-                设计模式C++实现
-            </h3>
-            
-            
-            <span class="tag is-post-tag">设计模式</span>
-            
-            <span class="tag is-post-tag">cpp</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                
-没别的, 就是把设计模式过一遍, 最后还补充了Boost库中用到的几个设计模式.
-
-相关代码可..
-            </p>
-            <p class="date text-shadow is-marginless">2017-06-10</p>
-        </div>
-    </div>
-</a>
-        
-        
-        
-<a class="post-hover" href="/2017/06/04/network-io.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/poll1.jpg')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                Linux网络IO模型
+                Linux基础套接字模型
             </h3>
             
             
@@ -309,9 +280,37 @@ https://..
             <p class="sub-title text-shadow"></p>
             <p class="is-marginless text-shadow post-content-text">
                 
-每次看到有人讲server端的内容就讲的超级复杂, 要么是图形很多, 要么说半天也没有说到 k..
+现在的很多库基本是基于异步网络IO, 以及 epoll等模型的封装, 但是 epoll模型的基..
             </p>
-            <p class="date text-shadow is-marginless">2017-06-04</p>
+            <p class="date text-shadow is-marginless">2017-06-11</p>
+        </div>
+    </div>
+</a>
+        
+        
+        
+<a class="post-hover" href="/2017/06/11/advice-of-network-learning-steps.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/linux-network.jpg')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                Linux网络学习参考
+            </h3>
+            
+            
+            <span class="tag is-post-tag">网络</span>
+            
+            <span class="tag is-post-tag">linux</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                
+结合自己的学习经历, 给出一定的步骤和规划设计, 仅供参考
+
+
+引子记录一下我过去学习网络编程..
+            </p>
+            <p class="date text-shadow is-marginless">2017-06-11</p>
         </div>
     </div>
 </a>
@@ -324,6 +323,118 @@ https://..
                 
                     
                        <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/socket-basic.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/06/11/basic-socket-model.html">
+                                            <p style="font-size: 24px;">Linux基础套接字模型</p>
+									    </a>
+                                        
+                                            <span class="sub-title">basic socket api of linux c</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/网络/">
+                                                <span class="tag is-post-tag">
+												  网络
+												</span>
+												</a>
+                                            
+												<a class="post-hover" href="/tags/linux/">
+                                                <span class="tag is-post-tag">
+												  linux
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         
+现在的很多库基本是基于异步网络IO, 以及 epoll等模型的封装, 但是 epoll模型的基础也还是基本的 socket api .最开始学习网络编程的时候, 这个地方肯定是逃不过去的.
+
+相关代码可以参考: https://gi...
+                                        </p>
+									<a class="post-hover" href="/2017/06/11/basic-socket-model.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/linux-network.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/06/11/advice-of-network-learning-steps.html">
+                                            <p style="font-size: 24px;">Linux网络学习参考</p>
+									    </a>
+                                        
+                                            <span class="sub-title">以一个 c/c++ 开发者的角度谈一谈网络编程的学习过程以及注意事项.</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/网络/">
+                                                <span class="tag is-post-tag">
+												  网络
+												</span>
+												</a>
+                                            
+												<a class="post-hover" href="/tags/linux/">
+                                                <span class="tag is-post-tag">
+												  linux
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         
+结合自己的学习经历, 给出一定的步骤和规划设计, 仅供参考
+
+
+引子记录一下我过去学习网络编程的道路(目前还在不断探索中). 相关代码记录(或者一些基础记录), 可以参考的github库 network_life :
+https:/...
+                                        </p>
+									<a class="post-hover" href="/2017/06/11/advice-of-network-learning-steps.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  " style="margin-bottom: 27px;">
                        <!-- a -->
                             <div class="columns" style="min-height: 230px;">
                                 
@@ -381,7 +492,7 @@ https://..
                     
                 
                     
-                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <div class="content-box  " style="margin-bottom: 27px;">
                        <!-- a -->
                             <div class="columns" style="min-height: 230px;">
                                 
@@ -596,111 +707,6 @@ https://..
                         </div>
                     
                 
-                    
-                       <div class="content-box  " style="margin-bottom: 27px;">
-                       <!-- a -->
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/pattern.jpg')">
-                                    </div>
-                                
-								
-                                <div class="column is-8-desktop post-content is-flex">
-								
-                                    <div class="content" style="margin-right:7px; align-center">
-									    <a class="post-hover" href="/2017/05/13/choose-license.html">
-                                            <p style="font-size: 24px;">开源协议怎么选</p>
-									    </a>
-                                        
-                                            <span class="sub-title">现在的开源协议多如牛毛, MIT, Apache, GPL等, 到底针对什么软件该怎么选?</span>
-                                        
-                
-                                        <p>
-                                            
-												<a class="post-hover" href="/tags/开发管理/">
-                                                <span class="tag is-post-tag">
-												  开发管理
-												</span>
-												</a>
-                                            
-                                        </p>
-                                        <p >
-                                         协议,不仅仅是约定, 更是保护.
-
-你发布一篇文章, 写一段代码, 发行一个软件一般都会给获取者一些权利permissions, 一些限制limitations, 以及一些条件conditions.
-
-
-下面我仔细说一下, 按照哪些标...
-                                        </p>
-									<a class="post-hover" href="/2017/05/13/choose-license.html" >
-                                        <button class="button is-info is-small">阅读详情</button>
-                        			</a>
-
-                                    </div> <!-- class content-->
-									
-                                </div> <!--class column -->
-
-                            </div>
-
-						<!-- a -->
-                        </div>
-                    
-                
-                    
-                       <div class="content-box  " style="margin-bottom: 27px;">
-                       <!-- a -->
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/reg.jpg')">
-                                    </div>
-                                
-								
-                                <div class="column is-8-desktop post-content is-flex">
-								
-                                    <div class="content" style="margin-right:7px; align-center">
-									    <a class="post-hover" href="/2017/05/12/using-regex-in-python.html">
-                                            <p style="font-size: 24px;">using-regex-in-python</p>
-									    </a>
-                                        
-                                            <span class="sub-title">regular expression operations in python 2.7</span>
-                                        
-                
-                                        <p>
-                                            
-												<a class="post-hover" href="/tags/python/">
-                                                <span class="tag is-post-tag">
-												  python
-												</span>
-												</a>
-                                            
-												<a class="post-hover" href="/tags/正则表达式/">
-                                                <span class="tag is-post-tag">
-												  正则表达式
-												</span>
-												</a>
-                                            
-                                        </p>
-                                        <p >
-                                         python支持正则表达式是借助外部的re库, 该库在安装python的时候就已经绑定了.但是注意, 这个库是PERE的阉割版, 仅仅支持核心部分正则语法(就常用而言,足够了).
-
-引子本文没有像官方文档写remodule一样去全篇幅...
-                                        </p>
-									<a class="post-hover" href="/2017/05/12/using-regex-in-python.html" >
-                                        <button class="button is-info is-small">阅读详情</button>
-                        			</a>
-
-                                    </div> <!-- class content-->
-									
-                                </div> <!--class column -->
-
-                            </div>
-
-						<!-- a -->
-                        </div>
-                    
-                
 
                 <!--翻頁-->
                 <nav class="pagination is-flex" style="justify-content: flex-end;">
@@ -847,7 +853,7 @@ https://..
         <div class="site-box is-flex">
             <div class="flex-1 is-flex flex-column center full-height right-line">
                 <p>博文总计</p>			
-                <strong>91</strong>
+                <strong>93</strong>
             </div>
             <div class="flex-1 is-flex flex-column center full-height">
                 <p>标签数</p>
@@ -861,8 +867,8 @@ https://..
         </div>
         <div class="content-inner is-flex flex-wrap justify-space-between">
             
-             <a class="tags-item" href="tags/网络/" title="点击 网络 详情" rel="13">
-                    网络<span class="tags-item-span"><b>13</span></b>
+             <a class="tags-item" href="tags/网络/" title="点击 网络 详情" rel="15">
+                    网络<span class="tags-item-span"><b>15</span></b>
              </a>
             
              <a class="tags-item" href="tags/boost/" title="点击 boost 详情" rel="6">
@@ -877,12 +883,12 @@ https://..
                     cpp<span class="tags-item-span"><b>28</span></b>
              </a>
             
-             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="18">
-                    思考<span class="tags-item-span"><b>18</span></b>
+             <a class="tags-item" href="tags/linux/" title="点击 linux 详情" rel="14">
+                    linux<span class="tags-item-span"><b>14</span></b>
              </a>
             
-             <a class="tags-item" href="tags/linux/" title="点击 linux 详情" rel="13">
-                    linux<span class="tags-item-span"><b>13</span></b>
+             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="18">
+                    思考<span class="tags-item-span"><b>18</span></b>
              </a>
             
              <a class="tags-item" href="tags/开发管理/" title="点击 开发管理 详情" rel="6">
@@ -897,12 +903,12 @@ https://..
                     线程<span class="tags-item-span"><b>7</span></b>
              </a>
             
-             <a class="tags-item" href="tags/框架/" title="点击 框架 详情" rel="6">
-                    框架<span class="tags-item-span"><b>6</span></b>
-             </a>
-            
              <a class="tags-item" href="tags/交易/" title="点击 交易 详情" rel="5">
                     交易<span class="tags-item-span"><b>5</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/框架/" title="点击 框架 详情" rel="6">
+                    框架<span class="tags-item-span"><b>6</span></b>
              </a>
             
              <a class="tags-item" href="tags/里程碑/" title="点击 里程碑 详情" rel="1">
@@ -948,7 +954,7 @@ https://..
             <strong>分类</strong>
         </div>
         <div class="content-inner">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">62</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">7</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">64</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">7</span></li></ul>
         </div>
     </div>
     <div class="content-inner content-box">
@@ -956,7 +962,7 @@ https://..
             <strong>归档</strong>
         </div>
         <div class="content-inner">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">31</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">19</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">9</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">31</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">19</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">9</span></li></ul>
         </div>
     </div>
 
