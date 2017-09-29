@@ -172,17 +172,17 @@ function tmpfobid()
                 
 <div class="primary-container content-box is-flex-desktop clear-padding bottom-line" style="margin-bottom: 25px;">
     <div class="column  is-7-desktop">
-        <a href="/2017/06/19/udp-model.html">
+        <a href="/2017/06/19/how-about-tcp.html">
             <div class="full-height post-hover"
                  style="
-                         background-image: url('http://omotkhw3y.bkt.clouddn.com/udp%E6%A8%A1%E5%9E%8B.PNG');
+                         background-image: url('http://omotkhw3y.bkt.clouddn.com/tcp1.jpg');
                          height: 350px;
                          background-size: cover;
                          background-repeat: no-repeat;
                          ">
                     <div class=" is-flex flex-column center content has-text-centered full-height has-padding content-bg-mask">
                         <h1 class="title text-shadow" style="margin-bottom: 15px;">
-                            UDP模型简述
+                            深挖TCP模型
                         </h1>
                         <div>
                         
@@ -193,9 +193,12 @@ function tmpfobid()
                         </div>
                         <p class="post-content-text is-marginless has-padding text-shadow">
                             
-tcp模型一般说的比较多, 因为tcp稳定,可靠; 但是代价就是传输效率不高, 实时性不强.这个时候udp正好做了弥补. 本文就谈谈udp.
+说完udp, 真的是忍不住说一下tcp, 连接管理, 滑动窗口, 拥塞控制(及其算法), 重发机制, 校验和等等 (谈理论的时候好像又回到了青涩的学生时代)
 
-(所涉及的代码都是核心代码, 很多没有做出错和异常处理, 比如说sendto, recvf..
+详细可以参考 unp 卷1 , 这里捡 核心说.
+
+
+引子为了保证可靠传输..
                         </p>
                         <p class="date text-shadow">2017-06-19</p>
                         <button class="button is-info is-small">阅读详情</button>
@@ -207,6 +210,29 @@ tcp模型一般说的比较多, 因为tcp稳定,可靠; 但是代价就是传输
         <div class="full-height is-flex flex-column justify-space-between" style="min-height: 350px;">
             
                 
+<a class="post-hover" href="/2017/06/19/udp-model.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/udp%E6%A8%A1%E5%9E%8B.PNG')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                UDP模型简述
+            </h3>
+            
+            
+            <span class="tag is-post-tag">网络</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                
+tcp模型一般说的比较多, 因为tcp稳定,可靠; 但是代价就是传输效率不高, 实时性不强.这..
+            </p>
+            <p class="date text-shadow is-marginless">2017-06-19</p>
+        </div>
+    </div>
+</a>
+            
+            
+                
 <a class="post-hover" href="/2017/06/13/why-not-epoll.html" style="height: 48.5%">
     <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/epoll1.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
@@ -226,31 +252,6 @@ tcp模型一般说的比较多, 因为tcp稳定,可靠; 但是代价就是传输
 多路IO/IO复用中..
             </p>
             <p class="date text-shadow is-marginless">2017-06-13</p>
-        </div>
-    </div>
-</a>
-            
-            
-                
-<a class="post-hover" href="/2017/06/11/basic-socket-model.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/socket-basic.jpg')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                Linux基础套接字模型
-            </h3>
-            
-            
-            <span class="tag is-post-tag">网络</span>
-            
-            <span class="tag is-post-tag">linux</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                
-现在的很多库基本是基于异步网络IO, 以及 epoll等模型的封装, 但是 epoll模型的基..
-            </p>
-            <p class="date text-shadow is-marginless">2017-06-11</p>
         </div>
     </div>
 </a>
@@ -260,6 +261,29 @@ tcp模型一般说的比较多, 因为tcp稳定,可靠; 但是代价就是传输
     <div class="column is-12 is-hidden-desktop">
         
         
+<a class="post-hover" href="/2017/06/19/udp-model.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/udp%E6%A8%A1%E5%9E%8B.PNG')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                UDP模型简述
+            </h3>
+            
+            
+            <span class="tag is-post-tag">网络</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                
+tcp模型一般说的比较多, 因为tcp稳定,可靠; 但是代价就是传输效率不高, 实时性不强.这..
+            </p>
+            <p class="date text-shadow is-marginless">2017-06-19</p>
+        </div>
+    </div>
+</a>
+        
+        
+        
 <a class="post-hover" href="/2017/06/13/why-not-epoll.html" style="height: 48.5%">
     <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/epoll1.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
@@ -283,35 +307,59 @@ tcp模型一般说的比较多, 因为tcp稳定,可靠; 但是代价就是传输
     </div>
 </a>
         
-        
-        
-<a class="post-hover" href="/2017/06/11/basic-socket-model.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/socket-basic.jpg')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                Linux基础套接字模型
-            </h3>
-            
-            
-            <span class="tag is-post-tag">网络</span>
-            
-            <span class="tag is-post-tag">linux</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                
-现在的很多库基本是基于异步网络IO, 以及 epoll等模型的封装, 但是 epoll模型的基..
-            </p>
-            <p class="date text-shadow is-marginless">2017-06-11</p>
-        </div>
-    </div>
-</a>
-        
     </div>
 </div>
 
                     
+                    
+                
+                    
+                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/udp%E6%A8%A1%E5%9E%8B.PNG')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/06/19/udp-model.html">
+                                            <p style="font-size: 24px;">UDP模型简述</p>
+									    </a>
+                                        
+                                            <span class="sub-title">主要是和TCP进行对比</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/网络/">
+                                                <span class="tag is-post-tag">
+												  网络
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         
+tcp模型一般说的比较多, 因为tcp稳定,可靠; 但是代价就是传输效率不高, 实时性不强.这个时候udp正好做了弥补. 本文就谈谈udp.
+
+(所涉及的代码都是核心代码, 很多没有做出错和异常处理, 比如说sendto, recv...
+                                        </p>
+									<a class="post-hover" href="/2017/06/19/udp-model.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
                     
                 
                     
@@ -365,7 +413,7 @@ tcp模型一般说的比较多, 因为tcp稳定,可靠; 但是代价就是传输
                     
                 
                     
-                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <div class="content-box  " style="margin-bottom: 27px;">
                        <!-- a -->
                             <div class="columns" style="min-height: 230px;">
                                 
@@ -498,15 +546,15 @@ https:/...
                 
                                         <p>
                                             
-												<a class="post-hover" href="/tags/设计模式/">
-                                                <span class="tag is-post-tag">
-												  设计模式
-												</span>
-												</a>
-                                            
 												<a class="post-hover" href="/tags/cpp/">
                                                 <span class="tag is-post-tag">
 												  cpp
+												</span>
+												</a>
+                                            
+												<a class="post-hover" href="/tags/设计模式/">
+                                                <span class="tag is-post-tag">
+												  设计模式
 												</span>
 												</a>
                                             
@@ -625,59 +673,6 @@ https:/...
 为何有此一文总在群里被问道, 各种烦人的 学这个有...
                                         </p>
 									<a class="post-hover" href="/2017/05/26/back-end-work.html" >
-                                        <button class="button is-info is-small">阅读详情</button>
-                        			</a>
-
-                                    </div> <!-- class content-->
-									
-                                </div> <!--class column -->
-
-                            </div>
-
-						<!-- a -->
-                        </div>
-                    
-                
-                    
-                       <div class="content-box  " style="margin-bottom: 27px;">
-                       <!-- a -->
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/mysql.jpg')">
-                                    </div>
-                                
-								
-                                <div class="column is-8-desktop post-content is-flex">
-								
-                                    <div class="content" style="margin-right:7px; align-center">
-									    <a class="post-hover" href="/2017/05/23/mysql-connector-cpp.html">
-                                            <p style="font-size: 24px;">mysql-connector-cpp</p>
-									    </a>
-                                        
-                                            <span class="sub-title">programming with mysql database in cpp language</span>
-                                        
-                
-                                        <p>
-                                            
-												<a class="post-hover" href="/tags/cpp/">
-                                                <span class="tag is-post-tag">
-												  cpp
-												</span>
-												</a>
-                                            
-												<a class="post-hover" href="/tags/mysql/">
-                                                <span class="tag is-post-tag">
-												  mysql
-												</span>
-												</a>
-                                            
-                                        </p>
-                                        <p >
-                                         
-就像JDBC接口一样, 利用 Connector 在 C++ 操作 mysql 数据库(而不是C api)进行数据操作, 更加简洁, 更加符合通用接口标准.mysql connector 会通过 mysqlclient-dev 库帮...
-                                        </p>
-									<a class="post-hover" href="/2017/05/23/mysql-connector-cpp.html" >
                                         <button class="button is-info is-small">阅读详情</button>
                         			</a>
 
@@ -837,7 +832,7 @@ https:/...
         <div class="site-box is-flex">
             <div class="flex-1 is-flex flex-column center full-height right-line">
                 <p>博文总计</p>			
-                <strong>94</strong>
+                <strong>95</strong>
             </div>
             <div class="flex-1 is-flex flex-column center full-height">
                 <p>标签数</p>
@@ -859,16 +854,16 @@ https:/...
                     boost<span class="tags-item-span"><b>6</span></b>
              </a>
             
-             <a class="tags-item" href="tags/设计模式/" title="点击 设计模式 详情" rel="1">
-                    设计模式<span class="tags-item-span"><b>1</span></b>
-             </a>
-            
              <a class="tags-item" href="tags/cpp/" title="点击 cpp 详情" rel="28">
                     cpp<span class="tags-item-span"><b>28</span></b>
              </a>
             
-             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="19">
-                    思考<span class="tags-item-span"><b>19</span></b>
+             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="20">
+                    思考<span class="tags-item-span"><b>20</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/设计模式/" title="点击 设计模式 详情" rel="1">
+                    设计模式<span class="tags-item-span"><b>1</span></b>
              </a>
             
              <a class="tags-item" href="tags/linux/" title="点击 linux 详情" rel="14">
@@ -887,12 +882,12 @@ https:/...
                     线程<span class="tags-item-span"><b>7</span></b>
              </a>
             
-             <a class="tags-item" href="tags/交易/" title="点击 交易 详情" rel="5">
-                    交易<span class="tags-item-span"><b>5</span></b>
-             </a>
-            
              <a class="tags-item" href="tags/框架/" title="点击 框架 详情" rel="6">
                     框架<span class="tags-item-span"><b>6</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/交易/" title="点击 交易 详情" rel="5">
+                    交易<span class="tags-item-span"><b>5</span></b>
              </a>
             
              <a class="tags-item" href="tags/里程碑/" title="点击 里程碑 详情" rel="1">
@@ -911,16 +906,16 @@ https:/...
                     python<span class="tags-item-span"><b>2</span></b>
              </a>
             
-             <a class="tags-item" href="tags/shell/" title="点击 shell 详情" rel="1">
-                    shell<span class="tags-item-span"><b>1</span></b>
-             </a>
-            
              <a class="tags-item" href="tags/stl/" title="点击 stl 详情" rel="2">
                     stl<span class="tags-item-span"><b>2</span></b>
              </a>
             
              <a class="tags-item" href="tags/算法/" title="点击 算法 详情" rel="2">
                     算法<span class="tags-item-span"><b>2</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/shell/" title="点击 shell 详情" rel="1">
+                    shell<span class="tags-item-span"><b>1</span></b>
              </a>
             
              <a class="tags-item" href="tags/正则表达式/" title="点击 正则表达式 详情" rel="4">
@@ -938,7 +933,7 @@ https:/...
             <strong>分类</strong>
         </div>
         <div class="content-inner">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">64</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">8</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">64</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">9</span></li></ul>
         </div>
     </div>
     <div class="content-inner content-box">
@@ -946,7 +941,7 @@ https:/...
             <strong>归档</strong>
         </div>
         <div class="content-inner">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">31</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">19</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">9</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">31</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">19</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">9</span></li></ul>
         </div>
     </div>
 
