@@ -405,7 +405,7 @@ function tmpfobid()
                             <div class="columns" style="min-height: 230px;">
                                 
                                     <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/background1.jpg')">
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/initializer-list.png')">
                                     </div>
                                 
 								
@@ -413,10 +413,10 @@ function tmpfobid()
 								
                                     <div class="content" style="margin-right:7px; align-center">
 									    <a class="post-hover" href="/2017/04/08/uniform-initialization.html">
-                                            <p style="font-size: 24px;">C++11一致性初始化</p>
+                                            <p style="font-size: 24px;">C++11一致性初始化探究</p>
 									    </a>
                                         
-                                            <span class="sub-title">uniform-initialization 是C++11专门为变量&对象而引入的初始化概念</span>
+                                            <span class="sub-title">uniform-initialization 是C++11专门为变量&对象而引入的初始化概念, 实现借助了 initializer_list 容器</span>
                                         
                 
                                         <p>
@@ -432,10 +432,11 @@ function tmpfobid()
                                          
 C++11之前, 各种大括号, 小括号, 赋值符号初始化变量, 对象; 乱七八糟, 不同编译器的对待方式也不太一样, 现在C++11统一了.
 
-TODO, 待整理上传.
+中间也会说说新容器 initializer_list 容器
 
 
-who is sponsoring the site? -...
+
+旧方式如下:单个对象:...
                                         </p>
 									<a class="post-hover" href="/2017/04/08/uniform-initialization.html" >
                                         <button class="button is-info is-small">阅读详情</button>
