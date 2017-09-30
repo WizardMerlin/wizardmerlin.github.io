@@ -8,22 +8,22 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   
-  <title>nullptr探究 | Merlin&#39;s Blog</title>
+  <title>C++11一致性初始化 | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="本文记录的东西非常简单, NULL和nullptr, 参考《Effective Modern C++》条款8">
+  <meta name="description" content="uniform-initialization 是C++11专门为变量&amp;对象而引入的初始化概念">
 <meta name="keywords" content="cpp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="nullptr探究">
-<meta property="og:url" content="www.merlinblog.site/2017/04/07/nullptr.html">
+<meta property="og:title" content="C++11一致性初始化">
+<meta property="og:url" content="www.merlinblog.site/2017/04/08/uniform-initialization.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
-<meta property="og:description" content="本文记录的东西非常简单, NULL和nullptr, 参考《Effective Modern C++》条款8">
+<meta property="og:description" content="uniform-initialization 是C++11专门为变量&amp;对象而引入的初始化概念">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/nullptr.png">
-<meta property="og:updated_time" content="2017-09-30T11:37:47.000Z">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/background1.jpg">
+<meta property="og:updated_time" content="2017-09-30T11:40:39.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="nullptr探究">
-<meta name="twitter:description" content="本文记录的东西非常简单, NULL和nullptr, 参考《Effective Modern C++》条款8">
-<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/nullptr.png">
+<meta name="twitter:title" content="C++11一致性初始化">
+<meta name="twitter:description" content="uniform-initialization 是C++11专门为变量&amp;对象而引入的初始化概念">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/background1.jpg">
   
   
     <link href="/favicon.ico" rel="ico" />
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NULL"><span class="toc-number">1.</span> <span class="toc-text">NULL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#nullptr"><span class="toc-number">2.</span> <span class="toc-text">nullptr</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#std-nullptr-t"><span class="toc-number">3.</span> <span class="toc-text">std::nullptr_t</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模板类型推断"><span class="toc-number">4.</span> <span class="toc-text">模板类型推断</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#怎么用"><span class="toc-number">5.</span> <span class="toc-text">怎么用?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#我偏不用"><span class="toc-number">6.</span> <span class="toc-text">我偏不用?</span></a></li></ol>
+           	
     	</div>
 	
 
@@ -205,13 +205,13 @@ function tmpfobid()
     <div class="container post-box">
         <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
             <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
-                <strong>nullptr探究</strong>
+                <strong>C++11一致性初始化</strong>
             </div>
  
             <div class="is-flex align-center" style="margin-top:10px;">
                 <span style="padding:0 10px;">post time:</span>
 				
-                <span class="post-date">2017-04-07</span>
+                <span class="post-date">2017-04-08</span>
             </div>
 			
             
@@ -227,87 +227,10 @@ function tmpfobid()
 
         <div class="content" style="overflow: auto; align:center;">
             <blockquote>
-<p>现在说的<code>nullptr</code>不仅仅是规范的问题.</p>
+<p>C++11之前, 各种大括号, 小括号, 赋值符号初始化变量, 对象; 乱七八糟, 不同编译器的对待方式也不太一样, 现在C++11统一了.</p>
 </blockquote>
-<p>本文主要涉及, <code>nullptr</code>关键字(其实是个对象, 或者常量)以及<code>std::nullptr_t</code>类型, 以及为什么要去使用它.<br><img src="http://omotkhw3y.bkt.clouddn.com/nullptr.png" alt="post-cover"></p>
-<h1 id="NULL"><a href="#NULL" class="headerlink" title="NULL"></a>NULL</h1><p>NULL是C, C++03或者98中使用最多的,<br>但是C++和C的定义不一样, 在<code>&lt;cstdlib&gt;</code>中, 其定义如下:</p>
-<pre><code class="C++">#ifdef __cplusplus
-
-    #define NULL 0
-
-#else
-
-    #define NULL ((void *)0)
-
-#endif
-</code></pre>
-<p>之所以这样定义的原因，是因为在C语言中，允许 void* 类型隐式转换为任意指针类型，而C++中不允许这样的强制类型转换，但是可以为任意类型的指针赋0值.<br>因此，在C++中将NULL 定义为0.</p>
-<blockquote>
-<p>简单说: C++允许你用<code>void*</code>这样的泛指针接收任何类型的指针(一般是安全的, 在分配器里面用的很多), 但是不允许(void<em>)强制类型转换为具体的指针, 不安全;<br>所以啊, 只有0代替`void</em>`了</p>
-<p>NULL(预处理)定义为0, 显然更好, 更加直观. </p>
-</blockquote>
-<h1 id="nullptr"><a href="#nullptr" class="headerlink" title="nullptr"></a>nullptr</h1><p>nullptr　是 nullptr_t 类型的常量，<code>nullptr</code>来处理转换安全:</p>
-<ul>
-<li>该类型定义了转到任意指针类型的转换操作符</li>
-<li>不允许该类型的对象转换到非指针类型</li>
-</ul>
-<blockquote>
-<p>写C++程序, 应该用<code>nullptr</code>代替0或者NULL 赋值给指针, C++11标准提倡的.</p>
-</blockquote>
-<p>最简单的例子, 下面有两个重载:</p>
-<pre><code>void f(int);
-void f(void*);
-</code></pre><p>那么无论<code>f(0)</code>还是<code>f(NULL)</code>都会调用<code>f(int)</code>, 这个时候<code>f(nullptr)</code>才会调用<code>f(void*)</code>.</p>
-<h1 id="std-nullptr-t"><a href="#std-nullptr-t" class="headerlink" title="std::nullptr_t"></a>std::nullptr_t</h1><p><code>&lt;cstddef&gt;</code>定义了一个<code>std::nullptr_t</code>类型, 其定义如下:</p>
-<pre><code class="C++">typedef decltype(nullptr) nullptr_t;
-</code></pre>
-<p>nullptr准确来说, 是<code>nullptr_t</code>类型的常量, <code>nullptr_t</code>定义如下:<br>大致代码如下:</p>
-<pre><code class="C++">class nullptr_t
-{
-public:
-    template&lt;class T&gt;
-    inline operator T*() const    //定义类型转换操作符，使nullptr_t 可转为任意非类成员指针类型
-    { return 0; }
-
-
-    //重载类型转换操作符，使 nullptr_t 可以转换为类 C 中任意的指针类型（数据成员指针/函数成员指针）    
-    //对类中数据成员的指针，T 将被推导为数据成员的类型 eg: int (X::*); 此时 T 为 int,C 为 X
-    //对类中函数成员的指针，T 将被推导为函数成员的类型 eg: int (X::*)(int); 此时T等效于： typedef int (T)(int)
-    template&lt;class C, class T&gt;
-    inline operator T C::*() const  
-    { return 0; } 
-
-private:                
-    void operator&amp;() const;
-};
-
-const null_ptr nullptr = {}
-</code></pre>
-<h1 id="模板类型推断"><a href="#模板类型推断" class="headerlink" title="模板类型推断"></a>模板类型推断</h1><blockquote>
-<p>为什么非要使用 <code>nullptr</code> ?</p>
-</blockquote>
-<p>事实上，最迫使你使用nullptr代替0和NULL的原因是，模板类型推断会为0和NULL推断出“错误”的类型当你想要一个空指针时。有了nullptr，模板就不会引起什么问题了。<br>再想想nullptr不受重载函数选择策略影响，而0和NULL却容易受到影响。所以，当你要说明空指针时，用nullptr，而不是0或者NULL。</p>
-<p>请看下面的例子: (<code>lockAndCall</code>是有指针和整数参数重载的函数)</p>
-<pre><code class="C++">auto result1 = lockAndCall(f1, f1m, 0);  // 错误
-...
-auto result2 = lockAndCall(f2, f2m, NULL);  // 错误
-...
-auto result3 = lockAndCall(f3, f3m, nullptr);  // 正确
-</code></pre>
-<h1 id="怎么用"><a href="#怎么用" class="headerlink" title="怎么用?"></a>怎么用?</h1><p>具体的使用看你的场景, 最多的应该是函数指针的场景, 那么声明的时候就可以做</p>
-<pre><code class="C++">int (A::*pmf)()=nullptr; //指向成员函数的指针  
-void (*pmf)()=nullptr; //指向函数的指针
-</code></pre>
-<p>或者检查对象是否为空, 可以这样:</p>
-<pre><code class="C++">const char *pc=str.c_str(); //data pointers  
-if (pc!=nullptr)  
-  cout&lt;&lt;pc&lt;&lt;endl;
-</code></pre>
-<p>总而言之, 原来用NULL的地方, 换成nullptr就行啦.</p>
-<h1 id="我偏不用"><a href="#我偏不用" class="headerlink" title="我偏不用?"></a>我偏不用?</h1><p>实际上, 最好还是使用nullptr, 不用的话, 就我知道的范围, 只要你能避免以下情况即可</p>
-<blockquote>
-<p>避免整数类型与指针类型之间的函数重载<br>避免使用自动类型推断, 比如auto</p>
-</blockquote>
+<p>TODO, 待整理上传.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/background1.jpg" alt="post-cover"></p>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 
@@ -325,8 +248,8 @@ if (pc!=nullptr)
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：nullptr探究</span><br/>
-	<span><b>本文链接</b>：www.merlinblog.site/2017/04/07/nullptr.html</span>
+	<span><b>本文标题</b>：C++11一致性初始化</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/04/08/uniform-initialization.html</span>
 
   </blockquote>
 </div>
