@@ -8,20 +8,20 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   
-  <title>C++11 RangeFor注意事项 | Merlin&#39;s Blog</title>
+  <title>C++11 RangeFor注意事项&amp;探究 | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="本文主要讲讲C++11引入的For EACH, 以及其用于容器的注意事项">
 <meta name="keywords" content="cpp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++11 RangeFor注意事项">
+<meta property="og:title" content="C++11 RangeFor注意事项&amp;探究">
 <meta property="og:url" content="www.merlinblog.site/2017/04/08/range-base-for.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
 <meta property="og:description" content="本文主要讲讲C++11引入的For EACH, 以及其用于容器的注意事项">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/range_for.png">
-<meta property="og:updated_time" content="2017-10-01T07:00:50.633Z">
+<meta property="og:updated_time" content="2017-10-01T07:57:56.025Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C++11 RangeFor注意事项">
+<meta name="twitter:title" content="C++11 RangeFor注意事项&amp;探究">
 <meta name="twitter:description" content="本文主要讲讲C++11引入的For EACH, 以及其用于容器的注意事项">
 <meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/range_for.png">
   
@@ -178,6 +178,19 @@ function tmpfobid()
 <section>
 <!--这里添加toc内容, 一定是在article entry之前-->
 <link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#方式对比"><span class="toc-number">1.</span> <span class="toc-text">方式对比</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#旧方式"><span class="toc-number">1.1.</span> <span class="toc-text">旧方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#range-for"><span class="toc-number">1.2.</span> <span class="toc-text">range for</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#迭代器-推导-问题"><span class="toc-number">1.3.</span> <span class="toc-text">迭代器(推导)问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对比for-each算法"><span class="toc-number">1.4.</span> <span class="toc-text">对比for_each算法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注意事项"><span class="toc-number">2.</span> <span class="toc-text">注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#用于关联容器"><span class="toc-number">2.1.</span> <span class="toc-text">用于关联容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#元素兼容问题"><span class="toc-number">2.2.</span> <span class="toc-text">元素兼容问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#迭代器失效问题"><span class="toc-number">2.3.</span> <span class="toc-text">迭代器失效问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数返回值问题"><span class="toc-number">2.4.</span> <span class="toc-text">函数返回值问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#高级话题"><span class="toc-number">3.</span> <span class="toc-text">高级话题</span></a></li></ol>
+    	</div>
 	
 
 
@@ -192,7 +205,7 @@ function tmpfobid()
     <div class="container post-box">
         <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
             <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
-                <strong>C++11 RangeFor注意事项</strong>
+                <strong>C++11 RangeFor注意事项&探究</strong>
             </div>
  
             <div class="is-flex align-center" style="margin-top:10px;">
@@ -214,16 +227,27 @@ function tmpfobid()
 
         <div class="content" style="overflow: auto; align:center;">
             <blockquote>
-<p>range based for 可以看做 boost 的 FOR_EACH或者 java 的增强版本的for.</p>
+<p>range based for 可以看做 boost 的 FOR_EACH 或者 java 的增强版本的 for, 但它不同于stl 的<code>for_each算法</code></p>
 </blockquote>
 <p><img src="http://omotkhw3y.bkt.clouddn.com/range_for.png" alt="post-cover"></p>
-<p>range for循环(或者成为for each)基本用法: 遍历字符串，数组，map，vector等容器, 语法如下:</p>
-<pre><code>for (decl : container) {
+<h1 id="方式对比"><a href="#方式对比" class="headerlink" title="方式对比"></a>方式对比</h1><h2 id="旧方式"><a href="#旧方式" class="headerlink" title="旧方式"></a>旧方式</h2><p>原来的循环:</p>
+<pre><code class="C++">int arr[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };  
+for (int i = 0; i &lt; 10; i++) {}
+    cout &lt;&lt; arr[i];  
+}
+</code></pre>
+<p>以及迭代器版本:</p>
+<pre><code>std::vector&lt;int&gt; vec {1,2,3,4,5,6,7,8,9,10};  
+for (std::vector&lt;int&gt;::iterator itr = vec.begin(); itr != vec.end(); ++itr)  
+    std::cout &lt;&lt; *itr;
+</code></pre><blockquote>
+<p>不管上面哪一种方法，都必须明确的确定for循环开头以及结尾条件</p>
+</blockquote>
+<h2 id="range-for"><a href="#range-for" class="headerlink" title="range for"></a>range for</h2><p>range for循环(或者成为for each)基本用法: 遍历字符串，数组，map，vector等容器, 语法如下:</p>
+<pre><code class="C++">for (decl : container) {
     //statement;
 }
-</code></pre><blockquote>
-<p>但是编译器底层还是把它转换成我们一般<code>使用迭代器的版本</code>, 只是不需要我们手动那么写了.</p>
-</blockquote>
+</code></pre>
 <p>例如, 用于容器</p>
 <pre><code class="C++">string s(&quot;hello,world&quot;);
 
@@ -238,11 +262,59 @@ cout&lt;&lt;s&lt;&lt;endl;
     std::cout &lt;&lt; i &lt;&lt; std::endl;
 }
 </code></pre>
+<h2 id="迭代器-推导-问题"><a href="#迭代器-推导-问题" class="headerlink" title="迭代器(推导)问题"></a>迭代器(推导)问题</h2><p>貌似使用range_for时, 根本没有涉及到<code>迭代器</code>: </p>
 <blockquote>
-<p>但是注意一下, 请不要对关联式容器, 比如map, set等, 通过迭代器改变容器元素内容</p>
+<p>但是编译器底层还是把它转换成我们一般<code>使用迭代器的版本</code>, 只是不需要我们手动那么写了.</p>
+</blockquote>
+<p>range for 里面, 直接推导出, value_type, 作为<code>auto &amp;c</code>部分, 而不去涉及迭代器. </p>
+<p> 写<code>map</code>就明白了:</p>
+<pre><code class="C++">std::map&lt;string, int&gt; map{{"a", 1}, {"b",2}};
+for(auto &amp;val: map) {
+    std:: cout &lt;&lt; val.firtst &lt;&lt; &quot;-&gt;&quot; &lt;&lt; val.second &lt;&lt; std::endl;
+}
+</code></pre>
+<p>也就是说, <code>auto &amp;val</code> 其实是 <code>std::pair&lt;string, value&gt;</code>; </p>
+<h2 id="对比for-each算法"><a href="#对比for-each算法" class="headerlink" title="对比for_each算法"></a>对比for_each算法</h2><p>range for 不同于 <code>for_each</code></p>
+<blockquote>
+<p>for_each用于逐个遍历容器元素，它对迭代器区间[first，last)所指的每一个元素，执行由单参数函数对象f所定义的操作</p>
+</blockquote>
+<p>模板函数for_each,大概是这样的:</p>
+<pre><code class="C++">template&lt;typename InputIterator, typename Function&gt;  
+Function for_each(InputIterator beg, InputIterator end, Function f) {  
+  while(beg != end)   
+    f(*beg++);  
+}
+</code></pre>
+<p>可用于遍历, 使用案例: (当然你用functor或者funtional对象等代替函数也是可以的)</p>
+<pre><code>void print(int&amp; elem) {  
+    cout &lt;&lt; elem &lt;&lt; endl;  
+}  
+
+int main() {  
+    int ia[] = {1, 2, 3};  
+    vector&lt;int&gt; ivec(ia, ia + sizeof(ia) / sizeof(int));  
+
+    for_each(ivec.begin(), ivec.end(), print);  
+}
+</code></pre><h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><p>因range for还是会被编译器编译成带有迭代器版本的for, 所以迭代器可能存在的问题, 它也会有.</p>
+<p>下面说说注意事项:</p>
+<h2 id="用于关联容器"><a href="#用于关联容器" class="headerlink" title="用于关联容器"></a>用于关联容器</h2><blockquote>
+<p>请不要对关联式容器, 比如map, set等, 通过迭代器改变容器元素内容</p>
 </blockquote>
 <p>他们的实现借助红黑树, 维持有序的, 所以应该是先删除, 再添加, 最好你只用range for来进行只读操作,<code>for(const auto &amp;c:s)</code>.</p>
-<p>另外还有一点注意, range for<code>左边的元素应该和容器里面的元素, 类型兼容或者一致</code>, 否则编译器尝试的转换可能就会失败, 比如下面的就会进行隐式转换, 导致报错:</p>
+<p>举个具体的例子:</p>
+<pre><code class="C++">std::map&lt;string, int&gt;  map{ { &quot;a&quot;, 1 }, { &quot;b&quot;, 2 }, { &quot;c&quot;, 3 } };  
+for (const auto &amp;val : map)  
+    cout &lt;&lt; val.first &lt;&lt; &quot;-&gt;&quot; &lt;&lt; val.second &lt;&lt; endl;
+</code></pre>
+<p>或者<code>std::set</code>, 你去修改, 直接编译器就报错了, 即便你用的是它的引用.</p>
+<blockquote>
+<p>只读情况(元素只读), 请写 <code>const auto&amp;</code></p>
+</blockquote>
+<h2 id="元素兼容问题"><a href="#元素兼容问题" class="headerlink" title="元素兼容问题"></a>元素兼容问题</h2><blockquote>
+<p>另外还有一点注意, range for<code>左边的元素应该和容器里面的元素, 类型兼容或者一致</code></p>
+</blockquote>
+<p>否则编译器尝试的转换可能就会失败, 比如下面的就会进行隐式转换, 导致报错:</p>
 <pre><code class="C++">class C
 {
 public:
@@ -254,6 +326,106 @@ for(const C&amp; elem:vs) {
     std::cout &lt;&lt; elem &lt;&lt; std::endl;
 }
 </code></pre>
+<h2 id="迭代器失效问题"><a href="#迭代器失效问题" class="headerlink" title="迭代器失效问题"></a>迭代器失效问题</h2><p>下面说说改变容器的情况,(不同于改变容器元素)</p>
+<blockquote>
+<p>不要在遍历途中, 修改容器属性(比如增加元素</p>
+</blockquote>
+<p>例如:</p>
+<pre><code class="C++">vector&lt;int&gt; vec = { 1, 2, 3, 4, 5, 6 };  
+
+int main()  
+{  
+    for (auto &amp;n : vec)  
+    {  
+        cout &lt;&lt; n &lt;&lt; endl;  
+        vec.push_back(0);  // 作死的节奏
+    }  
+}
+</code></pre>
+<p>因为底层还是会被编译器编译成迭代器版本, 改变了容器, 意味着<code>迭代器失效</code>, 出任何莫名奇妙的bug都不奇怪.</p>
+<p>关于迭代器失效问题, 可以参考我的文章 <a href="">《STL迭代器失效问题》</a>, 当然也可以参考 <a href="">《C++ primer 5e》</a></p>
+<h2 id="函数返回值问题"><a href="#函数返回值问题" class="headerlink" title="函数返回值问题"></a>函数返回值问题</h2><blockquote>
+<p>在range for 容器的位置, 放了函数表达式? 没问题的, 只要函数的返回值是容器类型, 一样好使.</p>
+</blockquote>
+<p>例如下面的代码, 正常工作, 没有任何问题;</p>
+<pre><code class="C++">set&lt;int&gt; ss = { 1, 2, 3, 4, 5, 6 };  
+const set&lt;int&gt;&amp; getSet()  
+{  
+    cout &lt;&lt; &quot;GetSet&quot; &lt;&lt; endl;  
+    return ss;  
+}  
+
+int main()  
+{  
+    for (auto &amp;n : getSet())  
+        cout &lt;&lt; n &lt;&lt; endl;  
+}
+</code></pre>
+<h1 id="高级话题"><a href="#高级话题" class="headerlink" title="高级话题"></a>高级话题</h1><p>如果你要自定义一个类(相当于自定义一个<code>容器</code>), 然后可以使用 range_for来遍历这个类; 这个时候, 你就会深刻体会到 <code>for each需要容器支持</code>(设计容器的时候, 同时设计<code>迭代器</code>).</p>
+<p>稍稍总结一下, 你知道要在容器&amp;迭代器中做哪些工作: (最好你理解<code>迭代器设计模式</code>)</p>
+<ul>
+<li>定义<code>自定义类的迭代器</code>  //可以简单到只是一个裸指针, 保存容器索引即可</li>
+<li>该类型拥有begin() 和 end() 成员方法（或者重载全局的begin() 和 end() 函数也可以），返回值为迭代器</li>
+<li>自定义迭代器的 <code>!= 比较操作</code></li>
+<li>自定义迭代器的 <code>++ 前置自增操作</code>，显然该操作要是迭代器对象指向该容器的下一个元素</li>
+<li>自定义迭代器 <code>* 解引用操作</code>，显然解引用操作必须容器对应元素的引用，否则引用遍历时将会出错</li>
+</ul>
+<p>遍历终止点, 遍历范围,都是依靠<code>begin</code>, <code>end</code>函数的. 所以:</p>
+<blockquote>
+<p>偷懒的话, 只要设计一下, begin, end, 解引用以及前置自增即可; 但一定要容器和迭代器配合</p>
+</blockquote>
+<p>给一个简单的示例代码:</p>
+<pre><code class="C++">template &lt;typename T&gt;  
+class Myiterator  
+{  
+public:  
+    Myiterator(T val) :_value(val){}  
+    bool operator!=(const Myiterator&lt;T&gt;&amp; other) const  
+    {  
+        return this-&gt;_value != other._value;  
+    }  
+
+    const T &amp; operator*()  
+    {  
+        return _value;  
+    }  
+
+    T operator++()  
+    {  
+        return ++_value;  
+    }  
+private:  
+    T _value;  // 这里也可以保留Range容器的头指针
+};  
+
+template&lt;typename T&gt;  
+class Range  
+{  
+public:  
+    Range(T begin, T end) :__begin(begin), __end(end){}  
+    Myiterator&lt;T&gt;&amp; begin()  
+    {  
+        return Myiterator&lt;T&gt;(__begin);  
+    }  
+
+    Myiterator&lt;T&gt;&amp; end()  
+    {  
+        return Myiterator&lt;T&gt;(__end);  
+    }  
+private:  
+    T __begin;  
+    T __end;  
+};  
+
+int main()  
+{  
+    for (auto i : Range&lt;int&gt;(1, 10))  
+        cout &lt;&lt; i &lt;&lt;  &quot; &quot;;  
+}
+</code></pre>
+<p>输出为：</p>
+<pre><code>1 2 3 4 5 6 7 8 9
+</code></pre><p>迭代器, 操作容器, 其余范围问题, 都交给了 range for 本身.</p>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 
@@ -271,7 +443,7 @@ for(const C&amp; elem:vs) {
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：C++11 RangeFor注意事项</span><br/>
+	<span><b>本文标题</b>：C++11 RangeFor注意事项&amp;探究</span><br/>
 	<span><b>本文链接</b>：www.merlinblog.site/2017/04/08/range-base-for.html</span>
 
   </blockquote>
