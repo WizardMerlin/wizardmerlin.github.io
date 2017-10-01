@@ -19,7 +19,7 @@
 <meta property="og:description" content="uniform-initialization 是C++11专门为变量&amp;对象而引入的初始化概念, 实现借助了 initializer_list 容器">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/initializer-list.png">
-<meta property="og:updated_time" content="2017-09-30T14:58:49.580Z">
+<meta property="og:updated_time" content="2017-10-01T05:05:56.633Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++11一致性初始化探究">
 <meta name="twitter:description" content="uniform-initialization 是C++11专门为变量&amp;对象而引入的初始化概念, 实现借助了 initializer_list 容器">
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#旧方式"><span class="toc-number">1.</span> <span class="toc-text">旧方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#新方式"><span class="toc-number">2.</span> <span class="toc-text">新方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实现剖析"><span class="toc-number">3.</span> <span class="toc-text">实现剖析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#内部实现"><span class="toc-number">3.1.</span> <span class="toc-text">内部实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内部array"><span class="toc-number">3.2.</span> <span class="toc-text">内部array</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#initializer-list"><span class="toc-number">4.</span> <span class="toc-text">initializer_list</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#默认赋值"><span class="toc-number">4.1.</span> <span class="toc-text">默认赋值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全检查"><span class="toc-number">4.2.</span> <span class="toc-text">安全检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单独使用"><span class="toc-number">4.3.</span> <span class="toc-text">单独使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法适配"><span class="toc-number">4.4.</span> <span class="toc-text">算法适配</span></a></li></ol></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#旧方式"><span class="toc-number">1.</span> <span class="toc-text">旧方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#新方式"><span class="toc-number">2.</span> <span class="toc-text">新方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实现剖析"><span class="toc-number">3.</span> <span class="toc-text">实现剖析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#内部实现"><span class="toc-number">3.1.</span> <span class="toc-text">内部实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内部array"><span class="toc-number">3.2.</span> <span class="toc-text">内部array</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#initializer-list"><span class="toc-number">4.</span> <span class="toc-text">initializer_list</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#默认赋值"><span class="toc-number">4.1.</span> <span class="toc-text">默认赋值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全检查"><span class="toc-number">4.2.</span> <span class="toc-text">安全检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单独使用"><span class="toc-number">4.3.</span> <span class="toc-text">单独使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法适配"><span class="toc-number">4.4.</span> <span class="toc-text">算法适配</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注意事项"><span class="toc-number">5.</span> <span class="toc-text">注意事项</span></a></li></ol>
     	</div>
 	
 
@@ -302,7 +302,7 @@ map&lt;string, string&gt; singers
 <blockquote>
 <p>私有构造器, 只有编译器有权利调用</p>
 </blockquote>
-<p>btw, 那么array是啥?<br>通俗的理解, array就是C++的数组, 和<code>[]</code>中括号指定的没有本质区别, 都是顺序存储, 但是比C数组好的地方在于, <code>它和容器接口统一</code>, begin, end等函数都是有的, 调用方式上完成了统一, 准确来说, 是迭代器和容器统一了, 当然和容器保持一致的好处是, <code>你可以用标准库的算法</code>了.</p>
+<p>btw, 那么array是啥?<br>通俗的理解, array就是C++的数组, 和<code>[]</code>中括号指定的没有本质区别, 都是顺序存储, 但是比C数组好的地方在于, <code>它和容器接口统一</code>, begin, end, size等函数都是有的, 调用方式上完成了统一, 准确来说, 是迭代器和容器统一了, 当然和容器保持一致的好处是, <code>你可以用标准库的算法</code>了.</p>
 <p>下面专门说收initializer</p>
 <h1 id="initializer-list"><a href="#initializer-list" class="headerlink" title="initializer_list"></a>initializer_list</h1><p>使用initializer有很多好处, 默认赋值, 安全检查等.</p>
 <h2 id="默认赋值"><a href="#默认赋值" class="headerlink" title="默认赋值"></a>默认赋值</h2><p>例如:</p>
@@ -324,11 +324,70 @@ int* q{}; //默认赋值为nullptr
 </code></pre>
 <p>只要你加上了大括号, 调用重载的时候, 都是优先找参数为<code>std::initializer_list&lt;int&gt;</code>的构造器.</p>
 <blockquote>
-<p>拷贝问题? 不要担心, 上面也解释了.</p>
+<p>拷贝问题? 不要担心数据成员array的浅拷贝问题, 上面也解释了. </p>
 </blockquote>
+<p>但是劝你不要这么用, 因为容器保存的元素的引用, 而不是拷贝.</p>
+<pre><code class="C++">std::initializer_list&lt;int&gt; func(void)  
+{  
+    auto a = 2, b = 3;  
+    return{ a, b };  
+}
+</code></pre>
+<p>另外, 它只能被整体的初始化和赋值，遍历只能通过begin和end迭代器来，遍历取得的<code>数据是只读的</code>，是不能对单个进行修改的</p>
 <h2 id="算法适配"><a href="#算法适配" class="headerlink" title="算法适配"></a>算法适配</h2><p>有一些算法, 随着<code>initializer_list</code>容器的引入, 也做了适配, 比如<code>std::max</code>, <code>std::min</code>原来只接受两个参数, 现在你直接把要比较的参数用<code>{}</code>中括号包起来起来就能用了, 因为这些算法, 有新的重载版本, 它们接收initializer_list作为参数.</p>
+<h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><blockquote>
+<p>总结一句话, initilizer-list是依赖于构造器的(基本类型的变量除外)</p>
+</blockquote>
+<p>如果你想不提供构造器, 使用编译器生成的默认的完成使用initializer-list的任务, 最好的情况是<code>类是聚合体</code>, 即</p>
+<ul>
+<li>无用户自定义构造函数</li>
+<li>无私有或者受保护的非静态数据成员</li>
+<li>无基类</li>
+<li>无虚函数</li>
+<li>无{}和=直接初始化的非静态数据成员</li>
+</ul>
+<p>例如, 没有定义构造器的情况, 可以使用默认的进行, 如下</p>
+<pre><code class="C++">#include &lt;iostream&gt;
+
+using namespace std;
+
+struct Foo  
+{  
+    int x;  
+    int y;
+};  
+
+int main()
+{
+    Foo foo{ 123, 321 };  
+    cout &lt;&lt; foo.x &lt;&lt; &quot; &quot; &lt;&lt; foo.y; 
+
+    return 0;
+}
+</code></pre>
+<p>但是一旦用户制定了构造器(或者有了非私有成员, 比如受保护的, 或者有静态成员, 或者有虚函数, 或者有基类, 或者在类的默认初始化成员了), 就要负责成员的初始化问题,<br>否则编译器用initializaer-list找不到初始化方式(默认构造器已经失效了). </p>
+<p>下面的结果就非常奇怪:(提供了构造器, 却不手动进行成员的初始化处理)</p>
+<pre><code class="C++">#include &lt;iostream&gt;
+
+using namespace std;
+
+struct Foo  
+{  
+    int x;  
+    int y;
+    Foo(int, int){ cout &lt;&lt; &quot;Foo construction&quot;; }  
+};  
+
+int main()
+{
+    Foo foo{ 123, 321 };  //此时初始化列表失效, 对象的成员根本没有初始化
+    cout &lt;&lt; foo.x &lt;&lt; &quot; &quot; &lt;&lt; foo.y; 
+
+    return 0;
+}
+</code></pre>
 <hr>
-<p>好了, 源码也说了, 先这样, 其他请参考, <code>&lt;Effective Modern  C++&gt;</code>.</p>
+<p>好了, 源码也说了, 先这样, 其他请参考, <code>《Effective Modern  C++》</code>, <code>《深入应用C++11 代码优化与工程机应用》</code></p>
 <blockquote>
 <p>C++11引入了很多机制, 为了这些机制又引入了更多的机制; 好在编译器做的多, 我们稍微少做一点儿</p>
 </blockquote>
