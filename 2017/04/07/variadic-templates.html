@@ -19,7 +19,7 @@
 <meta property="og:description" content="variadic templates  变长参数模板, 介绍一些使用场景.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/variadic_templates.jpg">
-<meta property="og:updated_time" content="2017-10-01T06:47:26.537Z">
+<meta property="og:updated_time" content="2017-10-02T14:18:37.154Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++11变长参数的模板">
 <meta name="twitter:description" content="variadic templates  变长参数模板, 介绍一些使用场景.">
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二义性问题"><span class="toc-number">2.</span> <span class="toc-text">二义性问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用场景"><span class="toc-number">3.</span> <span class="toc-text">使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#函数递归调用"><span class="toc-number">3.1.</span> <span class="toc-text">函数递归调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#递归继承"><span class="toc-number">3.2.</span> <span class="toc-text">递归继承</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注意事项"><span class="toc-number">4.</span> <span class="toc-text">注意事项</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二义性问题"><span class="toc-number">2.</span> <span class="toc-text">二义性问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用场景"><span class="toc-number">3.</span> <span class="toc-text">使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#函数递归调用"><span class="toc-number">3.1.</span> <span class="toc-text">函数递归调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#递归继承"><span class="toc-number">3.2.</span> <span class="toc-text">递归继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#递归组合"><span class="toc-number">3.3.</span> <span class="toc-text">递归组合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单独使用"><span class="toc-number">3.4.</span> <span class="toc-text">单独使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注意事项"><span class="toc-number">4.</span> <span class="toc-text">注意事项</span></a></li></ol>
     	</div>
 	
 
@@ -248,7 +248,7 @@ void print(const T&amp; firstArg, const Types&amp;...args){}
 template&lt;typename T, typename... Types&gt;
 void print(const Types&amp;...args){}
 </code></pre>
-<p>它们能不能共存呢?<br>(编译器总是找最佳匹配)</p>
+<p>对于编译器而言, 编译器总是找最佳匹配, 所以他们是可以共存的, 而且优先调用特化的版本, 即第一个版本.</p>
 <h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><h2 id="函数递归调用"><a href="#函数递归调用" class="headerlink" title="函数递归调用"></a>函数递归调用</h2><p>大家一般使用这样的变长模板参数, 主要是用于<code>递归</code>的场景.</p>
 <p>例如上面变参模板可以这样实现递归调用:</p>
 <pre><code class="C++">void print(){}
@@ -300,6 +300,81 @@ t.tail(); //{2.0, &quot;hello&quot;}, 即inherited类型引用, 亦即tuple&lt;f
 &amp;(t.tail()) 
 t.tail().head(); //2.0
 </code></pre>
+<h2 id="递归组合"><a href="#递归组合" class="headerlink" title="递归组合"></a>递归组合</h2><p>如果你不喜欢用<code>继承</code>, 可以把<code>tuple</code>改成组合的方式, 如下:</p>
+<pre><code class="C++">//先写递归结束条件, 因为是模板, 所以可以同时存在多个(参数不同)
+template&lt;typename...Values&gt;
+class tup{};
+
+//终止条件不需要泛型参数了
+template&lt;&gt;
+class tup&lt;&gt;{};
+
+//优先调用特化版本的
+template&lt;typename Head, typename...Tail&gt;
+class tup&lt;Head, Tail...&gt;
+{
+    //using composited = tup&lt;Tail...&gt;;
+    typedef tup&lt;Tail...&gt; composited;
+protected:
+    composited m_tail; //其他部分用成员表示, 而不是继承方式了
+    Head m_head;
+public:
+    tup()=default;
+    tup(Head v, Tail...vtail):m_tail(vtail...), m_head(v){}
+
+    Head head() {return m_head;}
+    composited&amp; tail() {return m_tail;}
+};
+</code></pre>
+<p>调用逻辑还是一样的, </p>
+<pre><code class="C++">tup&lt;int, float, string&gt; tt(3, 2.0, &quot;merlin&quot;);
+cout &lt;&lt; tt.head() &lt;&lt; endl;
+cout &lt;&lt; tt.tail().head() &lt;&lt; endl;
+</code></pre>
+<h2 id="单独使用"><a href="#单独使用" class="headerlink" title="单独使用"></a>单独使用</h2><blockquote>
+<p>好像泛型参数模板使用的时候, 都要<code>指定具体的类型么</code>?</p>
+</blockquote>
+<p>例如我下面有个泛型参数模板, 如下:</p>
+<pre><code class="C++">//递归终止时的调用
+int maximum(int n)
+{
+    return n;
+}
+
+template&lt;typename...T&gt;
+int maximum(int first, T...others)
+{
+    return std::max(first, maximum(others...));
+}
+</code></pre>
+<p>使用的时候, 不指定泛型参数, 如<code>cout &lt;&lt; maximum(1,2,3,4,5) &lt;&lt; endl;</code>可否?</p>
+<pre><code class="C++">#include &lt;iostream&gt;
+
+using namespace std;
+
+int maximum(int n)
+{
+    return n;
+}
+
+template&lt;typename...T&gt;
+int maximum(int first, T...others)
+{
+    return std::max(first, maximum(others...));
+}
+
+int main()
+{
+    cout &lt;&lt; maximum(1,2,3,4,5) &lt;&lt; endl; //5
+
+    return 0;
+}
+</code></pre>
+<p>完整代码自己可以试一下, ok的 (调用过程是, 5Vs4, 然后从右边不断向左推进比较).</p>
+<blockquote>
+<p>使用可变参数模板时, <code>不必为了专门的去特化而指定&lt;&gt;里的内容</code>, 也没法指定; <code>变参泛型模板自己会推导</code></p>
+</blockquote>
+<p>上面的例子, <code>同类型的不定参数最好用initializer_list</code> .</p>
 <h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><p>这个变参<code>...</code>的写法, 不仅仅是函数参数一项, 所以每次到底是在参数前面, 还是在参数后面, 非常烦人.</p>
 <p>例如上面的:</p>
 <pre><code class="C++">template&lt;typename Head, typename...Tail&gt;
