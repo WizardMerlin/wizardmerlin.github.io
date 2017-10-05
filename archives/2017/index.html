@@ -1287,10 +1287,10 @@ time这个太...
 								
                                     <div class="content" style="margin-right:7px; align-center">
 									    <a class="post-hover" href="/2017/08/11/Asio.html">
-                                            <p style="font-size: 24px;">Asio</p>
+                                            <p style="font-size: 24px;">Asio 异步IO</p>
 									    </a>
                                         
-                                            <span class="sub-title">异步网络编程asio库, 不过效率上可能还不如libevent, 真不骗你</span>
+                                            <span class="sub-title">异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说</span>
                                         
                 
                                         <p>
@@ -1311,9 +1311,8 @@ time这个太...
                                         <p >
                                          以前在说epoll和libevent的时候, 就谈到了异步IO的封装, 现在专门说说异步网络编程, 主要结合ASIO来说.
 
-引子大概就这个样子
-正文尾巴
-who is sponsoring the site? - i shall s...
+g概述异步 IO  (Async)
+上面事件驱动的 select,poll,epoll 机制即使很大的提升了...
                                         </p>
 									<a class="post-hover" href="/2017/08/11/Asio.html" >
                                         <button class="button is-info is-small">阅读详情</button>
@@ -1451,7 +1450,7 @@ who is sponsoring the site? - i shall s...
 								
                                     <div class="content" style="margin-right:7px; align-center">
 									    <a class="post-hover" href="/2017/07/29/time-in-cpp.html">
-                                            <p style="font-size: 24px;">time-in-cpp</p>
+                                            <p style="font-size: 24px;">C++编程之time问题总结</p>
 									    </a>
                                         
                                             <span class="sub-title">编程中需要注意的时间相关的问题</span>
@@ -1999,6 +1998,62 @@ STL中set, map, 网络中 epoll 等好多地方都会使用 RB tree, 以前也�
                             <div class="columns" style="min-height: 230px;">
                                 
                                     <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/lambda-again.png')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/07/15/cpp-lambda-again.html">
+                                            <p style="font-size: 24px;">C++11 Lambda 再探究</p>
+									    </a>
+                                        
+                                            <span class="sub-title">最初写lambda是和function做比较, 介绍基本语法, 但是很多注意问题没有写</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/cpp/">
+                                                <span class="tag is-post-tag">
+												  cpp
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         
+再谈一下Lambda, 以及相关注意事项; 并且推荐更多的使用lambda表达式.
+
+前面两篇文章可以参考:
+
+lambda in cpp
+bind和lambda性能比较
+
+第二篇是外文的翻译
+
+中括号问题[]() mutable ...
+                                        </p>
+									<a class="post-hover" href="/2017/07/15/cpp-lambda-again.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  " style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
                                          style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/inner1.png')">
                                     </div>
                                 
@@ -2307,7 +2362,7 @@ c++线程库
 								
                                     <div class="content" style="margin-right:7px; align-center">
 									    <a class="post-hover" href="/2017/07/03/function-in-cpp.html">
-                                            <p style="font-size: 24px;">function-in-cpp</p>
+                                            <p style="font-size: 24px;">C++11 可调用对象function总结</p>
 									    </a>
                                         
                                             <span class="sub-title">Boost库以及标准库中的function库</span>
@@ -2359,7 +2414,7 @@ c++线程库
 								
                                     <div class="content" style="margin-right:7px; align-center">
 									    <a class="post-hover" href="/2017/07/03/ref-in-cpp.html">
-                                            <p style="font-size: 24px;">ref-in-cpp</p>
+                                            <p style="font-size: 24px;">C++11 std::ref总结</p>
 									    </a>
                                         
                                             <span class="sub-title">Boost库以及标准库中的ref库</span>
@@ -2412,7 +2467,7 @@ c++线程库
 								
                                     <div class="content" style="margin-right:7px; align-center">
 									    <a class="post-hover" href="/2017/07/02/raii-technique-in-cpp.html">
-                                            <p style="font-size: 24px;">raii-technique-in-cpp</p>
+                                            <p style="font-size: 24px;">C++ RAII 相关技术总结</p>
 									    </a>
                                         
                                             <span class="sub-title">说说RAII技术和auto_ptr</span>
@@ -2562,7 +2617,7 @@ lambda表达式, 比起 bind 和 function...
 								
                                     <div class="content" style="margin-right:7px; align-center">
 									    <a class="post-hover" href="/2017/07/01/bind-in-cpp.html">
-                                            <p style="font-size: 24px;">bind-in-cpp</p>
+                                            <p style="font-size: 24px;">C++11 std:bind探究</p>
 									    </a>
                                         
                                             <span class="sub-title">主要讲讲 std::bind, 也会说bind1st和bind2nd</span>
@@ -2608,10 +2663,10 @@ lambda表达式, 比起 bind 和 function...
 								
                                     <div class="content" style="margin-right:7px; align-center">
 									    <a class="post-hover" href="/2017/07/01/lambda-in-cpp.html">
-                                            <p style="font-size: 24px;">lambda-in-cpp</p>
+                                            <p style="font-size: 24px;">C++11 Lambda探究</p>
 									    </a>
                                         
-                                            <span class="sub-title">lambda表达式, 感觉不错</span>
+                                            <span class="sub-title">lambda表达式, 仔细探究一下相关问题</span>
                                         
                 
                                         <p>
@@ -3571,7 +3626,7 @@ IO
 详细可以参考 unp 卷1 , 这里捡 核心说.
 
 
-引子为了保证可靠传...
+“IP协议是TCP...
                                         </p>
 									<a class="post-hover" href="/2017/06/19/how-about-tcp.html" >
                                         <button class="button is-info is-small">阅读详情</button>
@@ -4406,7 +4461,7 @@ gnu提供了一系列(posix comp...
                             <div class="columns" style="min-height: 230px;">
                                 
                                     <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/background1.jpg')">
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/target-choice.png')">
                                     </div>
                                 
 								
@@ -5296,52 +5351,6 @@ what kind of things we deal with by coding every every every day??
 我曾经在学习系统编程的时候， 发现各种不同的调用时，总是要涉及标准(man p...
                                         </p>
 									<a class="post-hover" href="/2017/03/18/linux-unix-posix.html" >
-                                        <button class="button is-info is-small">阅读详情</button>
-                        			</a>
-
-                                    </div> <!-- class content-->
-									
-                                </div> <!--class column -->
-
-                            </div>
-
-						<!-- a -->
-                        </div>
-                    
-                
-                    
-                       <div class="content-box  " style="margin-bottom: 27px;">
-                       <!-- a -->
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/tiny_fool.png')">
-                                    </div>
-                                
-								
-                                <div class="column is-8-desktop post-content is-flex">
-								
-                                    <div class="content" style="margin-right:7px; align-center">
-									    <a class="post-hover" href="/2017/03/17/meet-tinyfool-again.html">
-                                            <p style="font-size: 24px;">开玩笑《一年时间十年经验》?</p>
-									    </a>
-                                        
-                                            <span class="sub-title">并没有太多时间让我完完全全地去看完《技巧-如何用一年的时间获取十年的经验》这本书</span>
-                                        
-                
-                                        <p>
-                                            
-												<a class="post-hover" href="/tags/思考/">
-                                                <span class="tag is-post-tag">
-												  思考
-												</span>
-												</a>
-                                            
-                                        </p>
-                                        <p >
-                                         之所以推荐这本书，一来是我工作不满五年，虽然有自己的价值观，但是很多方面确实需要眼光远的前辈指正，二来是因为工作2年后我逐渐的开始意识到，工作于某一个领域，多数时候是由于兴趣—就好像我写东西&amp;记录东西，完全处于我自己的爱好，绝...
-                                        </p>
-									<a class="post-hover" href="/2017/03/17/meet-tinyfool-again.html" >
                                         <button class="button is-info is-small">阅读详情</button>
                         			</a>
 

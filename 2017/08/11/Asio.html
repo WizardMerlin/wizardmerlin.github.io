@@ -8,21 +8,21 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   
-  <title>Asio | Merlin&#39;s Blog</title>
+  <title>Asio 异步IO | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 真不骗你">
+  <meta name="description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
 <meta name="keywords" content="网络,boost">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Asio">
+<meta property="og:title" content="Asio 异步IO">
 <meta property="og:url" content="www.merlinblog.site/2017/08/11/Asio.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
-<meta property="og:description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 真不骗你">
+<meta property="og:description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/overview.gif">
-<meta property="og:updated_time" content="2017-09-24T07:02:51.195Z">
+<meta property="og:updated_time" content="2017-10-05T17:47:57.519Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Asio">
-<meta name="twitter:description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 真不骗你">
+<meta name="twitter:title" content="Asio 异步IO">
+<meta name="twitter:description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
 <meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/overview.gif">
   
   
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#g概述"><span class="toc-number">1.</span> <span class="toc-text">g概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
     	</div>
 	
 
@@ -205,7 +205,7 @@ function tmpfobid()
     <div class="container post-box">
         <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
             <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
-                <strong>Asio</strong>
+                <strong>Asio 异步IO</strong>
             </div>
  
             <div class="is-flex align-center" style="margin-top:10px;">
@@ -230,7 +230,12 @@ function tmpfobid()
         <div class="content" style="overflow: auto; align:center;">
             <p>以前在说epoll和libevent的时候, 就谈到了异步IO的封装, 现在专门说说异步网络编程, 主要结合ASIO来说.</p>
 <a id="more"></a>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>大概就这个样子<br><img src="http://omotkhw3y.bkt.clouddn.com/overview.gif" alt=""></p>
+<h1 id="g概述"><a href="#g概述" class="headerlink" title="g概述"></a>g概述</h1><p>异步 IO  (Async)</p>
+<p>上面事件驱动的 select,poll,epoll 机制即使很大的提升了性能，但是在数据的读写操作上还是同步的。而异步 IO 的出现进一步提升了 Server 的处理能力，应用程序发起一个异步读写操作，并提供相关参数（如用于存放数据的缓冲区、读写数据的大小、以及请求完成后的回调函数等），操作系统在自身的内核线程中执行实际的读或者写操作，并将结果存入程序制定的缓冲区中，然后把事件和缓冲区回调给应用程序。</p>
+<p>在当前 C10XXK 问题的主流背景下，epoll 和异步 IO 这种事件驱动模型正逐渐变为人们的首选方案，这也是 Nginx 能不断从 Apache 中抢占市场的一个重要原因。然而从 Linux 社区来看对填平 aio（异步 IO）这个大坑并没有太大兴趣，那么为了异步 IO 的统一只能从应用层进行兼容，免不了多次内核态与用户态的交互，这对程序性能自然会有损失。当然随着时间的发展单机并发性能的解决办法越来越高效，但是对应的程序开发复杂度也越来越高，我们要做的就是在这两者之间做出最优权衡。</p>
+<p>比如 epoll + ThreadPool 就是 muduo 这个高效 C++ 网络库采取的方案。</p>
+<p>当然也有语言&amp;库已经封装了各自的异步 IO 库，如 boost 的 asyncio, C++11的async, promise, future等一系列机制.</p>
+<p>大概就这个样子<br><img src="http://omotkhw3y.bkt.clouddn.com/overview.gif" alt=""></p>
 <h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 
@@ -248,7 +253,7 @@ function tmpfobid()
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：Asio</span><br/>
+	<span><b>本文标题</b>：Asio 异步IO</span><br/>
 	<span><b>本文链接</b>：www.merlinblog.site/2017/08/11/Asio.html</span>
 
   </blockquote>

@@ -8,22 +8,22 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   
-  <title>目标, 心态和方法 | Merlin&#39;s Blog</title>
+  <title>C++11 Lambda 再探究 | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录一下我对制定目标, 追逐目标的中涉及的心态和方法问题的思考">
-<meta name="keywords" content="思考">
+  <meta name="description" content="最初写lambda是和function做比较, 介绍基本语法, 但是很多注意问题没有写">
+<meta name="keywords" content="cpp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="目标, 心态和方法">
-<meta property="og:url" content="www.merlinblog.site/2017/05/09/target-and-choice.html">
+<meta property="og:title" content="C++11 Lambda 再探究">
+<meta property="og:url" content="www.merlinblog.site/2017/07/15/cpp-lambda-again.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
-<meta property="og:description" content="记录一下我对制定目标, 追逐目标的中涉及的心态和方法问题的思考">
+<meta property="og:description" content="最初写lambda是和function做比较, 介绍基本语法, 但是很多注意问题没有写">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/target-choice.png">
-<meta property="og:updated_time" content="2017-10-05T17:40:53.000Z">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/lambda-again.png">
+<meta property="og:updated_time" content="2017-10-05T18:37:51.799Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="目标, 心态和方法">
-<meta name="twitter:description" content="记录一下我对制定目标, 追逐目标的中涉及的心态和方法问题的思考">
-<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/target-choice.png">
+<meta name="twitter:title" content="C++11 Lambda 再探究">
+<meta name="twitter:description" content="最初写lambda是和function做比较, 介绍基本语法, 但是很多注意问题没有写">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/lambda-again.png">
   
   
     <link href="/favicon.ico" rel="ico" />
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#心态问题"><span class="toc-number">1.</span> <span class="toc-text">心态问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#目标问题"><span class="toc-number">2.</span> <span class="toc-text">目标问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#方法问题"><span class="toc-number">3.</span> <span class="toc-text">方法问题</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#中括号问题"><span class="toc-number">1.</span> <span class="toc-text">中括号问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#mutable问题"><span class="toc-number">2.</span> <span class="toc-text">mutable问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尽量用lambda代替functor"><span class="toc-number">3.</span> <span class="toc-text">尽量用lambda代替functor</span></a></li></ol>
     	</div>
 	
 
@@ -205,19 +205,19 @@ function tmpfobid()
     <div class="container post-box">
         <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
             <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
-                <strong>目标, 心态和方法</strong>
+                <strong>C++11 Lambda 再探究</strong>
             </div>
  
             <div class="is-flex align-center" style="margin-top:10px;">
                 <span style="padding:0 10px;">post time:</span>
 				
-                <span class="post-date">2017-05-09</span>
+                <span class="post-date">2017-07-15</span>
             </div>
 			
             
                 <div>
                     
-                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/思考/">思考</a>
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
                     
                 </div>
             
@@ -227,46 +227,108 @@ function tmpfobid()
 
         <div class="content" style="overflow: auto; align:center;">
             <blockquote>
-<p>首先, 人的精力是有限的, 甚至资源是有限的, 有时候不得已要错过某些风景, 实在是没有办法的事情吧.</p>
+<p>再谈一下Lambda, 以及相关注意事项; 并且推荐更多的使用lambda表达式.</p>
 </blockquote>
-<p>本文试图说一说目标, 心态, 方法等问题, 可能不太成熟, 但姑且做一次尝试吧.(这种问题还是少说的好, 我也尽可能简单&amp;简短的说)</p>
-<p><img src="http://omotkhw3y.bkt.clouddn.com/target-choice.png" alt="post-cover"></p>
+<p>前面两篇文章可以参考:</p>
+<ol>
+<li><a href="http://www.merlinblog.site/2017/07/01/lambda-in-cpp.html">lambda in cpp</a></li>
+<li><a href="http://www.merlinblog.site/2017/07/01/compare-bind-and-lambda.html">bind和lambda性能比较</a></li>
+</ol>
+<p><em>第二篇是外文的翻译</em></p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/lambda-again.png" alt="post-cover"></p>
+<h1 id="中括号问题"><a href="#中括号问题" class="headerlink" title="中括号问题"></a>中括号问题</h1><p><code>[]() mutable throw -&gt; returnType {};</code></p>
+<p>中括号和圆括号的区别, 上一次基本已经说清楚了:</p>
+<blockquote>
+<p>圆括号和函数行参没有太多区别; 方括号就是让函数体外的变量对函数体可见, 是scope aware.</p>
+</blockquote>
+<p>但是这样还没有解释清楚, 从编译器的角度来说, 上面的从<code>scope</code>上的解释还不够确切.</p>
+<p>当把 lambda 和 functor 进行对比是就能发现奥妙了.</p>
+<blockquote>
+<p>凡是在<code>[]</code>号里面主动传入的, 都将作为匿名仿函数对象的数据成员</p>
+</blockquote>
+<p>例如下面的例子:</p>
+<pre><code class="C++">#include &lt;iostream&gt;
+
+int main()
+{
+    int id = 0;
+    auto f = [id]()mutable{
+        std::cout &lt;&lt; &quot;id:&quot; &lt;&lt; id &lt;&lt; std::endl;
+        ++id; //ok
+    };
+
+    id =4;
+    f();
+    f();
+    f();
+
+    std::cout &lt;&lt; &quot;final id = &quot; &lt;&lt; id &lt;&lt; std::endl;
+
+    return 0;
+}
+</code></pre>
+<p>值传递, 并且可以改变; 但是输出结果是:</p>
+<pre><code>id:0
+id:1 
+id:2
+final id = 4
+</code></pre><p>因为生成函数对象(funcotr) f 的时候, 初始化数据成员id就是0, 并且它和外部的id没有关系(最开始是副本关系, 后续没有关系).<br>也就是说, 其实编译器相当于生成了一个函数对象:(对程序员来说是匿名的, 但是编译器一定给了具体的名称, 并且编译器很清楚)</p>
+<pre><code class="C++">class Functor
+{
+private:
+    int id; //外部id传入时的拷贝
+public:
+    void operator()(){
+        std::cout &lt;&lt; &quot;id:&quot; &lt;&lt; id &lt;&lt; std::endl;
+        ++id;
+    }
+};
+</code></pre>
+<h1 id="mutable问题"><a href="#mutable问题" class="headerlink" title="mutable问题"></a>mutable问题</h1><p>如果没有<code>mutable</code>关键字, <strong>即便 pass by value, 也不能在lambda表达式内部进行修改值操作.</strong><br>换句话说 mutable 就是用来修饰中括号里面可见的外部变量的(值传递的情况).</p>
+<p>总结: (中括号里面特殊一些)</p>
+<blockquote>
+<p>中括号里面 pass by value, 那么要修改变量, 一定要mutable修饰; (否则编译就报错了)<br>中括号里面 pass by reference 时, 内部可以直接修改, 不需要mutable修饰.(gnu g++下验证通过)</p>
+</blockquote>
+<p>小括号pass by value则不需要, 小括号随意(因为小括号就相当于函数的形参, 而不是超出作用域的捕捉变量)</p>
+<h1 id="尽量用lambda代替functor"><a href="#尽量用lambda代替functor" class="headerlink" title="尽量用lambda代替functor"></a>尽量用lambda代替functor</h1><p>个人觉得lambda最大的好处, 就是代替functor, 实现 in place 的方便, 随时需要, 随时写;</p>
+<p>如果你写函数对象, 那么你至少要实现<code>构造器</code>, <code>赋值函数</code>, 以及<code>operator()()</code>, 甚至还要指定函数对象的数据成员,<br>比如说我要</p>
+<blockquote>
+<p>删除vector里面10-100的数据(前闭后开)</p>
+</blockquote>
+<p>那么functor的成员就应该保留10和100, 大致上是这个样子的:</p>
+<pre><code class="C++">class LambdaFunctor
+{
+public:
+    LambdaFunctor(int a, int b): m_a(a), m_b(b) {}
+    bool operator()(int n) const {
+        return m_a &lt; n &amp;&amp; n&lt;m_b; //参数n来自容器元素
+    }
+private:
+    int m_a;
+    int m_b;
+};
+
+//调用逻辑
+vector&lt;int&gt; v{0, 11, 12, 22, 99, 100};
+int x=10, y=100;
+v.erase(remove_if(v.begin(), v.end(), LambdaFunctor(x,y)), v.end());
+</code></pre>
+<p>functor写法的框架, 规模总是存在的.但是你要是用lambda, 超级简单了, 代码如下:</p>
+<pre><code class="C++">vector&lt;int&gt; v{0, 11, 12, 22, 99, 100};
+int x=10, y=100;
+
+auto f = [x, y](int n) {return x &lt; n &amp;&amp; n&lt;y;};
+v.erase(remove_if(v.begin(), v.end(), f), v.end());
+</code></pre>
+<p>你甚至可以直接用匿名的:</p>
+<pre><code class="C++">v.erase(remove_if(v.begin(), v.end(), [x, y](int n) {return x &lt; n &amp;&amp; n&lt;y;}), v.end());
+</code></pre>
+<p>并且, 注意, 直接用<code>匿名lambda</code>, 好处是<strong>及时展开, 没有调用开销</strong>, 相当于<code>inline</code>. (当然, 效率主要还是算法问题, 这种提升微不足道)</p>
+<blockquote>
+<p>实际上呢, 你写的少了, 其实编译器做了更多, 尽量多用 lambda 吧.</p>
+</blockquote>
 <hr>
-<h1 id="心态问题"><a href="#心态问题" class="headerlink" title="心态问题"></a>心态问题</h1><blockquote>
-<p>问：一本数据结构与算法的书，以数组举例，本来数组的概念挺简单的，但是书上写得像一种更广义的数学概念一样，有没有必要去理解？</p>
-<p>答：该不该学，用不用学，这种问题，就是属于让别人没法回答的问题。严格意义讲，所有知识都是有意义的，肯定或者否定的回答都是片面的。但具体对于你现在的阶段需不需要学，是因你而异的。</p>
-</blockquote>
-<p>我的建议是，<strong>你已经有这个困惑了，其实就是不想学了，那就跳过去，等你以后发现这个知识有用，再回头仔细看，捡起来。学习就好比旅行，任性一点儿没关系，向你喜欢的风景出发。有时候回头看，发现自己错过了什么风景，再回头去追寻并不晚。不用害怕错过，重要的是一直在旅程上。</strong></p>
-<p>以上正对应着我们在学习中的<code>心态问题</code>。</p>
-<blockquote>
-<p>还有一条, <code>开始学习时, 千万不要完美主义</code></p>
-</blockquote>
-<p>我虽然强调<code>do one thing, do it well</code>, 并且索罗斯也说过, <code>你不需要知道所有的事情, 只要再某方面知道的比别人多一点就好</code>; 但是学习是循环反馈的过程, 需要持续的练习和反馈, 很难在第一次就能掌握全部, 就像 C++ 中的元编程, 不是你学完模板就能完全了解的, 需要在实践中, 或者源码中锻炼很长一段时间.</p>
-<blockquote>
-<p>我们没有那么多时间去把东西一开始就完美地弄明白，我觉得这也不现实。但能在一开始优雅地用起来，不是更让人有成就感吗？</p>
-</blockquote>
-<p>抓大, 放小; 循环反馈, 不要停在一个地方较劲, 但一定记得回头.</p>
-<h1 id="目标问题"><a href="#目标问题" class="headerlink" title="目标问题"></a>目标问题</h1><p>关于如何制定目标还有一个SMART原则：</p>
-<ul>
-<li>Specific：具体的</li>
-<li>Measurable：可衡量的</li>
-<li>Attainable：可达到的</li>
-<li>Relevant：与其他目标具有相关性的</li>
-<li>Time-bound：有时间限制的</li>
-</ul>
-<p>其中每一条都很关键, 但是从重要性和价值上来说, 一定要注意好<code>时限</code>.<br>定的目标太紧, 自己受不了, 感觉时间不够用, 精力不够用; 太松又达不到效果, 适度最好.</p>
-<h1 id="方法问题"><a href="#方法问题" class="headerlink" title="方法问题"></a>方法问题</h1><p>这里主要涉及两个部分内容, 书和练习.</p>
-<p>读书方法, 一般就是读厚和读薄两种.</p>
-<blockquote>
-<p>不要愚蠢的从第一页开始读, 一定要先知道大纲.</p>
-</blockquote>
-<p>练习方法也有很多, 但是个人觉得最重要的是:</p>
-<blockquote>
-<p>奔着目标(极其功利的) &amp; 有目的的进行练习</p>
-</blockquote>
-<p>这绝对不是什么不好的方法, 在我的经历来看, 这是非常好的, 实用的方法.</p>
-<hr>
-<p>差不多就这样, 每个人想法不同, 我在这里只是总结了一下我的片面的观点.</p>
+<p>先这样吧, 以后遇到问题再来补充.</p>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 
@@ -284,8 +346,8 @@ function tmpfobid()
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：目标, 心态和方法</span><br/>
-	<span><b>本文链接</b>：www.merlinblog.site/2017/05/09/target-and-choice.html</span>
+	<span><b>本文标题</b>：C++11 Lambda 再探究</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/07/15/cpp-lambda-again.html</span>
 
   </blockquote>
 </div>
