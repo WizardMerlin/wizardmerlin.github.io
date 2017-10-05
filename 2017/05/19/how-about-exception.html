@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>C++ 异常争论&amp;noexcept | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="C++11g给出了明确的态度, 不再使用动态异常机制">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 异常争论&amp;noexcept">
+<meta property="og:url" content="www.merlinblog.site/2017/05/19/how-about-exception.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="C++11g给出了明确的态度, 不再使用动态异常机制">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/no-except.png">
+<meta property="og:updated_time" content="2017-10-05T21:51:56.291Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++ 异常争论&amp;noexcept">
+<meta name="twitter:description" content="C++11g给出了明确的态度, 不再使用动态异常机制">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/no-except.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#noexcpet"><span class="toc-number">1.</span> <span class="toc-text">noexcpet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#throw"><span class="toc-number">2.</span> <span class="toc-text">throw()</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#异常争论"><span class="toc-number">3.</span> <span class="toc-text">异常争论</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>C++ 异常争论&noexcept</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-05-19</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>异常问题, 在 C++ 一直是个争论不休的问题, 好在C++11给出了定论.</p>
+</blockquote>
+<p>C++11 舍弃了原来的旧的异常机制, 引入了 <code>noexcept</code> 机制, 简化代码, 提高性能.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/no-except.png" alt="post-cover"></p>
+<p>本文先说一下<code>noexcept</code>, 再来说, 长久以来存在的异常争论.</p>
+<h1 id="noexcpet"><a href="#noexcpet" class="headerlink" title="noexcpet"></a>noexcpet</h1><p>noexcept, 一般代表<code>不抛出异常</code>或者<code>异常传播终止</code>, 实际上它是<code>noexcept(true)</code>的缩写, 保证一个函数不会抛出异常, 代替<code>throw()</code>,<br>直接终止程序, 而不去进行栈解旋或者析构对象啥的. 它提高了标准库的性能, 同时也阻止了异常扩散问题.</p>
+<p>换句话说, 原来的<code>动态异常</code>声明被废弃了.</p>
+<blockquote>
+<p>但它也可以抛出异常, 写成<code>noexcept(false)</code>; 但是要注意捕捉时需要制定异常类型.</p>
+</blockquote>
+<p>哪些地方会用到?</p>
+<p>比如说容器<code>vector</code>, 容器<code>deque</code>, 这种顺序存储的, 如果空间增长不够了, 需要 <code>memory reallocation</code>,<br>此时就需要保证的容器中元素拥有<code>noexcept</code>类型的构造器(可能是移动构造器), 否则容器挪动元素的时候, 它就不敢调用, 从而导致重分配失败.<br>(实际上, 容器中vector扩容比较常见, 双端队列deque虽然是顺序存储, 但是会向两边扩展, 但是是一段一段的(多个连续存储的区块), 扩充再分一段即可)</p>
+<blockquote>
+<p>具有move语义的函数, 一般会去保证它, 即不抛出异常.</p>
+</blockquote>
+<p>例如</p>
+<pre><code class="C++">void foo() noexcept;
+//等价于
+void foo() noexcept(true); //true可以用其他条件代替.
+</code></pre>
+<p>即, 保证一个函数不会抛出异常.</p>
+<p>或者加上条件提示:</p>
+<pre><code class="C++">void swap(T&amp;x, T&amp;y) noexcept(noexcept(x.swap(y))
+{
+    x.swap(y); 
+}
+</code></pre>
+<blockquote>
+<p>即括号里面部分不抛出异常(即为true), 外层整个函数就不抛出异常.</p>
+</blockquote>
+<p>调用端, 如果一直不处理, 最后就会交给<code>std::terminate()</code>, 这个函数就会调用<code>std::abort()</code>结束整个程序.</p>
+<blockquote>
+<p>以前抛出具体异常的例子怎么办?</p>
+</blockquote>
+<p>例如:</p>
+<pre><code class="C++">void *operator new(std::size_t) throw(std::bad_alloc);
+</code></pre>
+<p>现在直接写<code>void *operator new(std::size_t) noexcept(false);</code>即可.</p>
+<p>其他的, 比如<code>构函数默认就是noexcept的</code>, 因为它不应该抛出异常. (当然你可以修改默认, 让析构抛出异常; 但<code>delete</code>的noexcept更改不了)</p>
+<h1 id="throw"><a href="#throw" class="headerlink" title="throw()"></a>throw()</h1><p>为什么抛弃了原来的<code>动态异常声明</code>?</p>
+<p>我个人的理解是(并赞同), 有些运行时异常是在运行时发生的, 很难在编译时确定, 尤其是在模板代码中.</p>
+<p>借鉴<code>&lt;深入理解C++11新特性与应用&gt;</code>作者的观点, 总结如下:</p>
+<ul>
+<li>C++异常是运行时检查, 而不是编译时, 一旦运行失败, 会调用std::unexpected(), 且不能恢复正常流程(结果还是终止程序)</li>
+<li>运行时开销要求编译器生成更多的执行&amp;监视代码, 阻碍优化, 增大运行时开销</li>
+<li>泛型编码中很难确定具体跑出什么类型的异常</li>
+</ul>
+<p>throw()被保留了, 但是是以<code>noexcept</code>的形式, 保证代码段不会抛出异常.</p>
+<blockquote>
+<p>实际上, 我们最多希望知道, 程序抛或者不抛异常(因为很难修复异常, 所以不必关心具体异常), 所以保留noexcept是非常正确的</p>
+</blockquote>
+<h1 id="异常争论"><a href="#异常争论" class="headerlink" title="异常争论"></a>异常争论</h1><p>其实很容易想, C++已经存在很多机制帮助处理异常错误, 我们真的还需要<code>try-catch</code>来处理异常么?</p>
+<p>有人是这么总结的, <code>异常的三境界</code> :</p>
+<blockquote>
+<p>第一个境界就是：程序中看到不try,catch,finally。<br>这是新手的水平，他不知道有的模块/函数是会有异常抛出的，不处理的话，程序会当掉，很多资源会不能及时正确回收。或者他写程序时反复应用errno或者检查返回值的方式来处理异常情况，排错代码和正常流程代码搅在一起，混乱不堪。</p>
+<p>第二个境界就是：程序中看到好多好多try,catch,finally。<br>这是入门级的水平，他懂得利用抛异常的方式来处理错误情况，所以在程序中，正常的流程会统一在try里，各种错误处理，都安排在catch当中，小心翼翼地做好的善后工作。有时候狠起来还使用catch(…)来强行把所有的异常都压下来。这样没有什么混乱？才怪，各种善后处理虽然都做了，但是他不知道要写多少个try，多少个catch，而且经常要把思路放到catch当中去。</p>
+<p>第三个境界就是：程序中还是看到不try,catch,finally。</p>
+</blockquote>
+<p>实际上, 你可以看到, 是否需要异常, 取决于一个很简单的事实:</p>
+<blockquote>
+<p>出状况时, 能够正确处理(善后)</p>
+</blockquote>
+<p>但是是否能够妥善处理出异常时的资源问题, 又会由于使用者水平不同, 所处的代码抽象层次(调用方或者提供方)需要的保证又不同.</p>
+<blockquote>
+<p>这样的话, 就很难说, 是否需要异常了(尝试着从库的使用者和提供者分别换位思考就不难理解了)</p>
+<blockquote>
+<p>当然高手完全可以不依赖任何外在手段, 通过代码技巧&amp;技术解决问题, 例如Raii手法, 另当别论</p>
+</blockquote>
+</blockquote>
+<p>Herb Sutter的<code>《Exceptional C++》</code>中，他将异常的安全等级划分成三个层次: </p>
+<ul>
+<li>基本保证(The Basic Guarantee)<br>异常被抛出后，程序中剩下的所有东西都处于合法状态，没有对象或数据结构的破坏，不会发生资源泄漏现象确保出线异常时程序处于未知但有效(所谓有效，即对象的不变式检查全部通过)的状态，保证最基本的安全性。然后，程序的精确状态可能是不可预期的。</li>
+<li>强保证(The Strong Guarantee)<br>确保操作的事务性满足“提交或回退语义”，即要么成功，程序处于目标状态；要么不发生改变，保持原有状态(很难)</li>
+<li>不抛出保证(The Nothrow Guarantee)<br>在任何情况下都不可能引发任何异常。</li>
+</ul>
+<p>析构函数、释放函数和swap函数。因为这三个函数是实现“基本保证”和“强保证”的基石。析构和释放函数不抛出保证是RAII技术有效的基本保证;<br>swap不抛出保证是为了“在绝不失败的过程中，把对象替换到目标状态”。</p>
+<p>但是注意, <code>不抛出</code>就不表示不处理, 抛出也不一定表示一定会处理, 最终还是要看处理的手法能否保证安全.</p>
+<blockquote>
+<p>异常只不过是达到安全的手段之一, 没有非要和非不要的强制要求</p>
+</blockquote>
+<p>综上<br>如果采用了异常机制，就尽量保证异常安全：努力实现强保证，至少实现基本保证。<br>常用方法有：</p>
+<ul>
+<li>使用超强的RAII，保证在产生异常时，资源会自动回收，实现基本保证。</li>
+<li>使用pimpl帮助实现RAII，并把逻辑操作分派到各个成员内部当中，使之在发生异常时保持一致性，通过Copy &amp; Swap实现强保证。</li>
+<li>为析构函数、释放函数和swap函数提供最高层次的不抛出保证。<br>如果不使用异常也能达到强保证, 那么异常就可以不使用.</li>
+</ul>
+<blockquote>
+<p>我通常使用 raii手法 + pimpl + 智能指针时, 基本不需要异常机制 (当然基本函数还是会加上noexcept保证)</p>
+</blockquote>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：C++ 异常争论&amp;noexcept</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/05/19/how-about-exception.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY SA 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
