@@ -19,7 +19,7 @@
 <meta property="og:description" content="记录一下我对制定目标, 追逐目标的中涉及的心态和方法问题的思考">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/background1.jpg">
-<meta property="og:updated_time" content="2017-10-05T17:30:35.323Z">
+<meta property="og:updated_time" content="2017-10-05T17:35:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="目标, 心态和方法">
 <meta name="twitter:description" content="记录一下我对制定目标, 追逐目标的中涉及的心态和方法问题的思考">
@@ -178,6 +178,19 @@ function tmpfobid()
 <section>
 <!--这里添加toc内容, 一定是在article entry之前-->
 <link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#心态问题"><span class="toc-number">1.</span> <span class="toc-text">心态问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#目标问题"><span class="toc-number">2.</span> <span class="toc-text">目标问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#方法问题"><span class="toc-number">3.</span> <span class="toc-text">方法问题</span></a></li></ol>
+    	</div>
 	
 
 
@@ -216,16 +229,19 @@ function tmpfobid()
             <blockquote>
 <p>首先, 人的精力是有限的, 甚至资源是有限的, 有时候不得已要错过某些风景, 实在是没有办法的事情吧.</p>
 </blockquote>
-<p>本文试图说一说目标, 心态, 方法等问题, 可能不太成熟, 但姑且做一次尝试吧.</p>
+<p>本文试图说一说目标, 心态, 方法等问题, 可能不太成熟, 但姑且做一次尝试吧.(这种问题还是少说的好, 我也尽可能简单&amp;简短的说)</p>
 <p><img src="http://omotkhw3y.bkt.clouddn.com/background1.jpg" alt="post-cover"></p>
-<p>这种问题还是少说的好, 我也尽可能简单&amp;简短的说.</p>
 <hr>
 <h1 id="心态问题"><a href="#心态问题" class="headerlink" title="心态问题"></a>心态问题</h1><blockquote>
-<p>路人问：一本数据结构与算法的书，以数组举例，本来数组的概念挺简单的，但是书上写得像一种更广义的数学概念一样，有没有必要去理解？</p>
-<p>智者回答：该不该学，用不用学，这种问题，就是属于让别人没法回答的问题。严格意义讲，所有知识都是有意义的，肯定或者否定的回答都是片面的。但具体对于你现在的阶段需不需要学，是因你而异的。我的建议是，你已经有这个困惑了，其实就是不想学了，那就跳过去，等你以后发现这个知识有用，再回头仔细看，捡起来。学习就好比旅行，任性一点儿没关系，向你喜欢的风景出发。有时候回头看，发现自己错过了什么风景，再回头去追寻并不晚。不用害怕错过，重要的是一直在旅程上。</p>
+<p>问：一本数据结构与算法的书，以数组举例，本来数组的概念挺简单的，但是书上写得像一种更广义的数学概念一样，有没有必要去理解？</p>
+<p>答：该不该学，用不用学，这种问题，就是属于让别人没法回答的问题。严格意义讲，所有知识都是有意义的，肯定或者否定的回答都是片面的。但具体对于你现在的阶段需不需要学，是因你而异的。</p>
 </blockquote>
-<p>以上这个小对话，正对应着我们在学习中的心态问题。</p>
-<p>还有一条, <code>开始学习时, 千万不要完美主义</code>, 我虽然强调<code>do one thing, do it well</code>, 并且索罗斯也说过, <code>你不需要知道所有的事情, 只要再某方面知道的比别人多一点就好</code>; 但是学习是循环反馈的过程, 需要持续的练习和反馈, 很难在第一次就能掌握全部, 就像 C++ 中的元编程, 不是你学完模板就能完全了解的, 需要在实践中, 或者源码中锻炼很长一段时间.</p>
+<p>我的建议是，<strong>你已经有这个困惑了，其实就是不想学了，那就跳过去，等你以后发现这个知识有用，再回头仔细看，捡起来。学习就好比旅行，任性一点儿没关系，向你喜欢的风景出发。有时候回头看，发现自己错过了什么风景，再回头去追寻并不晚。不用害怕错过，重要的是一直在旅程上。</strong></p>
+<p>以上正对应着我们在学习中的<code>心态问题</code>。</p>
+<blockquote>
+<p>还有一条, <code>开始学习时, 千万不要完美主义</code></p>
+</blockquote>
+<p>我虽然强调<code>do one thing, do it well</code>, 并且索罗斯也说过, <code>你不需要知道所有的事情, 只要再某方面知道的比别人多一点就好</code>; 但是学习是循环反馈的过程, 需要持续的练习和反馈, 很难在第一次就能掌握全部, 就像 C++ 中的元编程, 不是你学完模板就能完全了解的, 需要在实践中, 或者源码中锻炼很长一段时间.</p>
 <blockquote>
 <p>我们没有那么多时间去把东西一开始就完美地弄明白，我觉得这也不现实。但能在一开始优雅地用起来，不是更让人有成就感吗？</p>
 </blockquote>
