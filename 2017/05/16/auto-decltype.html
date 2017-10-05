@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>C++ auto&amp;decltype总结 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="主要讲讲编译时和运行时类型推导的用处和妙用, 一般是在模板编程中">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ auto&amp;decltype总结">
+<meta property="og:url" content="www.merlinblog.site/2017/05/16/auto-decltype.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="主要讲讲编译时和运行时类型推导的用处和妙用, 一般是在模板编程中">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/auto-decl.png">
+<meta property="og:updated_time" content="2017-10-05T19:27:52.547Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++ auto&amp;decltype总结">
+<meta name="twitter:description" content="主要讲讲编译时和运行时类型推导的用处和妙用, 一般是在模板编程中">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/auto-decl.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#auto"><span class="toc-number">1.</span> <span class="toc-text">auto</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#编译时类型推导"><span class="toc-number">1.1.</span> <span class="toc-text">编译时类型推导</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#推导规则"><span class="toc-number">1.2.</span> <span class="toc-text">推导规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注意事项"><span class="toc-number">1.3.</span> <span class="toc-text">注意事项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高级用法"><span class="toc-number">1.4.</span> <span class="toc-text">高级用法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#decltype"><span class="toc-number">2.</span> <span class="toc-text">decltype</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#返回值"><span class="toc-number">2.1.</span> <span class="toc-text">返回值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型替代"><span class="toc-number">2.2.</span> <span class="toc-text">类型替代</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#元编程"><span class="toc-number">2.3.</span> <span class="toc-text">元编程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">3.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>C++ auto&decltype总结</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-05-16</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>摘要: auto&amp;decltype 表面上是为了实现C++11的新特性才引入的, 实际上编程中使用它会大大简化代码.</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/auto-decl.png" alt="post-cover"></p>
+<p>最常见的情况恐怕是写<code>vector&lt;int&gt;::iterator it</code>, 这种名字过长的情景, 简化了代码的书写.</p>
+<h1 id="auto"><a href="#auto" class="headerlink" title="auto"></a>auto</h1><h2 id="编译时类型推导"><a href="#编译时类型推导" class="headerlink" title="编译时类型推导"></a>编译时类型推导</h2><p>(C++98/03中一直就有auto关键字了，只不过在C++98/03中auto关键字用于标识具有自动存储期的局部变量，它的作用并不大; 在C++11中auto关键字被重新利用了，用作类型推导)</p>
+<blockquote>
+<p>写容器代码的时候, 尤其是迭代器, 算法之类的, 太长了&amp;复杂了, 直接用auto吧, 编译器自动推导类型</p>
+</blockquote>
+<p>比如:</p>
+<pre><code class="C++">auto x = 5; //auto即int
+static auto y = 0.0;        //auto即double
+</code></pre>
+<p>还有一种情况用auto, 即</p>
+<blockquote>
+<p>需要给lambda表达式命名的时候, 匿名的仿函数, 很少能写出它的命名, 直接用auto吧.</p>
+</blockquote>
+<p><code>《深入应用C++11 代码优化与工程机应用》</code>专门研究过这个问题.</p>
+<h2 id="推导规则"><a href="#推导规则" class="headerlink" title="推导规则"></a>推导规则</h2><p>理论上, 这里属于编译器实现的部分, 编译器会根据具体的情况推导出具体的类型.</p>
+<ul>
+<li>当表达式是一个引用类型的时候，auto会把引用类型抛弃，直接推导成原始类型</li>
+<li>当表达式是一个带cv限定符时，auto会把cv限定符也就是const抛弃，推导成non-const的</li>
+<li>当auto和引用类型相结合时, 编译器在推导时保留表达式的cv限定符</li>
+</ul>
+<p>总结起来就:</p>
+<ul>
+<li>当不声明为指针和引用是，auto的推导结果类型将抛弃表达式的引用和CV限定符</li>
+<li>当声明为指针或引用时，auto推导结果将保留表达式的的cv属性<pre><code class="C++">int x = 0;
+const auto &amp;g = x;
+auto &amp;h = g; //此时h的类型是 const int &amp;, 即auto是保留了const属性
+</code></pre>
+</li>
+</ul>
+<p>最好:</p>
+<blockquote>
+<p>在传递const变量的时候，使用auto必须自己加const<br>auto不涉及引用和指针, 即<code>&amp;</code>和<code>*</code>, 在定义的时候, 单独写出来</p>
+</blockquote>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>注意一下, auto的机制限制: </p>
+<ul>
+<li>auto不能作为函数形参</li>
+<li>auto不能修饰类或者结构体中的非静态成员变量</li>
+<li>auto不能定义数组</li>
+<li>auto不能推导出模板参数</li>
+</ul>
+<p>它毕竟是编译时处理, 即编译时不能确定的, auto都做不了(运行时需要确定的请用decltype, 获取变量&amp;对象&amp;表达式的类型)</p>
+<p>具体的例子:</p>
+<pre><code class="C++">void func(auto a = 1){};  //error: auto不能用于函数形参，哪怕是带默认参数的形参  
+
+struct MyStruct  
+{  
+    auto var = 1;           //error: auto不能修饰类或者结构体中的非静态成员  
+    static auto var2 = 2;  
+};  
+
+template&lt;class T&gt;  
+struct Bar{};   
+int _tmain(int argc, _TCHAR* argv[])  
+{  
+    int arr[10] = { 0 };  
+    auto a = arr;  //OK: a -&gt;int *  
+    auto r[10] = arr;  //error : auto不能定义数组  
+
+    Bar&lt;int&gt; bar;  
+    Bar&lt;auto&gt; bb = bar;  //error: auto 不能作为模板参数  
+    return 0;  
+}
+</code></pre>
+<h2 id="高级用法"><a href="#高级用法" class="headerlink" title="高级用法"></a>高级用法</h2><p>一般高级用法是用在模板, 即元编程中, 用于<strong>运行时才能确定类型, 当前先用auto为了通过编译</strong>, 需要<code>auto</code>和<code>decltype</code>配合.</p>
+<p>例如, 某个方法, 由于某种原因, 其返回值当前不知道(取决于形参类型), 可以这么写:</p>
+<pre><code class="C++">template&lt;typename X, tyname Y&gt;
+auto get(X x, Y y) -&gt; decltype(x+y) {//具体实现}
+</code></pre>
+<p>如果你直接写<code>decltype(x+y) get(X x, Y y)</code>是不能通过编译的, 因为直到函数体执行时, 编译器才了解到 x 和 y.</p>
+<h1 id="decltype"><a href="#decltype" class="headerlink" title="decltype"></a>decltype</h1><p>decltype</p>
+<blockquote>
+<p>有部分网友说这个关键词纯粹是为了开发标准库而引入的机制, 可能吧</p>
+</blockquote>
+<p>C++11 也提供了从对象或表达式中“俘获”类型的机制, 相当于<code>typeof()</code>, 但是不同于 auto, 它永远能推导出实际调用对象的类型, 即运行时推导.</p>
+<blockquote>
+<p>decltype永远推导出表达式的实际类型，不管你定义时是不是加了指针或者引用标记(一般不需要额外配合, 也不丢失属性)</p>
+</blockquote>
+<p>推导规则如下:</p>
+<ul>
+<li>expr是标识符，类访问表达式，decltype(expr)和expr的类型保持一致</li>
+<li>expr是函数调用，decltype(expr)和返回值类型一致</li>
+<li>expr是一个左值，则decltype(expr)是expr类型的左值引用，否则和expr类型一致</li>
+</ul>
+<p>主要用途:</p>
+<ul>
+<li>用于返回值类型</li>
+<li>用于类型替代</li>
+<li>元编程(模板编程)</li>
+</ul>
+<h2 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h2><p>新的操作符 decltype 可以从一个表达式中“俘获”其结果的类型并“返回”.</p>
+<p>再重复一下是上面 auto 的例子, 在<code>《C++标准库2e》</code>中有这么一个用法:</p>
+<pre><code class="C++">template&lt;typename T1, typename T2&gt;
+decltype(x+y) add(T1 x, T2 y);
+</code></pre>
+<p>用来描述两个类型兼容(当然不是类型一致, 类型一致的话, 要一个模板参数即可)的两个变量的加操作.</p>
+<p>可惜编译不通过, 因为<code>decltype(x+y)</code>时, 还不知道这两个变量, 只有在函数实现部分内部才知道.</p>
+<p>所以编译器需要我们这样处理:</p>
+<pre><code class="C++">template&lt;typename T1, typename T2&gt;
+auto add(T1 x, T2 y) -&gt; decltype(x+y);
+</code></pre>
+<p>表示编译时, 编译器当做auto即可, 运行时根据decltype进行推到(或强转).</p>
+<h2 id="类型替代"><a href="#类型替代" class="headerlink" title="类型替代"></a>类型替代</h2><p>其实它就是 gnu实现的<code>typeof</code>的标准版, 拿到类型, 然后用于下面的代码:</p>
+<pre><code class="C++">map&lt;string, float&gt; m;
+decltype(m)::value_type elem;
+</code></pre>
+<p>再例如:</p>
+<pre><code class="C++">const vector&lt;int&gt; vi;  
+typedef decltype (vi.begin()) CIT;  
+CIT another_const_iterator;
+</code></pre>
+<p>(不同于<code>typeid</code>, 它的功能非常有限, 只用于显示类型)</p>
+<h2 id="元编程"><a href="#元编程" class="headerlink" title="元编程"></a>元编程</h2><p>还有一种情况, 其实就是倒腾模板, 比如说, lambda表达式的的类型需要传递给模板, 例如下面的代码:</p>
+<pre><code>auto comp = [](const Person&amp;p1, const Person&amp;p2)-&gt;bool{
+    //具体的实现
+
+};
+
+std::set&lt;Person, decltype(comp)&gt; set1(comp);//如果这里不传入comp, 就
+</code></pre><p>如果这里不传入comp, 即<code>set1(comp);</code>不指定用于比较的 functor , 那么编译器就会报错, 找不到lambda表达式类型的functor的构造器以及赋值函数.</p>
+<p>其他例子:</p>
+<pre><code class="C++">template&lt;typename T&gt;
+void test(T obj) {
+    typedef typename decltype(obj)::iterator iType;
+    //相当于
+    //typedef typename T::iterator iType;
+}
+</code></pre>
+<p>其中<code>typename</code> 就是用来告诉编译器整个后面的<code>decltype(obj)::iterator</code>或者<code>T::iterator</code>确实是模板类型.</p>
+<p>可能有人会觉得多此一举, 但是注意上面的, 模板第一编译的时候肯定通过, 而第二次编译, 即根据调用特化成模板函数时, 不一定成功,</p>
+<blockquote>
+<p>因为<code>T::iterator</code>, 类型T必须要有iterator才行.</p>
+</blockquote>
+<hr>
+<p>auto, decltype 对于元编程的内容的影响远不止如此, 水平有限, 先说这么多.</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li>《深入应用C++11 代码优化与工程机应用》</li>
+<li>《C++标准库2e》</li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：C++ auto&amp;decltype总结</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/05/16/auto-decltype.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY SA 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
