@@ -232,11 +232,11 @@ function tmpfobid()
             
             
                 
-<a class="post-hover" href="/2017/05/20/type-traits-in-cpp.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/type-traits.png')">
+<a class="post-hover" href="/2017/05/21/move-awared-string.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/background1.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
             <h3 class="title is-marginless text-shadow">
-                C++类型萃取
+                带有移动语义的字符串类
             </h3>
             
             
@@ -246,12 +246,13 @@ function tmpfobid()
             <p class="sub-title text-shadow"></p>
             <p class="is-marginless text-shadow post-content-text">
                 
-写泛型框架&amp;库的时候, 可能会用到这些东西; 其他时候, 很少用到.
+本文是右值相问题的补充, 这里主要实现一个有右值语义的字符串类
 
 
-Type t..
+其代码实现, 大致如下:
+..
             </p>
-            <p class="date text-shadow is-marginless">2017-05-20</p>
+            <p class="date text-shadow is-marginless">2017-05-21</p>
         </div>
     </div>
 </a>
@@ -286,11 +287,11 @@ Type t..
         
         
         
-<a class="post-hover" href="/2017/05/20/type-traits-in-cpp.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/type-traits.png')">
+<a class="post-hover" href="/2017/05/21/move-awared-string.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/background1.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
             <h3 class="title is-marginless text-shadow">
-                C++类型萃取
+                带有移动语义的字符串类
             </h3>
             
             
@@ -300,12 +301,13 @@ Type t..
             <p class="sub-title text-shadow"></p>
             <p class="is-marginless text-shadow post-content-text">
                 
-写泛型框架&amp;库的时候, 可能会用到这些东西; 其他时候, 很少用到.
+本文是右值相问题的补充, 这里主要实现一个有右值语义的字符串类
 
 
-Type t..
+其代码实现, 大致如下:
+..
             </p>
-            <p class="date text-shadow is-marginless">2017-05-20</p>
+            <p class="date text-shadow is-marginless">2017-05-21</p>
         </div>
     </div>
 </a>
@@ -375,6 +377,114 @@ Type t..
                             <div class="columns" style="min-height: 230px;">
                                 
                                     <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/background1.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/05/21/move-awared-string.html">
+                                            <p style="font-size: 24px;">带有移动语义的字符串类</p>
+									    </a>
+                                        
+                                            <span class="sub-title">作为右值探讨的一部分, 单独拉出来, 方便加深认识</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/cpp/">
+                                                <span class="tag is-post-tag">
+												  cpp
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         
+本文是右值相问题的补充, 这里主要实现一个有右值语义的字符串类
+
+
+其代码实现, 大致如下:
+class MyString
+{
+private:
+    char *_data;
+    size_t _len;
+
+    //on...
+                                        </p>
+									<a class="post-hover" href="/2017/05/21/move-awared-string.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  " style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/move-forward.png')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/05/21/right-value-related.html">
+                                            <p style="font-size: 24px;">C++11 右值相关问题探讨</p>
+									    </a>
+                                        
+                                            <span class="sub-title">这里涉及到了至少两个问题, 移动语义和完美转发</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/cpp/">
+                                                <span class="tag is-post-tag">
+												  cpp
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         
+本文集中说说和右值相关的所有问题, 右值&amp;左值, 移动语义, 完美转发, 非consty引用; 以及引入移动语义的利弊.
+
+
+非consty引用
+最开始, 碰到右值问题的时候是, 临时对象不能赋值给非const类型的引用 (...
+                                        </p>
+									<a class="post-hover" href="/2017/05/21/right-value-related.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  " style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
                                          style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/type-traits.png')">
                                     </div>
                                 
@@ -402,10 +512,11 @@ Type t..
                                          
 写泛型框架&amp;库的时候, 可能会用到这些东西; 其他时候, 很少用到.
 
+以后有时间再来完善, 初步认识一下
 
-Type traits, 类型特征, 除此之外还有iterator traits, 可以得到迭代器的特征; 以及funtion traits
-例如:
-...
+
+
+Type traits, 类型特征, 除此之外还有iterator traits, 可以得到迭代器的特征; 以...
                                         </p>
 									<a class="post-hover" href="/2017/05/20/type-traits-in-cpp.html" >
                                         <button class="button is-info is-small">阅读详情</button>
@@ -541,15 +652,15 @@ C++11 舍弃了原来的旧的异常机制, 引入了 noexcept 机制, 简化代
                 
                                         <p>
                                             
-												<a class="post-hover" href="/tags/cpp/">
-                                                <span class="tag is-post-tag">
-												  cpp
-												</span>
-												</a>
-                                            
 												<a class="post-hover" href="/tags/boost/">
                                                 <span class="tag is-post-tag">
 												  boost
+												</span>
+												</a>
+                                            
+												<a class="post-hover" href="/tags/cpp/">
+                                                <span class="tag is-post-tag">
+												  cpp
 												</span>
 												</a>
                                             

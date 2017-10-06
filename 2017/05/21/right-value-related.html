@@ -8,22 +8,22 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   
-  <title>C++11 中默认函数问题探究 | Merlin&#39;s Blog</title>
+  <title>C++11 右值相关问题探讨 | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="C++常谈的大三元,五元, 以及默认构造器析构器, 私有函数问题">
-<meta name="keywords" content="boost,cpp">
+  <meta name="description" content="这里涉及到了至少两个问题, 移动语义和完美转发">
+<meta name="keywords" content="cpp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++11 中默认函数问题探究">
-<meta property="og:url" content="www.merlinblog.site/2017/05/17/defaulted-deleted-in-cpp.html">
+<meta property="og:title" content="C++11 右值相关问题探讨">
+<meta property="og:url" content="www.merlinblog.site/2017/05/21/right-value-related.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
-<meta property="og:description" content="C++常谈的大三元,五元, 以及默认构造器析构器, 私有函数问题">
+<meta property="og:description" content="这里涉及到了至少两个问题, 移动语义和完美转发">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/defaulted-deleted.png">
-<meta property="og:updated_time" content="2017-10-05T19:44:36.771Z">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/move-forward.png">
+<meta property="og:updated_time" content="2017-10-06T07:18:32.522Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C++11 中默认函数问题探究">
-<meta name="twitter:description" content="C++常谈的大三元,五元, 以及默认构造器析构器, 私有函数问题">
-<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/defaulted-deleted.png">
+<meta name="twitter:title" content="C++11 右值相关问题探讨">
+<meta name="twitter:description" content="这里涉及到了至少两个问题, 移动语义和完美转发">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/move-forward.png">
   
   
     <link href="/favicon.ico" rel="ico" />
@@ -178,6 +178,19 @@ function tmpfobid()
 <section>
 <!--这里添加toc内容, 一定是在article entry之前-->
 <link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#非consty引用"><span class="toc-number">1.</span> <span class="toc-text">非consty引用</span></a></li></ol>
+    	</div>
 	
 
 
@@ -192,19 +205,17 @@ function tmpfobid()
     <div class="container post-box">
         <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
             <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
-                <strong>C++11 中默认函数问题探究</strong>
+                <strong>C++11 右值相关问题探讨</strong>
             </div>
  
             <div class="is-flex align-center" style="margin-top:10px;">
                 <span style="padding:0 10px;">post time:</span>
 				
-                <span class="post-date">2017-05-17</span>
+                <span class="post-date">2017-05-21</span>
             </div>
 			
             
                 <div>
-                    
-                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/boost/">boost</a>
                     
                          <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
                     
@@ -216,84 +227,55 @@ function tmpfobid()
 
         <div class="content" style="overflow: auto; align:center;">
             <blockquote>
-<p>defaulted和deleted函数, 期间谈到了 big-three, boost::noncopyable, 友元等问题</p>
+<p>本文集中说说和右值相关的所有问题, 右值&amp;左值, 移动语义, 完美转发, 非consty引用; 以及引入移动语义的利弊.</p>
 </blockquote>
-<p><strong>本文可能会非常杂乱, 想到哪写到哪</strong></p>
-<hr>
-<p><img src="http://omotkhw3y.bkt.clouddn.com/defaulted-deleted.png" alt="post-cover"></p>
-<p>两种类型的函数, 都是只用声明, 不用实现的函数, 一般是指</p>
-<ul>
-<li>构造函数(包括拷贝类的, 移动类的)</li>
-<li>析构函数</li>
-<li>赋值函数</li>
-</ul>
-<p>这些函数一般都是inline的.</p>
-<blockquote>
-<p>但是很少用于一般函数, 只用于Big-three或者 Big-five. </p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/move-forward.png" alt="post-cover"></p>
+<h1 id="非consty引用"><a href="#非consty引用" class="headerlink" title="非consty引用"></a>非consty引用</h1><blockquote>
+<p>最开始, 碰到右值问题的时候是, <code>临时对象不能赋值给非const类型的引用</code> (编译器从安全检查的角度禁止你这么做).</p>
 </blockquote>
-<p>关于编译器会生成和自动调用什么, 请参考<code>&lt;Effective C++&gt;</code></p>
-<blockquote>
-<p>简单说, 类成员有pointer member时, 基本上就要写出来 Big-three了; </p>
-</blockquote>
-<p>比如说字符串这个类, 肯定设计按位拷贝和深拷贝问题, 所以必写; 换句话说, 涉及深拷贝浅拷贝的类, 要写<code>大三元</code>.</p>
-<hr>
-<p>下面分别说一下deleted和defaulted函数.</p>
-<p>defaulted 函数, 默认构造和析构函数, <code>=default;</code>声明即可, 不必提供实现. 指示编译器生成该函数的默认实现有两个好处：</p>
-<ul>
-<li>即便你自己提供了, 编译器还是保留一个默认提供的</li>
-<li>有更好的性能</li>
-</ul>
-<p>例如:</p>
-<pre><code class="C++">struct A  
-{  
- A()=default;
- A(int i){}
- virtual ~A()=default;
-};
-</code></pre>
-<p>deleted 函数, 即<code>=delete</code>声明的函数;  目的是不让你使用了, 比如单例模式, 比如防止对象拷贝:</p>
-<pre><code class="C++">struct NoCopy  
-{  
-    NoCopy&amp; operator =( const NoCopy&amp; ) = delete;  
-    NoCopy ( const NoCopy &amp; ) = delete;  
-};  
-NoCopy a;  
-NoCopy b(a); //编译错误，拷贝构造函数是 deleted 函数
-</code></pre>
-<p>不同于<code>纯虚函数</code>的<code>=0;</code>语法, 它的意思表示这个函数让子类去实现; 而<code>=delete;</code>主要是防止从外部调用.</p>
-<blockquote>
-<p>去我们不让别人调用, 可以使用private修饰, 现在delete修饰的, 直接所有人都禁用了.</p>
-</blockquote>
-<p>所以, 如果你的类存在友元, 那么最好还是保留成private的, 留个后门.</p>
-<blockquote>
-<p>实际上, <code>boost::noncopyable</code>就是这么做的</p>
-</blockquote>
-<p><code>Boost::noncopyable</code> 把拷贝构造和拷贝赋值私有化了, 以此来保证子类是不可拷贝的.<br>因为子类拷贝的函数, 不管是赋值还是构造, 总要处理父类部分吧, 而父类boost::noncopyable明确说了, 我是可拷贝的; 所以不管子类如何折腾, 拷贝还是放弃吧.</p>
-<p>但是类的友元还是可以使用的, 类似下面的实现.</p>
-<pre><code class="C++">namespace boost
+<p>例如有一个函数:</p>
+<pre><code class="C++">void test_move(A&amp; a)
 {
-    namespace noncopyable_
-    {
-        class noncopyable
-        {
-            protected:
-                noncopyable(){}
-                ~noncopyable(){}
-
-            private:
-                noncopyable(const noncopyable&amp;);
-                const noncopyable&amp; operator=(const noncopyable&amp; );
-        }
-    }
-};
+  //do nothing
+}
 </code></pre>
-<p>可以看到, 并没有用到<code>delete</code>关键字.</p>
-<blockquote>
-<p>在effective c++中, 作者还调侃过, <code>noncopyable</code>不是该叫做<code>uncopyable</code>嘛?</p>
-<blockquote>
-<p>纯粹的, 很有趣啊</p>
-</blockquote>
-</blockquote>
+<p>如果你这么调用<code>test_move(A(1));</code>, 即使用临时对象进行调用, 然后直接就报错了:</p>
+<pre><code>invalid initialization of non-const reference of type ‘A&amp;’ from an rvalue of type ‘A’
+</code></pre><p>然后, 没办法, 为了通过编译, 改进一下引入了一个<code>A&amp; setInt(int i);</code>方法让其返回<code>A&amp;</code>, 通过编译.<br>完整代码如下:</p>
+<pre><code class="C++">class A
+{
+public:
+  A()=default;
+  A(int i): i_(i){}
+
+  A&amp; setInt(int i){ //注意该函数返回值类型 A&amp;
+    i_ = i;
+    return *this;
+  }
+
+  ~A(){}
+
+private:
+  int i_;
+};
+
+void test_move(A&amp; a)
+{
+  //do nothing
+}
+
+
+int main(void)
+{
+  /*invalid initialization of non-const reference of type ‘A&amp;’
+   from an rvalue of type ‘A’ */
+  //test_move(A(1));
+  test_move(A().setInt(1));
+
+  return 0;
+}
+</code></pre>
+<p>那么有没有一种机制, 可以直接接收临时对象呢? 而不再受限于<code>test_move(A&amp;)</code>这种形式? (当然你改写成<code>const A&amp;</code>是可以解决问题的)</p>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 
@@ -311,8 +293,8 @@ NoCopy b(a); //编译错误，拷贝构造函数是 deleted 函数
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：C++11 中默认函数问题探究</span><br/>
-	<span><b>本文链接</b>：www.merlinblog.site/2017/05/17/defaulted-deleted-in-cpp.html</span>
+	<span><b>本文标题</b>：C++11 右值相关问题探讨</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/05/21/right-value-related.html</span>
 
   </blockquote>
 </div>

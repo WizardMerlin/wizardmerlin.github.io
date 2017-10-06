@@ -146,7 +146,7 @@ function tmpfobid()
 <div class="container tag-cate-wrap">
     <div class="category-title-inner content has-text-centered">
         <h1><strong style="border-top: 2px solid; border-bottom: 2px solid;">tag · cpp</strong></h1>共有
-		39 篇
+		41 篇
     </div>
 
     
@@ -938,6 +938,76 @@ IO
                     <div class="media-content">
                         <div class="content">
                             <p>
+								 <a href="/2017/05/21/move-awared-string.html">
+                                   <span style="font-size:20px"> <strong>带有移动语义的字符串类</strong> </span>
+								 </a>
+								 <small>  post at: 2017-05-21 </small>
+
+                                <br>
+                                
+本文是右值相问题的补充, 这里主要实现一个有右值语义的字符串类
+
+
+其代码实现, 大致如下:
+class MyString
+{
+private:
+    char *_data;
+    size_t _len;
+
+   ...|--->     
+                            </p>
+							<p>
+							  <div align="right">
+                			    <a href="/2017/05/21/move-awared-string.html">
+								 <button class="button is-info">阅读详情</button>
+								</a>
+							  </div>
+							</p>
+                        </div>
+                    </div>
+
+            </article>
+        </div>
+    
+        <div class="box">
+            <article class="media">
+                
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+								 <a href="/2017/05/21/right-value-related.html">
+                                   <span style="font-size:20px"> <strong>C++11 右值相关问题探讨</strong> </span>
+								 </a>
+								 <small>  post at: 2017-05-21 </small>
+
+                                <br>
+                                
+本文集中说说和右值相关的所有问题, 右值&amp;左值, 移动语义, 完美转发, 非consty引用; 以及引入移动语义的利弊.
+
+
+非consty引用
+最开始, 碰到右值问题的时候是, 临时对象不能赋值给非const类型...|--->     
+                            </p>
+							<p>
+							  <div align="right">
+                			    <a href="/2017/05/21/right-value-related.html">
+								 <button class="button is-info">阅读详情</button>
+								</a>
+							  </div>
+							</p>
+                        </div>
+                    </div>
+
+            </article>
+        </div>
+    
+        <div class="box">
+            <article class="media">
+                
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
 								 <a href="/2017/05/20/type-traits-in-cpp.html">
                                    <span style="font-size:20px"> <strong>C++类型萃取</strong> </span>
 								 </a>
@@ -947,8 +1017,11 @@ IO
                                 
 写泛型框架&amp;库的时候, 可能会用到这些东西; 其他时候, 很少用到.
 
+以后有时间再来完善, 初步认识一下
 
-Type traits, 类型特征, 除此之外还有iterator traits, 可以得到迭代器的特征; 以及funtion traits...|--->     
+
+
+Type traits, 类型特征, 除此之外还有iterator traits, 可以得到迭代器的...|--->     
                             </p>
 							<p>
 							  <div align="right">
