@@ -19,7 +19,7 @@
 <meta property="og:description" content="这里涉及到了至少两个问题, 移动语义和完美转发; 最后还说了RVO问题">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/move-forward.png">
-<meta property="og:updated_time" content="2017-10-06T10:03:10.487Z">
+<meta property="og:updated_time" content="2017-10-06T12:28:58.055Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++11 右值相关问题探讨">
 <meta name="twitter:description" content="这里涉及到了至少两个问题, 移动语义和完美转发; 最后还说了RVO问题">
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#非consty引用"><span class="toc-number">2.</span> <span class="toc-text">非consty引用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#右值引用"><span class="toc-number">3.</span> <span class="toc-text">右值引用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#移动语义"><span class="toc-number">4.</span> <span class="toc-text">移动语义</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#容器的影响"><span class="toc-number">4.1.</span> <span class="toc-text">容器的影响</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#右值引用引发的问题"><span class="toc-number">5.</span> <span class="toc-text">右值引用引发的问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#完美转发"><span class="toc-number">6.</span> <span class="toc-text">完美转发</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RVO"><span class="toc-number">7.</span> <span class="toc-text">RVO</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他问题"><span class="toc-number">8.</span> <span class="toc-text">其他问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#带有移动版本的string类"><span class="toc-number">9.</span> <span class="toc-text">带有移动版本的string类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">10.</span> <span class="toc-text">参考</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#非consty引用"><span class="toc-number">2.</span> <span class="toc-text">非consty引用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#右值引用"><span class="toc-number">3.</span> <span class="toc-text">右值引用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#移动语义"><span class="toc-number">4.</span> <span class="toc-text">移动语义</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#容器的影响"><span class="toc-number">4.1.</span> <span class="toc-text">容器的影响</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#右值引用引发的问题"><span class="toc-number">5.</span> <span class="toc-text">右值引用引发的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#完美转发"><span class="toc-number">5.1.</span> <span class="toc-text">完美转发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RVO"><span class="toc-number">5.2.</span> <span class="toc-text">RVO</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#string类参考"><span class="toc-number">6.1.</span> <span class="toc-text">string类参考</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">7.</span> <span class="toc-text">参考</span></a></li></ol>
     	</div>
 	
 
@@ -434,27 +434,26 @@ vector&lt;int&gt; b(std::move(a));       //这里调用的是b的移动构造函
 <li>函数参数问题 (完美转发问题)</li>
 </ul>
 <p>先说比较简单的, <code>完美转发</code>问题.</p>
-<h1 id="完美转发"><a href="#完美转发" class="headerlink" title="完美转发"></a>完美转发</h1><p>已经知道了右值引用, 可以直接说这个问题, 例如:</p>
+<h2 id="完美转发"><a href="#完美转发" class="headerlink" title="完美转发"></a>完美转发</h2><p>已经知道了右值引用, 可以直接说这个问题, 例如: (参考<code>&lt;C++ primer&gt;</code> page162)</p>
 <pre><code class="C++">template&lt;typename T1, typename T2&gt;
 void functionA(T1&amp;&amp; t1, T2&amp;&amp; t2)
 {
     functionB(t1, t2);
 }
 </code></pre>
-<p>你先不管 <code>functionB</code>, 只看functionA, 我传递给你的是右值, 然后在functionA内部使用这些值, 其实会把它弄为临时变量, 即编译器会给它命名.<br>那么如果functionB有非右值重载函数, 直接调用非右值版本了;</p>
-<p>此时, 这样的转发就不是<code>完美</code>的, 因为经过中途调用, 我还是想保留调用的是右值版本.</p>
+<p>你先不管 <code>functionB</code>, 只看functionA, 我传递给你的是右值, 然后在functionA内部使用这些值, 其实会把它弄为临时变量(拷贝), 即编译器会给它命名.<br>那么如果functionB有非右值重载函数, 直接调用非右值版本了;</p>
+<p>此时, 这样的转发就不是<code>完美</code>的, 只能说是<code>正确</code>的; 因为经过中途调用, 我还是想保留调用的是右值版本.</p>
 <p>标准库给了一种方案, 语言层面的实现, 头文件 <code>move.h</code>中<code>forward()</code>部分,  源码实现也简单, 例如:</p>
 <pre><code class="C++">template&lt;typename _Tp&gt;
     constexpr _t&amp;&amp; //注意其返回值
     forward(typename std::remove_reference&lt;_Tp&gt;::type&amp; _t) noexcept
     {return static_cast&lt;_Tp &amp;&amp;&gt;(_t);}
 </code></pre>
-<p>上面代码中<code>typename std::remove_reference&lt;_Tp&gt;::type&amp; _t</code>, <code>typename std::remove_reference&lt;_Tp&gt;</code>看做类型转换的模板,<br>大部分去掉左值名字关联的动作就在这个模板里面, 而<code>::type&amp;</code>则拿到了模板中内部参数的类型, <code>_t</code>则是调用时传递的实参对应的形参.</p>
-<p>之后内部实现, 由于已经拿掉命名了, 直接<code>static_cast</code>即可.</p>
+<p>上面代码中<code>typename std::remove_reference&lt;_Tp&gt;::type&amp; _t</code>, <code>typename std::remove_reference&lt;_Tp&gt;</code>看做类型转换的模板,<br>实际上可以简单认为就是<code>T&amp; &amp;&amp;</code>, 即<code>T &amp;</code> (具体可以参考<code>折叠规则</code>) 大部分去掉左值名字关联的动作就在这个模板里面<br>而<code>::type&amp;</code>则拿到了模板中内部参数的类型, <code>_t</code>则是调用时传递的实参对应的形参. 之后内部实现, 由于已经拿掉命名了, 直接<code>static_cast</code>即可.</p>
 <blockquote>
 <p>简单说, 摘掉名字, 强制转换一下.</p>
 </blockquote>
-<p>(为什么这里不用转移? 因为std::move此处没有forward直接进行类型转换效率高; move至少还要把弄一下指针指向吧?)</p>
+<p>(为什么这里不用std::move, 其实可以; 但是由于各自用途不同, 以及未来的扩展, 这里还是规范的采用forward)</p>
 <p>于是就变成了这样:</p>
 <pre><code class="C++">template&lt;typename T1, typename T2&gt;
 void functionA(T1&amp;&amp; t1, T2&amp;&amp; t2)
@@ -469,16 +468,67 @@ template&lt; class... Args &gt;
 void emplace_back( Args&amp;&amp;... args );
 </code></pre>
 <p>c++11中大部分容器都加了一个emplace_back成员函数, 它的内部也是调用了std::forward实现完美转发的。</p>
-<p>因此如果我们需要往容器中添加右值、临时变量时，用emplace_back版本最终可以调用移动版本的添加函数, 从而可以提高性能。</p>
-<p>甚至, 有人为不带移动语义的函数提供了转发语义包装函数:</p>
+<p>因此如果我们需要往容器中添加右值、临时变量时，用emplace_back版本<code>最终可以调用移动版本的添加函数</code>, 从而可以提高性能。</p>
+<p>甚至, 有人为不带移动语义的函数提供了转发语义<code>包装函数</code>:</p>
 <pre><code class="C++">template&lt;class Function, class... Args&gt;
 inline auto FuncWrapper(Function &amp;&amp; f, Args &amp;&amp; ... args) -&gt; decltype(f(std::forward&lt;Args&gt;(args)...))
 {
     return f(std::forward&lt;Args&gt;(args)...);
 }
 </code></pre>
-<p>转发之后, 优先调用右值引用版本(如果没有则调用值拷贝版本)</p>
-<h1 id="RVO"><a href="#RVO" class="headerlink" title="RVO"></a>RVO</h1><p>虽然利用右值引用可以写出<code>移动语义</code>的高效代码, 但是也已经引发了, 完美转发问题, 以及现在要说的<code>返回右值引用</code>问题.</p>
+<p>转发之后, 优先调用右值引用版本(如果没有则调用值拷贝版本, 即普通右值版本)</p>
+<p>具体实际的例子如下, 可以加深一下理解:</p>
+<pre><code class="C+">#include &lt;iostream&gt;
+
+using namespace std;
+
+//对不同类型的参数进行转发测试
+void RunCode(int &amp;&amp; m) {cout &lt;&lt; &quot;rv ref&quot; &lt;&lt; endl;}
+void RunCode(int &amp; m) {cout &lt;&lt; &quot;lv ref&quot; &lt;&lt; endl;}
+void RunCode(const int &amp;&amp; m) {cout &lt;&lt; &quot;const rv ref&quot; &lt;&lt; endl;}
+void RunCode(const int &amp; m) {cout &lt;&lt; &quot;const lv ref&quot; &lt;&lt; endl;}
+
+
+template&lt;typename T&gt;
+void PerfectForward(T &amp;&amp;t) { RunCode(forward&lt;T&gt;(t));}
+
+
+int main(void)
+{
+    int a, b;
+    const int c =1;
+    const int d = 0;
+
+    PerfectForward(a);
+    PerfectForward(move(b));
+    PerfectForward(c);
+    PerfectForward(move(d));
+
+/*
+lv ref
+rv ref
+const lv ref
+const rv ref
+*/
+
+    return 0;
+}
+</code></pre>
+<p>全部转发成了对目标函数的调用了. 其他复杂的例子, 例如:</p>
+<pre><code class="C++">template&lt;typename T, typename U&gt;
+void PerfectForward(T &amp;&amp;t, U&amp; func)
+{
+    Func(forward&lt;T&gt;(t));
+}
+</code></pre>
+<p>大同小异.</p>
+<blockquote>
+<p>完美转发其实就是一个包装函数的作用, 只不过它增加了对右值引用的支持.</p>
+<blockquote>
+<p>没有必要去钻那么引用推导规则, 只要明白, 一旦你的外层函数参数涉及了右值, 你就可能要进行一波完美转发, 才能调用到正确的函数版本</p>
+</blockquote>
+</blockquote>
+<h2 id="RVO"><a href="#RVO" class="headerlink" title="RVO"></a>RVO</h2><p>虽然利用右值引用可以写出<code>移动语义</code>的高效代码, 但是也已经引发了, 完美转发问题, 以及现在要说的<code>返回右值引用</code>问题.</p>
 <p>但是这方面问题一直很奇怪. 以一个简单的案例解释一下:</p>
 <pre><code class="C++">int x;
 
@@ -499,11 +549,23 @@ void printAddress (const int&amp; v) // const ref to allow binding to rvalues
 }
 </code></pre>
 <p>调用代码如下:</p>
-<pre><code class="C++">printAddress( x );
-printAddress( getInt() );
-printAddress( getRvalueInt() );
+<pre><code class="C++">printAddress( x );  //1
+printAddress( getInt() ); //2
+printAddress( getRvalueInt() ); //3
 </code></pre>
-<h1 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h1><h1 id="带有移动版本的string类"><a href="#带有移动版本的string类" class="headerlink" title="带有移动版本的string类"></a>带有移动版本的string类</h1><blockquote>
+<p>明确返回右值引用的 <strong>3</strong>和<strong>1</strong>是一样的, 而2则不同.</p>
+<blockquote>
+<p>So returning an rvalue reference is a different thing than not returning an rvalue reference, but this difference manifests itself most noticeably if you have a pre-existing object you are returning instead of a temporary object created in the function (where the compiler is likely to eliminate the copy for you).</p>
+</blockquote>
+<p>(也就是说, 但你外部有接收对象接收临时对象, 编译器是会进行具名返回值的优化; 并且明确返回原右值引用的确实返回的是同一地址的右值, 返回右值的则是值拷贝)</p>
+<blockquote>
+<p>具名优化, 和编译器实现有关, 不再多谈这些边角料;</p>
+<blockquote>
+<p>g++ 使用选项 <code>-fno-elide-constructors</code> 关闭该选项</p>
+</blockquote>
+</blockquote>
+<p>总之, 明确返回右值引用的, 应该是想利用原右值做进一步的操作, 比如再调用右值版本的函数.</p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><h2 id="string类参考"><a href="#string类参考" class="headerlink" title="string类参考"></a>string类参考</h2><blockquote>
 <p>自己实现move版本的函数, 尤其注意把原来参数中的指针置为null.<br>代码实现如下:<br>```C++<br>class MyString<br>{<br>private:<br>    char *_data;<br>    size_t _len;</p>
 </blockquote>
 <pre><code>//only deal with data part
@@ -596,6 +658,9 @@ char *get() const {return _data;}
 <li><a href="http://thbecker.net/articles/rvalue_references/section_01.html" target="_blank" rel="external">http://thbecker.net/articles/rvalue_references/section_01.html</a></li>
 <li><a href="https://eli.thegreenplace.net/2011/12/15/understanding-lvalues-and-rvalues-in-c-and-c" target="_blank" rel="external">https://eli.thegreenplace.net/2011/12/15/understanding-lvalues-and-rvalues-in-c-and-c</a></li>
 <li><a href="https://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html" target="_blank" rel="external">https://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Return_value_optimization" target="_blank" rel="external">https://en.wikipedia.org/wiki/Return_value_optimization</a></li>
+<li><a href="https://www.ibm.com/developerworks/community/blogs/5894415f-be62-4bc0-81c5-3956e82276f3/entry/RVO_V_S_std_move?lang=en" target="_blank" rel="external">https://www.ibm.com/developerworks/community/blogs/5894415f-be62-4bc0-81c5-3956e82276f3/entry/RVO_V_S_std_move?lang=en</a></li>
+<li>《深入理解C++11新特性与应用》 C++标准委员会 &amp; IBM XL编译器中国开发团队</li>
 </ol>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
