@@ -10,19 +10,19 @@
   
   <title>C++11 右值相关问题探讨 | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这里涉及到了至少两个问题, 移动语义和完美转发">
+  <meta name="description" content="这里涉及到了至少两个问题, 移动语义和完美转发; 最后还说了RVO问题">
 <meta name="keywords" content="cpp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++11 右值相关问题探讨">
 <meta property="og:url" content="www.merlinblog.site/2017/05/21/right-value-related.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
-<meta property="og:description" content="这里涉及到了至少两个问题, 移动语义和完美转发">
+<meta property="og:description" content="这里涉及到了至少两个问题, 移动语义和完美转发; 最后还说了RVO问题">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/move-forward.png">
-<meta property="og:updated_time" content="2017-10-06T07:18:32.522Z">
+<meta property="og:updated_time" content="2017-10-06T10:03:10.487Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++11 右值相关问题探讨">
-<meta name="twitter:description" content="这里涉及到了至少两个问题, 移动语义和完美转发">
+<meta name="twitter:description" content="这里涉及到了至少两个问题, 移动语义和完美转发; 最后还说了RVO问题">
 <meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/move-forward.png">
   
   
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#非consty引用"><span class="toc-number">1.</span> <span class="toc-text">非consty引用</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#非consty引用"><span class="toc-number">2.</span> <span class="toc-text">非consty引用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#右值引用"><span class="toc-number">3.</span> <span class="toc-text">右值引用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#移动语义"><span class="toc-number">4.</span> <span class="toc-text">移动语义</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#容器的影响"><span class="toc-number">4.1.</span> <span class="toc-text">容器的影响</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#右值引用引发的问题"><span class="toc-number">5.</span> <span class="toc-text">右值引用引发的问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#完美转发"><span class="toc-number">6.</span> <span class="toc-text">完美转发</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RVO"><span class="toc-number">7.</span> <span class="toc-text">RVO</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他问题"><span class="toc-number">8.</span> <span class="toc-text">其他问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#带有移动版本的string类"><span class="toc-number">9.</span> <span class="toc-text">带有移动版本的string类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">10.</span> <span class="toc-text">参考</span></a></li></ol>
     	</div>
 	
 
@@ -227,12 +227,57 @@ function tmpfobid()
 
         <div class="content" style="overflow: auto; align:center;">
             <blockquote>
-<p>本文集中说说和右值相关的所有问题, 右值&amp;左值, 移动语义, 完美转发, 非consty引用; 以及引入移动语义的利弊.</p>
+<p>本文集中说说和右值相关的所有问题, 右值&amp;左值, 移动语义, 完美转发, 非const引用; 以及引入移动语义的利弊.</p>
 </blockquote>
 <p><img src="http://omotkhw3y.bkt.clouddn.com/move-forward.png" alt="post-cover"></p>
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>这里要总结一下, 左值, 右值, 左值引用等.</p>
+<blockquote>
+<p>左值（lvalue）表示一个可被标识的（变量或对象的）内存位置，并且允许使用&amp;操作符来获取这块内存的地址。</p>
+</blockquote>
+<p>如果一个表达式不是左值，那它就被定义为右值。</p>
+<p>左值转换为右值:</p>
+<blockquote>
+<p>一般上讲，对象之间的运算，对象是以右值的形式参与的;那些表示数组、函数和非完整类型的左值是不能转换为右值的，因为无法对那些类型进行求值</p>
+</blockquote>
+<p>例如下面的代码:</p>
+<pre><code class="C++">int a = 1;     // a 是左值
+int b = 2;     // b 是左值
+int c = a + b; // a和b自动转换为右值求和
+</code></pre>
+<p>左值转换右值, 还涉及到CV限定问题:</p>
+<ul>
+<li>非对象类型的左值, 转换为右值计算或者求值, 会去掉其CV限定</li>
+<li>类对象类型的左值, 转换为右值, 则保留其原有类型修饰(const or volatile)</li>
+</ul>
+<blockquote>
+<p>也就是说，如果是类类型，从左值转为右值时，它的CV限定符会被保留</p>
+</blockquote>
+<p>例如下面的例子:</p>
+<pre><code class="C++">#include &lt;iostream&gt;
+
+class A {
+public:
+    void foo() const { std::cout &lt;&lt; &quot;A::foo() const\n&quot;; }
+    void foo() { std::cout &lt;&lt; &quot;A::foo()\n&quot;; }
+};
+
+A bar() { return A(); }           //返回临时对象，为右值
+const A cbar() { return A(); }    //返回带const的右值（带CV限定符）
+</code></pre>
+<p>由于C语言不涉及类, 所以也就不存在右值可以保留CV限定这一说.</p>
+<p>btw: 什么是CV限定符？如果变量声明时类型前带有const或volatile，就说此变量类型具有CV限定符。</p>
+<p>左值引用</p>
+<blockquote>
+<p>如果一个左值同时是引用，就称为左值引用.</p>
+</blockquote>
+<p>例如:</p>
+<pre><code class="C++">std::string s;
+std::string&amp; sref = s;  //sref为左值引用
+</code></pre>
 <h1 id="非consty引用"><a href="#非consty引用" class="headerlink" title="非consty引用"></a>非consty引用</h1><blockquote>
 <p>最开始, 碰到右值问题的时候是, <code>临时对象不能赋值给非const类型的引用</code> (编译器从安全检查的角度禁止你这么做).</p>
 </blockquote>
+<p>非const引用, 一般也可以称为<code>左值引用</code>.</p>
 <p>例如有一个函数:</p>
 <pre><code class="C++">void test_move(A&amp; a)
 {
@@ -276,6 +321,282 @@ int main(void)
 }
 </code></pre>
 <p>那么有没有一种机制, 可以直接接收临时对象呢? 而不再受限于<code>test_move(A&amp;)</code>这种形式? (当然你改写成<code>const A&amp;</code>是可以解决问题的)</p>
+<blockquote>
+<p>这样就由非const引用, 引出了<code>右值引用</code>问题(右值专用的引用)</p>
+</blockquote>
+<h1 id="右值引用"><a href="#右值引用" class="headerlink" title="右值引用"></a>右值引用</h1><p>上面顺利成章的说道了 C++11的<code>右值引用问题, 符号表示就是</code>T &amp;&amp;<code>, 表示上不同于以前的</code>左值引用`, 即一般引用.</p>
+<p>但是右值引用的存在, 不仅仅只是因为非const引用问题, 它的主要用途:</p>
+<blockquote>
+<p>利用临时对象, 即右值</p>
+</blockquote>
+<p>利用临时对象, 以前我们用临时对象是利用<code>const T &amp;</code>来做, 例如string的交换:</p>
+<pre><code class="C++">    string&amp; operator=(const string&amp; other)
+    {
+        log(&quot;copy assignment operator&quot;);
+        string tmp(other);  //构造一个临时对象，因为other为const，不能被修改
+        std::swap(m_size, tmp.m_size);
+        std::swap(m_data, tmp.m_data);  
+        //跟临时对象交换值，临时对象晰构时会delete [] m_data
+        return *this;
+    }
+</code></pre>
+<p>实际上, 我们还是拿右值创建了一个临时对象, 然后进行的交换, 那么为何不直接利用好临时对象呢?<br>比如, 这样利用:</p>
+<pre><code class="C++">string&amp; operator=(string&amp;&amp; other)
+{
+    log(&quot;move assignment operator&quot;);
+    std::swap(m_size, other.m_size);
+    std::swap(m_data, other.m_data);
+    return *this;
+}
+</code></pre>
+<p>比如<code>v = string(&quot;33&quot;);</code>, 赋值交换完毕, 外部的临时对象也是会被销毁的, 何苦在内部创建一个? </p>
+<blockquote>
+<p>&amp;&amp;语法声明右值引用，表示一个指向右值的引用，通过这个引用，可以直接操作右值.</p>
+</blockquote>
+<p>实际上<strong>右值引用专门用于引用右值(临时对象、匿名对象)</strong>, 但是也可以接收左值.</p>
+<p>但是除了可以引用临时对象, 很多时候, 也需要减少对象的构建代价, 直接利用已经存在的临时对象生成新对象(比如上面的例子),<br>甚至把别的对象挖空, 然后转移到本对象. 这方面广泛的应用是<code>拷贝构造</code>和<code>拷贝赋值</code>.</p>
+<blockquote>
+<p>但是归根揭底, 右值引用只是为临时对象, 匿名对象设置了机制</p>
+</blockquote>
+<p>如果拿到临时对象, 或者具体的说, 从原有对象中拿到临时对象? (比如说就是要利用现有对象构造新的对象, 避免拷贝, 要偷)</p>
+<blockquote>
+<p>于是引出了<code>移动语义</code>, 移动语义是利用<code>右值引用</code>引用机制.</p>
+</blockquote>
+<h1 id="移动语义"><a href="#移动语义" class="headerlink" title="移动语义"></a>移动语义</h1><p>说先强调一下, 移动语义应该分成两个方面理解:</p>
+<ul>
+<li>我们提供 move 版本的函数, 比如构造和拷贝构造</li>
+<li>系统提供的 std::move 作用方面(仅仅为了产生临时对象, 方便调用移动版本-避免拷贝)</li>
+</ul>
+<p>(其中移动语义, 很小一部分程度是指std::move, 更多的是指完成偷的任务, 下面详细说)</p>
+<p>先说第一点:</p>
+<p>我们提供 move 版函数, 实际上就是为了挖空对象或者说利用已知对象, 更高效的创建对象; 避免拷贝(只是搬动指针指向).</p>
+<p>对于挖空(偷)别的对象的资源, 不管是不是临时对象, 移动语义写法可谓是得心应手, 很多时候, 你甚至可以简单的认为:</p>
+<blockquote>
+<p>移动语义就是浅拷贝, 安全的浅拷贝.</p>
+</blockquote>
+<p>因为它避免了隐式的转移操作 (这也是我们舍弃auto_ptr, 改用unique_ptr的原因之一), 改成了<code>显式</code>的语义, 被偷的对象不再拥有相关资源的所有权.</p>
+<blockquote>
+<p>你可以理解成原来资源的指针已经被置为null.</p>
+</blockquote>
+<p>但是C++是有规则的, 什么对象可以偷?</p>
+<blockquote>
+<p>没有主人的, 即非左值的, that is <code>非具名</code>的.</p>
+</blockquote>
+<p>也就是你给我一个右值最好, 我心安理得地偷; 但是, 如果你给我左值, 我会先把它转换为右值(<code>&amp;&amp;</code>可以接收左值), 再偷, 于是引出了move的第二个方面, std::move. 如下所示:</p>
+<pre><code>template&lt;class _Ty&gt; inline
+constexpr typename remove_reference&lt;_Ty&gt;::type&amp;&amp;
+move(_Ty&amp;&amp; _Arg) _NOEXCEPT
+{
+    return (static_cast&lt;typename remove_reference&lt;_Ty&gt;::type&amp;&amp;&gt;(_Arg));
+}
+</code></pre><p>注意区别于算法的 std::move, 这个<code>std::move</code>定义在<code>&lt;utility&gt;</code>头文件中.</p>
+<blockquote>
+<p>凡是经过 move 这一家伙动作, 原来的对象已经不再控制相关内部资源了.</p>
+</blockquote>
+<p>也就是说 std::move 已经是提供好的 move 版本的函数, 它会把原对象的资源转移到临时对象上. 注意其返回值<code>&amp;&amp;</code>.</p>
+<blockquote>
+<p>准确来说, std::move(x)只是产生临时对象, 方便调用移动版本的函数, 而这个函数才是真正的转移资源.</p>
+</blockquote>
+<p>最简单的例子, 你可以试试:(str合法, 但是没有任何内部值)</p>
+<pre><code class="C++">    std::string str = &quot;Hello&quot;;
+    std::vector&lt;std::string&gt; v;
+        v.push_back(std::move(str));
+    std::cout &lt;&lt; &quot;After move, str is \&quot;&quot; &lt;&lt; str &lt;&lt; &quot;\&quot;\n&quot;; //output : After move, str is &quot;&quot;
+</code></pre>
+<p>此时, 移动语义和右值引用的关系就是:</p>
+<blockquote>
+<p>移动语义为右值引用产生临时对象, 副作用是把原来对象的资源偷到临时对象(右值)中了, 而这部分工作是由<code>vector::push_back(string &amp;&amp;)</code>版本的函数实现的.</p>
+</blockquote>
+<p>std::movej就像个助手, 安全的转换工具; 不借助 std::move, 很难完成具名对象的转移任务, 除非你自己提供<code>移动版本</code>的函数, 就像移动构造和移动赋值函数一样.</p>
+<blockquote>
+<p>How does std::move work</p>
+<p>You might be wondering, how does one write a function like std::move? How do you get this magical property of transforming an lvalue into an rvalue reference? The answer, as you might guess, is typecasting.<br>The actual declaration for std::move is somewhat more involved, but at its heart, it’s just a static_cast to an rvalue reference. This means, actually, that you don’t really need to use move–but you should, since it’s much more clear what you mean. The fact that a cast is required is, by the way, a very good thing! It means that you cannot accidentally convert an lvalue into an rvalue, which would be dangerous since it might allow an accidental move to take place. You must explicitly use std::move (or a cast) to convert an lvalue into an rvalue reference, and an rvalue reference will never bind to an lvalue on its own.</p>
+</blockquote>
+<p>一句话总结, 移动语义就是偷, 明目张胆的偷, 而 std::move 帮你偷, 它是帮助你调用到你移动版本函数的助手.</p>
+<h2 id="容器的影响"><a href="#容器的影响" class="headerlink" title="容器的影响"></a>容器的影响</h2><p>临时对象放入容器, 对比一下临时对象带有移动语义或者不带有移动语义的情况, 发现, 对于vector的影响最大.<br>其他的比如list, deque(只往末端插入), map, unordered容器(底层实际为hashtable)影响不是太大.</p>
+<p>实际拷贝容器的时候, vector直接拷贝构造和使用<code>std::move();</code>差别也很大:</p>
+<ul>
+<li>实际拷贝的, 一个元素一个元素的拷贝(从头到尾), 所以慢</li>
+<li>std::move 版本, <code>vector(vector&amp;&amp; __x) noexcept</code>, 内部实现其实是<code>交换地址指针</code>(begin, end, capacity), 所以快.</li>
+</ul>
+<p><code>使用std::move是为了调用移动版本的重载函数</code>, 副作用才是产生临时对象(右值), 例如:</p>
+<pre><code class="C++">vector&lt;int&gt; a = {1,2,3,4,5};
+vector&lt;int&gt; b(std::move(a));       //这里调用的是b的移动构造函数
+                              //a在重新赋值之前绝不使用
+</code></pre>
+<p>vector自己提供的移动版本才是避免拷贝的真正所在, 即移动的真理.</p>
+<blockquote>
+<p>一旦<code>std::move()</code>之后, 就不能再使用原来的资源了, 不管原来的是否是具名的变量.</p>
+</blockquote>
+<h1 id="右值引用引发的问题"><a href="#右值引用引发的问题" class="headerlink" title="右值引用引发的问题"></a>右值引用引发的问题</h1><p>是的, 不管是移动语义本身, 还是系统帮我们实现的简化偷动作的 <code>std::move</code> 都是有代价的, 可以回想一下, 以前我们在说拷贝问题时, 涉及的问题:</p>
+<ul>
+<li>返回值问题 (引出了返回值优化问题, 即RVO)</li>
+<li>函数参数问题 (完美转发问题)</li>
+</ul>
+<p>先说比较简单的, <code>完美转发</code>问题.</p>
+<h1 id="完美转发"><a href="#完美转发" class="headerlink" title="完美转发"></a>完美转发</h1><p>已经知道了右值引用, 可以直接说这个问题, 例如:</p>
+<pre><code class="C++">template&lt;typename T1, typename T2&gt;
+void functionA(T1&amp;&amp; t1, T2&amp;&amp; t2)
+{
+    functionB(t1, t2);
+}
+</code></pre>
+<p>你先不管 <code>functionB</code>, 只看functionA, 我传递给你的是右值, 然后在functionA内部使用这些值, 其实会把它弄为临时变量, 即编译器会给它命名.<br>那么如果functionB有非右值重载函数, 直接调用非右值版本了;</p>
+<p>此时, 这样的转发就不是<code>完美</code>的, 因为经过中途调用, 我还是想保留调用的是右值版本.</p>
+<p>标准库给了一种方案, 语言层面的实现, 头文件 <code>move.h</code>中<code>forward()</code>部分,  源码实现也简单, 例如:</p>
+<pre><code class="C++">template&lt;typename _Tp&gt;
+    constexpr _t&amp;&amp; //注意其返回值
+    forward(typename std::remove_reference&lt;_Tp&gt;::type&amp; _t) noexcept
+    {return static_cast&lt;_Tp &amp;&amp;&gt;(_t);}
+</code></pre>
+<p>上面代码中<code>typename std::remove_reference&lt;_Tp&gt;::type&amp; _t</code>, <code>typename std::remove_reference&lt;_Tp&gt;</code>看做类型转换的模板,<br>大部分去掉左值名字关联的动作就在这个模板里面, 而<code>::type&amp;</code>则拿到了模板中内部参数的类型, <code>_t</code>则是调用时传递的实参对应的形参.</p>
+<p>之后内部实现, 由于已经拿掉命名了, 直接<code>static_cast</code>即可.</p>
+<blockquote>
+<p>简单说, 摘掉名字, 强制转换一下.</p>
+</blockquote>
+<p>(为什么这里不用转移? 因为std::move此处没有forward直接进行类型转换效率高; move至少还要把弄一下指针指向吧?)</p>
+<p>于是就变成了这样:</p>
+<pre><code class="C++">template&lt;typename T1, typename T2&gt;
+void functionA(T1&amp;&amp; t1, T2&amp;&amp; t2)
+{
+    functionB(std::forward&lt;T1&gt;(t1), std::forward&lt;T2&gt;(t2));
+}
+</code></pre>
+<p>其实和 <code>std::move</code>工具一样, <code>std::forward</code>也就是为了调用右值版本的函数, 从而完成移动语义, 避免拷贝, 提高效率.</p>
+<p>最常见的例子:</p>
+<pre><code class="C++">//vector容器中
+template&lt; class... Args &gt;
+void emplace_back( Args&amp;&amp;... args );
+</code></pre>
+<p>c++11中大部分容器都加了一个emplace_back成员函数, 它的内部也是调用了std::forward实现完美转发的。</p>
+<p>因此如果我们需要往容器中添加右值、临时变量时，用emplace_back版本最终可以调用移动版本的添加函数, 从而可以提高性能。</p>
+<p>甚至, 有人为不带移动语义的函数提供了转发语义包装函数:</p>
+<pre><code class="C++">template&lt;class Function, class... Args&gt;
+inline auto FuncWrapper(Function &amp;&amp; f, Args &amp;&amp; ... args) -&gt; decltype(f(std::forward&lt;Args&gt;(args)...))
+{
+    return f(std::forward&lt;Args&gt;(args)...);
+}
+</code></pre>
+<p>转发之后, 优先调用右值引用版本(如果没有则调用值拷贝版本)</p>
+<h1 id="RVO"><a href="#RVO" class="headerlink" title="RVO"></a>RVO</h1><p>虽然利用右值引用可以写出<code>移动语义</code>的高效代码, 但是也已经引发了, 完美转发问题, 以及现在要说的<code>返回右值引用</code>问题.</p>
+<p>但是这方面问题一直很奇怪. 以一个简单的案例解释一下:</p>
+<pre><code class="C++">int x;
+
+int getInt ()
+{
+    return x;
+}
+
+int &amp;&amp; getRvalueInt ()
+{
+    // notice that it&#39;s fine to move a primitive type--remember, std::move is just a cast
+    return std::move( x );
+}
+
+void printAddress (const int&amp; v) // const ref to allow binding to rvalues
+{
+    cout &lt;&lt; reinterpret_cast&lt;const void*&gt;( &amp; v ) &lt;&lt; endl;
+}
+</code></pre>
+<p>调用代码如下:</p>
+<pre><code class="C++">printAddress( x );
+printAddress( getInt() );
+printAddress( getRvalueInt() );
+</code></pre>
+<h1 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h1><h1 id="带有移动版本的string类"><a href="#带有移动版本的string类" class="headerlink" title="带有移动版本的string类"></a>带有移动版本的string类</h1><blockquote>
+<p>自己实现move版本的函数, 尤其注意把原来参数中的指针置为null.<br>代码实现如下:<br>```C++<br>class MyString<br>{<br>private:<br>    char *_data;<br>    size_t _len;</p>
+</blockquote>
+<pre><code>//only deal with data part
+void _init_data(const char* s)
+{
+    _data = new char[_len+1];
+    memcpy(_data, s, _len);
+    _data[_len] = &#39;\0&#39;;
+}
+</code></pre><p>public:<br>    //default<br>    MyString() : _data(NULL), _len(0) {}</p>
+<pre><code>//constructor
+MyString(const char *p) : _len(strlen(p)) {
+    _init_data(p);
+}
+
+//copy constructor
+MyString(const MyString&amp; str) : _len(str._len)
+{
+    _init_data(str._data);
+}
+
+//copy assigment
+MyString&amp; operator=(const MyString&amp;str)
+{
+    if(this != &amp;str) {
+        if(_data) {
+            delete _data;
+        }
+        _len = str._len; 
+        _init_data(str._data);
+    }
+    return *this;
+}
+
+
+//move constructor
+MyString(MyString&amp;&amp; str) noexcept : 
+    _data(str._data), _len(str._len) {
+
+    str._len = 0;
+    str._data = nullptr; //watchout double delete
+}
+
+//move assigment
+MyString&amp; operator=(MyString&amp;&amp; str) noexcept
+{
+    if(this != &amp; str) {
+        if(_data) {
+            delete _data;
+        }
+        _len = str._len;
+        _data = str._data; //MOVE
+
+        str._len = 0;
+        str._data = nullptr;
+    }
+
+    return *this;
+}
+
+//deconstructor
+virtual ~MyString()
+{
+    if(_data) {
+        delete _data;
+    }
+}
+
+//为了放入一些有序容器中, 需要下面的函数
+//compare
+bool operator&lt;(const MyString&amp; str) const
+{
+    //借用std::string的比较函数
+    return std::string(this-&gt;_data) &lt; string(str._data);
+}
+
+//==
+bool operator==(const MyString&amp; str)
+{()
+    return std::string(this-&gt;_data) == std::string(str._data);
+}
+
+//get , c_str()
+char *get() const {return _data;}
+</code></pre><p>};</p>
+<p>//一般还要提供一个 MyStringHashCodeFunctor函数对象用于hash容器, 或者借助标准库的<code>std::hash</code>仿函数模板特化一个属于MyString的特化模板仿函数.<br>//例如下面</p>
+<p>namespace std<br>{//一定要放在std下<br>    template&lt;&gt;<br>    struct hash<mystring><br>    {<br>        size_t operator(const MyString&amp; s) const noexcept()<br>        {<br>            return hash<string>()(string(s.get()));<br>        }<br>    }</string></mystring></p>
+<p>};<br>```</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://thbecker.net/articles/rvalue_references/section_01.html" target="_blank" rel="external">http://thbecker.net/articles/rvalue_references/section_01.html</a></li>
+<li><a href="https://eli.thegreenplace.net/2011/12/15/understanding-lvalues-and-rvalues-in-c-and-c" target="_blank" rel="external">https://eli.thegreenplace.net/2011/12/15/understanding-lvalues-and-rvalues-in-c-and-c</a></li>
+<li><a href="https://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html" target="_blank" rel="external">https://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html</a></li>
+</ol>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 
