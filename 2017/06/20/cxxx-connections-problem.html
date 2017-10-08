@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>C XXXK 连接问题 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="探讨 CXXX K 问题的博主一大堆, 我个人对这个话题也比较感兴趣.">
+<meta name="keywords" content="网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C XXXK 连接问题">
+<meta property="og:url" content="www.merlinblog.site/2017/06/20/cxxx-connections-problem.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="探讨 CXXX K 问题的博主一大堆, 我个人对这个话题也比较感兴趣.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/cxxxk.png">
+<meta property="og:updated_time" content="2017-10-08T20:08:10.951Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C XXXK 连接问题">
+<meta name="twitter:description" content="探讨 CXXX K 问题的博主一大堆, 我个人对这个话题也比较感兴趣.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/cxxxk.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#端口和连接数的谬论"><span class="toc-number">1.</span> <span class="toc-text">端口和连接数的谬论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#用户态TCP-IP协议栈"><span class="toc-number">2.</span> <span class="toc-text">用户态TCP/IP协议栈</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#最大连接数"><span class="toc-number">3.</span> <span class="toc-text">最大连接数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#最大打开文件数"><span class="toc-number">4.</span> <span class="toc-text">最大打开文件数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#全局"><span class="toc-number">4.1.</span> <span class="toc-text">全局</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部"><span class="toc-number">4.2.</span> <span class="toc-text">局部</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#内存限制"><span class="toc-number">5.</span> <span class="toc-text">内存限制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#查看进程内存占用"><span class="toc-number">5.1.</span> <span class="toc-text">查看进程内存占用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#控制tcp读写缓冲区大小"><span class="toc-number">5.2.</span> <span class="toc-text">控制tcp读写缓冲区大小</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#吞吐量"><span class="toc-number">6.</span> <span class="toc-text">吞吐量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他话题"><span class="toc-number">7.</span> <span class="toc-text">其他话题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#异步IO问题"><span class="toc-number">7.1.</span> <span class="toc-text">异步IO问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调度问题"><span class="toc-number">7.2.</span> <span class="toc-text">调度问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">9.</span> <span class="toc-text">参考</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>C XXXK 连接问题</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-06-20</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/网络/">网络</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>本文只论述一些我过去的认识错误或者容器混淆的东西. 毕竟最大连接数, 受限于软硬件处理能力. (软件只占其中一部分)</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/cxxxk.png" alt="post-cover"></p>
+<p>当然也会说很多有趣的故事.</p>
+<h1 id="端口和连接数的谬论"><a href="#端口和连接数的谬论" class="headerlink" title="端口和连接数的谬论"></a>端口和连接数的谬论</h1><p>关于最大连接数问题其实还附带了很多问题:</p>
+<ul>
+<li>TCP端口号是16位无符号整数, 最大65535  (对外, 但是ipv4能用其中的部分, 大概3W多个)</li>
+<li>TCP客户端(TCP的主动发起者)可以在同一 ip:port 上向不同的服务器发起主动连接, 只需在bind之前对socket设置SO_REUSEADDR选项.<br>对于client端, 操作系统会自动根据不同的远端 ip:port, 决定是否重用本地端口<br>cat /proc/sys/net/ipv4/ip_local_port_range<br>  32768   61000</li>
+<li>系统最大支持多少个连接 (fd数目,TCP 连接不再占用系统文件数; 据说现在有一些内核支持用户态运行TCP/IP协议栈):<br>cat /proc/sys/fs/file-max<br>  580382</li>
+<li>单个进程呢<br>ulimit -n<br>1024</li>
+<li>accept的连接使用的本地地址也是同样的 ip:port , 服务器是一直使用监听的ip:port来接受连接，那么理论上可以接受的客户端连接数量是很大的:</li>
+</ul>
+<p>服务端同一个port, 接收N个连接(N在代表client的数目, 一般就是client_port <em> client_ip数目; 但是client_port也限制在32758~61000范围内);<br>服务端3W多个port的话, 大概3W </em> N个连接; 再算上重用的话, 就非常多了(并且客户端连接不同的 ip:port 也会重用端口)</p>
+<p>65536这种限制端口号的东西, 却拿来说连接数, 其中谬误, 不言自明.</p>
+<h1 id="用户态TCP-IP协议栈"><a href="#用户态TCP-IP协议栈" class="headerlink" title="用户态TCP/IP协议栈"></a>用户态TCP/IP协议栈</h1><p>内核的网络协议栈强调通用性，主要是为吞吐量优化（性能指标通常是 MB/s 或 packets per second），顺带兼顾大量并发连接。为了支持 C1000k，要调整内核参数让每个连接少占资源，这与内核代码的设计初衷是违背的。</p>
+<p>用户态协议栈捅破了这层窗户纸，可以根据应用的特点来剪裁协议栈功能。优化也更直接，不再是调黑盒参数组合，而是直接上 profiling，根据结果修改应用程序和协议栈的代码。</p>
+<p>用户态协议栈的吞吐量比不上内核，不过对 C1000k 的应用场合（例如 comet）应该不成问题。</p>
+<blockquote>
+<p>下面要说的内容, 都是基于内核协议栈的TCP/IP连接问题, 即连接数和系统文件数相关</p>
+</blockquote>
+<p>先说一些<code>内核</code>或者<code>内核协议栈</code>的限制.</p>
+<h1 id="最大连接数"><a href="#最大连接数" class="headerlink" title="最大连接数"></a>最大连接数</h1><p>首先, 还是强调一下, 基于TCP/IP内核协议栈.</p>
+<p>此时最大连接数和下面的因素有关:</p>
+<ul>
+<li>File Max</li>
+<li>物理&amp;可用内存</li>
+</ul>
+<p>以及吞吐量的影响.</p>
+<h1 id="最大打开文件数"><a href="#最大打开文件数" class="headerlink" title="最大打开文件数"></a>最大打开文件数</h1><p>对于绝大部分 Linux 操作系统, 默认情况下确实不支持 C1000K! 因为操作系统包含最大打开文件数(Max Open Files)限制, 分为系统全局的, 和进程级的限制.</p>
+<h2 id="全局"><a href="#全局" class="headerlink" title="全局"></a>全局</h2><p><code>cat /proc/sys/fs/file-max</code> ;  //大约是几十万级别, 根据系统不同, 可能实现也不同</p>
+<p>可以通过修改配置文件&amp;重启服务, 支持更多:(比如修改成百万级别)</p>
+<pre><code>fs.file-max = 1020000
+net.ipv4.ip_conntrack_max = 1020000
+net.ipv4.netfilter.ip_conntrack_max = 1020000
+</code></pre><p>重启服务<code>sudo sysctl -p /etc/sysctl.conf</code></p>
+<h2 id="局部"><a href="#局部" class="headerlink" title="局部"></a>局部</h2><p>也就是单进程打开的文件数目, 一般情况下, 应该是<code>1024</code>个.</p>
+<pre><code>ulimit -a  或
+ulimit -n
+</code></pre><p>要修改可以根据当前登录的用户进行修改(nofile)数目<code>emacs /etc/security/limits.conf</code></p>
+<pre><code># /etc/security/limits.conf
+merlin         hard    nofile      1020000
+merlin         soft    nofile      1020000
+</code></pre><p>第一列的 merlin 表示用户 merlin, 你可以填 *, 或者 root. 然后保存退出, 重新登录服务器.</p>
+<p>临时修改直接<code>ulimit -n 1020000</code>, 主要需要 root 权限.</p>
+<blockquote>
+<p>一般情况下, 需要重新编译内核: /usr/include/linux/fs.h 限制了能设置的最大的常量数目<code>NR_OPEN</code>.</p>
+</blockquote>
+<h1 id="内存限制"><a href="#内存限制" class="headerlink" title="内存限制"></a>内存限制</h1><p>实际上是操作系统为了维护连接所需要的系统资源&amp;内存占用, 可以简单的理解成存储这些文件描述(fd, 或者 socket) 所需要的内存(当然还有一些头信息, 结构体).</p>
+<p><code>sizeof(int)</code>, 在64位机器(Ubuntu)下是4字节, 那么100W连接应该是占用<code>4M</code>, 加上管理结构体等信息载体, 也之多不过100M.</p>
+<p>只是空连接, 即不包括收发数据的 buffer 内存, 基本也就那个样子, 这一点, 前辈已经做了验证了, 如下:</p>
+<p>服务端创建10个端口, 模拟10台服务器.</p>
+<pre><code class="C++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;netinet/tcp.h&gt;
+#include &lt;sys/select.h&gt;
+
+#define MAX_PORTS 10
+
+int main(int argc, char **argv){
+    struct sockaddr_in addr;
+    const char *ip = &quot;0.0.0.0&quot;;
+    int opt = 1;
+    int bufsize;
+    socklen_t optlen;
+    int connections = 0;
+    int base_port = 7000;
+    if(argc &gt; 2){
+        base_port = atoi(argv[1]);
+    }
+
+    int server_socks[MAX_PORTS];
+
+    for(int i=0; i&lt;MAX_PORTS; i++){
+        int port = base_port + i;
+        bzero(&amp;addr, sizeof(addr));
+        addr.sin_family = AF_INET;
+        addr.sin_port = htons((short)port);
+        inet_pton(AF_INET, ip, &amp;addr.sin_addr);
+
+        int serv_sock;
+        if((serv_sock = socket(AF_INET, SOCK_STREAM, 0)) == -1){
+            goto sock_err;
+        }
+        if(setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, &amp;opt, sizeof(opt)) == -1){
+            goto sock_err;
+        }
+        if(bind(serv_sock, (struct sockaddr *)&amp;addr, sizeof(addr)) == -1){
+            goto sock_err;
+        }
+        if(listen(serv_sock, 1024) == -1){
+            goto sock_err;
+        }
+
+        server_socks[i] = serv_sock;
+        printf(&quot;server listen on port: %d\n&quot;, port);
+    }
+
+    //optlen = sizeof(bufsize);
+    //getsockopt(serv_sock, SOL_SOCKET, SO_RCVBUF, &amp;bufsize, &amp;optlen);
+    //printf(&quot;default send/recv buf size: %d\n&quot;, bufsize);
+
+    while(1){
+        fd_set readset;
+        FD_ZERO(&amp;readset);
+        int maxfd = 0;
+        for(int i=0; i&lt;MAX_PORTS; i++){
+            FD_SET(server_socks[i], &amp;readset);
+            if(server_socks[i] &gt; maxfd){
+                maxfd = server_socks[i];
+            }
+        }
+        int ret = select(maxfd + 1, &amp;readset, NULL, NULL, NULL);
+        if(ret &lt; 0){
+            if(errno == EINTR){
+                continue;
+            }else{
+                printf(&quot;select error! %s\n&quot;, strerror(errno));
+                exit(0);
+            }
+        }
+
+        if(ret &gt; 0){
+            for(int i=0; i&lt;MAX_PORTS; i++){
+                if(!FD_ISSET(server_socks[i], &amp;readset)){
+                    continue;
+                }
+                socklen_t addrlen = sizeof(addr);
+                int sock = accept(server_socks[i], (struct sockaddr *)&amp;addr, &amp;addrlen);
+                if(sock == -1){
+                    goto sock_err;
+                }
+                connections ++;
+                printf(&quot;connections: %d, fd: %d\n&quot;, connections, sock);
+            }
+        }
+    }
+
+    return 0;
+sock_err:
+    printf(&quot;error: %s\n&quot;, strerror(errno));
+    return 0;
+}
+</code></pre>
+<p>服务器监听了 10 个端口, 这样一台测试机就可以和服务器之间创建 30 万左右个连接了.</p>
+<blockquote>
+<p> 因为只有一台客户端测试机, 最多只能跟同一个 IP 端口创建 30000 多个连接<br><code>cat /proc/sys/net/ipv4/ip_local_port_range</code></p>
+</blockquote>
+<p>客户端很简单, 就是不停的创建连接:(客户端也得支持 C1000K配置)</p>
+<pre><code class="C++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;netinet/tcp.h&gt;
+
+/*7000 - 7009端口*/
+int main(int argc, char **argv){
+    if(argc &lt;=  2){
+        printf(&quot;Usage: %s ip port\n&quot;, argv[0]);
+        exit(0);
+    }
+
+    struct sockaddr_in addr;
+    const char *ip = argv[1];
+    int base_port = atoi(argv[2]);
+    int opt = 1;
+    int bufsize;
+    socklen_t optlen;
+    int connections = 0;
+
+    bzero(&amp;addr, sizeof(addr));
+    addr.sin_family = AF_INET;
+    inet_pton(AF_INET, ip, &amp;addr.sin_addr);
+
+    char tmp_data[10];
+    int index = 0;
+    while(1){
+        if(++index &gt;= 10){
+            index = 0;
+        }
+        int port = base_port + index;
+        printf(&quot;connect to %s:%d\n&quot;, ip, port);
+
+        addr.sin_port = htons((short)port);
+
+        int sock;
+        if((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1){
+            goto sock_err;
+        }
+        if(connect(sock, (struct sockaddr *)&amp;addr, sizeof(addr)) == -1){
+            goto sock_err;
+        }
+
+        connections ++;
+        printf(&quot;connections: %d, fd: %d\n&quot;, connections, sock);
+
+        if(connections % 10000 == 9999){
+            printf(&quot;press Enter to continue: &quot;);
+            getchar();
+        }
+        usleep(1 * 1000);
+        /*
+           bufsize = 5000;
+           setsockopt(serv_sock, SOL_SOCKET, SO_SNDBUF, &amp;bufsize, sizeof(bufsize));
+           setsockopt(serv_sock, SOL_SOCKET, SO_RCVBUF, &amp;bufsize, sizeof(bufsize));
+         */
+    }
+
+    return 0;
+sock_err:
+    printf(&quot;error: %s\n&quot;, strerror(errno));
+    return 0;
+}
+</code></pre>
+<p>10 万个连接, 这些连接是空闲的, 什么数据也不发送也不接收. 这时, 进程只占用了不到 1MB 的内存. 但是, 通过程序退出前后的 free 命令对比, 发现操作系统用了 200M(大致)内存来维护这 10 万个连接! </p>
+<blockquote>
+<p>如果是百万连接的话, 操作系统本身就要占用 2GB 的内存! 也即 2KB 每连接.</p>
+</blockquote>
+<h2 id="查看进程内存占用"><a href="#查看进程内存占用" class="headerlink" title="查看进程内存占用"></a>查看进程内存占用</h2><p>上面, 查看测试时和测试后系统的内存, 需要用到ps或者top, 一般用top</p>
+<pre><code>$ top
+</code></pre><p>或者</p>
+<pre><code>cat /proc/meminfo
+</code></pre><p>查看单个进程的内存占用, <code>ps</code>,(当然用top或者htop也可以) 例如:</p>
+<pre><code>$ ps aux | sort -k4nr | head -n 10 
+USER        PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root          1  0.0  0.1 146976  7392 ?        Ss   10月08   0:01 /sbin/init splash
+</code></pre><blockquote>
+<p>通过上面的测试代码, 可以发现, 应用程序维持百万个空闲的连接, 只会占用操作系统的内存, 通过 ps 命令查看可知, 应用程序本身几乎不占用内存.</p>
+<blockquote>
+<p>毕竟是内核协议栈</p>
+</blockquote>
+</blockquote>
+<h2 id="控制tcp读写缓冲区大小"><a href="#控制tcp读写缓冲区大小" class="headerlink" title="控制tcp读写缓冲区大小"></a>控制tcp读写缓冲区大小</h2><p>其实就是修改:<br><code>/proc/sys/net/ipv4/tcp_wmem</code> 以及 <code>/proc/sys/net/ipv4/tcp_rmem</code> 的大小.</p>
+<p>例如:</p>
+<pre><code>$ cat /proc/sys/net/ipv4/tcp_rmem
+4096    87380    6291456
+$ cat /proc/sys/net/ipv4/tcp_wmem
+4096    16384    4194304
+</code></pre><p>(查看cpu前10, <code>ps aux | sort -k3nr | head -n 10</code>)</p>
+<h1 id="吞吐量"><a href="#吞吐量" class="headerlink" title="吞吐量"></a>吞吐量</h1><p>百万连接, 如果其中有20%是活跃的, 那么活跃连接数就是0.2M个(1000K * 0.2, 涉及硬件都这么算), 每个连接每秒传输 1KB 的数据,<br>那么需要的网络带宽是 <code>0.2M x 1KB/s x 8 = 1.6Gbps</code>, 要求服务器至少是万兆网卡(10Gbps).</p>
+<p>(个人觉得, 现在真正速度的限制不是网络了, 而是硬盘)</p>
+<h1 id="其他话题"><a href="#其他话题" class="headerlink" title="其他话题"></a>其他话题</h1><blockquote>
+<p>这里基本就是调优内核了, 不是简单的设置参数限制, 而是采用更好的机制, 比如说异步IO.</p>
+</blockquote>
+<h2 id="异步IO问题"><a href="#异步IO问题" class="headerlink" title="异步IO问题"></a>异步IO问题</h2><p>异步IO, 来自内核层面对高并发的支持, 帮助在大量连接下提升服务器的处理能力, 简单的说就是cpu相应能力和降低内存占用.</p>
+<p>(注意异步IO要比非阻塞I/O+就绪通知更加彻底)</p>
+<blockquote>
+<p>不要让内核执行所有繁重的任务。将数据包处理，内存管理，处理器调度等任务从内核转移到应用程序高效地完成。<br>让Linux只处理控制层，数据层完全交给应用程序来处理。</p>
+</blockquote>
+<p>内核规模不够，解决的办法是尽可能将业务移动到内核之外，并且自己处理所有繁重的业务. 这一点比如 epoll 的ET模式就很像, 除了触发问题, 尽可能自己解决.</p>
+<p><strong>或者说, 这个时候, 再去探究epoll模型等网络框架, 意义更加明确.</strong></p>
+<p>以epoll为例，在它的基础上抽象了一些开发框架和库，为广大软件开发者在软件开发带来了便利，比如libevent、libev等。随着当年在IO模型上的革命，衍生出了很多至今为止我们都在大量使用的优秀开源软件，比如nginx、haproxy、squid等，通过大量的创新、实践和优化，使我们在今天能够很轻易地解决一个大并发压力场景下的技术问题。</p>
+<p>如果要看 select, 可以参考这位大佬的<a href="http://blog.csdn.net/tlthm/article/category/6234525" target="_blank" rel="external">文章</a>, 但robot love 也说了:</p>
+<blockquote>
+<p>select 非获取性遍历开销问题使得它不被看好.</p>
+</blockquote>
+<h2 id="调度问题"><a href="#调度问题" class="headerlink" title="调度问题"></a>调度问题</h2><p>说到底还是内核问题, 或者说<code>cpu亲和性</code>问题, 探索的还是调度和分配问题, 这部分提升, 应该是靠算法, 避免(频繁)切换&amp;调度的代价.</p>
+<p>其他可以参考:<br><a href="http://blog.csdn.net/erlib/article/details/50994440" target="_blank" rel="external">http://blog.csdn.net/erlib/article/details/50994440</a></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>关于C1M问题, 前辈的原话:</p>
+<blockquote>
+<p>Linux 系统需要修改内核参数和系统配置, 才能支持 C1000K. C1000K 的应用要求服务器至少需要 2GB 内存, 如果应用本身还需要内存, 这个要求应该是至少 10GB 内存. 同时, 网卡应该至少是万兆网卡. 当然, 这仅仅是理论分析, 实际的应用需要更多的内存和 CPU 资源来处理业务数据.</p>
+</blockquote>
+<p>我个人觉得, 往深了研究, 还有很多地方可以优化; 但目前, 弄清楚异步IO以及在其基础上衍生的网络框架, 就可以应付绝大多数场景了.</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://www.ideawu.net/blog/archives/740.html" target="_blank" rel="external">http://www.ideawu.net/blog/archives/740.html</a></li>
+<li><a href="http://blog.csdn.net/solstice/article/details/26363901" target="_blank" rel="external">http://blog.csdn.net/solstice/article/details/26363901</a></li>
+<li><a href="https://github.com/ideawu/c1000k" target="_blank" rel="external">https://github.com/ideawu/c1000k</a></li>
+<li><a href="http://www.kegel.com/c10k.html" target="_blank" rel="external">http://www.kegel.com/c10k.html</a></li>
+<li><a href="http://www.csdn.net/article/2013-05-16/2815317-The-Secret-to-10M-Concurrent-Connections" target="_blank" rel="external">http://www.csdn.net/article/2013-05-16/2815317-The-Secret-to-10M-Concurrent-Connections</a></li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：C XXXK 连接问题</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/06/20/cxxx-connections-problem.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY SA 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
