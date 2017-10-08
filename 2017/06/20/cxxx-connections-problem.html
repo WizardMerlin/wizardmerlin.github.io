@@ -19,7 +19,7 @@
 <meta property="og:description" content="探讨 CXXX K 问题的博主一大堆, 我个人对这个话题也比较感兴趣.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/cxxxk.png">
-<meta property="og:updated_time" content="2017-10-08T20:39:29.007Z">
+<meta property="og:updated_time" content="2017-10-08T21:09:02.995Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C xxx K 连接问题">
 <meta name="twitter:description" content="探讨 CXXX K 问题的博主一大堆, 我个人对这个话题也比较感兴趣.">
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#端口和连接数的谬论"><span class="toc-number">1.</span> <span class="toc-text">端口和连接数的谬论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#用户态TCP-IP协议栈"><span class="toc-number">2.</span> <span class="toc-text">用户态TCP/IP协议栈</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#最大连接数"><span class="toc-number">3.</span> <span class="toc-text">最大连接数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#最大打开文件数"><span class="toc-number">4.</span> <span class="toc-text">最大打开文件数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#全局"><span class="toc-number">4.1.</span> <span class="toc-text">全局</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部"><span class="toc-number">4.2.</span> <span class="toc-text">局部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见状况"><span class="toc-number">4.3.</span> <span class="toc-text">常见状况</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#内存限制"><span class="toc-number">5.</span> <span class="toc-text">内存限制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#查看进程内存占用"><span class="toc-number">5.1.</span> <span class="toc-text">查看进程内存占用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#控制tcp读写缓冲区大小"><span class="toc-number">5.2.</span> <span class="toc-text">控制tcp读写缓冲区大小</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#吞吐量"><span class="toc-number">6.</span> <span class="toc-text">吞吐量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他话题"><span class="toc-number">7.</span> <span class="toc-text">其他话题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#异步IO问题"><span class="toc-number">7.1.</span> <span class="toc-text">异步IO问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调度问题"><span class="toc-number">7.2.</span> <span class="toc-text">调度问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">9.</span> <span class="toc-text">参考</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#端口和连接数的谬论"><span class="toc-number">1.</span> <span class="toc-text">端口和连接数的谬论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#用户态TCP-IP协议栈"><span class="toc-number">2.</span> <span class="toc-text">用户态TCP/IP协议栈</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#最大连接数"><span class="toc-number">3.</span> <span class="toc-text">最大连接数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#最大打开文件数"><span class="toc-number">4.</span> <span class="toc-text">最大打开文件数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#全局"><span class="toc-number">4.1.</span> <span class="toc-text">全局</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部"><span class="toc-number">4.2.</span> <span class="toc-text">局部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见状况"><span class="toc-number">4.3.</span> <span class="toc-text">常见状况</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#内存限制"><span class="toc-number">5.</span> <span class="toc-text">内存限制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#查看进程内存占用"><span class="toc-number">5.1.</span> <span class="toc-text">查看进程内存占用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#控制tcp读写缓冲区大小"><span class="toc-number">5.2.</span> <span class="toc-text">控制tcp读写缓冲区大小</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#吞吐量"><span class="toc-number">6.</span> <span class="toc-text">吞吐量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他话题"><span class="toc-number">7.</span> <span class="toc-text">其他话题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#IO问题"><span class="toc-number">7.1.</span> <span class="toc-text">IO问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调度问题"><span class="toc-number">7.2.</span> <span class="toc-text">调度问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">9.</span> <span class="toc-text">参考</span></a></li></ol>
     	</div>
 	
 
@@ -292,6 +292,9 @@ merlin         soft    nofile      1020000
 <h2 id="常见状况"><a href="#常见状况" class="headerlink" title="常见状况"></a>常见状况</h2><p>在Linux上编写支持高并发TCP连接的客户端通讯处理程序时，有时会发现尽管已经解除了系统对用户同时打开文件数的限制，但仍会出现并发TCP连接数增加到一定数量时，再也无法成功建立新的TCP连接的现象。出现这种现在的原因有多种。</p>
 <p>第一种原因可能是因为Linux网络内核对本地端口号范围有限制。<br>此时，进一步分析为什么无法建立TCP连接，会发现问题出在connect()调用返回失败，查看系统错误提示消息是“Can’t assign requestedaddress”。同时，如果在此时用tcpdump工具监视网络，会发现根本没有TCP连接时客户端发SYN包的网络流量。这些情况说明问题在于本地Linux系统内核中有限制。其实，问题的根本原因在于Linux内核的TCP/IP协议实现模块对系统中所有的客户端TCP连接对应的本地端口号的范围进行了限制(例如，内核限制本地端口号的范围为1024~32768之间)。当系统中某一时刻同时存在太多的TCP客户端连接时，由于每个TCP客户端连接都要占用一个唯一的本地端口号(此端口号在系统的本地端口号范围限制中)，如果现有的TCP客户端连接已将所有的本地端口号占满，则此时就无法为新的TCP客户端连接分配一个本地端口号了，因此系统会在这种情况下在connect()调用中返回失败，并将错误提示消息设为“Can’t assignrequested address”。</p>
 <p>第二种无法建立TCP连接的原因可能是因为Linux网络内核的IP_TABLE防火墙对最大跟踪的TCP连接数有限制。此时程序会表现为在 connect()调用中阻塞，如同死机，如果用tcpdump工具监视网络，也会发现根本没有TCP连接时客户端发SYN包的网络流量。由于 IP_TABLE防火墙在内核中会对每个TCP连接的状态进行跟踪，跟踪信息将会放在位于内核内存中的conntrackdatabase中，这个数据库的大小有限，当系统中存在过多的TCP连接时，数据库容量不足，IP_TABLE无法为新的TCP连接建立跟踪信息，于是表现为在connect()调用中阻塞。</p>
+<blockquote>
+<p><code>/etc/sysctl.conf</code> 是用来控制linux网络的配置文件，对于依赖网络的程序非常重要, 一般别乱动</p>
+</blockquote>
 <h1 id="内存限制"><a href="#内存限制" class="headerlink" title="内存限制"></a>内存限制</h1><p>实际上是操作系统为了维护连接所需要的系统资源&amp;内存占用, 可以简单的理解成存储这些文件描述(fd, 或者 socket) 所需要的内存(当然还有一些头信息, 结构体).</p>
 <p><code>sizeof(int)</code>, 在64位机器(Ubuntu)下是4字节, 那么100W连接应该是占用<code>4M</code>, 加上管理结构体等信息载体, 也之多不过100M.</p>
 <p>只是空连接, 即不包括收发数据的 buffer 内存, 基本也就那个样子, 这一点, 前辈已经做了验证了, 如下:</p>
@@ -494,8 +497,8 @@ $ cat /proc/sys/net/ipv4/tcp_wmem
 <h1 id="其他话题"><a href="#其他话题" class="headerlink" title="其他话题"></a>其他话题</h1><blockquote>
 <p>这里基本就是调优内核了, 不是简单的设置参数限制, 而是采用更好的机制, 比如说异步IO.</p>
 </blockquote>
-<h2 id="异步IO问题"><a href="#异步IO问题" class="headerlink" title="异步IO问题"></a>异步IO问题</h2><p>异步IO, 来自内核层面对高并发的支持, 帮助在大量连接下提升服务器的处理能力, 简单的说就是cpu相应能力和降低内存占用.</p>
-<p>(注意异步IO要比非阻塞I/O+就绪通知更加彻底)</p>
+<h2 id="IO问题"><a href="#IO问题" class="headerlink" title="IO问题"></a>IO问题</h2><p>非阻塞同步IO, 异步IO, 来自内核层面对高并发的支持, 帮助在大量连接下提升服务器的处理能力, 简单的说就是cpu相应能力和降低内存占用.</p>
+<p>(注意异步IO要比非阻塞事件I/O就绪通知更加彻底, 即asio比epoll更加独立)</p>
 <blockquote>
 <p>不要让内核执行所有繁重的任务。将数据包处理，内存管理，处理器调度等任务从内核转移到应用程序高效地完成。<br>让Linux只处理控制层，数据层完全交给应用程序来处理。</p>
 </blockquote>
@@ -506,6 +509,7 @@ $ cat /proc/sys/net/ipv4/tcp_wmem
 <blockquote>
 <p>select 非获取性遍历开销问题使得它不被看好.</p>
 </blockquote>
+<p>IO问题也可以参考我的文章<a href="http://www.merlinblog.site/2017/06/04/network-io.html">网络IO</a>, 以前探讨过.</p>
 <h2 id="调度问题"><a href="#调度问题" class="headerlink" title="调度问题"></a>调度问题</h2><p>说到底还是内核问题, 或者说<code>cpu亲和性</code>问题, 探索的还是调度和分配问题, 这部分提升, 应该是靠算法, 避免(频繁)切换&amp;调度的代价.</p>
 <p>其他可以参考:<br><a href="http://blog.csdn.net/erlib/article/details/50994440" target="_blank" rel="external">http://blog.csdn.net/erlib/article/details/50994440</a></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>关于C1M问题, 前辈的原话:</p>
