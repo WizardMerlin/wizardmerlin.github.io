@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>TCP流解析(粘包和拆包问题) | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="也就是集中探讨一下粘包和分包问题, message or package;sub and adhere package.">
+<meta name="keywords" content="网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP流解析(粘包和拆包问题)">
+<meta property="og:url" content="www.merlinblog.site/2017/06/19/sub-and-adhere-package.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="也就是集中探讨一下粘包和分包问题, message or package;sub and adhere package.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/adhere-package.png">
+<meta property="og:updated_time" content="2017-10-08T16:35:04.871Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TCP流解析(粘包和拆包问题)">
+<meta name="twitter:description" content="也就是集中探讨一下粘包和分包问题, message or package;sub and adhere package.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/adhere-package.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#原因阐述"><span class="toc-number">1.</span> <span class="toc-text">原因阐述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模拟问题-amp-解决"><span class="toc-number">2.</span> <span class="toc-text">模拟问题&解决</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#常见实用解决方案"><span class="toc-number">3.</span> <span class="toc-text">常见实用解决方案</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他问题"><span class="toc-number">4.</span> <span class="toc-text">其他问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>TCP流解析(粘包和拆包问题)</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-06-19</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/网络/">网络</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>TCP是字节流(流式协议, 无边界), 不知道消息(包, 有边界)的概念. 它本身不知道边界, 它不保留边界.</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/adhere-package.png" alt="post-cover"></p>
+<h1 id="原因阐述"><a href="#原因阐述" class="headerlink" title="原因阐述"></a>原因阐述</h1><p>TCP程序中涉及的粘包和分包:</p>
+<ul>
+<li>粘包是因为TCP会缓存小的数据包而不是马上发出去(但是TCP没有包意识, 它也不管), 攒够多了之后再一起发出去.<br>(但这给一些实时性要求比较高的应用造成影响)</li>
+<li>分包由于接收端缓存问题(或者网络问题), 也会将大的数据段拆分发送; </li>
+</ul>
+<blockquote>
+<p>试想如果它知道消息message的概念, 估计就会整段完整的发了; 但这不现实, 也和协议的设计不符.</p>
+</blockquote>
+<p>TCP粘包和分包的问题核心并不在TCP本身(<code>TCP根本不知道包</code>), 而在如何<code>把字节流切开成一个个的消息</code>(一般业务都是基于报文的).</p>
+<blockquote>
+<p>实质上是<code>流解析</code>与<code>包解析</code>的互换, 将无边界的数据流解析为有边界的数据包.  </p>
+</blockquote>
+<p>分包和粘包处理要一起做(不能只写发送端, 你要考虑接收端怎么处理)</p>
+<p>有人喜欢直接发送C语言结构体, 但是这个要考虑对齐问题. 有人的做法是这样的, 直接用 pragra 命令设置全局的pack, 然后发送, 这样导致的后果就是, 没有考虑ABI接口, 即库兼容问题; 当然从而导致API兼容性, 很可能在接收端直接core dump.</p>
+<p>并且, 使用结构体发送, 升级也是个大难题, 后续版本增删字段, 问你怎么办? </p>
+<h1 id="模拟问题-amp-解决"><a href="#模拟问题-amp-解决" class="headerlink" title="模拟问题&amp;解决"></a>模拟问题&amp;解决</h1><p>TCP是流式协议, 所以在使用的时候, 一般会进行报文设计; 要么你使用别人设计好的报文协议, 要么你自己设计.<br>如果你自己不设计, 也不使用别人设计好的, 那么你肯定错了. 一定会遇到所谓的粘包和拆包.</p>
+<p>现代的一些RPC或者网络框架很多都已经处理了该问题, 我知道的, 比较好的方式有 protobuffer, thrift.</p>
+<p>前辈的建议是:</p>
+<blockquote>
+<p>我的建议是，不要自己去实现，应该去使用别人已经写好的代码</p>
+</blockquote>
+<p>但是实际上, 处理TCP粘包和拆包的核心逻辑没有那么复杂(真正实现的工程细节, 考虑的错误, 效率问题等比较复杂), 主要处理以下两种情况:</p>
+<ul>
+<li>拆包情况怎么处理, 比如: 一个长数据经过多次才到达目的地</li>
+<li>粘包情况怎么处理, 比如: 多个数据一次性发送</li>
+</ul>
+<p>但是不管哪种情况, 接收端处理时都需要服务端配合, 先同意协商好, 最简单的例子, 比如, 先协商发送完整message的长度, 为9个字节, 那么每次读取的时候, 先读前9个字节确定后面数据的长度, 核心代码如下:<br>写端:</p>
+<pre><code class="C++">    printf(&quot;emulate_adheringpackage...\n&quot;);  
+    const int HEAD_SIZE = 9;  
+    char buf[1024] = {0};  
+    char text[128] = {0};  
+    char *pstart = buf;  
+
+    // append text  
+    memset(text, 0, sizeof(text));  
+    snprintf(text, sizeof(text), &quot;Hello &quot;);  
+    snprintf(pstart, HEAD_SIZE, &quot;%08zu&quot;, strlen(text) + 1);  
+    pstart += HEAD_SIZE;  //先写的9个字节数据头, 记录实际消息的大小
+    snprintf(pstart, strlen(text) + 1, &quot;%s&quot;, text);  
+    pstart += strlen(text) + 1;  
+
+    // append text  
+    memset(text, 0, sizeof(text));  
+    snprintf(text, sizeof(text), &quot;I&#39;m lucky.&quot;);  
+    snprintf(pstart, HEAD_SIZE, &quot;%08zu&quot;, strlen(text) + 1);  
+    pstart += HEAD_SIZE;  //先写的9个字节数据头, 记录实际消息的大小
+    snprintf(pstart, strlen(text) + 1, &quot;%s&quot;, text);  
+    pstart += strlen(text) + 1;
+</code></pre>
+<p>读端, 先读前9个字节:(不管对端分几次发, 总是先读9个字节之后在读数据; 这是一次完整的读取)</p>
+<pre><code class="C++">    int datasize = 0;  
+    const int HEAD_SIZE = 9;  
+    char buf[512] = {0};  
+    while (true) {  
+        memset(buf, 0, sizeof(buf));  
+        if (! readPack(sock, buf, HEAD_SIZE)) {  //先读9个字节的长度
+            printf(&quot;read head buffer failed.\n&quot;);  
+            safe_close(sock);  
+            return;  
+        }  
+
+        datasize = atoi(buf);   //已经读取到了数据的长度信息
+        printf(&quot;data size: %s, value:%d\n&quot;, buf, datasize);  
+        memset(buf, 0, sizeof(buf));  
+        if (! readPack(sock, buf, datasize)) {  
+            printf(&quot;read data buffer failed\n&quot;);  
+            safe_close(sock);  
+            return;  
+        }  
+        printf(&quot;data size: %d, text: %s\n&quot;, datasize, buf);  
+        if (0 == strcmp(buf, &quot;exit&quot;)) {  
+            break;  
+        }  
+    }
+</code></pre>
+<p>也就是确保一个完整的消息总是有一个保存长度信息的头, 固定长度的头. 之后无论一个完整的消息被拆分发送还是被粘包发送, 消息头确保了边界, 包的完整性.</p>
+<p>其中 readPack的实现, 可以根据具体的IO情况分别实现, 比如如果用阻塞IO的话, 最好写成<code>readn</code>这种情况, 参考如下:</p>
+<pre><code class="C++">/**  
+ * read size of len from sock into buf.  
+ */    
+bool readPack(int sock, char* buf, size_t len) {    
+    if (NULL == buf || len &lt; 1) {    
+        return false;    
+    }    
+    memset(buf, 0, len); // only reset buffer len.    
+    ssize_t read_len = 0, readsum = 0;    
+    do {    
+        read_len = read(sock, buf + readsum, len - readsum);    
+        if (-1 == read_len) { // ignore error case    
+            return false;    
+        }    
+        printf(&quot;receive data: %s\n&quot;, buf + readsum);    
+        readsum += read_len;    
+    } while (readsum &lt; len &amp;&amp; 0 != read_len);    
+    return true;    
+}
+</code></pre>
+<p>(异步IO的读取情况, 更加复杂; 具体问题再说)</p>
+<p>完整额代码如下, 请参考 <a href="https://github.com/WizardMerlin/network_life/tree/master/code/pack" target="_blank" rel="external">net_work_life</a></p>
+<h1 id="常见实用解决方案"><a href="#常见实用解决方案" class="headerlink" title="常见实用解决方案"></a>常见实用解决方案</h1><p>业务层本意上是想使用一种基于报文的协议, 但所定义的报文格式并没有提供报文分隔符或者长度字段, 这就要求程序进行语义分析, 增加了实现难度. 所以一般是要自己设计报文格式, 以应对相关的流解析问题.</p>
+<p>基于TCP socket的程序, 有几种方式可用来实现报文协议:</p>
+<ol>
+<li>报文中声明报文数据的长度.</li>
+<li>使用分隔符. (例如以行作为分隔符)</li>
+<li>发送方发送完一个报文后关闭连接(这个不推荐, 这是HTTP1.0的方式)</li>
+</ol>
+<p>下面还有一些经典的实践:</p>
+<ul>
+<li>读,写一般都要循环监督(除了fgets/fputs, 因为它已经为你封装好了循环)</li>
+<li>字节序当做数组, 那么组织报文的时候最好加上<code>\0</code>. (虽然C++的字符串没有这个要求)<br>最好不要<code>ptr[strlen(ptr)] = &#39;\0&#39;;</code>, 因为<code>strlen</code>的判断标准就是<code>\0</code>, 还是老老实实用具体的指定长度去加上<code>\0</code></li>
+</ul>
+<h1 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h1><p>读取的报文格式不对, 或者消息&amp;数据错误, 可能有多方面原因:</p>
+<ul>
+<li>报文的组织格式等有问题(数据是完整的, 解析流出了问题)</li>
+<li>边界失效, 即数据本身都不完整(TCP可保证到达顺序与正确性，即保证已收到的数据的正确)<br>(特别注意一下, 边界失效问题: TCP传输处理粘包以外还需要处理丢包情况, 丢包通常是发送端发送失败导致数据流不完整引起的边界失效)</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>说白了就是一个网络流(IO), 字节解析问题, 搞了一整篇文章…博主已经去跳海了.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：TCP流解析(粘包和拆包问题)</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/06/19/sub-and-adhere-package.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY SA 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
