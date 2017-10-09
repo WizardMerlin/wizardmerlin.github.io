@@ -19,7 +19,7 @@
 <meta property="og:description" content="说完了Boost和std中的智能指针, 也尝试实现看看">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.jpg">
-<meta property="og:updated_time" content="2017-09-24T05:12:31.411Z">
+<meta property="og:updated_time" content="2017-10-09T01:48:40.438Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="再说说智能指针">
 <meta name="twitter:description" content="说完了Boost和std中的智能指针, 也尝试实现看看">
@@ -337,13 +337,13 @@ int main()
         return *this;
     }
 </code></pre>
-<p>既然不能共享所有权, 那么凡是调用 operator=()的操作都是危险的, 比如吧auto_ptr放入容器内, 即</p>
+<p>既然不能共享所有权, 那么凡是调用 <code>operator=()</code> 的操作都是危险的, 比如吧auto_ptr放入容器内, 即</p>
 <pre><code class="c++">vector&lt;auto_ptr&lt;MyClass&gt;&gt;m_example;
 </code></pre>
 <p>(当然你可以使用std:ref智能引用进行包装, 不过一拷贝, 原对象就失效, 总的来说还是不能放入容器).</p>
 <p>正是auto_ptr实现机制上的问题(<code>原件一拷贝就失效, 你受得了?</code>), 所以后来引入标准库的 std::unique_ptr用静态检验的方式去确认用户是否需要在赋值后转移所有权, 并且采用引用计数的shared_ptr可以共享所有权(除了一个相互引用比较烦人以外). 唯一可惜的是, shared_ptr(配合weaked_ptr使用)效率会有微小损失, 而auto_ptr则没有. 哦, scoped_ptr 这又是一个对所有权的几种做法: 不允许转移, 也就是说保证资源从一而终(此时也保障了唯一所有者).</p>
-<p>补充: auto_ptr还不能存储数组, 即auto_ptr<t[]> 原因可能是因为析构的时候, 没有调用delete[]处理, 而只有delete.</t[]></p>
-<h2 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h2><p>std::unique_ptr 它也是通过指针的方式来管理对象资源, 并且在 unique_ptr 的生命期结束后释放该资源. unique_ptr 持有对对象的独有权, 即两个 unique_ptr 不能指向一个对象, 不能进行复制操作只能进行移动操作(某种意义上禁止了拷贝语义, 只保留move语义, 查看函数原型就能发现), 即右值(临时变量)转移给某个具名值(左值)或者函数返回. 那么它为什么就比 auto_ptr好呢?</p>
+<p>补充: auto_ptr还不能存储数组, 即auto_ptr<t[]> 原因可能是因为析构的时候, 没有调用delete[]处理, 而只有 delete.</t[]></p>
+<h2 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h2><p>std::unique_ptr 它也是通过指针的方式来管理对象资源, 并且在 unique_ptr 的生命期结束后释放该资源. unique_ptr 持有对对象的独有权, 即两个 unique_ptr 不能指向一个对象, 不能进行复制操作<strong>只能进行移动操作</strong>(某种意义上<code>禁止了拷贝语义</code>, 只保留move语义, 查看函数原型就能发现), 即右值(临时变量)转移给某个具名值(左值)或者函数返回. 那么它为什么就比 auto_ptr好呢?</p>
 <blockquote>
 <p>即unique_ptr赋值拷贝构造有多个重载, 但是都不具备拷贝语义, 而只有移动语义. (从其原型看出, 它其实是强制你在需要转义的时候使用move语句, 因为根本找不到T&amp;, 只有T&amp;&amp;)</p>
 </blockquote>
@@ -353,6 +353,9 @@ int main()
 <li>unique_ptr 所要接收的对象显示的放弃了所有权, 比如release(), 即左值或者非const引用电泳move语句.</li>
 </ul>
 <p>通俗的说:<br>auto_ptr是可以说你随便赋值,但赋值完了之后原来的对象就不知不觉的报废.搞得你莫名其妙.而unique就干脆不让你可以随便去复制,赋值.如果实在想传个值就哪里,显式的说明内存转移std:move一下.然后这样传值完了之后,之前的对象也同样报废了.只不过整个move你让明显的知道这样操作后会导致之前的unique_ptr对象失效.</p>
+<blockquote>
+<p>显示的说明你要转移所有权, 而不再是 auto_ptr 莫名其妙地隐式转移权限; 直接禁止拷贝语义, 保留转移语义(只有右值引用的版本允许调用)</p>
+</blockquote>
 <p>对比一下就知道:</p>
 <pre><code class="c++">
 auto_ptr&lt;int&gt; ap(new int(88));
@@ -365,7 +368,7 @@ unique_ptr&lt;int&gt; one (ap) ; // 会出错
 unique_ptr&lt;int&gt; two = one; //会出错
 
 //uniuqe_ptr 可以进行移动操作
-//例如作为函数的返回值
+//例如作为函数的返回值(直接右值)
 unique_ptr&lt;int&gt; GetVal()
 {
   unique_ptr&lt;int&gt; up(new int(88));
@@ -375,9 +378,9 @@ unique_ptr&lt;int&gt; GetVal()
 unique_ptr&lt;int&gt; uPtr = GetVal();   //ok
 
 //或者直接move
-unique_ptr&lt;int&gt; up(new int(88 );
+unique_ptr&lt;int&gt; up(new int(88) );
 //这里是显式的所有权转移, 把up所指的内存转给uPtr2了
-unique_ptr&lt;int&gt; uPtr2 = std:move( up) ;
+unique_ptr&lt;int&gt; uPtr2 = std:move(up) ;
 </code></pre>
 <p>cppreference上的例子:</p>
 <pre><code class="c++">#include &lt;iostream&gt;
@@ -450,19 +453,20 @@ int main()
     }
 }
 </code></pre>
-<p>可以看到凡是涉及到左值的, 全部都用了move(). </p>
+<p>可以看到凡是涉及到左值的, 全部都用了move()调用了右值引用的重载版本.</p>
+<blockquote>
 <p>个人觉得,  unique支持容器, 并且支持数组类型,  <code>unique_ptr&lt;T[]&gt;</code>, 这才是重点. </p>
-<p>最初我也怀疑, unique不支持拷贝, 怎么能放入输入: auto_ptr不可做为容器元素, 而unique_ptr也同样不能直接做为容器元素.</p>
+</blockquote>
+<p>最初我也怀疑, unique不支持拷贝, 怎么能放入容器: auto_ptr不可做为容器元素, 而unique_ptr也同样不能直接做为容器元素.</p>
 <p>实际上, 发现用右值, 或者移动语义是可以实现的:</p>
 <pre><code class="c++">unique_ptr&lt;int&gt; sp(new int(88) );
 vector&lt;unique_ptr&lt;int&gt; &gt; vec;
-vec.push_back(std::move(sp));
+vec.push_back(std::move(sp)); //显示地说明你要放入
 //vec.push_back( sp ); 这样不行,会报错的.
 //cout&lt;&lt;*sp&lt;&lt;endl;但这个也同样出错,说明sp添加到容器中之后,它自身报废了.
 </code></pre>
 <p>上面的学习, 也可以看到, unique_ptr和auto_ptr真的太像了, 只不过unique_ptr支持移动语义, 被c++11所推崇(并且其转移是可控的, 用户的显示行为).</p>
-<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>不算太详细的说明了一下 auot_ptr, unique_ptr; 顺带说了下引用计数的原理.</p>
-<p>先这样吧.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>感觉已经说的够详细了.</p>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 

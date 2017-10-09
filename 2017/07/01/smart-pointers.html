@@ -8,20 +8,20 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   
-  <title>智能指针 | Merlin&#39;s Blog</title>
+  <title>C++ 智能指针 | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="集中说说Boost和标准库中的智能指针">
-<meta name="keywords" content="cpp,boost">
+<meta name="keywords" content="boost,cpp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="智能指针">
+<meta property="og:title" content="C++ 智能指针">
 <meta property="og:url" content="www.merlinblog.site/2017/07/01/smart-pointers.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
 <meta property="og:description" content="集中说说Boost和标准库中的智能指针">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.jpg">
-<meta property="og:updated_time" content="2017-09-24T05:13:50.347Z">
+<meta property="og:updated_time" content="2017-10-09T01:54:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="智能指针">
+<meta name="twitter:title" content="C++ 智能指针">
 <meta name="twitter:description" content="集中说说Boost和标准库中的智能指针">
 <meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.jpg">
   
@@ -205,7 +205,7 @@ function tmpfobid()
     <div class="container post-box">
         <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
             <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
-                <strong>智能指针</strong>
+                <strong>C++ 智能指针</strong>
             </div>
  
             <div class="is-flex align-center" style="margin-top:10px;">
@@ -217,9 +217,9 @@ function tmpfobid()
             
                 <div>
                     
-                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
-                    
                          <a style="margin-right:5px" class="tag is-post-tag" href="/tags/boost/">boost</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
                     
                 </div>
             
@@ -350,7 +350,7 @@ Main Function end
 <pre><code>scoped_ptr&lt;T&gt; ptr_t(new T); //创建了一个智能指针维护空间
 ptr_t.reset(); //调用delete指针所指向空间
 ptr_t-&gt;get(); //返回内部管理的指针, 但禁止在get()出来的指针上执行delete
-</code></pre><h3 id="shared-ptr"><a href="#shared-ptr" class="headerlink" title="shared_ptr"></a>shared_ptr</h3><p>这个是重点, 可以看做auto_ptr的替代品, 内置引用计数, 支持拷贝和赋值, 支持 <code>*</code> 和 <code>-&gt;</code> 运算</p>
+</code></pre><h3 id="shared-ptr"><a href="#shared-ptr" class="headerlink" title="shared_ptr"></a>shared_ptr</h3><p>这个是重点, 可以看做auto_ptr的替代品, 内置引用计数, 支持拷贝和赋值, 支持 <code>*</code> 和 <code>-&gt;</code> 运算<br>RCSP: reference-counting smart pointer. 引用计数机制.   (避免了浅拷贝的危险性, 只有引用计数为0的时候, 才真正去释放资源)</p>
 <p>在 <code>scoped_ptr</code> 的基础上还要注意:</p>
 <ul>
 <li>不要循环引用(这个 <code>weak_ptr</code> 出面解决)</li>
@@ -371,7 +371,46 @@ ptr_t-&gt;get(); //返回内部管理的指针, 但禁止在get()出来的指针
     f(p, g()); 
 }
 </code></pre>
-<p>这一点 <code>Effective C++</code> 中反复强调了: 以独立语句将newed对象置入智能指针, 原因很简单: 在异常发生的同时, shared_ptr可能没有完全构造. 这样的话, 原始对象指针可能将会遗失. (也就是说, 尽可能独立语句完成 shared_ptr 的构造).</p>
+<p>这一点 <code>Effective C++</code> 中反复强调了: 以独立语句将newed对象置入智能指针, 原因很简单: 在异常发生的同时, shared_ptr可能没有完全构造.<br>这样的话, 原始对象指针可能将会遗失. (也就是说, 尽可能独立语句完成 shared_ptr 的构造).</p>
+<p>大师的书中, 也强调了shared_ptr最好结合Raii手法一起使用, 举了这样的例子:<br>不用智能指针时, 实现可能是这样的:</p>
+<pre><code class="C++">class Lock
+{
+public:
+    explicit Lock(Mutex* pm): mutexPtr(pm)
+    {
+        lock(mutexPtr);
+    }
+    ~Lock() {unlock(mutexPtr);}
+private:
+    Mutex *mutexPtr;
+};
+</code></pre>
+<p>即用对象管理资源(管理指针其实就是管理背后的资源)</p>
+<p>之后使用智能指针(shared_ptr 是允许指定析构行为的函数的, 即指定释放资源的函数)</p>
+<pre><code class="C++">class Lock
+{
+public: 
+    explicit Lock(Mutex *pm): mutexPtr(pm, unlock) //指定了释放函数
+    {
+        lock(mutexPtr.get());
+    }
+private:
+    std::shared_ptr&lt;Mutex&gt; mutexPtr;
+};
+</code></pre>
+<p>使用方式还是一样的:</p>
+<pre><code class="C++">Mutex m;
+
+{
+    Lock ll(&amp;m);
+}
+</code></pre>
+<blockquote>
+<p>所有的指针, 请你都放到shared_ptr里面去吧, 用法和普通指针没有太多区别.</p>
+<blockquote>
+<p>然后结合 pImpl手法, 可以更加简单的处理 move 语义</p>
+</blockquote>
+</blockquote>
 <p>详细看一下:</p>
 <pre><code class="c++">    shared_ptr&lt;int&gt; p0;
 
@@ -706,7 +745,7 @@ std::unique_ptr&lt;int[]&gt; pnums = std::make_unique&lt;int[]&gt;(len);
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：智能指针</span><br/>
+	<span><b>本文标题</b>：C++ 智能指针</span><br/>
 	<span><b>本文链接</b>：www.merlinblog.site/2017/07/01/smart-pointers.html</span>
 
   </blockquote>
