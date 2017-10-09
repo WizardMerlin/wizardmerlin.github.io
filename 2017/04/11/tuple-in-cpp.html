@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>C++11 tuple 容器 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简单叙述一下 tuple 容器">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++11 tuple 容器">
+<meta property="og:url" content="www.merlinblog.site/2017/04/11/tuple-in-cpp.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="简单叙述一下 tuple 容器">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/tuple-container.png">
+<meta property="og:updated_time" content="2017-10-09T01:04:39.390Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++11 tuple 容器">
+<meta name="twitter:description" content="简单叙述一下 tuple 容器">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/tuple-container.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>C++11 tuple 容器</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-04-11</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>以前说变参模板(valiadic templates)的时候说过, tuple就是借助变参模板的实现的; 现在主要说说其用法及一些常用代码.</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/tuple-container.png" alt="post-cover"></p>
+<p>主要用途如下, 直接贴代码了:</p>
+<pre><code class="C++">//create tuple with make_tuple()
+auto t2 = make_tuple(22, 44, &quot;sss&quot;);
+
+//std::get&lt;&gt;() 模板, 避免一个个head, tail方法的使用
+tuple&lt;int, float, string&gt; t1(2, 3.3 &quot;string&quot;);
+cout &lt;&lt; &quot;t:&quot; &lt;&lt; get&lt;0&gt;(t1) &lt;&lt; &#39;&#39; &lt;&lt; get&lt;1&gt;(t1) &lt;&lt; &#39;&#39; &lt;&lt; get&lt;0&gt;(t2) &lt;&lt; endl;
+
+//赋值
+get&lt;0&gt;(t2) = get&lt;1&gt;(t1);
+</code></pre>
+<p>打印 tuple 元素</p>
+<p><code>cout &lt;&lt; t2;</code> 这个不行, 需要你自己去设计实现一个&lt;&lt;方法, 利用<strong>valiadic template</strong>, 例如参考实现:(参考boost的代码)</p>
+<pre><code class="C++">template&lt;typename...Args&gt;
+ostream&amp; operator&lt;&lt;(ostream&amp; os, const tuple&lt;Args...&gt; &amp;t)
+{
+    os &lt;&lt; &quot;[&quot;;
+    PRINT_TUPLE&lt;0, sizeof...(Args), Args...&gt;::print(os, t);
+    return os&lt;&lt;&quot;]&quot;;
+}
+
+//最后一次特化&amp;调用, 前两个模板参数相同的情况的特化版本
+//所以只写 int MAX
+template&lt;int MAX, typename...Args&gt;
+struct PRINT_TUPLE&lt;MAX, MAX, Args...&gt;
+{
+    static void print(std::ostream&amp; os, const tuple&lt;Args...&gt;&amp;t){//do nothing}
+};
+
+template&lt;int IDX, int MAX, typename...Args&gt;
+struct PRINT_TUPLE
+{
+    static void print(ostream&amp; os, const tuple&lt;Args...&gt; &amp;t)
+    {
+        os &lt;&lt; get&lt;IDX&gt;(t) &lt;&lt; (IDX+1==MAX ? &quot;&quot;:&quot;,&quot;);
+        PRINT_TUPLE&lt;IDX+1, MAX, Args...&gt;::print(os,t); //最后一次IDX+1=MAX调用特化版本
+    }
+};
+</code></pre>
+<p>tuple的大小<code>tuple_size</code></p>
+<pre><code class="C++">//处理类型属于元编程的范畴 (一般编程都是对变量, 对象做操作)
+typedef tuple&lt;int, float, string&gt; T;
+cout &lt;&lt; tuple_size&lt;T&gt;::value &lt;&lt; endl; //3, 其实是问类型的个数
+</code></pre>
+<p>tuple元素的类型<code>tuple_element</code></p>
+<pre><code class="C++">//拿到(元素)类型
+tuple_element&lt;1, T&gt;::type f ;
+</code></pre>
+<p><code>《Modern C++ Design》</code>中再没有设计tuple的时候(设计层级对象的继承体系), 是怎么做的呢?</p>
+<pre><code class="C++">//产生层级继承体系
+typedef GenScatterHiderarchy&lt;TYPELIST_4(int, int, string, widget), Holder&gt; Foo;
+Foo aFoo;
+</code></pre>
+<p>此时<code>aFoo</code>对象图就是(int, int, string, Widget), </p>
+<p><code>TYPELIST_4</code>的实现, 他们用的是宏定义, 一系列宏定义</p>
+<pre><code class="C++">#define TYPELIST_1(T1) Typelist&lt;T1, NullType&gt;
+#define TYPELIST_2(T1, T2) Typelist&lt;T1, TYPELIST_1(T2)&gt;
+#define TYPELIST_3(T1, T2, T3) Typelist&lt;T1, TYPELIST_2(T2, T3)&gt;
+#define TYPELIST_4(T1, T2, T3) Typelist&lt;T1, Typelist_3(T2, T3, T4)&gt;
+//...
+</code></pre>
+<p>可以看到和<code>tuple</code>思想类似, 用的是head+tail的方法.  (早起版本的boost tuple也是这么做的, 手动宏定义实现的)</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：C++11 tuple 容器</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/04/11/tuple-in-cpp.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY SA 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
