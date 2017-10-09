@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>C++迭代器失效问题 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="不同于网络上其他总结的思考">
+<meta name="keywords" content="cpp,stl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++迭代器失效问题">
+<meta property="og:url" content="www.merlinblog.site/2017/06/22/invalid-iterators.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="不同于网络上其他总结的思考">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/invalid-iterators.png">
+<meta property="og:updated_time" content="2017-10-09T00:02:07.838Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++迭代器失效问题">
+<meta name="twitter:description" content="不同于网络上其他总结的思考">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/invalid-iterators.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本认识"><span class="toc-number">1.</span> <span class="toc-text">基本认识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#erase-push-back"><span class="toc-number">1.1.</span> <span class="toc-text">erase/push_back</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#insert"><span class="toc-number">1.2.</span> <span class="toc-text">insert</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>C++迭代器失效问题</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-06-22</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/stl/">stl</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>针对顺序容器的迭代器失效问题, 很长一段事件困扰我, 现在集中说一下, 汇总一下</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/invalid-iterators.png" alt="post-cover"></p>
+<h1 id="基本认识"><a href="#基本认识" class="headerlink" title="基本认识"></a>基本认识</h1><p>一般就发生在容器(vector, string, deque)中insert/erase等操作后, iterators,pointers,references失效.</p>
+<p>C++ primer 原话:</p>
+<blockquote>
+<p>当处理vector,string,deque时，当在一个循环中可能增加或移除元素时，要考虑到迭代器可能会失效的问题.</p>
+</blockquote>
+<p>我个人觉得, 需要注意迭代器失效的真正原因是, <strong>如果你使用失效前的迭代器, 其行为未定义</strong>, 简单说, </p>
+<blockquote>
+<p>就怕你store了旧的已经失效的迭代器, 并且拿出来用了.</p>
+</blockquote>
+<p>其实主要注意一下<code>增</code> &amp; <code>删</code> 方法, 一旦容器失效手动更新一下. 即<code>重新获取</code>一下即可. </p>
+<p>下面说说简单的注意事项.</p>
+<h2 id="erase-push-back"><a href="#erase-push-back" class="headerlink" title="erase/push_back"></a>erase/push_back</h2><p>例如 《C++ Primier》有个例子是这么写的:</p>
+<pre><code class="C++">int arr[]={0,1,2,3,4,5,6,7,8,9,10}; 
+vector&lt;int&gt; a(arr,arr+sizeof(arr)/sizeof(*arr));
+for (auto it = a.begin(); it != a.end();){
+    if ((*it)&amp;1){
+        it=a.erase(it);
+    }
+    else
+        ++it;    
+}
+</code></pre>
+<p>也就是说, erase之后, 迭代器指针会指向元素的下一个位置(相当于自动refresh了).</p>
+<p>但是如果这样写, 例如:</p>
+<pre><code class="C++">int arr[]={0,1,2,3,4,5,6,7,8,9,10}; 
+vector&lt;int&gt; a(arr,arr+sizeof(arr)/sizeof(*arr));
+
+for (auto it = a.begin(); it != a.end();++it ){
+    if ((*it)&amp;1){
+        a.erase(it);
+    }
+}
+</code></pre>
+<p>小结: </p>
+<blockquote>
+<p>指针是与内存绑定的，而迭代器是与容器里的元素绑定的，删除了之后，该迭代器就失效了，不能再访问此迭代器<br>并且删除后, 容器一般是自动更新了迭代器, 例如本例中的自动指向了一下元素.</p>
+</blockquote>
+<h2 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h2><p>使用<code>range for</code>的时候, 强调过, 在遍历的时候, 最好不要改变容器的属性.<br>比如, vector, 由于你遍历途中插入一个元素, ok, capacity翻倍了, 然后迭代器全部失效了, 后面的全部不能再遍历了.</p>
+<p>具体的例子:</p>
+<pre><code class="C++">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+int main(void)
+{
+    vector&lt;int&gt; a;
+    for (int i = 0; i &lt; 10; ++i) //一会儿把容量修改成16
+    {
+        a.push_back(i);
+    }
+
+    for (vector&lt;int&gt;::iterator it = a.begin(); it != a.end(); ++it){
+        if (*it == 5){ 
+            a.insert(it, 100);
+            ++it;
+        }
+    } 
+
+    cout &lt;&lt; a.capacity() &lt;&lt; endl; //16
+
+    for(auto &amp;elem : a)
+    {
+        cout &lt;&lt; elem &lt;&lt; &quot; &quot;;        
+    }
+    cout &lt;&lt; endl;
+
+    return 0;
+}
+</code></pre>
+<p>因为insert之后指向当前insert元素, 所以要手动<code>++</code>一次, 程序运行结果都不错:</p>
+<pre><code>16
+0 1 2 3 4 100 5 6 7 8 9
+</code></pre><p>表面上看上面的程序是没有什么问题的, 但是稍微改一下就知道问题了</p>
+<pre><code class="C++">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+int main(void)
+{
+    vector&lt;int&gt; a;
+    for (int i = 0; i &lt; 16; ++i) //一会儿把容量修改成16
+    {
+        a.push_back(i);
+    }
+
+    for (vector&lt;int&gt;::iterator it = a.begin(); it != a.end(); ++it){
+        if (*it == 5){ 
+            a.insert(it, 100); //容器此时容量翻倍所有迭代器失效
+
+            ++it;
+            cout &lt;&lt; &quot; now &quot; &lt;&lt; *it &lt;&lt; endl; 
+        }
+    } 
+
+    cout &lt;&lt; a.capacity() &lt;&lt; endl; //16
+
+    for(auto &amp;elem : a)
+    {
+        cout &lt;&lt; elem &lt;&lt; &quot; &quot;;        
+    }
+    cout &lt;&lt; endl;
+
+    return 0;
+}
+</code></pre>
+<p>运行结果如下:</p>
+<pre><code class="C++"> now 6
+ now 5
+32
+0 1 2 3 4 100 100 5 6 7 8 9 10 11 12 13 14 15
+</code></pre>
+<p>容器容量翻倍之前, 即使insert也可以继续使用后面的迭代器; 但是翻倍之后, 再继续使用原来的迭代器(不更新)那么就会造成奇怪的后果(当然也可以进行分析, 没必要).</p>
+<blockquote>
+<p>一般情况下, insert之后容器后面的迭代器都失效了(如果你之前存储了之后的迭代器就不要在用了), 甚至可能全部失效(比如 vector capacity翻倍的情况).幸运的是, 容器也会内部调整迭代器, 所以这个时候<code>重新获取</code>即可.</p>
+</blockquote>
+<p>参考代码如下:</p>
+<pre><code class="C++">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+int main(void)
+{
+    vector&lt;int&gt; a;
+    for (int i = 0; i &lt; 16; ++i) //一会儿把容量修改成16
+    {
+        a.push_back(i);
+    }
+
+    for (vector&lt;int&gt;::iterator it = a.begin(); it != a.end(); ++it){
+        if (*it == 5){ 
+            it = a.insert(it, 100); //重新获取, 手动更新
+
+            ++it;
+            cout &lt;&lt; &quot; now &quot; &lt;&lt; *it &lt;&lt; endl; 
+        }
+    } 
+
+    cout &lt;&lt; a.capacity() &lt;&lt; endl; //16
+
+    for(auto &amp;elem : a)
+    {
+        cout &lt;&lt; elem &lt;&lt; &quot; &quot;;        
+    }
+    cout &lt;&lt; endl;
+
+    return 0;
+}
+</code></pre>
+<p>第一段代码, 没有<strong>重新获取</strong>, 为什么还能实现, 我只能说编译器可能做了其他的辅助动作, 因为按照标准:</p>
+<pre><code>Causes reallocation if the new size() is greater than the old capacity(). 
+If the new size() is greater than capacity(), all iterators and references are invalidated. 
+Otherwise, only the iterators and references before the insertion point remain valid. 
+
+The past-the-end iterator is also invalidated.
+</code></pre><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>网上有一堆总结, 我看的苦笑不得, 有时候你去实验一下就知道谁说错了(多试验几个平台, 编译运行环境).</p>
+<p>为啥要实验? </p>
+<p>的确, <strong>了解容器内部数据结构, 然后分析容器存储新旧元素内存状态, 发现改变部分, 即可分析是否失效</strong>, 但是不要忽略一个问题, 那就是编译器做了哪些 under table 的小动作. </p>
+<blockquote>
+<p>真心不敢猜测编译器背后在搞什么鬼, 我通常实验一下, gdb观察一下</p>
+</blockquote>
+<p>我不再多说, 给出一个经典的总结:</p>
+<blockquote>
+<p>除了 链式容器list, 以及关联容器(红黑树)set, map; 只要是顺序存储的比如string, vector, array, deque</p>
+<blockquote>
+<p>凡是涉及到 增, 删操作的, 不管怎么样, <code>都手动更新一下迭代器(重新获取一下)</code>, 确保安全.</p>
+</blockquote>
+</blockquote>
+<p>为啥链式和红黑树不用管, 因为原来的空间根本没有发生变化, 也就不存在<code>迭代器失效</code>一说.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：C++迭代器失效问题</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/06/22/invalid-iterators.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY SA 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
