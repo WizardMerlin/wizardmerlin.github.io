@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>C++11 hashtable 结构 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="C++11引入了 unorder container, 其背后支撑的数据结构就是 hashtable">
+<meta name="keywords" content="cpp,stl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++11 hashtable 结构">
+<meta property="og:url" content="www.merlinblog.site/2017/04/10/hashtable-in-cpp.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="C++11引入了 unorder container, 其背后支撑的数据结构就是 hashtable">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/unorder-container.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/container.jpg">
+<meta property="og:updated_time" content="2017-10-09T01:33:44.366Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++11 hashtable 结构">
+<meta name="twitter:description" content="C++11引入了 unorder container, 其背后支撑的数据结构就是 hashtable">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/unorder-container.png">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#hash-table结构"><span class="toc-number">1.</span> <span class="toc-text">hash table结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基本概念"><span class="toc-number">2.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#hash-code计算方法"><span class="toc-number">3.</span> <span class="toc-text">hash code计算方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#具体的实现"><span class="toc-number">4.</span> <span class="toc-text">具体的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#通用实现"><span class="toc-number">4.1.</span> <span class="toc-text">通用实现</span></a></li></ol></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>C++11 hashtable 结构</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-04-10</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/stl/">stl</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>基本的 hash table结构(桶+链表)在大学数据结构的课程就已经学过; 本文主要介绍如果要使用 unorder container要hash配合什么</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/unorder-container.png" alt="post-cover"></p>
+<h1 id="hash-table结构"><a href="#hash-table结构" class="headerlink" title="hash table结构"></a>hash table结构</h1><p>其实这里谈散列表, 也只是<code>为了用好新容器</code>, 而已.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/container.jpg" alt=""></p>
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>散列表有多种, 这里只谈最常见的.</p>
+<blockquote>
+<p>separate chaining : bucket &amp; list (桶+ 链表; 不同系统采用的链表不同, gnu采用的单向链表)</p>
+</blockquote>
+<p>rehashing: 如果元素的个数多余桶的数目, 一般就会重新扩充桶的数目—业界的通用做法, 没有太多依据.(注意, 重新分配是要花时间的, <code>成长要付出代价</code>)</p>
+<p>hash表存储算法: 一般最简单的算法是, 对桶的数据进行取模运算, 然后确定元素在hash表中存储的位置.</p>
+<p>元素的hash值(hash code): 一般是经过算法运算的, 对元素的value经过一定的操作取得, 但这个算法过程不同于hash存储算法, 这里希望不同元素最好有不同的hash值, 这样碰撞或者重复的概率就比较小. 常见的hash算法, 如md5, sha1. </p>
+<p>在使用unordered容器时指定<code>hash&lt;&gt;</code>函数模板对象作为模板参数, 例如: <code>unordered_set&lt;ClaName, HashCodeFunctor&gt; set</code>, 基本类型的, string的, 你可以不指定, 但是你自己自定义类型的一定要传入一个特化模板functor.</p>
+<p>通常所说的 hash方法, 一般混合了 hash表存储算法, 以及hash code计算方法</p>
+<h1 id="hash-code计算方法"><a href="#hash-code计算方法" class="headerlink" title="hash code计算方法"></a>hash code计算方法</h1><p>可以简单检测一下基本的hash code方法:(标准库已经实现好了)</p>
+<pre><code class="C++">std::cout &lt;&lt; hash&lt;char&gt;()(`c`) &lt;&lt; std::endl;
+std::cout &lt;&lt; hash&lt;char*&gt;()(&quot;wiki&quot;) &lt;&lt; std::endl;
+
+//当然直接创建函数对象也可以
+//auto
+hash&lt;char*&gt; hashFunctor;
+hashFunctor(&quot;wiki&quot;);
+</code></pre>
+<p>其简单的源码可能是:</p>
+<pre><code class="C++">template&lt;class Key&gt;
+struct hash { //空的, 没有实现}; //泛化版本
+
+//然后就有很多特化版本(函数对象了)
+struct hash&lt;char&gt;
+{
+   size_t operator()(char x) const {return x; //直接返回ASCII编码}
+}
+</code></pre>
+<p>所以指定自定义对象时, 也要自己特化(比如string类的特化, 就是放在string类自己的文件中, <code>basic_string</code>中)</p>
+<pre><code class="C++">template&lt;&gt;
+struct hash&lt;string&gt; : public _hash_base&lt;size_t, string&gt;
+{
+    size_t operator()(const string&amp; __s) const noexcept
+    {
+        return std::_Hash_impl::hash(__s.data(), __s.length()); //然后这里其实是调用_Hash_bytes()
+    }
+}
+</code></pre>
+<p>注意这种泛化方式.</p>
+<blockquote>
+<p>实际上可以从<code>include/c++/bits/functional_hash.h</code>中找到相关基本类型的 hash code 计算方法, 特化类型的 functor, 对所有基本类型都做了特化.</p>
+<blockquote>
+<p>底层的<code>_Hash_bytes</code>貌似由编译器代码实现了, 或者已经是二进制代码了, 所以找不到源码</p>
+</blockquote>
+</blockquote>
+<p>这些 hash code 计算方法, 用法按照functor的用法即可.</p>
+<p>通常版本的 hash code 计算方法怎么提供?<br>一共有三种方法:</p>
+<ul>
+<li>提供一个函数</li>
+<li>提供一个仿函数</li>
+<li>借助标准库的<code>hash</code>函数模板特化一下自己的模板functor</li>
+</ul>
+<p>写成函数?</p>
+<pre><code class="C++">size_t classname_hash_code_func(cosnt classname&amp; c)
+{
+    //返回一个计算好的size_t值
+}
+</code></pre>
+<p>这么做, 你使用 <code>unodrder map</code> 就要注意泛型参数了:(初始化容器需要制定相关的泛型参数)</p>
+<pre><code>unordered_set&lt;className, size_t(*)(const classname&amp;)&gt; cc(桶的个数, classname_hash_code_func);
+</code></pre><p>上面的形式, 即写成函数, 要求在调用的时候, 指定好桶的个数. (使用者要非常熟悉容器, unordered相关容器)</p>
+<p>函数对象?<br>方便使用, 最好是为具体的类对象指定好, <code>hash code函数对象</code></p>
+<pre><code class="C++">class ClassNameHashFunctor
+{
+public:
+   std::size_t operator()(const ClaName&amp; c) const{//...具体方法}
+}
+</code></pre>
+<p>此时用的时候, 就非常简单了:</p>
+<pre><code class="C++">unordered_set&lt;ClassName, ClassNameHashFunctor&gt; set;
+</code></pre>
+<p>仿函数模板模板<br>最最常见的, 直接用<code>特化的模板仿函数</code>, 即, 借助标准库的<code>hash</code>仿函数, 例如:</p>
+<pre><code class="C++">namespace std 
+{ //注意放入std名字空间
+
+    template&lt;&gt;  //不需要模板参数了, 因为这里是特化
+    struct ClassNameHashFunctor&lt;ClassName&gt;
+    {
+        std::size_t operator()(const ClaName&amp; c) const noexcept{//...具体实现方法方法}
+    }
+};
+</code></pre>
+<p>调用的时候, 最简单(<strong>因为已经放入std了</strong>):</p>
+<pre><code class="C++">unordered_set&lt;ClassName&gt; set;
+</code></pre>
+<h1 id="具体的实现"><a href="#具体的实现" class="headerlink" title="具体的实现"></a>具体的实现</h1><p>hash code的具体的实现方法? </p>
+<ul>
+<li>可以用变参模板, 比如 initializer_list 或者 variadic template 去拆分然后<code>借助基本类型</code>的hash方法</li>
+<li>让<strong>研究数学</strong>的人, 提供一种专门的hash方法, 减少冲突&amp;碰撞次数; (本质上减少rehash几率)</li>
+</ul>
+<blockquote>
+<p>算法实现的好坏, 不是以乱, 离散为考核, 而是以减少碰撞次数为目的.</p>
+</blockquote>
+<p>但一些误区是, 分别计算hash然后相加; 这种方式太傻了(达不到目的), 不能减少存储冲突, 倒不如把所有计算参数传递给具体的hash函数, 然后计算.</p>
+<h2 id="通用实现"><a href="#通用实现" class="headerlink" title="通用实现"></a>通用实现</h2><p>完整的例子,  比如说你要为Customer类写一个 hash code 计算的functor, 如下:</p>
+<pre><code class="C++">class CustomerHash
+{
+public:
+    std::size_t operator()(const Customer&amp; c) const noexcept
+    {
+        //这里用到hash_val函数模板, 可变参数模板, 所以这里没有指定具体类型&lt;&gt;
+        //使用可变参数模板时, 不必为了专门的去特化而指定&lt;&gt;里的内容, 也没法指定
+        return hash_val(c.firstmember, second.member); 
+    }
+};
+
+//具体看你怎么用可变参数模板实现了
+template&lt;typename...Types&gt;
+inline size_t hash_val(const Types&amp; ...args)
+{
+    size_t seed=0;i
+    hash_val(seed, args...);
+    return seed;
+}
+
+//然后按理调用下面的, 即逐个把args参数表中的第一个参数拆出来.
+template&lt;typename T, typename...Types&gt;
+inline void hash_val(size_t&amp; seed, cosnt T&amp; val, const Types&amp; ...args)
+{
+    //处理一下seed, 结合value
+    hash_combine(seed, value); //单独用要指定T, 不过现在在变参模板中, 则不必要.
+    //递归调用下一个args, 再从args中拆
+    hash_val(seed, args...);
+}
+
+
+//结合seed和第一个参数的函数模板如下
+template&lt;typename T&gt;
+inline void hash_combine(size_t &amp;seed, const T&amp;val)
+{
+    //下面这个应该是数学家想出来的算法(这是黄金比例算法)
+    // 标准库的hash算法里面也提供了奇怪数字的种子
+    seed ^= std::hash&lt;T&gt;()(val) + 0x9e3779b9 + (seed&lt;&lt;6) + (seed&gt;&gt;2);
+}
+
+//hash_val递归的终止条件, 即args...只剩最后一个T&amp; value了
+template&lt;typename T&gt;
+inline void hash_val(size_t &amp;seed, const T&amp;val)
+{
+    hash_combine(seed, val);
+}
+</code></pre>
+<p>上面的<code>variadic template</code>就是一个通用的 hash code 方法, 即<code>hash_val</code>.</p>
+<hr>
+<p>总结一下: 根据你调用 unordered container 的方式不同而不同, 一般都是使用<code>自定义仿函数</code>的方式; 但是实现上, 可以借鉴<code>通用实现</code>.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：C++11 hashtable 结构</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/04/10/hashtable-in-cpp.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY SA 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
