@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>Asio 异步IO库 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
+<meta name="keywords" content="网络,boost">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Asio 异步IO库">
+<meta property="og:url" content="www.merlinblog.site/2017/08/11/asio.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/overview.gif">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/aync.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/linux-aio.png">
+<meta property="og:updated_time" content="2017-10-09T21:23:38.790Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Asio 异步IO库">
+<meta name="twitter:description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/overview.gif">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#区分对比"><span class="toc-number">2.</span> <span class="toc-text">区分对比</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#对比同步IO"><span class="toc-number">2.1.</span> <span class="toc-text">对比同步IO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对比事件IO"><span class="toc-number">2.2.</span> <span class="toc-text">对比事件IO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对比libevent"><span class="toc-number">2.3.</span> <span class="toc-text">对比libevent</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#boost-asio-Vs-asio"><span class="toc-number">2.4.</span> <span class="toc-text">boost asio Vs asio</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心内容"><span class="toc-number">3.</span> <span class="toc-text">核心内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>Asio 异步IO库</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-08-11</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/网络/">网络</a>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/boost/">boost</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>以前在说epoll和libevent的时候, 就谈到了异步IO的封装, 现在专门说说异步网络编程, 主要结合ASIO来说.</p>
+<blockquote>
+<p>Boost的ASIO是一个异步IO库，封装了对Socket的常用操作，简化了基于socket程序的开发。支持跨平台。</p>
+</blockquote>
+<p>实际上, 根据老外所说:(比较奇怪, 明明是异步IO库…)</p>
+<blockquote>
+<p>Library also allows to use different strategies — synchronous and asynchronous to work with sockets.</p>
+<blockquote>
+<p>Asio provides the basic building blocks for C++ networking, concurrency and other kinds of I/O.</p>
+</blockquote>
+</blockquote>
+<p>补充一句: <strong>ASIO库效率上可能赶不上Libevent, 有大佬测试过; 但是! 这货 跨平台 &amp;&amp; 兼容 std::iostream.</strong></p>
+<a id="more"></a>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>异步 IO  (Async)</p>
+<p>上面事件驱动的 select,poll,epoll 机制已经很大的提升了性能，但是在数据的读写操作上还是同步的。而异步 IO 的出现进一步提升了 Server 的处理能力(全称无阻塞)，应用程序发起一个异步读写操作，并提供相关参数（如用于存放数据的缓冲区、读写数据的大小、以及请求完成后的回调函数等），操作系统在自身的内核线程中执行实际的读或者写操作，并将结果存入程序制定的缓冲区中，然后把事件和缓冲区回调给应用程序。<br><strong>2.6内核提出了epoll, 这个时候正好也提出了异步IO的实现<code>aio_read</code>, <code>aio_write</code>, 但是Linux实际上用的很少.</strong></p>
+<blockquote>
+<p>在当前 C10XXK 问题的主流背景下，epoll 和异步 IO 这种事件驱动模型正逐渐变为人们的首选方案，这也是 Nginx 能不断从 Apache 中抢占市场的一个重要原因。然而从 Linux 社区来看对填平 aio（异步 IO）这个大坑并没有太大兴趣(内核2.6后支持aio_read, write)，那么为了异步 IO 的统一只能从应用层进行兼容，免不了多次内核态与用户态的交互，这对程序性能自然会有损失。当然随着时间的发展单机并发性能的解决办法越来越高效，但是对应的程序开发复杂度也越来越高，我们要做的就是在这两者之间做出最优权衡。<br>比如 epoll + ThreadPool 就是 muduo 这个高效 C++ 网络库采取的方案。</p>
+</blockquote>
+<p>当然也有语言&amp;库已经封装了各自的异步 IO 库，如 <code>boost 的 asio</code>, C++11的async, promise, future等一系列机制(这已经说过了, 见我的文章<code>&lt;C++11并发库&gt;</code>).</p>
+<p>实际上, asio是独立的库, 但渐渐作为 boost 的一部分, 大概就这个样子:<br><img src="http://omotkhw3y.bkt.clouddn.com/overview.gif" alt=""></p>
+<blockquote>
+<p>这个库, 说大也大, 说小也小; 如果你项目中实际用到了, 那么可以好好研究一下, 否则抓住<code>核心机制</code>探讨一下.</p>
+</blockquote>
+<p>(btw: 在没有接触过这个库以前, 腾讯后端的同学告诉我, 这个库就是简化了socket的操作; 而接触之后, 我觉得, 这个库带来了一次革新, 全新的开发模式)</p>
+<h1 id="区分对比"><a href="#区分对比" class="headerlink" title="区分对比"></a>区分对比</h1><h2 id="对比同步IO"><a href="#对比同步IO" class="headerlink" title="对比同步IO"></a>对比同步IO</h2><blockquote>
+<p>异步的代码难于编写&amp;调试还是同步的代码? 这个很难说, 一定要说的话, 那应该是<code>异步</code>.</p>
+</blockquote>
+<p>在同步编程中，所有的操作都是顺序执行的，比如从socket中读取（ 请求） ，然后写入（ 回应） 到socket中。<br>每一个操作都是阻塞的。因为操作是阻塞的，所以为了不影响主程序，当在socket上读写时，通常会创建一个或多个线程来处理socket的输入/输出。<br>因此，同步的服务端/客户端通常是多线程的。</p>
+<p><strong>同步代码中, 往往要自己处理线程同步共享;</strong></p>
+<p>异步编程是事件驱动的。虽然启动了一个操作，但是你不知道它何时会结束；它只是提供一个回调给你，当操作结束时，它会调用这个API，并返回操作结果。</p>
+<p><strong>异步中线程不是必须的, 但是一般也需要, 只是需要更少的线程; 但是需要提供事件响应 handler.</strong></p>
+<p>简单说, 就是<code>阻塞</code>与否的问题, posix给出了这样的定义:</p>
+<ul>
+<li>A synchronous I/O operation causes the requesting process to be blocked until that I/O operation completes;</li>
+<li>An asynchronous I/O operation does not cause the requesting process to be blocked;</li>
+</ul>
+<p>区分同步和异步, 一个很重要的维度, 就是<code>阻塞</code>, 而且是<code>全程阻塞</code>: 内核准备数据的过程, 数据从内核态到用户态内存的过程.</p>
+<blockquote>
+<p>通常所说的阻塞IO, 非阻塞IO, 包括事件IO(即多路IO), 全部都是同步IO.</p>
+</blockquote>
+<p>他们总有一个过程是被阻塞的, 要么是在kernel准备数据的时候(例如从网络缓存数据), 比如阻塞IO; 要么是从内核拷贝数据到应用程序buffer的过程, 比如non-blocking IO.</p>
+<p>异步IO就很纯粹:<br><strong>当进程发起IO 操作之后，就直接返回再也不理睬了，直到kernel发送一个信号，告诉进程说IO完成。</strong>在这整个过程中，进程完全没有被block。</p>
+<p>下面给个图, 你就知道了(大概了解), 干说没用, 要自己去体会:(把阻塞IO拿出来当做同步IO的代表)<br><img src="http://omotkhw3y.bkt.clouddn.com/aync.png" alt=""></p>
+<h2 id="对比事件IO"><a href="#对比事件IO" class="headerlink" title="对比事件IO"></a>对比事件IO</h2><p>也就是和 select/poll/epoll对比一下(抱歉,我只熟悉linux平台), 虽然都是事件驱动(functor, functional handler), 但是同步IO和异步IO还是有着本质的区别.</p>
+<p>这其中 epoll 比较特殊, 因为2.6内核提出了epoll, 这个时候正好也提出了异步IO的实现<code>aio_read</code>, <code>aio_write</code>, 如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/linux-aio.png" alt=""></p>
+<p>但是怎么说呢, 我看到的现象, Linux下大家对<code>epoll + 非阻塞IO</code>乐此不疲.</p>
+<p>我还是把相关的事件IO, 在重复啰嗦一下:</p>
+<pre><code>select：是最初解决IO阻塞问题的方法。用结构体fd_set来告诉内核监听多个文件描述符，该结构体被称为描述符集。由数组来维持哪些描述符被置位了。对结构体的操作封装在三个宏定义中。通过轮寻来查找是否有描述符要被处理，如果没有则返回. 
+存在的问题： 
+1. 内置数组的形式使得select的最大文件数受限与FD_SIZE； 
+2. 每次调用select前都要重新初始化描述符集(以及来回拷贝)，将fd从用户态拷贝到内核态，每次调用select后，都需要将fd从内核态拷贝到用户态； 
+3. 轮寻排查当文件描述符个数很多时，效率很低；
+
+poll：通过一个可变长度的数组解决了select文件描述符受限的问题。数组中元素是结构体，该结构体保存描述符的信息，每增加一个文件描述符就向数组中加入一个结构体，结构体只需要拷贝一次到内核态。poll解决了select重复初始化的问题。轮寻排查的问题未解决。
+
+
+epoll：轮寻排查所有文件描述符的效率不高，使服务器并发能力受限。因此，epoll采用只返回状态发生变化的文件描述符，便解决了轮寻的瓶颈。(文件描述符受限, 来回拷贝等问题也解决了)
+</code></pre><p><strong>轮训问题, 拷贝问题(重复初始化), 最大fd问题等</strong>, 可以参考我的文章 <a href="http://www.merlinblog.site/2017/06/04/network-io.html">Linux网络IO模型</a></p>
+<h2 id="对比libevent"><a href="#对比libevent" class="headerlink" title="对比libevent"></a>对比libevent</h2><p>下面是业内人士的总结, 我摘录如下:</p>
+<p>ASIO只涉及到Socket，提供简单的线程操作。<br>libevent只提供了简单的网络API的封装， 线程池， 内存池， 递归锁等均需要自己实现。</p>
+<p>ASIO主要应用了Proactor。<br>libevent为Reactor模式</p>
+<p>ASIO支持单线程与多线程调度。<br>libevent的线程调度需要自己来注册不同的事件句柄。</p>
+<p>ASIO是基于函数对象的hanlder事件分派。<br>libevent基于注册的事件回调函数来实现事件分发。</p>
+<p>ASIO支持多种平台，可移植性不存在问题。<br>libevent主要支持linux平台，freebsd平台， 其他平台下通过select模型进行支持， 效率不是太高。</p>
+<p>基于ASIO开发应用，要求程序员熟悉函数对象，函数指针，熟悉boost库中的boost::bind。内存管理控制方面。<br>基于libevent开发应用，相对容易， 具体大家可以参考memcached这个开源的应用，里面使用了libevent这个库。</p>
+<p>具体可参考我另外一篇文章 <a href="http://www.merlinblog.site/2017/07/29/libevent.html">libevnet</a></p>
+<h2 id="boost-asio-Vs-asio"><a href="#boost-asio-Vs-asio" class="headerlink" title="boost asio Vs asio"></a>boost asio Vs asio</h2><p>下面是从它官网摘抄的一些区别:</p>
+<ul>
+<li>Asio is in a namespace called asio::, whereas Boost.Asio puts everything under boost::asio::.</li>
+<li>The main Asio header file is called asio.hpp. The corresponding header in Boost.Asio is boost/asio.hpp. All other headers are similarly changed.</li>
+<li>Any macros used by or defined in Asio are prefixed with ASIO_. In Boost.Asio they are prefixed with BOOST<em>ASIO</em>.</li>
+<li>Asio includes a class for launching threads: asio::thread. Boost.Asio does not include this class, to avoid overlap with the Boost.Thread library</li>
+<li>Boost.Asio uses the Boost.System library to provide support for error codes ( boost::system::error_code and boost::system::system_error). Asio includes these under its own namespace ( asio::error_code and asio::system_error). For C++11, Asio uses the std::error_code and std::system_error classes shipped with the compiler. When not using C++11, the Boost.System version of these classes currently supports better extensibility for user-defined error codes.</li>
+<li>Asio is header-file-only and for most uses does not require linking against any Boost library. When using C++11 with recent versions of gcc, clang or MSVC, Asio can be used independently of Boost by defining ASIO_STANDALONE when you compile. Boost.Asio always requires that you link against the Boost.System library, and also against Boost.Thread if you want to launch threads using boost::thread.</li>
+</ul>
+<p>(如非必要, 可以单独使用 asio库, 而非boost.asio库)</p>
+<h1 id="核心内容"><a href="#核心内容" class="headerlink" title="核心内容"></a>核心内容</h1><p>TODO, 待整理上传.</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><code>&lt;Boost.Asio C++ Network Programming-2013&gt;</code> 这本书在<strong>git-book</strong>上有翻译版本(谢谢群里的小伙伴)</li>
+<li><a href="http://alexott.net/en/cpp/BoostAsioNotes.html" target="_blank" rel="external">What is Boost.Asio, and why we should use it</a></li>
+<li><a href="http://think-async.com/Asio" target="_blank" rel="external">http://think-async.com/Asio</a></li>
+</ol>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：Asio 异步IO库</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/08/11/asio.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY SA 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+

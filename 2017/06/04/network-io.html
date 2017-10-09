@@ -19,7 +19,7 @@
 <meta property="og:description" content="summary of server side network programming model">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/poll1.jpg">
-<meta property="og:updated_time" content="2017-09-24T01:59:24.983Z">
+<meta property="og:updated_time" content="2017-10-09T21:18:25.930Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux网络IO模型">
 <meta name="twitter:description" content="summary of server side network programming model">
@@ -265,6 +265,14 @@ function tmpfobid()
 </code></pre><p>关于 <code>1</code> 的说明:<br>各个操作系统又提供了更加高效的接口: linux下面的epoll, bsd的kqueue, solaris提供的/dev/poll.如果想要实现高效的服务器程序, 建议用epoll, 但是epoll在Posix系统的实现差异很大, 所以要实现跨平台的服务器会比较困难</p>
 <p>关于 <code>2</code> 的说明:<br>如果上一个事件的执行体迟迟没有执行完毕, 会大大降低对下一事件处理的及时性(libevent, libev都会根据系统的特点选择合适的接口进行探测, 并且加入了异步响应—探测和响应分离)(到这里也就发现, 其实事件驱动IO模型其实和操作系统内核有关, 至少是内核探测函数有关)所以啊, 在事件驱动IO模型之上, 加入异步IO模型, 分离事件与响应岂不更美？可以直接参考libev或者你使用aio_read, aio_write也行—linux内核2.6提供</p>
 <p>但是你可以看到主动的轮询(监测)还是少不了, 轮询阻塞在select这边儿; 主动去调用相关读写调用(把数据从内核往用户空间拷贝)也少不了, 此时用户进程阻塞.</p>
+<p>下面类对比一下select, poll, epoll: (一般现在直接使用epoll)<br><strong>select</strong>：是最初解决IO阻塞问题的方法。用结构体fd_set来告诉内核监听多个文件描述符，该结构体被称为描述符集。由数组来维持哪些描述符被置位了。对结构体的操作封装在三个宏定义中。通过轮寻来查找是否有描述符要被处理，如果没有则返回.<br>存在的问题： </p>
+<ol>
+<li>内置数组的形式使得select的最大文件数受限与FD_SIZE； </li>
+<li>每次调用select前都要重新初始化描述符集(以及来回拷贝)，将fd从用户态拷贝到内核态，每次调用select后，都需要将fd从内核态拷贝到用户态； </li>
+<li>轮寻排查当文件描述符个数很多时，效率很低；</li>
+</ol>
+<p><strong>poll</strong>：通过一个可变长度的数组解决了select文件描述符受限的问题。数组中元素是结构体，该结构体保存描述符的信息，每增加一个文件描述符就向数组中加入一个结构体，结构体只需要拷贝一次到内核态。poll解决了select重复初始化的问题。轮寻排查的问题未解决。</p>
+<p><strong>epoll</strong>：轮寻排查所有文件描述符的效率不高，使服务器并发能力受限。因此，epoll采用只返回状态发生变化的文件描述符，便解决了轮寻的瓶颈。(文件描述符受限, 来回拷贝等问题也解决了)</p>
 <p>缺点总结: 由于引入了除recvfrom之外的其他系统调用, 在请求数量少时真不见得比多线程同步模型高效; 但是请求数量多时, 该模型把并发数量提上去了.</p>
 <h2 id="异步IO模型"><a href="#异步IO模型" class="headerlink" title="异步IO模型"></a>异步IO模型</h2><p>非阻塞IO或者说事件IO还是要求用户进程主动检查, 并且当内核数据准备完成后, 也是它去主动调用readvfrom把数据拷贝到用户进程中. 整个事件用户进程都在积极参与, 只是没有数据的时候, 直接返回了, 减少了等待的事件.</p>
 <p>而异步IO则完全不同, 在这里就好像用户进程注册之后就不管了, 也不轮询了; 准备数据(收到请求)和拷贝数据到用户态进程的事儿直接交给内核了, 内核好了再调用相关回调，或者发信号通知.</p>
