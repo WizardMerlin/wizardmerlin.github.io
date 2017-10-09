@@ -172,17 +172,17 @@ function tmpfobid()
                 
 <div class="primary-container content-box is-flex-desktop clear-padding bottom-line" style="margin-bottom: 25px;">
     <div class="column  is-7-desktop">
-        <a href="/2017/04/08/explicit-constructor.html">
+        <a href="/2017/04/08/range-base-for.html">
             <div class="full-height post-hover"
                  style="
-                         background-image: url('http://omotkhw3y.bkt.clouddn.com/explicit.png');
+                         background-image: url('http://omotkhw3y.bkt.clouddn.com/range_for.png');
                          height: 350px;
                          background-size: cover;
                          background-repeat: no-repeat;
                          ">
                     <div class=" is-flex flex-column center content has-text-centered full-height has-padding content-bg-mask">
                         <h1 class="title text-shadow" style="margin-bottom: 15px;">
-                            C++11 explicit注意事项
+                            C++11 RangeFor注意事项&探究
                         </h1>
                         <div>
                         
@@ -193,14 +193,11 @@ function tmpfobid()
                         </div>
                         <p class="post-content-text is-marginless has-padding text-shadow">
                             
-避免根据参数隐式转换, 隐式类型提升, 调用(拷贝)构造器; 简而言之, 禁止编译器自动调用相关的构造器.
+range based for 可以看做 boost 的 FOR_EACH 或者 java 的增强版本的 for, 但它不同于stl 的for_each算法
 
 
-下面分单参数和多参数的情况, 分别探讨一下.
-单参数单个参数的情况, 代码如下:
-class Foo  
-{  
-publ..
+方式对比旧方式原来的循环:
+int arr[10] = { 1, 2, ..
                         </p>
                         <p class="date text-shadow">2017-04-08</p>
                         <button class="button is-info is-small">阅读详情</button>
@@ -212,6 +209,29 @@ publ..
         <div class="full-height is-flex flex-column justify-space-between" style="min-height: 350px;">
             
                 
+<a class="post-hover" href="/2017/04/08/explicit-constructor.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/explicit.png')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                C++11 explicit注意事项
+            </h3>
+            
+            
+            <span class="tag is-post-tag">cpp</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                
+避免根据参数隐式转换, 隐式类型提升, 调用(拷贝)构造器; 简而言之, 禁止编译器自动调用相..
+            </p>
+            <p class="date text-shadow is-marginless">2017-04-08</p>
+        </div>
+    </div>
+</a>
+            
+            
+                
 <a class="post-hover" href="/2017/04/07/nullptr.html" style="height: 48.5%">
     <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/nullptr.png')">
         <div class="content-bg-mask full-width full-height has-padding">
@@ -229,31 +249,6 @@ publ..
 现在说的nullptr不仅仅是规范的问题.
 
 本文主要涉及, nullptr关键字(其实是个对..
-            </p>
-            <p class="date text-shadow is-marginless">2017-04-07</p>
-        </div>
-    </div>
-</a>
-            
-            
-                
-<a class="post-hover" href="/2017/04/07/variadic-templates.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/variadic_templates.jpg')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                C++11变长参数的模板
-            </h3>
-            
-            
-            <span class="tag is-post-tag">cpp</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                
-这个应该算是C++11, 即2.0时代的新特性吧, 比较有意思.(tuple中也有使用)
-
-简..
             </p>
             <p class="date text-shadow is-marginless">2017-04-07</p>
         </div>
@@ -265,6 +260,29 @@ publ..
     <div class="column is-12 is-hidden-desktop">
         
         
+<a class="post-hover" href="/2017/04/08/explicit-constructor.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/explicit.png')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                C++11 explicit注意事项
+            </h3>
+            
+            
+            <span class="tag is-post-tag">cpp</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                
+避免根据参数隐式转换, 隐式类型提升, 调用(拷贝)构造器; 简而言之, 禁止编译器自动调用相..
+            </p>
+            <p class="date text-shadow is-marginless">2017-04-08</p>
+        </div>
+    </div>
+</a>
+        
+        
+        
 <a class="post-hover" href="/2017/04/07/nullptr.html" style="height: 48.5%">
     <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/nullptr.png')">
         <div class="content-bg-mask full-width full-height has-padding">
@@ -288,35 +306,64 @@ publ..
     </div>
 </a>
         
-        
-        
-<a class="post-hover" href="/2017/04/07/variadic-templates.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/variadic_templates.jpg')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                C++11变长参数的模板
-            </h3>
-            
-            
-            <span class="tag is-post-tag">cpp</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                
-这个应该算是C++11, 即2.0时代的新特性吧, 比较有意思.(tuple中也有使用)
-
-简..
-            </p>
-            <p class="date text-shadow is-marginless">2017-04-07</p>
-        </div>
-    </div>
-</a>
-        
     </div>
 </div>
 
                     
+                    
+                
+                    
+                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/explicit.png')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/04/08/explicit-constructor.html">
+                                            <p style="font-size: 24px;">C++11 explicit注意事项</p>
+									    </a>
+                                        
+                                            <span class="sub-title">本文主要说说, 单参数和多参数的注意事项</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/cpp/">
+                                                <span class="tag is-post-tag">
+												  cpp
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         
+避免根据参数隐式转换, 隐式类型提升, 调用(拷贝)构造器; 简而言之, 禁止编译器自动调用相关的构造器.
+
+
+下面分单参数和多参数的情况, 分别探讨一下.
+单参数单个参数的情况, 代码如下:
+class Foo  
+{  
+pub...
+                                        </p>
+									<a class="post-hover" href="/2017/04/08/explicit-constructor.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
                     
                 
                     
@@ -370,7 +417,7 @@ NULLNULL是C, C++03或者98中使用最多的,但...
                     
                 
                     
-                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <div class="content-box  " style="margin-bottom: 27px;">
                        <!-- a -->
                             <div class="columns" style="min-height: 230px;">
                                 

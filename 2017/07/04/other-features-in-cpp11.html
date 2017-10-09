@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>C++11 特性补充 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="介绍一些个人觉得不太重要,或者不值得单独说的, 其他特性.">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++11 特性补充">
+<meta property="og:url" content="www.merlinblog.site/2017/07/04/other-features-in-cpp11.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="介绍一些个人觉得不太重要,或者不值得单独说的, 其他特性.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/cpp11keyword.jpg">
+<meta property="og:updated_time" content="2017-10-09T02:12:26.762Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++11 特性补充">
+<meta name="twitter:description" content="介绍一些个人觉得不太重要,或者不值得单独说的, 其他特性.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/cpp11keyword.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>C++11 特性补充</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-07-04</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/cpp/">cpp</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p>C++真的是一门新的语言. 如果在C++11, 即C++2.0没有跟上的同学, 再过一两个版本, 基本上看不懂C++代码了.</p>
+<blockquote>
+<p>前面已经陆陆续续把大部分<code>C++11</code>的新特性全部都说完了, 这里带一下剩下的</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/cpp11keyword.jpg" alt=""></p>
+<h1 id="推荐书籍"><a href="#推荐书籍" class="headerlink" title="推荐书籍"></a>推荐书籍</h1><p>C++ Primer, 2012<br>The C++ programming Language C++ 2013.<br>Effective Modern C++ 2014. –推荐.</p>
+<h1 id="编译器支持"><a href="#编译器支持" class="headerlink" title="编译器支持"></a>编译器支持</h1><p>ISOC++11支持, GNUC++11支持.<br>总之要记得调整你的compiler选项.</p>
+<p>代码中主要检查相关的宏:</p>
+<pre><code class="C++">#define __cplusplus 201103L  //11
+
+#define __cplusplus 199711L  //98
+
+std::cout &lt;&lt; __cplusplus &lt;&lt; std::endl;
+</code></pre>
+<h1 id="模板参数的括号问题"><a href="#模板参数的括号问题" class="headerlink" title="模板参数的括号问题"></a>模板参数的括号问题</h1><p>右移操作符和连续模板包含中的空格问题</p>
+<pre><code>vector&lt;list&lt;int&gt; &gt;; 
+//以及C++11的
+vector&lt;list&lt;int&gt;&gt;;
+</code></pre><p>不多解释了.</p>
+<h1 id="委托构造"><a href="#委托构造" class="headerlink" title="委托构造"></a>委托构造</h1><p>C++03里面, 从一个构造调用同一个类的另外一个构造, 其实是在初始化另外一段内存空间,<br>它一般是不允许你这么做(不像Java那么灵活; 或者允许你这么做, 但是实际上产生的是临时对象), 但是现在好了, C++允许了.<br>(可能要借助完美转发实现委托构造)<br>举个例子:</p>
+<pre><code>class M
+{  
+    int x, y;  
+    char *p;  
+
+public:  
+    M(int v) : x(v), y(0),  p(new char [MAX])  {} //#1 target  
+    M(): M(0) {
+        cout&lt;&lt;&quot;delegating ctor&quot;&lt;&lt;end; //#2 delegating  
+    }
+};
+</code></pre><p><code>#2</code>就是所谓的委托构造函数, 调用了真正的构造函数<code>#1</code>.</p>
+<h1 id="新的算法"><a href="#新的算法" class="headerlink" title="新的算法"></a>新的算法</h1><p>主要是 all_of()、any_of() 和 none_of(), copy_n().</p>
+<pre><code class="C++">#include &lt;algorithm&gt;  
+//C++11 code  
+//are all of the elements positive?  
+all_of(first, first+n, ispositive()); //false  
+//is there at least one positive element?  
+any_of(first, first+n, ispositive());//true  
+// are none of the elements positive?  
+none_of(first, first+n, ispositive()); //false
+</code></pre>
+<p>以及<code>copy_n</code>:</p>
+<pre><code class="C++">#include &lt;algorithm&gt;  
+int source[5]={0,12,34,50,80};  
+int target[5];  
+//从 source 拷贝 5 个元素到 target  
+copy_n(source,5,target);
+</code></pre>
+<p>iota() 算法可以用来创建递增序列，它先把初值赋值给 *first，然后用前置 ++ 操作符增长初值并赋值到给下一个迭代器指向的元素，如下：</p>
+<pre><code class="C++">#include &lt;numeric&gt;  
+int a[5]={0};  
+char c[3]={0};  
+iota(a, a+5, 10); //changes a to {10,11,12,13,14}  
+iota(c, c+3, &#39;a&#39;); //{&#39;a&#39;,&#39;b&#39;,&#39;c&#39;}
+</code></pre>
+<h1 id="array容器"><a href="#array容器" class="headerlink" title="array容器"></a>array容器</h1><p>其实就是封装了数组, 主要方法是size, begin, end, 当然还有at等方法.</p>
+<pre><code class="C++">//int myArray[10];
+std::array&lt;int ,10&gt; myArray;
+
+//array&lt;int, 10&gt;::iterator;
+auto it = myArray.begin(); //拿到索引
+
+it += 3; //移动到第三个元素上
+cout &lt;&lt; *it;
+</code></pre>
+<p>这样可以使用标准库更多的算法等.</p>
+<p>不过也会失去这样做的好处</p>
+<pre><code class="C++">typedef int T[100];
+T myArray;
+</code></pre>
+<blockquote>
+<p>我一般不适用 array, 还是直接使用原始数组.</p>
+<blockquote>
+<p>越做越复杂的东西, 很烦的.</p>
+</blockquote>
+</blockquote>
+<h1 id="override"><a href="#override" class="headerlink" title="override"></a>override</h1><p>重写父类的虚函数, 可以在函数名字后面, 实现大括号前面, 加上<code>override</code>, 让编译器帮助检查函数声明, 确保一致.</p>
+<h1 id="final"><a href="#final" class="headerlink" title="final"></a>final</h1><p>两个作用, 情景</p>
+<ul>
+<li>用于类, 不让别人再继承, 表明自己是继承体系的最后一个类.</li>
+<li>用于虚函数, 子类则不可以重写.</li>
+</ul>
+<hr>
+<p>本篇的确没有什么深度, 权当记载了吧.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：C++11 特性补充</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/07/04/other-features-in-cpp11.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY SA 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
