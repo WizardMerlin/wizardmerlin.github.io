@@ -22,7 +22,7 @@
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/overview.gif">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/aync.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/linux-aio.png">
-<meta property="og:updated_time" content="2017-10-09T23:59:02.094Z">
+<meta property="og:updated_time" content="2017-10-10T09:35:34.614Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Asio 异步IO库">
 <meta name="twitter:description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
@@ -192,7 +192,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#区分对比"><span class="toc-number">2.</span> <span class="toc-text">区分对比</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#对比同步IO"><span class="toc-number">2.1.</span> <span class="toc-text">对比同步IO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对比事件IO"><span class="toc-number">2.2.</span> <span class="toc-text">对比事件IO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对比libevent"><span class="toc-number">2.3.</span> <span class="toc-text">对比libevent</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#boost-asio-Vs-asio"><span class="toc-number">2.4.</span> <span class="toc-text">boost asio Vs asio</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心内容"><span class="toc-number">3.</span> <span class="toc-text">核心内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#区分对比"><span class="toc-number">2.</span> <span class="toc-text">区分对比</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#对比同步IO"><span class="toc-number">2.1.</span> <span class="toc-text">对比同步IO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对比事件IO"><span class="toc-number">2.2.</span> <span class="toc-text">对比事件IO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对比libevent"><span class="toc-number">2.3.</span> <span class="toc-text">对比libevent</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#boost-asio-Vs-asio"><span class="toc-number">2.4.</span> <span class="toc-text">boost asio Vs asio</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心概述"><span class="toc-number">3.</span> <span class="toc-text">核心概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述-1"><span class="toc-number">3.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#库依赖"><span class="toc-number">3.2.</span> <span class="toc-text">库依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编译库"><span class="toc-number">3.3.</span> <span class="toc-text">编译库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常问题"><span class="toc-number">3.4.</span> <span class="toc-text">异常问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程安全"><span class="toc-number">3.5.</span> <span class="toc-text">线程安全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#超时处理"><span class="toc-number">3.6.</span> <span class="toc-text">超时处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#信号处理"><span class="toc-number">3.7.</span> <span class="toc-text">信号处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#io-service"><span class="toc-number">3.8.</span> <span class="toc-text">io_service</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#普通文件IO"><span class="toc-number">3.9.</span> <span class="toc-text">普通文件IO</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实用性探究"><span class="toc-number">4.</span> <span class="toc-text">实用性探究</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
     	</div>
 	
 
@@ -255,6 +255,44 @@ function tmpfobid()
 <p>这个库, 说大也大, 说小也小; 如果你项目中实际用到了, 那么可以好好研究一下, 否则抓住<code>核心机制</code>探讨一下.</p>
 </blockquote>
 <p>(btw: 在没有接触过这个库以前, 腾讯后端的同学告诉我, 这个库就是简化了socket的操作; 而接触之后, 我觉得, 这个库带来了一次革新, 全新的开发模式)</p>
+<p>先来一个<strong>直观的例子</strong>, 以下代码实现一个简单的tcp服务，访问<a href="http://localhost:6688可得到字符" target="_blank" rel="external">http://localhost:6688可得到字符</a>.<br>(如果浏览器说响应的字符无效, 可以直接用nc命令代替<code>nc localhost 6688</code>)</p>
+<pre><code class="C++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;boost/assign.hpp&gt;
+#include &lt;boost/typeof/typeof.hpp&gt;
+#include &lt;boost/assign.hpp&gt;
+#include &lt;boost/thread.hpp&gt;
+#include &lt;boost/thread/mutex.hpp&gt;
+#include &lt;boost/asio.hpp&gt;
+using namespace boost;
+using namespace std;
+
+int main(int argc, const char * argv[]) {
+    using namespace boost::asio;
+
+    try {
+        io_service ios;
+        //endpoint 涵盖了所有的监听地址信息, 它要绑定到io_service上
+        ip::tcp::acceptor acceptor(ios, ip::tcp::endpoint(ip::tcp::v4(), 6688));
+        cout &lt;&lt; acceptor.local_endpoint().address() &lt;&lt; endl;
+
+        while (true) {
+            //socket代表响应远端接收对象(accept后新创建的实例)
+            ip::tcp::socket sock(ios);
+            acceptor.accept(sock);
+
+            cout &lt;&lt; &quot;client:&quot; ;
+            cout &lt;&lt; sock.remote_endpoint().address() &lt;&lt; endl;
+            sock.write_some(buffer(&quot;hello asio\n&quot;));
+        }
+    } catch (std::exception&amp; e) {
+        cout &lt;&lt; e.what() &lt;&lt; endl;
+    }
+
+    return 0;
+}
+</code></pre>
+<p>编译的时候需要<code>-lboost_system</code>.</p>
 <h1 id="区分对比"><a href="#区分对比" class="headerlink" title="区分对比"></a>区分对比</h1><h2 id="对比同步IO"><a href="#对比同步IO" class="headerlink" title="对比同步IO"></a>对比同步IO</h2><blockquote>
 <p>异步的代码难于编写&amp;调试还是同步的代码? 这个很难说, 一定要说的话, 那应该是<code>异步</code>.</p>
 </blockquote>
@@ -307,7 +345,171 @@ epoll：轮寻排查所有文件描述符的效率不高，使服务器并发能
 <li>Asio is header-file-only and for most uses does not require linking against any Boost library. When using C++11 with recent versions of gcc, clang or MSVC, Asio can be used independently of Boost by defining ASIO_STANDALONE when you compile. Boost.Asio always requires that you link against the Boost.System library, and also against Boost.Thread if you want to launch threads using boost::thread.</li>
 </ul>
 <p>(如非必要, 可以单独使用 asio库, 而非boost.asio库)</p>
-<h1 id="核心内容"><a href="#核心内容" class="headerlink" title="核心内容"></a>核心内容</h1><p>TODO, 待整理上传.</p>
+<h1 id="核心概述"><a href="#核心概述" class="headerlink" title="核心概述"></a>核心概述</h1><h2 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h2><p><strong>io_service</strong> : 每个 Asio 程序都至少有一个 io_service 对象，它代表了操作系统的 I/O 服务，并把你的程序和这些服务链接起来。Boost.Asio使用io_service同操作系<br>统的输入/输出服务进行交互。<br>有了 io_service 还不足以完成 I/O 操作，用户一般也不跟 io_service 直接交互。根据 I/O 操作的不同，Asio 提供了不同的 I/O 对象，比如 timer（定时器），socket，等等。</p>
+<p><strong>timer</strong> : Timer 可以用来实现 watcher，是最简单的一种 I/O 对象。<br><strong>socket</strong> : 支持网络编程的IO对象.</p>
+<p>下面是一个简单的例子(同步服务端模型), 一个io_service, 建立socket, 把socket连接到目标地址和端口.</p>
+<pre><code class="C++">using boost::asio;
+//线程执行体 
+void client_session(socket_ptr sock) {
+    while ( true) {
+        char data[512];
+        size_t len = sock-&gt;read_some(buffer(data));
+        if ( len &gt; 0)
+        write(*sock, buffer(&quot;ok&quot;, 2)); //同步IO
+    }
+}
+//
+typedef boost::shared_ptr&lt;ip::tcp::socket&gt; socket_ptr;
+io_service service;
+ip::tcp::endpoint ep( ip::tcp::v4(), 2001)); // listen on 2001
+ip::tcp::acceptor acc(service, ep); 
+while ( true) {
+    socket_ptr sock(new ip::tcp::socket(service));
+    acc.accept(*sock); //接受请求
+    boost::thread( boost::bind(client_session, sock)); //建立新线程处理请求
+}
+</code></pre>
+<p>上面的<code>write</code>是同步IO, 异步的话应该是<code>异步的话async_write(stream, buffer [, extra options], handler)</code>.<br>并且使用的是<code>ip::tcp::acceptor</code>的<strong>accept方法</strong>, 异步一般使用<strong>async_accept方法</strong>.</p>
+<p>异步服务端典型的, 如下:</p>
+<pre><code class="C++">using boost::asio;
+typedef boost::shared_ptr&lt;ip::tcp::socket&gt; socket_ptr;
+io_service service;
+ip::tcp::endpoint ep( ip::tcp::v4(), 2001)); // 监听端口2001
+ip::tcp::acceptor acc(service, ep);
+
+socket_ptr sock(new ip::tcp::socket(service));
+start_accept(sock);
+service.run(); //只有调用了io_service::run()方法的线程才会调用回调函数
+
+void start_accept(socket_ptr sock) {
+    acc.async_accept(*sock, boost::bind( handle_accept, sock, _1) );
+}
+
+void handle_accept(socket_ptr sock, const boost::system::error_code &amp;err) {
+    if ( err) return;
+    // 从这里开始IO操作, 你可以从socket读取或者写入
+    socket_ptr sock(new ip::tcp::socket(service));
+    start_accept(sock);
+}
+</code></pre>
+<p>上面的代码 <code>async_accept</code> 内部handler的IO读写逻辑是, 再创建了一个新的socket, 然后再次调用start_accept().<br>用来创建另外一个“等待客户端连接”的异步操作，从而使service.run()循环一直保持忙碌状态.</p>
+<h2 id="库依赖"><a href="#库依赖" class="headerlink" title="库依赖"></a>库依赖</h2><p>Boost.asio库依赖于下面这些库:</p>
+<ul>
+<li>Boost.System：这个库(<strong>必须</strong>)为Boost库提供操作系统支持</li>
+<li>Boost.Regex：使用这个库（ 可选的） 以便你重载read_until()或者async_read_until()时使用boost::regex参数。</li>
+<li>Boost.DateTime：使用这个库（ 可选的） 以便你使用Boost.Asio中的计时器</li>
+<li>OpenSSL：使用这个库（ 可选的） 以便你使用Boost.Asio提供的SSL支持。</li>
+</ul>
+<h2 id="编译库"><a href="#编译库" class="headerlink" title="编译库"></a>编译库</h2><p>一般需要预先编译boost, 即使你是使用 boost.asio 的头文件.</p>
+<pre><code>bjam –with-system –with-regex stage
+</code></pre><p>上面的<code>-with</code>部分就是依赖部分, 可以根据需要进行编译, 具体的编译参数参考:</p>
+<pre><code>--build-dir=&lt;builddir&gt;    编译的临时文件会放在builddir里(这样比较好管理，编译完就可以把它删除了)
+--stagedir=&lt;stagedir&gt;    存放编译后库文件的路径，默认是stage
+--build-type=complete    
+编译所有版本，不然只会编译一小部分版本，确切地说是相当于:
+variant=release, threading=multi;link=shared|static;runtime-link=shared
+variant=debug|release    决定编译什么版本(Debug or Release?)
+link=static|shared    决定使用静态库还是动态库
+threading=single|multi    决定使用单线程还是多线程库
+runtime-link=static|shared    决定是静态还是动态链接C/C++标准库
+--with-&lt;library&gt;    只编译指定的库，如输入--with-regex就只编译regex库了
+--show-libraries    显示需要编译的库名称
+</code></pre><p>(运行时, 少补了<code>-I</code>和<code>-L</code>选项)</p>
+<h2 id="异常问题"><a href="#异常问题" class="headerlink" title="异常问题"></a>异常问题</h2><p>异步函数出错, 既可以返回error code, 也可以抛出异常(<code>boost::system::system_error</code>); 两种方式任选(最好保持一致).</p>
+<p>例如下面的代码:</p>
+<pre><code class="C++">try {
+    sock.connect(ep);
+} catch(boost::system::system_error e) {
+    std::cout &lt;&lt; e.code() &lt;&lt; std::endl;
+}
+//或者
+boost::system::error_code err;
+sock.connect(ep, err);
+if (err) {
+    std::cout &lt;&lt; err &lt;&lt; std::endl;
+}
+</code></pre>
+<p>具体使用哪种方式没有太多要求, 但是没有太多折中选择给你:</p>
+<ul>
+<li>如果你的代码复杂, 则可以使用异常机制(试想每个异步函数都检查返回值, 很累的), 但是这样做势必会在编译时产生很多监视代码, 降低运行效率</li>
+<li>如果使用error code, 则可能存在大量的返回值检查代码逻辑.</li>
+</ul>
+<p>我个人一般使用<code>error code</code>, 可以具体的检查原因, 比如:</p>
+<pre><code>char data[512];
+boost::system::error_code error;
+size_t length = sock.read_some(buffer(data), error);
+if (error == error::eof) {
+    return; // 连接关闭
+}
+</code></pre><p>(也会在一些场合使用异常处理机制, 毕竟有时候要书写简单)</p>
+<h2 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h2><p>异步编程中, 也会使用线程(boost::thread), 但不会像同步代码中那么多.<br>异步代码往往最关心的不是是否使用线程问题, 而是<code>线程安全问题</code>:</p>
+<ul>
+<li>io_service 线程安全</li>
+<li>socket 非线程安全</li>
+<li>utility 非线程安全</li>
+</ul>
+<p>主要注意事项也很简单, 非要线程安全的类实例, 最好不要在多个线程中使用; 如果要用, 自己注意加锁控制.</p>
+<h2 id="超时处理"><a href="#超时处理" class="headerlink" title="超时处理"></a>超时处理</h2><p>一些I/O操作需要一个超时时间, 这只能应用在异步操作上(同步意味着阻塞, 因此没有超时时间), 这就好像一个事件来了一样(实际上是时间事件), 可以开始回调了. 超时处理, 通常是用<code>计时器</code>, 即<code>deadline_timer</code>, 通常用法如下:</p>
+<pre><code class="C++">deadline_timer t(service, boost::posix_time::milliseconds(500));
+t.wait(); // 同步等待(阻塞)
+t.async_wait(&amp;deadline_handler_func); //异步等待(不阻塞)
+</code></pre>
+<p>当同步等待的时候, 其实和<code>boost::this_thread::sleep(500);</code> 没有区别.</p>
+<p>下面有一个示例代码:</p>
+<pre><code class="C++">bool read = false;
+void deadline_handler(const boost::system::error_code &amp;) {
+    std::cout &lt;&lt; (read ? &quot;read successfully&quot; : &quot;read failed&quot;) &lt;&lt;
+    std::endl;
+} 
+void read_handler(const boost::system::error_code &amp;) {
+    read = true;
+} 
+ip::tcp::socket sock(service);
+//… 
+read = false;
+char data[512];
+sock.async_read_some(buffer(data, 512), read_handler);//异步读取buffer内容
+deadline_timer t(service, boost::posix_time::milliseconds(100)); //设置等待时间100毫秒
+t.async_wait(&amp;deadline_handler); //设置异步等待(异步操作同时可以干其他的)
+service.run(); //进行异步操作
+</code></pre>
+<p>在上述代码片段中，如果你在超时之前读完了数据，read则被设置成true，这样我们的伙伴就及时地通知了我们。<br>否则，当deadline_handler被调用时，read还是false，也就意味着我们的操作超时了。</p>
+<p>计时器的使用, 在TCP编程中, 再常见不过了, 可以参考我的其他文章<a href="">TCP中的计时器</a>, 主要有:</p>
+<ul>
+<li>建立连接定时器(connection-establishment timer)</li>
+<li>重传定时器(retransmission timer)</li>
+<li>延迟应答定时器(delayed ACK timer)</li>
+<li>坚持定时器(persist timer)</li>
+<li>保活定时器(keepalive timer)</li>
+<li>FIN_WAIT_2定时器(FIN_WAIT_2 timer)</li>
+<li>TIME_WAIT定时器 (TIME_WAIT timer, 也叫2MSL timer)</li>
+</ul>
+<h2 id="信号处理"><a href="#信号处理" class="headerlink" title="信号处理"></a>信号处理</h2><p>可以创建一个<code>signal_set</code>实例，指定异步等待的信号量，然后当这些信号量产生时，就会调用你的异步处理程序.<br>例如下面的代码, 处理软终止和中断信号:</p>
+<pre><code class="C++">void signal_handler(const boost::system::error_code &amp; err, int s
+ignal)
+{
+    // 纪录日志，然后退出应用
+} 
+boost::asio::signal_set sig(service, SIGINT, SIGTERM);
+sig.async_wait(signal_handler);
+</code></pre>
+<h2 id="io-service"><a href="#io-service" class="headerlink" title="io_service"></a>io_service</h2><p>如果要使用异步操作, 一般都会用到<code>ioservice</code>的<code>run</code>方法, 它处理异步操作, 和操作系统打交道, 并且调用回调函数.</p>
+<p>没有异步操作的话, <code>service.run()</code>直接返回(先还是会调用相关的回调函数).</p>
+<p>这个类中有很多成员方法, 下面再细说. </p>
+<p><strong>在整个boost.asio中该类占有很重要地位.</strong></p>
+<h2 id="普通文件IO"><a href="#普通文件IO" class="headerlink" title="普通文件IO"></a>普通文件IO</h2><p>也可以连接到普通文件IO, 比如linux下可以这么做:</p>
+<pre><code class="C++">posix::stream_descriptor sd_in(service, ::dup(STDIN_FILENO));
+char data[512];
+read(sd_in, buffer(data, 512));
+</code></pre>
+<p>windows可以这么做:</p>
+<pre><code class="C++">HANDLE h = ::OpenFile(...);
+windows::stream_handle sh(service, h);
+char data[512];
+read(h, buffer(data, 512));
+</code></pre>
+<h1 id="实用性探究"><a href="#实用性探究" class="headerlink" title="实用性探究"></a>实用性探究</h1><p>看到 Boost.Asio 的文档有 1000 多页, 所以根本没有必要全文谈, 也谈不完.</p>
+<p>下面的所有探究和注解, 全部都是以<strong>实用</strong>为主, 去理解这个库, 使用这个库, 而不是谈论API都有哪些重载.</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li><code>&lt;Boost.Asio C++ Network Programming-2013&gt;</code> 这本书在<strong>git-book</strong>上有翻译版本(谢谢群里的小伙伴)</li>
 <li><a href="http://alexott.net/en/cpp/BoostAsioNotes.html" target="_blank" rel="external">What is Boost.Asio, and why we should use it</a></li>
