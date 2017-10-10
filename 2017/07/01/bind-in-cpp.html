@@ -19,7 +19,7 @@
 <meta property="og:description" content="主要讲讲 std::bind, 也会说bind1st和bind2nd">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/stsbind1.jpg">
-<meta property="og:updated_time" content="2017-10-05T17:56:40.299Z">
+<meta property="og:updated_time" content="2017-10-10T11:33:27.422Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++11 std:bind探究">
 <meta name="twitter:description" content="主要讲讲 std::bind, 也会说bind1st和bind2nd">
@@ -442,18 +442,45 @@ int main(void)
 </code></pre>
 <p>即 <code>bind&lt;result_type&gt;(functor, ...);</code></p>
 </li>
-<li>绑定成员函数或者对象<br>一定要传入this指针, 即对象的地址, 下面给一个简单的案例:<br>```c++<br>#include <random><br>#include <iostream><br>#include <memory><br>#include <functional></functional></memory></iostream></random></li>
+<li><p>绑定成员函数或者对象<br>一定要传入this指针, 即对象的地址, 下面给一个简单的案例: </p>
+<pre><code class="c++">#include &lt;random&gt;
+#include &lt;iostream&gt;
+#include &lt;memory&gt;
+#include &lt;functional&gt;
+struct Foo {
+  void print_sum(int n1, int n2)
+  {
+    std::cout &lt;&lt; n1+n2 &lt;&lt; &#39;\n&#39;;
+  }
+  int data = 10;
+};
+
+int main()
+{
+  using namespace std::placeholders;  // for _1, _2, _3...
+  // bind to a pointer to member function
+  Foo foo;
+  auto f3 = std::bind(&amp;Foo::print_sum, &amp;foo, 95, _1);
+  f3(5);//5作为foo.print_sum的第二个参数
+
+  // bind to a pointer to data member
+  //绑定的时候, 没有传入this指针, 则调用时要传入(指针或者引用)
+  auto f4 = std::bind(&amp;Foo::data, _1);
+  std::cout &lt;&lt; f4(foo) &lt;&lt; &#39;\n&#39;;//实际上传入的是引用
+
+  //上面f4还可以写成如下形式(绑定时就传入this指针)
+  auto f5 = std::bind(&amp;Foo::data, &amp;foo); //这里传入引用也是可以的
+  std::cout &lt;&lt; f5() &lt;&lt; std::endl;
+
+  //当然也可以拿着去绑定pair对象的first和second成员
+  //pair&lt;int, string&gt; p(1, &quot;1&quot;);
+  //cout &lt;&lt; bind(&amp;pair&lt;int, string&gt;::fist, p)() &lt;&lt; endl;
+}
+</code></pre>
+</li>
 </ul>
-<p>struct Foo {<br>  void print_sum(int n1, int n2)<br>  {<br>    std::cout &lt;&lt; n1+n2 &lt;&lt; ‘\n’;<br>  }<br>  int data = 10;<br>};</p>
-<p>int main()<br>{<br>  using namespace std::placeholders;  // for _1, _2, _3…</p>
-<p>  // bind to a pointer to member function<br>  Foo foo;<br>  auto f3 = std::bind(&amp;Foo::print_sum, &amp;foo, 95, _1);<br>  f3(5);//5作为foo.print_sum的第二个参数</p>
-<p>  // bind to a pointer to data member<br>  //绑定的时候, 没有传入this指针, 则调用时要传入(指针或者引用)<br>  auto f4 = std::bind(&amp;Foo::data, _1);<br>  std::cout &lt;&lt; f4(foo) &lt;&lt; ‘\n’;//实际上传入的是引用</p>
-<p>  //上面f4还可以写成如下形式(绑定时就传入this指针)<br>  auto f5 = std::bind(&amp;Foo::data, &amp;foo); //这里传入引用也是可以的<br>  std::cout &lt;&lt; f5() &lt;&lt; std::endl;</p>
-<p>  //当然也可以拿着去绑定pair对象的first和second成员<br>  //pair<int, string=""> p(1, “1”);<br>  //cout &lt;&lt; bind(&amp;pair<int, string="">::fist, p)() &lt;&lt; endl;<br>}</int,></int,></p>
-<pre><code>
-而且用于STL算法时, std::bind 降低了算法函数绑定对象的要求:
-```c++
-vector&lt;point&gt; v(10);
+<p>而且用于STL算法时, std::bind 降低了算法函数绑定对象的要求:</p>
+<pre><code class="c++">vector&lt;point&gt; v(10);
 vector&lt;x&gt; v2(10); //专门记录point的横坐标
 
 //初始化 容器v
@@ -463,7 +490,8 @@ transform(v.begin(), v.end(), v2.begin(), bind(&amp;point::x, _1));
 for(auto x: v2){
   cout &lt;&lt; x &lt;&lt; &quot;,&quot;;
 }
-</code></pre><p>更加复杂的, 嵌套式绑定, 运算符重载式绑定, 最好不要用, 绑定标准C库的函数等, 太过复杂, 容易出错.(或者选用lambda表达式)</p>
+</code></pre>
+<p>更加复杂的, 嵌套式绑定, 运算符重载式绑定, 最好不要用, 绑定标准C库的函数等, 太过复杂, 容易出错.(或者选用lambda表达式)</p>
 <p>(注意: 绑定标准C库函数的时候, 可能还会扯上调用方式 <code>_stdcall</code>, <code>_fastcall</code>, 以及修饰 <code>extern &quot;C&quot;</code>, 具体可以参考相关的宏控制)</p>
 <p>补充: </p>
 <ul>
