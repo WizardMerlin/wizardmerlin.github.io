@@ -18,14 +18,15 @@
 <meta property="og:site_name" content="Merlin&#39;s Blog">
 <meta property="og:description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/boost-asio.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/overview.gif">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/aync.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/linux-aio.png">
-<meta property="og:updated_time" content="2017-10-09T21:23:38.790Z">
+<meta property="og:updated_time" content="2017-10-09T23:59:02.094Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Asio 异步IO库">
 <meta name="twitter:description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
-<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/overview.gif">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/boost-asio.png">
   
   
     <link href="/favicon.ico" rel="ico" />
@@ -242,7 +243,7 @@ function tmpfobid()
 </blockquote>
 </blockquote>
 <p>补充一句: <strong>ASIO库效率上可能赶不上Libevent, 有大佬测试过; 但是! 这货 跨平台 &amp;&amp; 兼容 std::iostream.</strong></p>
-<a id="more"></a>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/boost-asio.png" alt="post-cover"><br><a id="more"></a></p>
 <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>异步 IO  (Async)</p>
 <p>上面事件驱动的 select,poll,epoll 机制已经很大的提升了性能，但是在数据的读写操作上还是同步的。而异步 IO 的出现进一步提升了 Server 的处理能力(全称无阻塞)，应用程序发起一个异步读写操作，并提供相关参数（如用于存放数据的缓冲区、读写数据的大小、以及请求完成后的回调函数等），操作系统在自身的内核线程中执行实际的读或者写操作，并将结果存入程序制定的缓冲区中，然后把事件和缓冲区回调给应用程序。<br><strong>2.6内核提出了epoll, 这个时候正好也提出了异步IO的实现<code>aio_read</code>, <code>aio_write</code>, 但是Linux实际上用的很少.</strong></p>
 <blockquote>
