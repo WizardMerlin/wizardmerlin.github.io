@@ -24,7 +24,7 @@
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/time-nc.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/time-nc1.jpg">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/nc_dd.jpg">
-<meta property="og:updated_time" content="2017-09-28T12:56:28.559Z">
+<meta property="og:updated_time" content="2017-10-12T20:27:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络吞吐量测试">
 <meta name="twitter:description" content="主要使用nc测试一下网络吞吐量(throughput), 辅助工具time, pv, dd, nc">
@@ -194,7 +194,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概念梳理"><span class="toc-number">1.</span> <span class="toc-text">概念梳理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#带宽"><span class="toc-number">1.1.</span> <span class="toc-text">带宽</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#传输速率"><span class="toc-number">1.2.</span> <span class="toc-text">传输速率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#吞吐量"><span class="toc-number">1.3.</span> <span class="toc-text">吞吐量</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#工具介绍"><span class="toc-number">2.</span> <span class="toc-text">工具介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正式测量"><span class="toc-number">3.</span> <span class="toc-text">正式测量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#为啥要测试"><span class="toc-number">3.1.</span> <span class="toc-text">为啥要测试?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一般测试方法"><span class="toc-number">3.2.</span> <span class="toc-text">一般测试方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实际测量"><span class="toc-number">3.3.</span> <span class="toc-text">实际测量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dd-nc"><span class="toc-number">3.3.1.</span> <span class="toc-text">dd+nc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#time-nc"><span class="toc-number">3.3.2.</span> <span class="toc-text">time+nc</span></a></li></ol></li></ol></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概念梳理"><span class="toc-number">1.</span> <span class="toc-text">概念梳理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#带宽"><span class="toc-number">1.1.</span> <span class="toc-text">带宽</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#传输速率"><span class="toc-number">1.2.</span> <span class="toc-text">传输速率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#吞吐量"><span class="toc-number">1.3.</span> <span class="toc-text">吞吐量</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#工具介绍"><span class="toc-number">2.</span> <span class="toc-text">工具介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正式测量"><span class="toc-number">3.</span> <span class="toc-text">正式测量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#为啥要测试"><span class="toc-number">3.1.</span> <span class="toc-text">为啥要测试?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一般测试方法"><span class="toc-number">3.2.</span> <span class="toc-text">一般测试方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实际测量"><span class="toc-number">3.3.</span> <span class="toc-text">实际测量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dd-nc"><span class="toc-number">3.3.1.</span> <span class="toc-text">dd+nc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#time-nc"><span class="toc-number">3.3.2.</span> <span class="toc-text">time+nc</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TPS-QPS"><span class="toc-number">4.</span> <span class="toc-text">TPS QPS</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
     	</div>
 	
 
@@ -292,6 +292,18 @@ function tmpfobid()
 <blockquote>
 <p>此外, netcat的版本也是影响测量因素的原因, 只是这个案例中没有体现出来.</p>
 </blockquote>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+<h1 id="TPS-QPS"><a href="#TPS-QPS" class="headerlink" title="TPS QPS"></a>TPS QPS</h1><blockquote>
+<p>一个系统吞吐量通常由QPS（TPS）、并发数两个因素决定，每套系统这两个值都有一个相对极限值，在应用场景访问压力下，只要某一项达到系统最高值，系统的吞吐量就上不去了，如果压力继续增大，系统的吞吐量反而会下降，原因是系统超负荷工作，上下文切换、内存等等其它消耗导致系统性能下降。</p>
+</blockquote>
+<p><strong>TPS</strong>：Transactions Per Second（<code>每秒传输的事物处理个数</code>），即服务器每秒处理的事务数。TPS包括一条消息入和一条消息出，加上一次用户数据库访问。<br>（业务TPS = CAPS × 每个呼叫平均TPS）TPS是软件测试结果的测量单位。一个事务是指一个客户机向服务器发送请求然后服务器做出反应的过程。<strong>客户机在发送请求时开始计时，收到服务器响应后结束计时，以此来计算使用的时间和完成的事务个数</strong>。</p>
+<p><strong>QPS</strong>：每秒查询率QPS是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准</p>
+<p>下面有个具体的例子:<br>一个典型的上班签到系统，早上8点上班，7点半到8点的30分钟的时间里用户会登录签到系统进行签到。公司员工为1000人，平均每个员上登录签到系统的时长为5分钟。<br>可以用下面的方法计算。<br><code>QPS = 1000/(30*60) 事务/秒</code>,<br><code>平均响应时间为 = 5*60  秒</code>,<br><code>并发数= QPS*平均响应时间 = 1000/(30*60) *(5*60)=166.7</code>;</p>
+<p><strong>并发数</strong>也很好理解, 在处理响应的时间内, 能够处理的事物总个数; 即<code>qps * 平均响应时间</code>.</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://blog.csdn.net/wind19/article/details/8600083" target="_blank" rel="external">http://blog.csdn.net/wind19/article/details/8600083</a></li>
+</ol>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 
