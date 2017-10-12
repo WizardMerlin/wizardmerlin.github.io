@@ -21,8 +21,9 @@
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/boost-asio.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/overview.gif">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/aync.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/io-all.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/linux-aio.png">
-<meta property="og:updated_time" content="2017-10-10T09:35:34.614Z">
+<meta property="og:updated_time" content="2017-10-12T23:41:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Asio 异步IO库">
 <meta name="twitter:description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
@@ -305,13 +306,17 @@ int main(int argc, const char * argv[]) {
 <li>A synchronous I/O operation causes the requesting process to be blocked until that I/O operation completes;</li>
 <li>An asynchronous I/O operation does not cause the requesting process to be blocked;</li>
 </ul>
-<p>区分同步和异步, 一个很重要的维度, 就是<code>阻塞</code>, 而且是<code>全程阻塞</code>: 内核准备数据的过程, 数据从内核态到用户态内存的过程.</p>
+<blockquote>
+<p>阻塞IO和非阻塞IO的区别就在于：应用程序的调用是否立即返回！</p>
+</blockquote>
+<p>区分同步和异步, 一个很重要的维度, 就是<code>阻塞</code>, 而且是<code>全程阻塞</code>: 内核准备数据的过程, 数据从内核态到用户态内存的过程.<br>同步IO和异步IO的区别就在于：数据拷贝的时候进程是否阻塞！</p>
 <blockquote>
 <p>通常所说的阻塞IO, 非阻塞IO, 包括事件IO(即多路IO), 全部都是同步IO.</p>
 </blockquote>
 <p>他们总有一个过程是被阻塞的, 要么是在kernel准备数据的时候(例如从网络缓存数据), 比如阻塞IO; 要么是从内核拷贝数据到应用程序buffer的过程, 比如non-blocking IO.</p>
 <p>异步IO就很纯粹:<br><strong>当进程发起IO 操作之后，就直接返回再也不理睬了，直到kernel发送一个信号，告诉进程说IO完成。</strong>在这整个过程中，进程完全没有被block。</p>
 <p>下面给个图, 你就知道了(大概了解), 干说没用, 要自己去体会:(把阻塞IO拿出来当做同步IO的代表)<br><img src="http://omotkhw3y.bkt.clouddn.com/aync.png" alt=""></p>
+<p>或者还有一个图更加完整的说明了问题:(图片源自百度)<br><img src="http://omotkhw3y.bkt.clouddn.com/io-all.png" alt=""></p>
 <h2 id="对比事件IO"><a href="#对比事件IO" class="headerlink" title="对比事件IO"></a>对比事件IO</h2><p>也就是和 select/poll/epoll对比一下(抱歉,我只熟悉linux平台), 虽然都是事件驱动(functor, functional handler), 但是同步IO和异步IO还是有着本质的区别.</p>
 <p>这其中 epoll 比较特殊, 因为2.6内核提出了epoll, 这个时候正好也提出了异步IO的实现<code>aio_read</code>, <code>aio_write</code>, 如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/linux-aio.png" alt=""></p>
 <p>但是怎么说呢, 我看到的现象, Linux下大家对<code>epoll + 非阻塞IO</code>乐此不疲.</p>
