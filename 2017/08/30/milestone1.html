@@ -19,7 +19,7 @@
 <meta property="og:description" content="一些列工作经验的分享,干货">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/new_era_1.png">
-<meta property="og:updated_time" content="2017-10-11T11:04:14.379Z">
+<meta property="og:updated_time" content="2017-10-12T21:52:27.131Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="里程碑记录(Linux后台开发经验分享)">
 <meta name="twitter:description" content="一些列工作经验的分享,干货">
@@ -274,6 +274,9 @@ function tmpfobid()
 </ul>
 <p>分布式架构我就不太熟悉了, 一般需要到专门的大公司学习.</p>
 <h3 id="其他技术"><a href="#其他技术" class="headerlink" title="其他技术"></a>其他技术</h3><p>一般用的都是开源的, 比如gtest, glog/zlog, tcmalloc(内存性能分析), distcc, repo等</p>
+<blockquote>
+<p>其他技术, 请参考我的博客其他文章.</p>
+</blockquote>
 <h2 id="Linux系统"><a href="#Linux系统" class="headerlink" title="Linux系统"></a>Linux系统</h2><h3 id="core文件"><a href="#core文件" class="headerlink" title="core文件"></a>core文件</h3><p>产生 core 文件, 命令 <code>ulimit -c</code> 如果显示 1024 那么说明 coredump 已经被开启, 0 则表示没有开启.</p>
 <blockquote>
 <p>一般临时修改: ulimit -c unlimited  或者 <code>ulimit -c 1024</code>;关闭的话<code>ulimit -c 0</code>.</p>
@@ -416,12 +419,167 @@ login_type: &quot;sina_weibo&quot;,
 <h2 id="C-语言"><a href="#C-语言" class="headerlink" title="C++语言"></a>C++语言</h2><h3 id="window移植"><a href="#window移植" class="headerlink" title="window移植"></a>window移植</h3><p>windows迁移问题, 自己遇到的, 记录一下:</p>
 <ul>
 <li>缺少最后一行空行, 多余的\r回车符<br><code>dos2unix &lt;file&gt; fromdos &lt;file&gt;</code></li>
-<li>中文注释乱码<br><code>iconv –f gbk –t utf8</code></li>
+<li>中文注释乱码<br><code>iconv –f gbk –t utf8</code> (utf8也可以写成utf-8)</li>
 <li>不能忍的头文件<br><code>windows.h</code></li>
 <li>不兼容的宏, 库函数<br><code>snprintf()</code>,<code>__FUNCTION__</code>, <code>__FILE__</code>, <code>__LINE__</code></li>
 <li>特殊的宏<br><code>#ifdef WIN_32  #define …  #endif</code></li>
 </ul>
-<h3 id="宽字符问题"><a href="#宽字符问题" class="headerlink" title="宽字符问题"></a>宽字符问题</h3><h3 id="操作大文件"><a href="#操作大文件" class="headerlink" title="操作大文件"></a>操作大文件</h3><p>1.包含所有头文件以前，先定义这些宏：</p>
+<h3 id="宽字符问题"><a href="#宽字符问题" class="headerlink" title="宽字符问题"></a>宽字符问题</h3><p>本质上是ascii码和unicode的存储问题.(单字节不够用, 采用多字节)<br>先注意一下文件编码, windows下默认是gbk编码:</p>
+<pre><code>iconv -f GBK -t UTF-8 main.cc &gt; mainu.cc
+</code></pre><p>之后注意一下多字节字符问题, 基本情况如下:(实际上wchar_t同样没有标准限定)</p>
+<ul>
+<li>Windows 下的 char 是 ANSI，WCHAR 是 UTF-16（UCS-2），跟 locale设置有关系</li>
+<li>Linux   下的 char 是 UTF-8，WCHAR 是 UTF-32（UCS-4），都是 Unicode，与 locale 无关</li>
+</ul>
+<p>我建议你 Windows 下调用<code>MultiByteToWideChar</code>和<code>WideCharToMultiByte</code>，<br>而 Linux 直接自己写一个转换函数(UTF-8 和 UTF-32 转换规律很简单), 大致如下:</p>
+<pre><code class="C++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int UTF8ToUnicode(const char *pmbs, wchar_t *pwcs, int size)
+{
+    int cnt = 0;
+    // 这里 size-- 是预先除去尾零所需位置
+    if (pmbs != NULL &amp;&amp; pwcs != NULL &amp;&amp; size-- &gt; 0) {
+        while (*pmbs != 0 &amp;&amp; size &gt; 0) {
+            unsigned char ch = *pmbs;
+            if (ch &gt; 0x7FU) {
+                int cwch = 0;
+                while (ch &amp; 0x80U) {
+                    ch &lt;&lt;= 1;
+                    cwch++;
+                }
+                *pwcs = *pmbs++ &amp; (0xFFU &gt;&gt; cwch);
+                while (--cwch &gt; 0) {
+                    *pwcs &lt;&lt;= 6;
+                    *pwcs |= (*pmbs++ &amp; 0x3FU);
+                }
+            } else {
+                *pwcs = *pmbs++;
+            }
+            pwcs++;
+            size--;
+            cnt++;
+        }
+        *pwcs = 0;
+        cnt++;
+    }
+    return cnt;
+}
+
+int UnicodeToUTF8(const wchar_t *pwcs, char *pmbs, int size)
+{
+    int cnt = 0;
+    // 这里 size-- 是预先除去尾零所需位置
+    if (pwcs != NULL &amp;&amp; pmbs != NULL &amp;&amp; size-- &gt; 0) {
+        while (*pwcs != 0 &amp;&amp; size &gt; 0) {
+            if (*pwcs &lt; 0x00000080U) {
+                *pmbs++ = (char)*pwcs;
+                size -= 1;
+                cnt += 1;
+            } else if (*pwcs &lt; 0x00000800U) {
+                // 剩余空间不够存放该字符
+                if (size &lt; 2) {
+                    break;
+                }
+                *pmbs++ = (0xFFU &lt;&lt; 6) | (*pwcs &gt;&gt; 6);
+                *pmbs++ = 0x80U | (*pwcs &amp; 0x3FU);
+                size -= 2;
+                cnt += 2;
+            } else if (*pwcs &lt; 0x00010000U) {
+                // 剩余空间不够存放该字符
+                if (size &lt; 3) {
+                    break;
+                }
+                *pmbs++ = (0xFFU &lt;&lt; 5) | (*pwcs &gt;&gt; 12);
+                *pmbs++ = 0x80U | ((*pwcs &gt;&gt; 6) &amp; 0x3FU);
+                *pmbs++ = 0x80U | (*pwcs &amp; 0x3FU);
+                size -= 3;
+                cnt += 3;
+            } else if (*pwcs &lt; 0x00200000U) {
+                // 剩余空间不够存放该字符
+                if (size &lt; 4) {
+                    break;
+                }
+                *pmbs++ = (0xFFU &lt;&lt; 4) | (*pwcs &gt;&gt; 18);
+                *pmbs++ = 0x80U | ((*pwcs &gt;&gt; 12) &amp; 0x3FU);
+                *pmbs++ = 0x80U | ((*pwcs &gt;&gt; 6) &amp; 0x3FU);
+                *pmbs++ = 0x80U | (*pwcs &amp; 0x3FU);
+                size -= 4;
+                cnt += 4;
+            } else if (*pwcs &lt; 0x04000000U) {
+                // 剩余空间不够存放该字符
+                if (size &lt; 5) {
+                    break;
+                }
+                *pmbs++ = (0xFFU &lt;&lt; 3) | (*pwcs &gt;&gt; 24);
+                *pmbs++ = 0x80U | ((*pwcs &gt;&gt; 18) &amp; 0x3FU);
+                *pmbs++ = 0x80U | ((*pwcs &gt;&gt; 12) &amp; 0x3FU);
+                *pmbs++ = 0x80U | ((*pwcs &gt;&gt; 6) &amp; 0x3FU);
+                *pmbs++ = 0x80U | (*pwcs &amp; 0x3FU);
+                size -= 5;
+                cnt += 5;
+            } else if (*pwcs &lt; 0x80000000U) {
+                // 剩余空间不够存放该字符
+                if (size &lt; 6) {
+                    break;
+                }
+                *pmbs++ = (0xFFU &lt;&lt; 2) | (*pwcs &gt;&gt; 30);
+                *pmbs++ = 0x80U | ((*pwcs &gt;&gt; 24) &amp; 0x3FU);
+                *pmbs++ = 0x80U | ((*pwcs &gt;&gt; 18) &amp; 0x3FU);
+                *pmbs++ = 0x80U | ((*pwcs &gt;&gt; 12) &amp; 0x3FU);
+                *pmbs++ = 0x80U | ((*pwcs &gt;&gt; 6) &amp; 0x3FU);
+                *pmbs++ = 0x80U | (*pwcs &amp; 0x3FU);
+                size -= 6;
+                cnt += 6;
+            } else {
+                // 无法识别的 Unicode 字符
+                break;
+            }
+            pwcs++;
+        }
+        *pmbs = 0;
+        cnt++;
+    }
+    return cnt;
+}
+
+int main(void)
+{
+    // 这部分代码请在 Linux 上测试，Windows 命令行无法打印 UTF-8 字符串。
+    char mbs1[256] = { 0 };
+    wchar_t wcs1[] = L&quot;测试文字&quot;; //单个中文, utf8存储3字节
+    int ret1 = UnicodeToUTF8(wcs1, mbs1, sizeof(mbs1)/sizeof(char));
+    printf(&quot;%d\n&quot;, ret1); //13
+
+    // 这部分代码请在 Linux 上测试，Windows 的 char 类型非 UTF-8 编码。
+    char mbs2[] = &quot;测试文字&quot;;
+    wchar_t wcs2[256] = { 0 };
+    int ret2 = UTF8ToUnicode(mbs2, wcs2, sizeof(wcs2)/sizeof(wchar_t));
+    printf(&quot;%d\n&quot;, ret2); //5
+
+    return 0;
+}
+</code></pre>
+<p>参数作用简单说明如下：</p>
+<ul>
+<li>第一个参数为待转换的字符串</li>
+<li>第二个参数为接收结果的缓冲区</li>
+<li>第三个参数为结果缓冲区大小(包含尾零)<br>返回值为所写入缓冲区的大小(包含尾零)</li>
+</ul>
+<p>最好不要使用<code>wchar_t</code>, 而直接使用<code>std::wstring</code>, 例如下面的代码:(windows环境)</p>
+<pre><code class="C++">//const wchar_t* ws = L&quot;世界你好！&quot;;
+std::wstring wstr = L&quot;世界你好！&quot;;
+std::wcout.imbue( std::locale(&quot;chs&quot;) );
+std::wcout &lt;&lt; wstr &lt;&lt; std::endl;
+</code></pre>
+<p><code>std::locale( std::locale(),&quot;&quot;,std::locale::ctype )</code>会创建当前系统环境下locale，这个locale中会保存这个系统 ansi 使用 code page.<br>(wofstream，wcout 在处理 unicode字符 时，必须进行内部编码转换（unicode -&gt; ansi ）)</p>
+<p>具体参考以下链接:</p>
+<ol>
+<li><a href="http://blog.csdn.net/xujiezhige/article/details/17843831" target="_blank" rel="external">http://blog.csdn.net/xujiezhige/article/details/17843831</a></li>
+<li><a href="http://www.cnblogs.com/Dageking/archive/2014/01/15/3520406.html" target="_blank" rel="external">http://www.cnblogs.com/Dageking/archive/2014/01/15/3520406.html</a></li>
+<li><a href="http://bbs.csdn.net/topics/391079600?page=1" target="_blank" rel="external">http://bbs.csdn.net/topics/391079600?page=1</a></li>
+</ol>
+<h3 id="操作大文件"><a href="#操作大文件" class="headerlink" title="操作大文件"></a>操作大文件</h3><p>1.包含所有头文件以前，先定义这些宏：</p>
 <pre><code class="C++">#ifndef __USE_FILE_OFFSET64
 #define __USE_FILE_OFFSET64
 #endif
