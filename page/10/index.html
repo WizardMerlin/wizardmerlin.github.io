@@ -172,17 +172,17 @@ function tmpfobid()
                 
 <div class="primary-container content-box is-flex-desktop clear-padding bottom-line" style="margin-bottom: 25px;">
     <div class="column  is-7-desktop">
-        <a href="/2017/06/13/why-not-epoll.html">
+        <a href="/2017/06/19/sub-and-adhere-package.html">
             <div class="full-height post-hover"
                  style="
-                         background-image: url('http://omotkhw3y.bkt.clouddn.com/epoll1.jpg');
+                         background-image: url('http://omotkhw3y.bkt.clouddn.com/adhere-package.png');
                          height: 350px;
                          background-size: cover;
                          background-repeat: no-repeat;
                          ">
                     <div class=" is-flex flex-column center content has-text-centered full-height has-padding content-bg-mask">
                         <h1 class="title text-shadow" style="margin-bottom: 15px;">
-                            深挖一下Epoll模型
+                            TCP流解析(粘包和拆包问题)
                         </h1>
                         <div>
                         
@@ -193,12 +193,14 @@ function tmpfobid()
                         </div>
                         <p class="post-content-text is-marginless has-padding text-shadow">
                             
-你现在用 epoll 模型么? 不用. 我用libevent. (笑)
+TCP是字节流(流式协议, 无边界), 不知道消息(包, 有边界)的概念. 它本身不知道边界, 它不保留边界.
 
-多路IO/IO复用中一种比较厉害的模型, 始终拿红黑树去理解就容易了. 现在的很多库比如libevent都是在其基础上进行的扩展和封装.
-(文章主要以TCP协议..
+
+原因阐述TCP程序中涉及的粘包和分包:
+
+粘包是因为TCP会缓存小的数据包而不是马上发出去(但是TCP没有包意识, 它..
                         </p>
-                        <p class="date text-shadow">2017-06-13</p>
+                        <p class="date text-shadow">2017-06-19</p>
                         <button class="button is-info is-small">阅读详情</button>
                     </div>
             </div>
@@ -206,6 +208,31 @@ function tmpfobid()
     </div>
     <div class="column is-5 is-hidden-touch" style="padding-left: 0;">
         <div class="full-height is-flex flex-column justify-space-between" style="min-height: 350px;">
+            
+                
+<a class="post-hover" href="/2017/06/13/why-not-epoll.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/epoll1.jpg')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                深挖一下Epoll模型
+            </h3>
+            
+            
+            <span class="tag is-post-tag">网络</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                
+你现在用 epoll 模型么? 不用. 我用libevent. (笑)
+
+多路IO/IO复用中..
+            </p>
+            <p class="date text-shadow is-marginless">2017-06-13</p>
+        </div>
+    </div>
+</a>
+            
             
                 
 <a class="post-hover" href="/2017/06/11/basic-socket-model.html" style="height: 48.5%">
@@ -225,34 +252,6 @@ function tmpfobid()
             <p class="is-marginless text-shadow post-content-text">
                 
 现在的很多库基本是基于异步网络IO, 以及 epoll等模型的封装, 但是 epoll模型的基..
-            </p>
-            <p class="date text-shadow is-marginless">2017-06-11</p>
-        </div>
-    </div>
-</a>
-            
-            
-                
-<a class="post-hover" href="/2017/06/11/advice-of-network-learning-steps.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/linux-network.jpg')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                Linux网络学习参考
-            </h3>
-            
-            
-            <span class="tag is-post-tag">网络</span>
-            
-            <span class="tag is-post-tag">linux</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                
-结合自己的学习经历, 给出一定的步骤和规划设计, 仅供参考
-
-
-引子记录一下我过去学习网络编程..
             </p>
             <p class="date text-shadow is-marginless">2017-06-11</p>
         </div>
@@ -264,6 +263,31 @@ function tmpfobid()
     <div class="column is-12 is-hidden-desktop">
         
         
+<a class="post-hover" href="/2017/06/13/why-not-epoll.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/epoll1.jpg')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                深挖一下Epoll模型
+            </h3>
+            
+            
+            <span class="tag is-post-tag">网络</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                
+你现在用 epoll 模型么? 不用. 我用libevent. (笑)
+
+多路IO/IO复用中..
+            </p>
+            <p class="date text-shadow is-marginless">2017-06-13</p>
+        </div>
+    </div>
+</a>
+        
+        
+        
 <a class="post-hover" href="/2017/06/11/basic-socket-model.html" style="height: 48.5%">
     <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/socket-basic.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
@@ -287,38 +311,60 @@ function tmpfobid()
     </div>
 </a>
         
-        
-        
-<a class="post-hover" href="/2017/06/11/advice-of-network-learning-steps.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/linux-network.jpg')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                Linux网络学习参考
-            </h3>
-            
-            
-            <span class="tag is-post-tag">网络</span>
-            
-            <span class="tag is-post-tag">linux</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                
-结合自己的学习经历, 给出一定的步骤和规划设计, 仅供参考
-
-
-引子记录一下我过去学习网络编程..
-            </p>
-            <p class="date text-shadow is-marginless">2017-06-11</p>
-        </div>
-    </div>
-</a>
-        
     </div>
 </div>
 
                     
+                    
+                
+                    
+                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/epoll1.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/06/13/why-not-epoll.html">
+                                            <p style="font-size: 24px;">深挖一下Epoll模型</p>
+									    </a>
+                                        
+                                            <span class="sub-title">一棵红黑树, 能玩到这个地步也只有epolll了.deep on epoll model(including extensions in libevent)</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/网络/">
+                                                <span class="tag is-post-tag">
+												  网络
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         
+你现在用 epoll 模型么? 不用. 我用libevent. (笑)
+
+多路IO/IO复用中一种比较厉害的模型, 始终拿红黑树去理解就容易了. 现在的很多库比如libevent都是在其基础上进行的扩展和封装.
+(文章主要以TCP协...
+                                        </p>
+									<a class="post-hover" href="/2017/06/13/why-not-epoll.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
                     
                 
                     
@@ -377,7 +423,7 @@ function tmpfobid()
                     
                 
                     
-                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <div class="content-box  " style="margin-bottom: 27px;">
                        <!-- a -->
                             <div class="columns" style="min-height: 230px;">
                                 
@@ -455,15 +501,15 @@ https:/...
                 
                                         <p>
                                             
-												<a class="post-hover" href="/tags/设计模式/">
-                                                <span class="tag is-post-tag">
-												  设计模式
-												</span>
-												</a>
-                                            
 												<a class="post-hover" href="/tags/cpp/">
                                                 <span class="tag is-post-tag">
 												  cpp
+												</span>
+												</a>
+                                            
+												<a class="post-hover" href="/tags/设计模式/">
+                                                <span class="tag is-post-tag">
+												  设计模式
 												</span>
 												</a>
                                             
@@ -648,63 +694,6 @@ https:/...
                         </div>
                     
                 
-                    
-                       <div class="content-box  " style="margin-bottom: 27px;">
-                       <!-- a -->
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/background1.jpg')">
-                                    </div>
-                                
-								
-                                <div class="column is-8-desktop post-content is-flex">
-								
-                                    <div class="content" style="margin-right:7px; align-center">
-									    <a class="post-hover" href="/2017/05/21/move-awared-string.html">
-                                            <p style="font-size: 24px;">带有移动语义的字符串类</p>
-									    </a>
-                                        
-                                            <span class="sub-title">作为右值探讨的一部分, 单独拉出来, 方便加深认识</span>
-                                        
-                
-                                        <p>
-                                            
-												<a class="post-hover" href="/tags/cpp/">
-                                                <span class="tag is-post-tag">
-												  cpp
-												</span>
-												</a>
-                                            
-                                        </p>
-                                        <p >
-                                         
-本文是右值相问题的补充, 这里主要实现一个有右值语义的字符串类
-
-
-其代码实现, 大致如下:
-class MyString
-{
-private:
-    char *_data;
-    size_t _len;
-
-    //on...
-                                        </p>
-									<a class="post-hover" href="/2017/05/21/move-awared-string.html" >
-                                        <button class="button is-info is-small">阅读详情</button>
-                        			</a>
-
-                                    </div> <!-- class content-->
-									
-                                </div> <!--class column -->
-
-                            </div>
-
-						<!-- a -->
-                        </div>
-                    
-                
 
                 <!--翻頁-->
                 <nav class="pagination is-flex" style="justify-content: flex-end;">
@@ -851,7 +840,7 @@ private:
         <div class="site-box is-flex">
             <div class="flex-1 is-flex flex-column center full-height right-line">
                 <p>博文总计</p>			
-                <strong>115</strong>
+                <strong>116</strong>
             </div>
             <div class="flex-1 is-flex flex-column center full-height">
                 <p>标签数</p>
@@ -865,18 +854,6 @@ private:
         </div>
         <div class="content-inner is-flex flex-wrap justify-space-between">
             
-             <a class="tags-item" href="tags/设计模式/" title="点击 设计模式 详情" rel="1">
-                    设计模式<span class="tags-item-span"><b>1</span></b>
-             </a>
-            
-             <a class="tags-item" href="tags/cpp/" title="点击 cpp 详情" rel="45">
-                    cpp<span class="tags-item-span"><b>45</span></b>
-             </a>
-            
-             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="21">
-                    思考<span class="tags-item-span"><b>21</span></b>
-             </a>
-            
              <a class="tags-item" href="tags/网络/" title="点击 网络 详情" rel="17">
                     网络<span class="tags-item-span"><b>17</span></b>
              </a>
@@ -885,8 +862,20 @@ private:
                     linux<span class="tags-item-span"><b>13</span></b>
              </a>
             
+             <a class="tags-item" href="tags/cpp/" title="点击 cpp 详情" rel="45">
+                    cpp<span class="tags-item-span"><b>45</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="22">
+                    思考<span class="tags-item-span"><b>22</span></b>
+             </a>
+            
              <a class="tags-item" href="tags/boost/" title="点击 boost 详情" rel="7">
                     boost<span class="tags-item-span"><b>7</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/设计模式/" title="点击 设计模式 详情" rel="1">
+                    设计模式<span class="tags-item-span"><b>1</span></b>
              </a>
             
              <a class="tags-item" href="tags/开发管理/" title="点击 开发管理 详情" rel="6">
@@ -952,7 +941,7 @@ private:
             <strong>分类</strong>
         </div>
         <div class="content-inner">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">83</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">10</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">84</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">10</span></li></ul>
         </div>
     </div>
     <div class="content-inner content-box">
@@ -960,7 +949,7 @@ private:
             <strong>归档</strong>
         </div>
         <div class="content-inner">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">33</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">22</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">17</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">8</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">33</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">22</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">17</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">8</span></li></ul>
         </div>
     </div>
 

@@ -172,17 +172,17 @@ function tmpfobid()
                 
 <div class="primary-container content-box is-flex-desktop clear-padding bottom-line" style="margin-bottom: 25px;">
     <div class="column  is-7-desktop">
-        <a href="/2017/07/01/bind-in-cpp.html">
+        <a href="/2017/07/01/smart-pointers-again.html">
             <div class="full-height post-hover"
                  style="
-                         background-image: url('http://omotkhw3y.bkt.clouddn.com/stsbind1.jpg');
+                         background-image: url('http://omotkhw3y.bkt.clouddn.com/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.jpg');
                          height: 350px;
                          background-size: cover;
                          background-repeat: no-repeat;
                          ">
                     <div class=" is-flex flex-column center content has-text-centered full-height has-padding content-bg-mask">
                         <h1 class="title text-shadow" style="margin-bottom: 15px;">
-                            C++11 std:bind探究
+                            再说说智能指针
                         </h1>
                         <div>
                         
@@ -192,7 +192,15 @@ function tmpfobid()
                         
                         </div>
                         <p class="post-content-text is-marginless has-padding text-shadow">
-                            以前常用的是 std::bind1st 和 std::bind2nd 函数适配器, 现在主推 std::bind 并且常常和 std::function 一起使用的就是 std::bind , 用于绑定类成员函数.(std::funct..
+                            引用计数, 标记擦除, 智能指针还有其他实现方式么?
+本篇主要涉及: 
+
+尝试自己实现 引用计数类型的智能指针
+仔细说说 auto_ptr 和 unique_ptr
+
+
+
+引子如果明白了RAII手法, 引用计数原理, 标记擦除原理, 那..
                         </p>
                         <p class="date text-shadow">2017-07-01</p>
                         <button class="button is-info is-small">阅读详情</button>
@@ -204,6 +212,28 @@ function tmpfobid()
         <div class="full-height is-flex flex-column justify-space-between" style="min-height: 350px;">
             
                 
+<a class="post-hover" href="/2017/07/01/bind-in-cpp.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/stsbind1.jpg')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                C++11 std:bind探究
+            </h3>
+            
+            
+            <span class="tag is-post-tag">cpp</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                以前常用的是 std::bind1st 和 std::bind2nd 函数适配器, 现在主推 s..
+            </p>
+            <p class="date text-shadow is-marginless">2017-07-01</p>
+        </div>
+    </div>
+</a>
+            
+            
+                
 <a class="post-hover" href="/2017/07/01/lambda-in-cpp.html" style="height: 48.5%">
     <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/lambda1.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
@@ -219,29 +249,6 @@ function tmpfobid()
             <p class="is-marginless text-shadow post-content-text">
                 
 你知道的, 像函数指针, 函数对象(functor)这类都是非常方便的用于回调, 由于解耦的方..
-            </p>
-            <p class="date text-shadow is-marginless">2017-07-01</p>
-        </div>
-    </div>
-</a>
-            
-            
-                
-<a class="post-hover" href="/2017/07/01/binutils-in-linux.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/linuxbinutils2.jpg')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                Linux Bin Utils
-            </h3>
-            
-            
-            <span class="tag is-post-tag">linux</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                
-大致上有: ar, as, ld, nm, objcopy, objdump, ranlib,..
             </p>
             <p class="date text-shadow is-marginless">2017-07-01</p>
         </div>
@@ -253,6 +260,28 @@ function tmpfobid()
     <div class="column is-12 is-hidden-desktop">
         
         
+<a class="post-hover" href="/2017/07/01/bind-in-cpp.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/stsbind1.jpg')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                C++11 std:bind探究
+            </h3>
+            
+            
+            <span class="tag is-post-tag">cpp</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                以前常用的是 std::bind1st 和 std::bind2nd 函数适配器, 现在主推 s..
+            </p>
+            <p class="date text-shadow is-marginless">2017-07-01</p>
+        </div>
+    </div>
+</a>
+        
+        
+        
 <a class="post-hover" href="/2017/07/01/lambda-in-cpp.html" style="height: 48.5%">
     <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/lambda1.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
@@ -274,33 +303,56 @@ function tmpfobid()
     </div>
 </a>
         
-        
-        
-<a class="post-hover" href="/2017/07/01/binutils-in-linux.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/linuxbinutils2.jpg')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                Linux Bin Utils
-            </h3>
-            
-            
-            <span class="tag is-post-tag">linux</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                
-大致上有: ar, as, ld, nm, objcopy, objdump, ranlib,..
-            </p>
-            <p class="date text-shadow is-marginless">2017-07-01</p>
-        </div>
-    </div>
-</a>
-        
     </div>
 </div>
 
                     
+                    
+                
+                    
+                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/stsbind1.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/07/01/bind-in-cpp.html">
+                                            <p style="font-size: 24px;">C++11 std:bind探究</p>
+									    </a>
+                                        
+                                            <span class="sub-title">主要讲讲 std::bind, 也会说bind1st和bind2nd</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/cpp/">
+                                                <span class="tag is-post-tag">
+												  cpp
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         以前常用的是 std::bind1st 和 std::bind2nd 函数适配器, 现在主推 std::bind 并且常常和 std::function 一起使用的就是 std::bind , 用于绑定类成员函数.(std::func...
+                                        </p>
+									<a class="post-hover" href="/2017/07/01/bind-in-cpp.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
                     
                 
                     
@@ -358,7 +410,7 @@ function tmpfobid()
                     
                 
                     
-                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <div class="content-box  " style="margin-bottom: 27px;">
                        <!-- a -->
                             <div class="columns" style="min-height: 230px;">
                                 
@@ -610,63 +662,6 @@ who is s...
                         </div>
                     
                 
-                    
-                       <div class="content-box  " style="margin-bottom: 27px;">
-                       <!-- a -->
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/background1.jpg')">
-                                    </div>
-                                
-								
-                                <div class="column is-8-desktop post-content is-flex">
-								
-                                    <div class="content" style="margin-right:7px; align-center">
-									    <a class="post-hover" href="/2017/06/30/cpp-library-in-linux.html">
-                                            <p style="font-size: 24px;">Linux静态库&amp;动态库</p>
-									    </a>
-                                        
-                                            <span class="sub-title">好恶心, 我居然在说, 静态库和动态库生成和使用</span>
-                                        
-                
-                                        <p>
-                                            
-												<a class="post-hover" href="/tags/linux/">
-                                                <span class="tag is-post-tag">
-												  linux
-												</span>
-												</a>
-                                            
-                                        </p>
-                                        <p >
-                                         
-这里我记录的是曾经踩过的坑, 主要是生成和使用, 优缺点等理论内容不说. (权当一个无聊消遣吧…)
-
-
-
-引子linux平台下, 目标文件分为3种:
-
-可重定向目标文件
-可执行目标文件
-共享目标文件(共享库)
-
-这里从第三种入手, ...
-                                        </p>
-									<a class="post-hover" href="/2017/06/30/cpp-library-in-linux.html" >
-                                        <button class="button is-info is-small">阅读详情</button>
-                        			</a>
-
-                                    </div> <!-- class content-->
-									
-                                </div> <!--class column -->
-
-                            </div>
-
-						<!-- a -->
-                        </div>
-                    
-                
 
                 <!--翻頁-->
                 <nav class="pagination is-flex" style="justify-content: flex-end;">
@@ -813,7 +808,7 @@ who is s...
         <div class="site-box is-flex">
             <div class="flex-1 is-flex flex-column center full-height right-line">
                 <p>博文总计</p>			
-                <strong>115</strong>
+                <strong>116</strong>
             </div>
             <div class="flex-1 is-flex flex-column center full-height">
                 <p>标签数</p>
@@ -827,18 +822,6 @@ who is s...
         </div>
         <div class="content-inner is-flex flex-wrap justify-space-between">
             
-             <a class="tags-item" href="tags/设计模式/" title="点击 设计模式 详情" rel="1">
-                    设计模式<span class="tags-item-span"><b>1</span></b>
-             </a>
-            
-             <a class="tags-item" href="tags/cpp/" title="点击 cpp 详情" rel="45">
-                    cpp<span class="tags-item-span"><b>45</span></b>
-             </a>
-            
-             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="21">
-                    思考<span class="tags-item-span"><b>21</span></b>
-             </a>
-            
              <a class="tags-item" href="tags/网络/" title="点击 网络 详情" rel="17">
                     网络<span class="tags-item-span"><b>17</span></b>
              </a>
@@ -847,8 +830,20 @@ who is s...
                     linux<span class="tags-item-span"><b>13</span></b>
              </a>
             
+             <a class="tags-item" href="tags/cpp/" title="点击 cpp 详情" rel="45">
+                    cpp<span class="tags-item-span"><b>45</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="22">
+                    思考<span class="tags-item-span"><b>22</span></b>
+             </a>
+            
              <a class="tags-item" href="tags/boost/" title="点击 boost 详情" rel="7">
                     boost<span class="tags-item-span"><b>7</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/设计模式/" title="点击 设计模式 详情" rel="1">
+                    设计模式<span class="tags-item-span"><b>1</span></b>
              </a>
             
              <a class="tags-item" href="tags/开发管理/" title="点击 开发管理 详情" rel="6">
@@ -914,7 +909,7 @@ who is s...
             <strong>分类</strong>
         </div>
         <div class="content-inner">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">83</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">10</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">84</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">10</span></li></ul>
         </div>
     </div>
     <div class="content-inner content-box">
@@ -922,7 +917,7 @@ who is s...
             <strong>归档</strong>
         </div>
         <div class="content-inner">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">33</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">22</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">17</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">8</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">33</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">22</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">17</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">8</span></li></ul>
         </div>
     </div>
 

@@ -8,22 +8,22 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   
-  <title>网络编程部分汇总 | Merlin&#39;s Blog</title>
+  <title>领域信息系统开源构想 | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="个人是比较喜欢研究网络问题的, 最初可能是为了玩更多高大上配置的服务器, 之后就是为了弄清楚编程中遇到的问题以及其原因.">
-<meta name="keywords" content="网络">
+  <meta name="description" content="希望明年6月份前可以拉几个同学一起开发一下和这个系统">
+<meta name="keywords" content="思考">
 <meta property="og:type" content="article">
-<meta property="og:title" content="网络编程部分汇总">
-<meta property="og:url" content="www.merlinblog.site/2017/10/13/network-base.html">
+<meta property="og:title" content="领域信息系统开源构想">
+<meta property="og:url" content="www.merlinblog.site/2017/10/12/domain-specific-system.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
-<meta property="og:description" content="个人是比较喜欢研究网络问题的, 最初可能是为了玩更多高大上配置的服务器, 之后就是为了弄清楚编程中遇到的问题以及其原因.">
+<meta property="og:description" content="希望明年6月份前可以拉几个同学一起开发一下和这个系统">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/net.jpg">
-<meta property="og:updated_time" content="2017-10-13T07:46:07.311Z">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/design.gif">
+<meta property="og:updated_time" content="2017-10-13T16:57:19.559Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="网络编程部分汇总">
-<meta name="twitter:description" content="个人是比较喜欢研究网络问题的, 最初可能是为了玩更多高大上配置的服务器, 之后就是为了弄清楚编程中遇到的问题以及其原因.">
-<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/net.jpg">
+<meta name="twitter:title" content="领域信息系统开源构想">
+<meta name="twitter:description" content="希望明年6月份前可以拉几个同学一起开发一下和这个系统">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/design.gif">
   
   
     <link href="/favicon.ico" rel="ico" />
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#大小端问题"><span class="toc-number">1.</span> <span class="toc-text">大小端问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#查看"><span class="toc-number">1.1.</span> <span class="toc-text">查看</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#转换"><span class="toc-number">1.2.</span> <span class="toc-text">转换</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考："><span class="toc-number">2.</span> <span class="toc-text">参考：</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#尴聊"><span class="toc-number">1.</span> <span class="toc-text">尴聊</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li></ol>
     	</div>
 	
 
@@ -205,19 +205,19 @@ function tmpfobid()
     <div class="container post-box">
         <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
             <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
-                <strong>网络编程部分汇总</strong>
+                <strong>领域信息系统开源构想</strong>
             </div>
  
             <div class="is-flex align-center" style="margin-top:10px;">
                 <span style="padding:0 10px;">post time:</span>
 				
-                <span class="post-date">2017-10-13</span>
+                <span class="post-date">2017-10-12</span>
             </div>
 			
             
                 <div>
                     
-                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/网络/">网络</a>
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/思考/">思考</a>
                     
                 </div>
             
@@ -227,98 +227,20 @@ function tmpfobid()
 
         <div class="content" style="overflow: auto; align:center;">
             <blockquote>
-<p>本文主要记载一些网络基础知识, 但这些知识不是纯碎的理论研究, 而是为了后面<code>传输层</code>/<code>应用层</code>网络编程服务的.</p>
+<p>一直以来我获取行业调研报告的途径都是券商的网站, 比如中金所, 建投等, 后来朋友建议你可以试试Python爬虫</p>
+</blockquote>
+<h1 id="尴聊"><a href="#尴聊" class="headerlink" title="尴聊"></a>尴聊</h1><p>机缘巧合, 朋友正在考虑要不要去<code>七牛</code>上海这边工作时, 我就存储的问题咨询了一下他, 为啥七牛, 又拍运的存储后台可以做的这么好.<br>其实呢, 我心里是有一定的见解的, 大致上由于其服务器分布位置以及网络供应商的合作, 没想到这个<strong>未来架构师</strong>未来架构师的<code>老男人</code>开始大谈特谈架构问题.</p>
+<p>他推荐了一篇文章, 我找了一个有用的架构图(单人使用的工具系统, 有必要这么复杂么?)<br><img src="http://omotkhw3y.bkt.clouddn.com/design.gif" alt=""></p>
+<p>其实我是不太懂架构, 或者是不想懂; 上学那会儿我还会憧憬一下架构师, 可是经过2年多的工作, 我的兴趣点, 长处渐渐明确, 其实也应该是由于看到了架构师在单位内部尴尬的位置&amp;处境, 怎么说呢, 不说架构师, 反正就是, 死活不想做架构师. (希望5年内可以做领域专家)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>后端信息系统, 我其实死没有考虑这个的, 我希望要的是一个可以搜集数据, 分析数据, 然后适当分析数据的系统(当然主要的分析数据能力在我, 人类专家知识).</p>
 <blockquote>
-<p>2017年10月更新了本文: <code>nagle算法</code> + <code>delayed ack算法</code> + <code>重新整理排版</code></p>
+<p>但是当前没有太详细的构想</p>
 </blockquote>
-</blockquote>
-<p><strong>该文是我写的网络编程的第一篇文章, 改版了, 成为最后一篇, 总结</strong>大致上已经整理了以下内容:(链接都是我站内的链接)</p>
-<ul>
-<li>网络理论基础部分 (本文)</li>
-<li>基础套接字编程, <a href="http://www.merlinblog.site/2017/06/11/basic-socket-model.html">链接</a></li>
-<li>本地套接字, <a href="http://www.merlinblog.site/2017/06/20/ipc-unix-domain-socket.html">链接</a></li>
-<li>TCP 专题, <a href="http://www.merlinblog.site/2017/06/19/how-about-tcp.html">链接</a>, 以及 <a href="http://www.merlinblog.site/2017/06/19/sub-and-adhere-package.html">流解析(粘包问题)</a></li>
-<li>UDP 专题, <a href="http://www.merlinblog.site/2017/06/19/udp-model.html">链接</a></li>
-<li>IO 模型, <a href="http://www.merlinblog.site/2017/06/04/network-io.html">链接</a></li>
-<li>Epoll专题, <a href="http://www.merlinblog.site/2017/06/13/why-not-epoll.html">链接</a></li>
-<li>服务端模型演变, <a href="http://www.merlinblog.site/2017/06/19/server-side-model-again.html">链接</a></li>
-<li>proto buffer 库, <a href="http://www.merlinblog.site/2017/08/21/protocol-buffer.html">链接</a></li>
-<li>thrift 库, <a href="http://www.merlinblog.site/2017/08/22/thrift.html">链接</a></li>
-<li>libevent 库, <a href="http://www.merlinblog.site/2017/07/29/libevent.html">链接</a></li>
-<li>asio, <a href="http://www.merlinblog.site/2017/08/11/asio.html">链接</a></li>
-<li>muduo, 陈硕大神的库, 值得研究学习, <a href="http://www.merlinblog.site/2017/07/29/deep-in-muduo-framework.html">链接</a></li>
-<li>网络常用工具, nc, dd, tcpdump, ping, traceroute等, <a href="http://www.merlinblog.site/2017/08/23/net-work-tools.html">链接</a></li>
-</ul>
-<p>大部分知识来自于书籍(unp 1, unix高级编程, 以及 linux系统编程上下册), 腾讯后端的同学的交流, 我的一些个人思考, 最后靠谱网友的博客.</p>
-<blockquote>
-<p>这些整理记录了我的成长, 也希望为看到的人带来帮助, 至少节约一些时间</p>
-</blockquote>
-<a id="more"></a>
+<p>python 爬虫? + 可视化? 以及我要的<code>领域&amp;行业调研报告</code>? 有点乱.</p>
+<p>总之, 这个事情, <strong>先记录一下, 之后有时间, 仔细思考和实践</strong>, 作为了mini-project or side-project.</p>
+<p>TODO</p>
 <hr>
-<p><img src="http://omotkhw3y.bkt.clouddn.com/net.jpg" alt="post-cover"></p>
-<p>TODO, 重新整理上传.</p>
-<h1 id="大小端问题"><a href="#大小端问题" class="headerlink" title="大小端问题"></a>大小端问题</h1><h2 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h2><p>编写一个程序， 看一下主机字节序是 little-endian还是big-endian.</p>
-<p>下面给出一种简单的方案：</p>
-<pre><code class="c">#include &lt;stdio.h&gt;
-
-int main()
-{
-
-    int a = 0x1122;
-
-    char *b = (char*)&amp;a;
-
-    if(*b == 0x11){
-        printf(&quot;BE\n&quot;);
-    }else{
-        printf(&quot;LE\n&quot;);
-    }
-
-    printf(&quot;%d\n&quot;, *b==0x22); //1
-
-    return 0;
-}
-</code></pre>
-<p>当然你用联合union也挺好：</p>
-<pre><code class="c">#include &lt;stdio.h&gt;
-
-int main()
-{
-    typedef union {
-        int num;
-        char num_low8;
-    } NUM;
-
-    NUM number;
-    number.num = 0x1122;
-    if(number.num_low8 == 0x11){
-        printf(&quot;BE\n&quot;);
-    }else{
-        printf(&quot;LE\n&quot;);
-    }
-
-    printf(&quot;%d\n&quot;, number.num_low8==0x22); //1
-
-
-    return 0;
-}
-</code></pre>
-<h2 id="转换"><a href="#转换" class="headerlink" title="转换"></a>转换</h2><p>注意：操作系统读写内存都是从低地址到高地址。</p>
-<p>一般本地主机是小端，但是网络字节序就是大端了。<br>这个时候涉及到转换问题，一般是IP地址的转换，有相应的函数htons()、ntohs()、htonl()、ntohl() ，并且像protobuf库也有相关的API.</p>
-<p>手动转换？（模拟一下）<br>小端转换成大端：　(主机序变成网络序)<br>转换思想是这样的(32位系统)：</p>
-<ol>
-<li>先把十进制转换成十六进制</li>
-<li>低８位和高８位交换</li>
-<li>分别在低４位，高４位中分别进行两两交换</li>
-</ol>
-<p>(之后如果还是在你本机查看的话，你得到的可能是另外一个数字)</p>
-<p>代码如下：<br>…写不出来。</p>
-<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><ol>
-<li><a href="">《图解TCP/IP》</a></li>
-</ol>
-<hr>
-<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)                                                                                                  </p>
-<p>Saturday, 11. March 2017 04:09PM </p>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 
         </div>
 
@@ -334,8 +256,8 @@ int main()
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：网络编程部分汇总</span><br/>
-	<span><b>本文链接</b>：www.merlinblog.site/2017/10/13/network-base.html</span>
+	<span><b>本文标题</b>：领域信息系统开源构想</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/10/12/domain-specific-system.html</span>
 
   </blockquote>
 </div>
