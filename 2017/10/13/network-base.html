@@ -8,21 +8,21 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   
-  <title>深挖Linux之网络 | Merlin&#39;s Blog</title>
+  <title>网络编程部分&amp;汇总 | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="我不知道我有没有这样的水平把 &quot;网络&quot; 这一大块儿总结清楚， 但是我还是硬着头皮试试">
-<meta name="keywords" content="网络,linux">
+  <meta name="description" content="个人是比较喜欢研究网络问题的, 最初可能是为了玩更多高大上配置的服务器, 之后就是为了弄清楚编程中遇到的问题以及其原因.">
+<meta name="keywords" content="网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深挖Linux之网络">
-<meta property="og:url" content="www.merlinblog.site/2017/03/26/network-base.html">
+<meta property="og:title" content="网络编程部分&amp;汇总">
+<meta property="og:url" content="www.merlinblog.site/2017/10/13/network-base.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
-<meta property="og:description" content="我不知道我有没有这样的水平把 &quot;网络&quot; 这一大块儿总结清楚， 但是我还是硬着头皮试试">
+<meta property="og:description" content="个人是比较喜欢研究网络问题的, 最初可能是为了玩更多高大上配置的服务器, 之后就是为了弄清楚编程中遇到的问题以及其原因.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/net.jpg">
-<meta property="og:updated_time" content="2017-10-12T23:19:20.000Z">
+<meta property="og:updated_time" content="2017-10-13T07:45:29.959Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深挖Linux之网络">
-<meta name="twitter:description" content="我不知道我有没有这样的水平把 &quot;网络&quot; 这一大块儿总结清楚， 但是我还是硬着头皮试试">
+<meta name="twitter:title" content="网络编程部分&amp;汇总">
+<meta name="twitter:description" content="个人是比较喜欢研究网络问题的, 最初可能是为了玩更多高大上配置的服务器, 之后就是为了弄清楚编程中遇到的问题以及其原因.">
 <meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/net.jpg">
   
   
@@ -205,21 +205,19 @@ function tmpfobid()
     <div class="container post-box">
         <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
             <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
-                <strong>深挖Linux之网络</strong>
+                <strong>网络编程部分&汇总</strong>
             </div>
  
             <div class="is-flex align-center" style="margin-top:10px;">
                 <span style="padding:0 10px;">post time:</span>
 				
-                <span class="post-date">2017-03-26</span>
+                <span class="post-date">2017-10-13</span>
             </div>
 			
             
                 <div>
                     
                          <a style="margin-right:5px" class="tag is-post-tag" href="/tags/网络/">网络</a>
-                    
-                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/linux/">linux</a>
                     
                 </div>
             
@@ -228,13 +226,37 @@ function tmpfobid()
 
 
         <div class="content" style="overflow: auto; align:center;">
-            <p>总结一下<code>linux网络编程</code>相关知识&amp;问题，貌似不太轻松啊- . -! 还是试试看吧.</p>
-<p> one more thing: 要写点网络理论么？</p>
-<pre><code>不，不讲理论。那是最基本的common sense. (除非一些核心的东西需要强调时)
-</code></pre><a id="more"></a>
+            <blockquote>
+<p>本文主要记载一些网络基础知识, 但这些知识不是纯碎的理论研究, 而是为了后面<code>传输层</code>/<code>应用层</code>网络编程服务的.</p>
+<blockquote>
+<p>2017年10月更新了本文: <code>nagle算法</code> + <code>delayed ack算法</code> + <code>重新整理排版</code></p>
+</blockquote>
+</blockquote>
+<p><strong>该文是我写的网络编程的第一篇文章, 改版了, 成为最后一篇, 总结</strong>大致上已经整理了以下内容:(链接都是我站内的链接)</p>
+<ul>
+<li>网络理论基础部分 (本文)</li>
+<li>基础套接字编程, <a href="http://www.merlinblog.site/2017/06/11/basic-socket-model.html">链接</a></li>
+<li>本地套接字, <a href="http://www.merlinblog.site/2017/06/20/ipc-unix-domain-socket.html">链接</a></li>
+<li>TCP 专题, <a href="http://www.merlinblog.site/2017/06/19/how-about-tcp.html">链接</a>, 以及 <a href="http://www.merlinblog.site/2017/06/19/sub-and-adhere-package.html">流解析(粘包问题)</a></li>
+<li>UDP 专题, <a href="http://www.merlinblog.site/2017/06/19/udp-model.html">链接</a></li>
+<li>IO 模型, <a href="http://www.merlinblog.site/2017/06/04/network-io.html">链接</a></li>
+<li>Epoll专题, <a href="http://www.merlinblog.site/2017/06/13/why-not-epoll.html">链接</a></li>
+<li>服务端模型演变, <a href="http://www.merlinblog.site/2017/06/19/server-side-model-again.html">链接</a></li>
+<li>proto buffer 库, <a href="http://www.merlinblog.site/2017/08/21/protocol-buffer.html">链接</a></li>
+<li>thrift 库, <a href="http://www.merlinblog.site/2017/08/22/thrift.html">链接</a></li>
+<li>libevent 库, <a href="http://www.merlinblog.site/2017/07/29/libevent.html">链接</a></li>
+<li>asio, <a href="http://www.merlinblog.site/2017/08/11/asio.html">链接</a></li>
+<li>muduo, 陈硕大神的库, 值得研究学习, <a href="http://www.merlinblog.site/2017/07/29/deep-in-muduo-framework.html">链接</a></li>
+<li>网络常用工具, nc, dd, tcpdump, ping, traceroute等, <a href="http://www.merlinblog.site/2017/08/23/net-work-tools.html">链接</a></li>
+</ul>
+<p>大部分知识来自于书籍(unp 1, unix高级编程, 以及 linux系统编程上下册), 腾讯后端的同学的交流, 我的一些个人思考, 最后靠谱网友的博客.</p>
+<blockquote>
+<p>这些整理记录了我的成长, 也希望为看到的人带来帮助, 至少节约一些时间</p>
+</blockquote>
+<a id="more"></a>
 <hr>
 <p><img src="http://omotkhw3y.bkt.clouddn.com/net.jpg" alt="post-cover"></p>
-<p>TODO</p>
+<p>TODO, 重新整理上传.</p>
 <h1 id="大小端问题"><a href="#大小端问题" class="headerlink" title="大小端问题"></a>大小端问题</h1><h2 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h2><p>编写一个程序， 看一下主机字节序是 little-endian还是big-endian.</p>
 <p>下面给出一种简单的方案：</p>
 <pre><code class="c">#include &lt;stdio.h&gt;
@@ -312,8 +334,8 @@ int main()
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：深挖Linux之网络</span><br/>
-	<span><b>本文链接</b>：www.merlinblog.site/2017/03/26/network-base.html</span>
+	<span><b>本文标题</b>：网络编程部分&amp;汇总</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/10/13/network-base.html</span>
 
   </blockquote>
 </div>
