@@ -27,9 +27,10 @@
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-sub.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/net-work-route.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/ipheader.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-arp.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-linklayer1.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/net-work-udp-mtu.png">
-<meta property="og:updated_time" content="2017-10-13T21:25:16.555Z">
+<meta property="og:updated_time" content="2017-10-14T23:53:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络编程部分汇总">
 <meta name="twitter:description" content="个人是比较喜欢研究网络问题的, 最初可能是为了玩更多高大上配置的服务器, 之后就是为了弄清楚编程中遇到的问题以及其原因.">
@@ -199,7 +200,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分层模型"><span class="toc-number">1.</span> <span class="toc-text">分层模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#OSI模型"><span class="toc-number">1.1.</span> <span class="toc-text">OSI模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP-IP四层模型"><span class="toc-number">1.2.</span> <span class="toc-text">TCP/IP四层模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#各层要点"><span class="toc-number">1.3.</span> <span class="toc-text">各层要点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他问题"><span class="toc-number">2.</span> <span class="toc-text">其他问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#MTU-相关问题"><span class="toc-number">2.1.</span> <span class="toc-text">MTU 相关问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MTU-路径发现"><span class="toc-number">2.1.1.</span> <span class="toc-text">MTU 路径发现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#大小端问题"><span class="toc-number">2.2.</span> <span class="toc-text">大小端问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ping原理"><span class="toc-number">2.3.</span> <span class="toc-text">Ping原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Traceroute原理"><span class="toc-number">2.4.</span> <span class="toc-text">Traceroute原理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考："><span class="toc-number">3.</span> <span class="toc-text">参考：</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分层模型"><span class="toc-number">1.</span> <span class="toc-text">分层模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#OSI模型"><span class="toc-number">1.1.</span> <span class="toc-text">OSI模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP-IP四层模型"><span class="toc-number">1.2.</span> <span class="toc-text">TCP/IP四层模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#各层要点"><span class="toc-number">1.3.</span> <span class="toc-text">各层要点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他问题"><span class="toc-number">2.</span> <span class="toc-text">其他问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#MTU-相关问题"><span class="toc-number">2.1.</span> <span class="toc-text">MTU 相关问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MTU-路径发现"><span class="toc-number">2.1.1.</span> <span class="toc-text">MTU 路径发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSS"><span class="toc-number">2.1.2.</span> <span class="toc-text">MSS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#大小端问题"><span class="toc-number">2.2.</span> <span class="toc-text">大小端问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ping原理"><span class="toc-number">2.3.</span> <span class="toc-text">Ping原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Traceroute原理"><span class="toc-number">2.4.</span> <span class="toc-text">Traceroute原理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考："><span class="toc-number">3.</span> <span class="toc-text">参考：</span></a></li></ol>
     	</div>
 	
 
@@ -353,7 +354,7 @@ function tmpfobid()
 <p>分组和重组, 也会涉及 MTU, 请参考<code>其他部分</code>的<code>MTU路径发现</code>.</p>
 <p>由于<code>环</code>和<code>分组</code>问题都依赖于<code>IP首部</code>结构, 下面就说说.</p>
 <p><strong>IP首部</strong><br>即 ip协议头(20字节), 这里有很多设计讲究.<br><img src="http://omotkhw3y.bkt.clouddn.com/ipheader.png" alt=""></p>
-<p>8位的TTL字段。(解决环的问题, 不可能让你无限传下去)<br>这个字段规定该数据包在穿过多少个路由之后才会被抛弃。某个IP数据包每穿过一个路由器，该数据包的TTL数值就会减少1，当该数据包的TTL成为零，它就会被自动抛弃。<br>这个字段的最大值也就是255，也就是说一个协议包也就在路由器里面穿行255次就会被抛弃了，根据系统的不同，这个数字也不一样，一般是32或者是64。</p>
+<p>8位的TTL字段(解决环的问题, 不可能让你无限传下去)<br>这个字段规定该数据包在穿过多少个路由之后才会被抛弃。某个IP数据包每穿过一个路由器，该数据包的TTL数值就会减少1，当该数据包的TTL成为零，它就会被自动抛弃。<br>这个字段的最大值也就是255，也就是说一个协议包也就在路由器里面穿行255次就会被抛弃了，根据系统的不同，这个数字也不一样，一般是32或者是64。</p>
 <p>其他部分介绍:(从上往下一层层看)</p>
 <ul>
 <li>总长度(Total Length)：表示IP首部与数据部分总的字节数，该段长16比特，所以IP包的最大长度为65535字节(2^16)。虽然不同数据链路的MTU不同，但是IP协议屏蔽了这些区别，通过自己实现的数据分片功能，从上层的角度来看，IP协议总是能够以65535为最大包长进行传输。<br>(上层看不到下层的MTU限制)</li>
@@ -363,12 +364,24 @@ function tmpfobid()
 <li>首部校验和：用于检查IP首部是否损坏</li>
 <li>可选项：仅在试验或诊断时用，可以没有。如果有，需要配合填充（Padding）占满32比特。</li>
 </ul>
-<p><strong>ARP及RARP协议</strong> :</p>
-<p>TODO</p>
+<p><strong>ARP及RARP协议</strong> :<br>(非重点, 我以前电脑中过arp病毒, 所以印象深刻)<br>ARP (Address Resolution Protocol)是根据IP地址获取 MAC 地址的一种协议。(因为最终确定一台计算机的不是IP, 而是Mac地址, 硬件地址)<br>如果目标主机处在同一个数据链路上，那么可以直接得到目标主机的 MAC 地址，否则会得到下一条路由器的 MAC 地址。</p>
+<p>ARP（地址解析）协议是一种解析协议，详细说明即: ARP 请求和 ARP 响应。<br>首先，源主机会通过广播发送一个 ARP 请求包：“我要与 IP 地址为 xxx 的主机通话，谁知道它的 MAC地址？”。<br>数据链路上的所有主机都会收到这条消息并检查自己的 IP 地址，如果与 ARP 请求包中的 IP 地址一致，主机就会发送 ARP 响应包：“我就是 IP 地址为 xxx 的主机，我的 MAC 地址是：xxxx”。<br><img src="http://omotkhw3y.bkt.clouddn.com/network-arp.png" alt=""></p>
+<p>但是反复查询效率很低, 也是不推荐的做法; 通常的做法是把获取到的 MAC 地址缓存一段时间。(一旦源主机向目标地址发送一个数据包，接下来继续发送多次的概率非常大，因此这种缓存非常容易命中)</p>
+<p>当主机要发送一个IP包的时候，会首先查一下自己的ARP高速缓存（就是一个 IP-MAC 地址对应表缓存）。</p>
+<p>如果查询的 IP－MAC 值对不存在，那么主机就向网络发送一个ARP协议广播包，这个广播包里面就有待查询的IP地址，而直接收到这份广播的包的所有主机都会查询自己的IP地址，如果收到广播包的某一个主机发现自己符合条件，那么就准备好一个包含自己的 MAC 地址的ARP包传送给发送ARP广播的主机。而广播主机拿到ARP包后会更新自己的ARP缓存（就是存放IP-MAC对应表的地方）。发送广播的主机就会用新的ARP缓存数据准备好数据链路层的的数据包发送工作。</p>
+<p>当下一次发送 ARP 请求或超过一定时间后，缓存都会失效，这保证了即使 MAC 地址与 IP 地址的对应关系发生了变化，数据包依然能够被正确的发往目标地址。</p>
+<p>RARP协议的工作与此相反，不做赘述。</p>
+<blockquote>
+<p>只用IP是不行的, 只用Mac是非常低效的.</p>
+</blockquote>
+<p>其中用意个人体会吧, arp和rarp协议有其存在的必要性.</p>
 <p><strong>NAT 和 NAPT 技术</strong> :<br>TODO</p>
-<p><strong>ICMP协议</strong> :</p>
+<p><strong>ICMP协议</strong> :<br>这也是IP层的一个重要协议, 主要负责异常/错误通知.</p>
+<p>IP协议并不是一个可靠的协议，它不保证数据被送达，那么，自然的，保证数据送达的工作应该由其他的模块来完成。<br>其中一个重要的模块就是ICMP(网络控制报文)协议。</p>
+<blockquote>
+<p>当传送IP数据包发生错误。比如主机不可达，路由不可达等等，ICMP协议将会把错误信息封包，然后传送回给主机。<br>给主机一个处理错误的机会，这也就是为什么说建立在 IP 层以上的协议是可能做到安全的原因。</p>
+</blockquote>
 <p>该协议有一个重要应用, <code>ping</code> 命令, 具体可以参考下面 <code>其他部分</code>.<br>哦, 还有一个TTL检测工具, <code>traceroute</code> 也需要借助它.</p>
-<p>TODO</p>
 <hr>
 <p><strong>传输层</strong></p>
 <p>这里已经不仅仅是理论了, 而且有大量的code实践, 可以单独参考我的其他文章:</p>
@@ -396,13 +409,15 @@ function tmpfobid()
 <li>如果说TCP packet 最大长度, 那么 window是, 1500-20-20=1460(减掉ip, tcp头部各20字节), linux/mac/unix则还要减去12字节 tcp time stamp, 即1448字节</li>
 <li>如果说udp, UDP数据报的首部8字节,所以UDP数据报的数据区最大长度为1472字节</li>
 </ul>
-<p>强调一下, 这里说的是<strong>最大</strong>.<br>大于MTU, 这个时候发送方IP层就需要分片(fragmentation). 把数据报分成若干片,使每一片都小于MTU.而接收方IP层则需要进行数据报的重组.</p>
+<p>强调一下, 这里说的是<strong>最大</strong>, <code>最小为64字节</code> (以太网最大数据帧1500+14+4=1518字节, 头14字节, 尾CRC校验位4字节)<br>大于MTU, 这个时候发送方IP层就需要分片(fragmentation). 把数据报分成若干片,使每一片都小于MTU.而接收方IP层则需要进行数据报的重组.</p>
+<p>用于ping时, 一般就是1500-20-8 = 1472, ipv4中icmp协议头为8字节, 但是ipv6中可能是4也可能是8.</p>
 <h3 id="MTU-路径发现"><a href="#MTU-路径发现" class="headerlink" title="MTU 路径发现"></a>MTU 路径发现</h3><p>但是 MTU 不是一成不变的, 它会根据网络的性质, 通信状态进行一些列的调整, 例如Internet上的标准MTU值为 576. 其实也有一部分原因是, IP一旦丢包整段都要舍弃, 所以分小包减少丢包的概率.</p>
 <p>MTU路径发现, 就是解决办法:<br>主机会首先获取整个路径中所有数据链路的最小MTU，并按照整个大小将数据分片。<br>传输过程中的任何一个路由器都不用进行分片工作(但路由器有这个能力)。</p>
 <blockquote>
 <p>为了找到路径MTU，主机首先发送整个数据包，并将IP首部的禁止分片标志设为1.这样路由器在遇到需要分片才能处理的包时不会分片，而是直接丢弃数据并通过ICMP协议将整个不可达的消息发回给主机。<br>主机将ICMP通知中的MTU设置为当前MTU，根据整个MTU对数据进行分片处理。如此反复下去，直到不再收到ICMP通知，此时的MTU就是路径MTU。</p>
 </blockquote>
 <p>还是以udp为例子:(1500-20-8=1472的理论值)<br><img src="http://omotkhw3y.bkt.clouddn.com/net-work-udp-mtu.png" alt=""></p>
+<h3 id="MSS"><a href="#MSS" class="headerlink" title="MSS"></a>MSS</h3><p>TCP中谈论的更多的是, MSS (maximum segment size) 最大分节大小<br>一般为了避免分节, 也会进行相关的协商或者探测, 取网络的最小值.<br>撇开系统因素(比如linux/unix下可能会有tcp time stamp部分), 一般是:<br>ipv4 1500-20-20 = 1460 字节<br>ipv6 1500-20-40 = 1440 字节</p>
 <h2 id="大小端问题"><a href="#大小端问题" class="headerlink" title="大小端问题"></a>大小端问题</h2><p>编写一个程序， 看一下主机字节序是<code>little-endian</code>还是<code>big-endian</code>.</p>
 <p>下面给出一种简单的方案:</p>
 <pre><code class="C++">#include &lt;stdio.h&gt;
@@ -458,6 +473,7 @@ int main()
 <blockquote>
 <p>用类型码为0的ICMP发请求, 收到请求的主机则用类型码为8的ICMP回应</p>
 </blockquote>
+<p>用于ping时, MTU一般是1500-20-8 = 1472, ipv4中icmp协议头为8字节, 但是ipv6中可能是4也可能是8.</p>
 <h2 id="Traceroute原理"><a href="#Traceroute原理" class="headerlink" title="Traceroute原理"></a>Traceroute原理</h2><p>这个工具比较强大, 给的选项也比较多, 通常是来检查跳(hop)数.<br>Traceroute是用来侦测主机到目的主机之间所经路由情况的重要工具，也是最便利的工具。</p>
 <p>原理: (改变ttl数, 借助icmp反馈)</p>
 <blockquote>

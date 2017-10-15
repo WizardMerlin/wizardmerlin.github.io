@@ -172,17 +172,17 @@ function tmpfobid()
                 
 <div class="primary-container content-box is-flex-desktop clear-padding bottom-line" style="margin-bottom: 25px;">
     <div class="column  is-7-desktop">
-        <a href="/2017/06/19/sub-and-adhere-package.html">
+        <a href="/2017/06/19/udp-model.html">
             <div class="full-height post-hover"
                  style="
-                         background-image: url('http://omotkhw3y.bkt.clouddn.com/adhere-package.png');
+                         background-image: url('http://omotkhw3y.bkt.clouddn.com/udp%E6%A8%A1%E5%9E%8B.PNG');
                          height: 350px;
                          background-size: cover;
                          background-repeat: no-repeat;
                          ">
                     <div class=" is-flex flex-column center content has-text-centered full-height has-padding content-bg-mask">
                         <h1 class="title text-shadow" style="margin-bottom: 15px;">
-                            TCP流解析(粘包和拆包问题)
+                            UDP模型简述
                         </h1>
                         <div>
                         
@@ -193,12 +193,9 @@ function tmpfobid()
                         </div>
                         <p class="post-content-text is-marginless has-padding text-shadow">
                             
-TCP是字节流(流式协议, 无边界), 不知道消息(包, 有边界)的概念. 它本身不知道边界, 它不保留边界.
+tcp模型一般说的比较多, 因为tcp稳定,可靠; 但是代价就是传输效率不高, 实时性不强.这个时候udp正好做了弥补. 本文就谈谈udp.
 
-
-原因阐述TCP程序中涉及的粘包和分包:
-
-粘包是因为TCP会缓存小的数据包而不是马上发出去(但是TCP没有包意识, 它..
+(所涉及的代码都是核心代码, 很多没有做出错和异常处理, 比如说sendto, recvf..
                         </p>
                         <p class="date text-shadow">2017-06-19</p>
                         <button class="button is-info is-small">阅读详情</button>
@@ -210,6 +207,29 @@ TCP是字节流(流式协议, 无边界), 不知道消息(包, 有边界)的概�
         <div class="full-height is-flex flex-column justify-space-between" style="min-height: 350px;">
             
                 
+<a class="post-hover" href="/2017/06/19/sub-and-adhere-package.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/adhere-package.png')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                TCP流解析(粘包和拆包问题)
+            </h3>
+            
+            
+            <span class="tag is-post-tag">网络</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                
+TCP是字节流(流式协议, 无边界), 不知道消息(包, 有边界)的概念. 它本身不知道边界,..
+            </p>
+            <p class="date text-shadow is-marginless">2017-06-19</p>
+        </div>
+    </div>
+</a>
+            
+            
+                
 <a class="post-hover" href="/2017/06/13/why-not-epoll.html" style="height: 48.5%">
     <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/epoll1.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
@@ -229,31 +249,6 @@ TCP是字节流(流式协议, 无边界), 不知道消息(包, 有边界)的概�
 多路IO/IO复用中..
             </p>
             <p class="date text-shadow is-marginless">2017-06-13</p>
-        </div>
-    </div>
-</a>
-            
-            
-                
-<a class="post-hover" href="/2017/06/11/basic-socket-model.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/socket-basic.jpg')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                Linux基础套接字模型
-            </h3>
-            
-            
-            <span class="tag is-post-tag">网络</span>
-            
-            <span class="tag is-post-tag">linux</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                
-现在的很多库基本是基于异步网络IO, 以及 epoll等模型的封装, 但是 epoll模型的基..
-            </p>
-            <p class="date text-shadow is-marginless">2017-06-11</p>
         </div>
     </div>
 </a>
@@ -263,6 +258,29 @@ TCP是字节流(流式协议, 无边界), 不知道消息(包, 有边界)的概�
     <div class="column is-12 is-hidden-desktop">
         
         
+<a class="post-hover" href="/2017/06/19/sub-and-adhere-package.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/adhere-package.png')">
+        <div class="content-bg-mask full-width full-height has-padding">
+            <h3 class="title is-marginless text-shadow">
+                TCP流解析(粘包和拆包问题)
+            </h3>
+            
+            
+            <span class="tag is-post-tag">网络</span>
+            
+            
+            <p class="sub-title text-shadow"></p>
+            <p class="is-marginless text-shadow post-content-text">
+                
+TCP是字节流(流式协议, 无边界), 不知道消息(包, 有边界)的概念. 它本身不知道边界,..
+            </p>
+            <p class="date text-shadow is-marginless">2017-06-19</p>
+        </div>
+    </div>
+</a>
+        
+        
+        
 <a class="post-hover" href="/2017/06/13/why-not-epoll.html" style="height: 48.5%">
     <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/epoll1.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
@@ -286,35 +304,62 @@ TCP是字节流(流式协议, 无边界), 不知道消息(包, 有边界)的概�
     </div>
 </a>
         
-        
-        
-<a class="post-hover" href="/2017/06/11/basic-socket-model.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/socket-basic.jpg')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                Linux基础套接字模型
-            </h3>
-            
-            
-            <span class="tag is-post-tag">网络</span>
-            
-            <span class="tag is-post-tag">linux</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                
-现在的很多库基本是基于异步网络IO, 以及 epoll等模型的封装, 但是 epoll模型的基..
-            </p>
-            <p class="date text-shadow is-marginless">2017-06-11</p>
-        </div>
-    </div>
-</a>
-        
     </div>
 </div>
 
                     
+                    
+                
+                    
+                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/adhere-package.png')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/06/19/sub-and-adhere-package.html">
+                                            <p style="font-size: 24px;">TCP流解析(粘包和拆包问题)</p>
+									    </a>
+                                        
+                                            <span class="sub-title">也就是集中探讨一下粘包和分包问题, message or package;sub and adhere package.</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/网络/">
+                                                <span class="tag is-post-tag">
+												  网络
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         
+TCP是字节流(流式协议, 无边界), 不知道消息(包, 有边界)的概念. 它本身不知道边界, 它不保留边界.
+
+
+原因阐述TCP程序中涉及的粘包和分包:
+
+粘包是因为TCP会缓存小的数据包而不是马上发出去(但是TCP没有包意识, ...
+                                        </p>
+									<a class="post-hover" href="/2017/06/19/sub-and-adhere-package.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
                     
                 
                     
@@ -368,7 +413,7 @@ TCP是字节流(流式协议, 无边界), 不知道消息(包, 有边界)的概�
                     
                 
                     
-                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <div class="content-box  " style="margin-bottom: 27px;">
                        <!-- a -->
                             <div class="columns" style="min-height: 230px;">
                                 
@@ -501,15 +546,15 @@ https:/...
                 
                                         <p>
                                             
-												<a class="post-hover" href="/tags/设计模式/">
-                                                <span class="tag is-post-tag">
-												  设计模式
-												</span>
-												</a>
-                                            
 												<a class="post-hover" href="/tags/cpp/">
                                                 <span class="tag is-post-tag">
 												  cpp
+												</span>
+												</a>
+                                            
+												<a class="post-hover" href="/tags/设计模式/">
+                                                <span class="tag is-post-tag">
+												  设计模式
 												</span>
 												</a>
                                             
@@ -628,59 +673,6 @@ https:/...
 为何有此一文总在群里被问道, 各种烦人的 学这个有...
                                         </p>
 									<a class="post-hover" href="/2017/05/26/back-end-work.html" >
-                                        <button class="button is-info is-small">阅读详情</button>
-                        			</a>
-
-                                    </div> <!-- class content-->
-									
-                                </div> <!--class column -->
-
-                            </div>
-
-						<!-- a -->
-                        </div>
-                    
-                
-                    
-                       <div class="content-box  " style="margin-bottom: 27px;">
-                       <!-- a -->
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/mysql.jpg')">
-                                    </div>
-                                
-								
-                                <div class="column is-8-desktop post-content is-flex">
-								
-                                    <div class="content" style="margin-right:7px; align-center">
-									    <a class="post-hover" href="/2017/05/23/mysql-connector-cpp.html">
-                                            <p style="font-size: 24px;">mysql-connector-cpp</p>
-									    </a>
-                                        
-                                            <span class="sub-title">programming with mysql database in cpp language</span>
-                                        
-                
-                                        <p>
-                                            
-												<a class="post-hover" href="/tags/cpp/">
-                                                <span class="tag is-post-tag">
-												  cpp
-												</span>
-												</a>
-                                            
-												<a class="post-hover" href="/tags/mysql/">
-                                                <span class="tag is-post-tag">
-												  mysql
-												</span>
-												</a>
-                                            
-                                        </p>
-                                        <p >
-                                         
-就像JDBC接口一样, 利用 Connector 在 C++ 操作 mysql 数据库(而不是C api)进行数据操作, 更加简洁, 更加符合通用接口标准.mysql connector 会通过 mysqlclient-dev 库帮...
-                                        </p>
-									<a class="post-hover" href="/2017/05/23/mysql-connector-cpp.html" >
                                         <button class="button is-info is-small">阅读详情</button>
                         			</a>
 
@@ -840,7 +832,7 @@ https:/...
         <div class="site-box is-flex">
             <div class="flex-1 is-flex flex-column center full-height right-line">
                 <p>博文总计</p>			
-                <strong>116</strong>
+                <strong>117</strong>
             </div>
             <div class="flex-1 is-flex flex-column center full-height">
                 <p>标签数</p>
@@ -854,16 +846,16 @@ https:/...
         </div>
         <div class="content-inner is-flex flex-wrap justify-space-between">
             
-             <a class="tags-item" href="tags/设计模式/" title="点击 设计模式 详情" rel="1">
-                    设计模式<span class="tags-item-span"><b>1</span></b>
-             </a>
-            
              <a class="tags-item" href="tags/cpp/" title="点击 cpp 详情" rel="45">
                     cpp<span class="tags-item-span"><b>45</span></b>
              </a>
             
-             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="22">
-                    思考<span class="tags-item-span"><b>22</span></b>
+             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="23">
+                    思考<span class="tags-item-span"><b>23</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/设计模式/" title="点击 设计模式 详情" rel="1">
+                    设计模式<span class="tags-item-span"><b>1</span></b>
              </a>
             
              <a class="tags-item" href="tags/网络/" title="点击 网络 详情" rel="17">
@@ -894,12 +886,12 @@ https:/...
                     交易<span class="tags-item-span"><b>5</span></b>
              </a>
             
-             <a class="tags-item" href="tags/stl/" title="点击 stl 详情" rel="5">
-                    stl<span class="tags-item-span"><b>5</span></b>
-             </a>
-            
              <a class="tags-item" href="tags/框架/" title="点击 框架 详情" rel="6">
                     框架<span class="tags-item-span"><b>6</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/stl/" title="点击 stl 详情" rel="5">
+                    stl<span class="tags-item-span"><b>5</span></b>
              </a>
             
              <a class="tags-item" href="tags/里程碑/" title="点击 里程碑 详情" rel="1">
@@ -941,7 +933,7 @@ https:/...
             <strong>分类</strong>
         </div>
         <div class="content-inner">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">84</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">10</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">84</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">11</span></li></ul>
         </div>
     </div>
     <div class="content-inner content-box">
@@ -949,7 +941,7 @@ https:/...
             <strong>归档</strong>
         </div>
         <div class="content-inner">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">33</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">22</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">17</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">8</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">33</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">22</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">17</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">8</span></li></ul>
         </div>
     </div>
 
