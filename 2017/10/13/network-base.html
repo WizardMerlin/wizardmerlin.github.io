@@ -28,9 +28,12 @@
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/net-work-route.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/ipheader.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-arp.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-nat.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-napt.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-dns.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-linklayer1.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/net-work-udp-mtu.png">
-<meta property="og:updated_time" content="2017-10-14T23:53:14.000Z">
+<meta property="og:updated_time" content="2017-10-15T02:22:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络编程部分汇总">
 <meta name="twitter:description" content="个人是比较喜欢研究网络问题的, 最初可能是为了玩更多高大上配置的服务器, 之后就是为了弄清楚编程中遇到的问题以及其原因.">
@@ -265,6 +268,11 @@ function tmpfobid()
 <blockquote>
 <p>这些整理记录了我的成长(完善知识体系), 也希望为看到的人带来帮助, 至少节约一些时间(<code>于我个人而言, 写作是一种乐趣</code>)</p>
 </blockquote>
+<p>补充上层协议: (2017/9月整理)</p>
+<ul>
+<li>http协议, <a href="">链接</a></li>
+<li>https协议, <a href="">链接</a></li>
+</ul>
 <a id="more"></a>
 <hr>
 <p><img src="http://omotkhw3y.bkt.clouddn.com/net.jpg" alt="post-cover"></p>
@@ -375,7 +383,13 @@ function tmpfobid()
 <p>只用IP是不行的, 只用Mac是非常低效的.</p>
 </blockquote>
 <p>其中用意个人体会吧, arp和rarp协议有其存在的必要性.</p>
-<p><strong>NAT 和 NAPT 技术</strong> :<br>TODO</p>
+<p><strong>NAT 和 NAPT 技术</strong> :<br>NAT (Network Address Translator) 是一种用于将局域网中的私有地址转换成全局 IP 地址的技术。</p>
+<p>在连接上无线路由器的时候，如果检查一下设备的 IP 地址，也许你会发现是类似于 192.168.1.1 这样的局域网 IP 地址。那不同网段中，IP 地址都是 192.168.1.1 的主机改如何通信呢？</p>
+<p>下图描绘了 NAT 的工作原理：</p>
+<p>局域网中 IP 地址为 10.0.0.10 的主机向全局 IP 地址 163.221.120.9 发送数据。NAT 路由器将数据包的源地址修改成自己的全局 IP 地址：202.244.174.37。同理，接收数据时，路由器把目标地址 202.244.174.37 翻译成内网地址：10.0.0.10</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/network-nat.png" alt=""><br>路由器只有一个对外的全局 IP 地址，如果有多个内网主机都向外部通讯怎么办呢？这时就要使用 NAPT 技术，它和 NAT 从原理上类似，但它可以转换 TCP 和 UDP 端口号。</p>
+<p>使用 NAPT 技术时，不同的内网 IP 被转换成同一个公共 IP 地址，也就是路由器对外显示的全局 IP 地址，但是被附加不同的端口号以示区分：</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/network-napt.png" alt=""><br>不管是 NAT 还是 NAPT，都需要路由器路由器内部维护一张自动生成的地址转换表。以 TCP 为例，建立 TCP 连接首次握手的 SYN 包发出时会生成这个表，关闭连接时会发出 FIN 包，收到这个包的应答时转换表被删除。</p>
 <p><strong>ICMP协议</strong> :<br>这也是IP层的一个重要协议, 主要负责异常/错误通知.</p>
 <p>IP协议并不是一个可靠的协议，它不保证数据被送达，那么，自然的，保证数据送达的工作应该由其他的模块来完成。<br>其中一个重要的模块就是ICMP(网络控制报文)协议。</p>
 <blockquote>
@@ -389,13 +403,17 @@ function tmpfobid()
 <li>tcp: <a href="http://www.merlinblog.site/2017/06/19/how-about-tcp.html">how-about-tcp</a></li>
 <li>udp: <a href="http://www.merlinblog.site/2017/06/19/udp-model.html">udp model</a></li>
 </ul>
-<p>TODO</p>
 <hr>
 <p><strong>应用层</strong></p>
 <p>这里谈一些其他的协议, 比如常见的 HTTP, HTTPS, DNS等, 当然, 也有人专门花一本书的时间,去写一个应用协议, 呵呵呵.</p>
-<p><strong>DNS</strong> : Domain Name System，域名解析系统<br>因特网上作为域名和IP地址相互映射的一个分布式数据库，能够使用户更方便的访问互联网，而不用去记住能够被机器直接读取的IP数串。通过主机名，最终得到该主机名对应的IP地址的过程叫做域名解析（或主机名解析）。<br>DNS协议运行在UDP协议之上，使用端口号53。</p>
+<p><strong>DNS</strong> : Domain Name System，域名解析系统<br>因特网上作为域名和IP地址相互映射的一个分布式数据库，能够使用户更方便的访问互联网，而不用去记住能够被机器直接读取的IP数串。通过主机名，最终得到该主机名对应的IP地址的过程叫做域名解析（或主机名解析）。</p>
+<p>以解析域名： www.ietf.org为例：<br><img src="http://omotkhw3y.bkt.clouddn.com/network-dns.png" alt=""><br>根服务器其实并不知道 www.ietf.org 的 IP 地址，但是它知道 itef.org 域名服务器的地址，所以它把这条查询请求转发给 itef.org 域名服务器。DNS请求被逐层下发，直到找到对应的 IP 地址为止。</p>
+<blockquote>
+<p>DNS协议运行在UDP协议之上，使用端口号53</p>
+</blockquote>
+<p>应用层, 我接触的,最主要的还是 HTTP, HTTPS协议, 由于比较重要, 我还是单独成文了.</p>
 <p><strong>HTTP</strong> :</p>
-<p>TODO</p>
+<p>TODO, </p>
 <p><strong>HTTPS</strong> :<br>TODO</p>
 <h1 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h1><h2 id="MTU-相关问题"><a href="#MTU-相关问题" class="headerlink" title="MTU 相关问题"></a>MTU 相关问题</h2><p>其实这这个MTU指的是链路层的数据区, 并不包括链路层的首部和尾部的18个字节.<br><img src="http://omotkhw3y.bkt.clouddn.com/network-linklayer1.png" alt=""></p>
 <p>上面已经说了</p>

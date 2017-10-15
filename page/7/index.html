@@ -172,30 +172,33 @@ function tmpfobid()
                 
 <div class="primary-container content-box is-flex-desktop clear-padding bottom-line" style="margin-bottom: 25px;">
     <div class="column  is-7-desktop">
-        <a href="/2017/07/01/compare-bind-and-lambda.html">
+        <a href="/2017/07/03/ref-in-cpp.html">
             <div class="full-height post-hover"
                  style="
-                         background-image: url('http://omotkhw3y.bkt.clouddn.com/lambdavsbind.jpg');
+                         background-image: url('http://omotkhw3y.bkt.clouddn.com/ref.jpg');
                          height: 350px;
                          background-size: cover;
                          background-repeat: no-repeat;
                          ">
                     <div class=" is-flex flex-column center content has-text-centered full-height has-padding content-bg-mask">
                         <h1 class="title text-shadow" style="margin-bottom: 15px;">
-                            compare-bind-and-lambda
+                            C++11 std::ref总结
                         </h1>
                         <div>
                         
                             `
                                 <span class="tag is-post-tag">cpp</span>
+                            `
+                                <span class="tag is-post-tag">boost</span>
                             
                         
                         </div>
                         <p class="post-content-text is-marginless has-padding text-shadow">
-                            yasnippet 进行代码补全(实现上是采用的模板的形式), 但是每次补全的算法模板, 都是采用的lambda形式代替函数对象(functor), 于是引起了我极大的兴趣.
-lambda表达式, 比起 bind 和 function ..
+                            智能引用, 一种对于cpp现存机制的引用不足的弥补.C++11引入 std:: 的 reference_wrapper 和 boost中谈到的稍稍有些区别, 应该说比 boost 中的更加强大了.
+本文谈谈该库的来龙去脉, 使用技巧.
+..
                         </p>
-                        <p class="date text-shadow">2017-07-01</p>
+                        <p class="date text-shadow">2017-07-03</p>
                         <button class="button is-info is-small">阅读详情</button>
                     </div>
             </div>
@@ -205,11 +208,11 @@ lambda表达式, 比起 bind 和 function ..
         <div class="full-height is-flex flex-column justify-space-between" style="min-height: 350px;">
             
                 
-<a class="post-hover" href="/2017/07/01/smart-pointers-again.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.jpg')">
+<a class="post-hover" href="/2017/07/02/raii-technique-in-cpp.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/raiis.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
             <h3 class="title is-marginless text-shadow">
-                再说说智能指针
+                C++ RAII 相关技术总结
             </h3>
             
             
@@ -218,23 +221,21 @@ lambda表达式, 比起 bind 和 function ..
             
             <p class="sub-title text-shadow"></p>
             <p class="is-marginless text-shadow post-content-text">
-                引用计数, 标记擦除, 智能指针还有其他实现方式么?
-本篇主要涉及: 
-
-尝试自己实现 引用计数..
+                
+在 smart-pointers-again 一文里面我谈 auto_ptr 时略带说过 RA..
             </p>
-            <p class="date text-shadow is-marginless">2017-07-01</p>
+            <p class="date text-shadow is-marginless">2017-07-02</p>
         </div>
     </div>
 </a>
             
             
                 
-<a class="post-hover" href="/2017/07/01/bind-in-cpp.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/stsbind1.jpg')">
+<a class="post-hover" href="/2017/07/01/compare-bind-and-lambda.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/lambdavsbind.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
             <h3 class="title is-marginless text-shadow">
-                C++11 std:bind探究
+                compare-bind-and-lambda
             </h3>
             
             
@@ -243,7 +244,7 @@ lambda表达式, 比起 bind 和 function ..
             
             <p class="sub-title text-shadow"></p>
             <p class="is-marginless text-shadow post-content-text">
-                以前常用的是 std::bind1st 和 std::bind2nd 函数适配器, 现在主推 s..
+                yasnippet 进行代码补全(实现上是采用的模板的形式), 但是每次补全的算法模板, 都是采..
             </p>
             <p class="date text-shadow is-marginless">2017-07-01</p>
         </div>
@@ -255,11 +256,11 @@ lambda表达式, 比起 bind 和 function ..
     <div class="column is-12 is-hidden-desktop">
         
         
-<a class="post-hover" href="/2017/07/01/smart-pointers-again.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.jpg')">
+<a class="post-hover" href="/2017/07/02/raii-technique-in-cpp.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/raiis.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
             <h3 class="title is-marginless text-shadow">
-                再说说智能指针
+                C++ RAII 相关技术总结
             </h3>
             
             
@@ -268,23 +269,21 @@ lambda表达式, 比起 bind 和 function ..
             
             <p class="sub-title text-shadow"></p>
             <p class="is-marginless text-shadow post-content-text">
-                引用计数, 标记擦除, 智能指针还有其他实现方式么?
-本篇主要涉及: 
-
-尝试自己实现 引用计数..
+                
+在 smart-pointers-again 一文里面我谈 auto_ptr 时略带说过 RA..
             </p>
-            <p class="date text-shadow is-marginless">2017-07-01</p>
+            <p class="date text-shadow is-marginless">2017-07-02</p>
         </div>
     </div>
 </a>
         
         
         
-<a class="post-hover" href="/2017/07/01/bind-in-cpp.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/stsbind1.jpg')">
+<a class="post-hover" href="/2017/07/01/compare-bind-and-lambda.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/lambdavsbind.jpg')">
         <div class="content-bg-mask full-width full-height has-padding">
             <h3 class="title is-marginless text-shadow">
-                C++11 std:bind探究
+                compare-bind-and-lambda
             </h3>
             
             
@@ -293,7 +292,7 @@ lambda表达式, 比起 bind 和 function ..
             
             <p class="sub-title text-shadow"></p>
             <p class="is-marginless text-shadow post-content-text">
-                以前常用的是 std::bind1st 和 std::bind2nd 函数适配器, 现在主推 s..
+                yasnippet 进行代码补全(实现上是采用的模板的形式), 但是每次补全的算法模板, 都是采..
             </p>
             <p class="date text-shadow is-marginless">2017-07-01</p>
         </div>
@@ -308,6 +307,102 @@ lambda表达式, 比起 bind 和 function ..
                 
                     
                        <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/raiis.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/07/02/raii-technique-in-cpp.html">
+                                            <p style="font-size: 24px;">C++ RAII 相关技术总结</p>
+									    </a>
+                                        
+                                            <span class="sub-title">说说RAII技术和auto_ptr</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/cpp/">
+                                                <span class="tag is-post-tag">
+												  cpp
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         
+在 smart-pointers-again 一文里面我谈 auto_ptr 时略带说过 RAII, 本文细讲.
+
+每次谈到 资源管理 大概都会说Gc, Raii, PIMPL, 智能指针, 健壮指针, 数据的一致性, 泄露等问题,...
+                                        </p>
+									<a class="post-hover" href="/2017/07/02/raii-technique-in-cpp.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/lambdavsbind.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/07/01/compare-bind-and-lambda.html">
+                                            <p style="font-size: 24px;">compare-bind-and-lambda</p>
+									    </a>
+                                        
+                                            <span class="sub-title">比较一下Bind和Lambda的性能</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/cpp/">
+                                                <span class="tag is-post-tag">
+												  cpp
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         yasnippet 进行代码补全(实现上是采用的模板的形式), 但是每次补全的算法模板, 都是采用的lambda形式代替函数对象(functor), 于是引起了我极大的兴趣.
+lambda表达式, 比起 bind 和 function...
+                                        </p>
+									<a class="post-hover" href="/2017/07/01/compare-bind-and-lambda.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  " style="margin-bottom: 27px;">
                        <!-- a -->
                             <div class="columns" style="min-height: 230px;">
                                 
@@ -361,7 +456,7 @@ lambda表达式, 比起 bind 和 function ..
                     
                 
                     
-                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
+                       <div class="content-box  " style="margin-bottom: 27px;">
                        <!-- a -->
                             <div class="columns" style="min-height: 230px;">
                                 
@@ -562,105 +657,6 @@ who is sp...
                         </div>
                     
                 
-                    
-                       <div class="content-box  " style="margin-bottom: 27px;">
-                       <!-- a -->
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/moreeffectivecpp.jpg')">
-                                    </div>
-                                
-								
-                                <div class="column is-8-desktop post-content is-flex">
-								
-                                    <div class="content" style="margin-right:7px; align-center">
-									    <a class="post-hover" href="/2017/07/01/more-effective-cpp.html">
-                                            <p style="font-size: 24px;">《More Effective Cpp》</p>
-									    </a>
-                                        
-                                            <span class="sub-title">这也是C++领域一本经典的书, 并且和effective c++一样, 必读书籍</span>
-                                        
-                
-                                        <p>
-                                            
-												<a class="post-hover" href="/tags/cpp/">
-                                                <span class="tag is-post-tag">
-												  cpp
-												</span>
-												</a>
-                                            
-                                        </p>
-                                        <p >
-                                         
-相比上一本《effective c++》, 这本《more effective c++》探讨的问题就有点儿泛, 但是仍旧不失为一本好书.
-
-一起说说吧, 我用通俗的话说说里面比较实用的rules.
-
-
-引子正文尾巴
-who is s...
-                                        </p>
-									<a class="post-hover" href="/2017/07/01/more-effective-cpp.html" >
-                                        <button class="button is-info is-small">阅读详情</button>
-                        			</a>
-
-                                    </div> <!-- class content-->
-									
-                                </div> <!--class column -->
-
-                            </div>
-
-						<!-- a -->
-                        </div>
-                    
-                
-                    
-                       <div class="content-box  " style="margin-bottom: 27px;">
-                       <!-- a -->
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/effectivecpp.jpg')">
-                                    </div>
-                                
-								
-                                <div class="column is-8-desktop post-content is-flex">
-								
-                                    <div class="content" style="margin-right:7px; align-center">
-									    <a class="post-hover" href="/2017/07/01/effective-cpp.html">
-                                            <p style="font-size: 24px;">《Effective Cpp》</p>
-									    </a>
-                                        
-                                            <span class="sub-title">不介绍了, 搞C++没读过《effective c++》的话, 呵呵</span>
-                                        
-                
-                                        <p>
-                                            
-												<a class="post-hover" href="/tags/cpp/">
-                                                <span class="tag is-post-tag">
-												  cpp
-												</span>
-												</a>
-                                            
-                                        </p>
-                                        <p >
-                                         首先说这本书, 搞Cpp的, 必读(C++貌似和别的语言不一样, 在这么个 狭小 的领域有太多经典著作). 其次说, 第三版和网上免费的第二版差别有点儿大.c++的确是一门需要适应的语言, 可能你用python搞出来好几个应用了, 妈...
-                                        </p>
-									<a class="post-hover" href="/2017/07/01/effective-cpp.html" >
-                                        <button class="button is-info is-small">阅读详情</button>
-                        			</a>
-
-                                    </div> <!-- class content-->
-									
-                                </div> <!--class column -->
-
-                            </div>
-
-						<!-- a -->
-                        </div>
-                    
-                
 
                 <!--翻頁-->
                 <nav class="pagination is-flex" style="justify-content: flex-end;">
@@ -807,7 +803,7 @@ who is s...
         <div class="site-box is-flex">
             <div class="flex-1 is-flex flex-column center full-height right-line">
                 <p>博文总计</p>			
-                <strong>117</strong>
+                <strong>119</strong>
             </div>
             <div class="flex-1 is-flex flex-column center full-height">
                 <p>标签数</p>
@@ -821,6 +817,10 @@ who is s...
         </div>
         <div class="content-inner is-flex flex-wrap justify-space-between">
             
+             <a class="tags-item" href="tags/设计模式/" title="点击 设计模式 详情" rel="1">
+                    设计模式<span class="tags-item-span"><b>1</span></b>
+             </a>
+            
              <a class="tags-item" href="tags/cpp/" title="点击 cpp 详情" rel="45">
                     cpp<span class="tags-item-span"><b>45</span></b>
              </a>
@@ -829,12 +829,8 @@ who is s...
                     思考<span class="tags-item-span"><b>23</span></b>
              </a>
             
-             <a class="tags-item" href="tags/设计模式/" title="点击 设计模式 详情" rel="1">
-                    设计模式<span class="tags-item-span"><b>1</span></b>
-             </a>
-            
-             <a class="tags-item" href="tags/网络/" title="点击 网络 详情" rel="17">
-                    网络<span class="tags-item-span"><b>17</span></b>
+             <a class="tags-item" href="tags/网络/" title="点击 网络 详情" rel="19">
+                    网络<span class="tags-item-span"><b>19</span></b>
              </a>
             
              <a class="tags-item" href="tags/linux/" title="点击 linux 详情" rel="13">
@@ -908,7 +904,7 @@ who is s...
             <strong>分类</strong>
         </div>
         <div class="content-inner">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">84</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">11</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">86</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">11</span></li></ul>
         </div>
     </div>
     <div class="content-inner content-box">
@@ -916,7 +912,7 @@ who is s...
             <strong>归档</strong>
         </div>
         <div class="content-inner">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">33</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">22</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">17</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">8</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">33</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">22</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">17</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">8</span></li></ul>
         </div>
     </div>
 
