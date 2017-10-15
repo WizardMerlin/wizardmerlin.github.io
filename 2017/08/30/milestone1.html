@@ -19,7 +19,7 @@
 <meta property="og:description" content="一些列工作经验的分享,干货">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/new_era_1.png">
-<meta property="og:updated_time" content="2017-10-13T16:12:30.279Z">
+<meta property="og:updated_time" content="2017-10-15T02:55:46.216Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="里程碑1(Linux后台开发经验分享)">
 <meta name="twitter:description" content="一些列工作经验的分享,干货">
@@ -265,7 +265,7 @@ function tmpfobid()
 <li>Boost的ASIO是一个异步IO库，封装了对Socket的常用操作，简化了基于socket程序的开发。支持跨平台。</li>
 <li>Libevent是一个C语言写的事件驱动的开源网络库, 应用和异步IO逻辑思想类似的 reactor反应堆模型.</li>
 </ul>
-<p>这两个库我都有详细介绍过, 这里就不再多说了.</p>
+<p>这两个库我都有详细介绍过, 这里就不再多说了, 具体可以参考我的文章: <a href="http://www.merlinblog.site/2017/10/13/network-base.html">网络部分汇总</a></p>
 <h3 id="相关架构"><a href="#相关架构" class="headerlink" title="相关架构"></a>相关架构</h3><p>后端服务器架构应该说有很多种, 我熟悉的:</p>
 <ul>
 <li>Gate: 首先要有一个Gate(网关)服务器，负责客户端连接及消息转发到Game(游戏服),保持客户端到服务端的连接<br>没有任何逻辑，只做消息加密和解密，以及客户端和服务器消息的转发(相当于两者之间的桥梁).</li>

@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-dns.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-linklayer1.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/net-work-udp-mtu.png">
-<meta property="og:updated_time" content="2017-10-15T02:22:47.000Z">
+<meta property="og:updated_time" content="2017-10-15T02:53:50.168Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络编程部分汇总">
 <meta name="twitter:description" content="个人是比较喜欢研究网络问题的, 最初可能是为了玩更多高大上配置的服务器, 之后就是为了弄清楚编程中遇到的问题以及其原因.">
@@ -203,7 +203,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分层模型"><span class="toc-number">1.</span> <span class="toc-text">分层模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#OSI模型"><span class="toc-number">1.1.</span> <span class="toc-text">OSI模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP-IP四层模型"><span class="toc-number">1.2.</span> <span class="toc-text">TCP/IP四层模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#各层要点"><span class="toc-number">1.3.</span> <span class="toc-text">各层要点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他问题"><span class="toc-number">2.</span> <span class="toc-text">其他问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#MTU-相关问题"><span class="toc-number">2.1.</span> <span class="toc-text">MTU 相关问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MTU-路径发现"><span class="toc-number">2.1.1.</span> <span class="toc-text">MTU 路径发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSS"><span class="toc-number">2.1.2.</span> <span class="toc-text">MSS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#大小端问题"><span class="toc-number">2.2.</span> <span class="toc-text">大小端问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ping原理"><span class="toc-number">2.3.</span> <span class="toc-text">Ping原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Traceroute原理"><span class="toc-number">2.4.</span> <span class="toc-text">Traceroute原理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考："><span class="toc-number">3.</span> <span class="toc-text">参考：</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分层模型"><span class="toc-number">1.</span> <span class="toc-text">分层模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#OSI模型"><span class="toc-number">1.1.</span> <span class="toc-text">OSI模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP-IP四层模型"><span class="toc-number">1.2.</span> <span class="toc-text">TCP/IP四层模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#各层要点-重要"><span class="toc-number">1.3.</span> <span class="toc-text">各层要点(重要)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他问题"><span class="toc-number">2.</span> <span class="toc-text">其他问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#MTU-相关问题"><span class="toc-number">2.1.</span> <span class="toc-text">MTU 相关问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MTU-路径发现"><span class="toc-number">2.1.1.</span> <span class="toc-text">MTU 路径发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSS"><span class="toc-number">2.1.2.</span> <span class="toc-text">MSS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#大小端问题"><span class="toc-number">2.2.</span> <span class="toc-text">大小端问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ping原理"><span class="toc-number">2.3.</span> <span class="toc-text">Ping原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Traceroute原理"><span class="toc-number">2.4.</span> <span class="toc-text">Traceroute原理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考："><span class="toc-number">3.</span> <span class="toc-text">参考：</span></a></li></ol>
     	</div>
 	
 
@@ -270,8 +270,8 @@ function tmpfobid()
 </blockquote>
 <p>补充上层协议: (2017/9月整理)</p>
 <ul>
-<li>http协议, <a href="">链接</a></li>
-<li>https协议, <a href="">链接</a></li>
+<li>http协议, <a href="http://www.merlinblog.site/2017/09/07/network-base-http.html">链接</a></li>
+<li>https协议, <a href="http://www.merlinblog.site/2017/09/08/network-base-https.html">链接</a></li>
 </ul>
 <a id="more"></a>
 <hr>
@@ -290,7 +290,7 @@ function tmpfobid()
 <p><strong>物理层</strong> 处于 OSI 七层模型的最底端，它的主要任务是将比特流与电子信号进行转换。<br><strong>数据链路层</strong> 处于 OSI 七层模型的第二层，它定义了通过通信介质相互连接的设备之间，数据传输的规范。<br><strong>网络层</strong> 处于OSI参考模型的第三层网络层的主要作用是实现终端节点间的通信。IP协议是网络层的一个重要协议，网络层中还有ARP(获取MAC地址)和ICMP协议(数据发送异常通知)<br><strong>传输层</strong> 处于 OSI 七层模型的第四层, 主要作用是实现应用程序之间的通信。<br><strong>会话层</strong> 处于 OSI 七层模型的第五层, 利用传输层提供的服务，使应用建立和维持会话，并能使会话获得同步。<br><strong>表示层</strong> 处于 OSI 七层模型的第六层, 表示层是处理所有与数据表示及运输有关的问题，包括转换、加密和压缩。(字符集数据格式等处理)<br><strong>应用层</strong> 处于 OSI 七层模型的第七层, 这是最高层, 也是网络应用程序直接使用的协议, 它利用下层协议完成网络通信, 根据用途不同, 种类也不一样.</p>
 <h2 id="TCP-IP四层模型"><a href="#TCP-IP四层模型" class="headerlink" title="TCP/IP四层模型"></a>TCP/IP四层模型</h2><p>为了实践编码方便, 理所应当采用了简化的四层模型, 即TCP/IP四层模型, 业界俗称为TCP/IP协议族.</p>
 <p>下面也以规模性作为重点记录.</p>
-<h2 id="各层要点"><a href="#各层要点" class="headerlink" title="各层要点"></a>各层要点</h2><p>TCP/IP协议族按照层次由上到下，层层包装。最上面的是应用层，这里面有http，ftp,等等我们熟悉的协议。而第二层则是传输层，著名的TCP和UDP协议就在这个层次。第三层是网络层，IP协议就在这里，它负责对数据加上IP地址和其他的数据以确定传输的目标。第四层是数据链路层，这个层次为待传送的数据加入一个以太网协议头，并进行CRC编码，为最后的数据传输做准备。<br><img src="http://omotkhw3y.bkt.clouddn.com/network-in.png" alt=""></p>
+<h2 id="各层要点-重要"><a href="#各层要点-重要" class="headerlink" title="各层要点(重要)"></a>各层要点(重要)</h2><p>TCP/IP协议族按照层次由上到下，层层包装。最上面的是应用层，这里面有http，ftp,等等我们熟悉的协议。而第二层则是传输层，著名的TCP和UDP协议就在这个层次。第三层是网络层，IP协议就在这里，它负责对数据加上IP地址和其他的数据以确定传输的目标。第四层是数据链路层，这个层次为待传送的数据加入一个以太网协议头，并进行CRC编码，为最后的数据传输做准备。<br><img src="http://omotkhw3y.bkt.clouddn.com/network-in.png" alt=""></p>
 <p>TCP/IP协议通信的过程其实就对应着数据入栈与出栈的过程。入栈的过程，数据发送方每层不断地封装首部与尾部，添加一些传输的信息，确保能传输到目的地。出栈的过程，数据接收方每层不断地拆除首部与尾部，得到最终传输的数据。(以太网帧协议是头尾, 注意1500字节, 后面还会出现)</p>
 <p>完整的以 <strong>HTTP</strong>为例子:<br><img src="http://omotkhw3y.bkt.clouddn.com/network-in1.png" alt=""></p>
 <p><strong>网络接口层</strong> :<br>物理层负责0、1比特流与物理设备电压高低、光的闪灭之间的互换。 数据链路层负责将0、1序列划分为数据帧从一个节点传输到临近的另一个节点,这些节点是通过MAC来唯一标识的(MAC,物理地址，一个主机会有一个MAC地址)。<br><img src="http://omotkhw3y.bkt.clouddn.com/network-linklayer.png" alt=""></p>
@@ -412,9 +412,8 @@ function tmpfobid()
 <p>DNS协议运行在UDP协议之上，使用端口号53</p>
 </blockquote>
 <p>应用层, 我接触的,最主要的还是 HTTP, HTTPS协议, 由于比较重要, 我还是单独成文了.</p>
-<p><strong>HTTP</strong> :</p>
-<p>TODO, </p>
-<p><strong>HTTPS</strong> :<br>TODO</p>
+<p><strong>HTTP</strong> :<br>详细可以参考: <a href="http://www.merlinblog.site/2017/09/07/network-base-http.html">HTTP相关</a></p>
+<p><strong>HTTPS</strong> :<br>详细可以参考: <a href="http://www.merlinblog.site/2017/09/08/network-base-https.html">HTTPS相关</a></p>
 <h1 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h1><h2 id="MTU-相关问题"><a href="#MTU-相关问题" class="headerlink" title="MTU 相关问题"></a>MTU 相关问题</h2><p>其实这这个MTU指的是链路层的数据区, 并不包括链路层的首部和尾部的18个字节.<br><img src="http://omotkhw3y.bkt.clouddn.com/network-linklayer1.png" alt=""></p>
 <p>上面已经说了</p>
 <blockquote>
@@ -498,6 +497,8 @@ int main()
 <p>它收到到目的主机的IP后，首先给目的主机发送一个TTL=1的UDP数据包，而经过的第一个路由器收到这个数据包以后，就自动把TTL减1，而TTL变为0以后，路由器就把这个包给抛弃了，并同时产生 一个主机不可达的ICMP数据报给主机。<br>主机收到这个数据报以后再发一个TTL=2的UDP数据报给目的主机，然后刺激第二个路由器给主机发ICMP数据 报。<br>如此往复直到到达目的主机</p>
 </blockquote>
 <p>这样，traceroute就拿到了所有的路由器IP.</p>
+<hr>
+<p>就写这么多吧.</p>
 <h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><ol>
 <li><a href="">《图解TCP/IP》</a></li>
 <li><a href="http://www.cnblogs.com/hjslovewcl/archive/2011/07/18/2314316.html" target="_blank" rel="external">http://www.cnblogs.com/hjslovewcl/archive/2011/07/18/2314316.html</a></li>
