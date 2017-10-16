@@ -20,7 +20,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-https.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-https1.png">
-<meta property="og:updated_time" content="2017-10-16T01:12:18.000Z">
+<meta property="og:updated_time" content="2017-10-16T01:50:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《图解HTTP》之 HTTPS">
 <meta name="twitter:description" content="在 《图解HTTP》 这本书后半部分, 讲述了 https. (该文不写很长)">
@@ -248,23 +248,33 @@ function tmpfobid()
 <li>非对称加密， 利用公钥加密的数据能且只能通过私钥解密，通过私钥加密的数据能且只能通过公钥解密。</li>
 <li>对称加密, 速度快，但是假设秘钥由服务器保存，如何安全的让客户端得到秘钥是需要解决的问题。</li>
 </ul>
-<p>例如<code>使用非对称加密</code>技术传输的过程可能是这样的:<br>服务端会将自己的证书发送给客户端，其中包含了服务端的公钥。基于非对称加密的传输过程如下：</p>
+<p>例如<code>使用非对称加密</code>技术传输的过程可能是这样的, 包括<code>传递对称秘钥</code> + <code>传输数据</code>:</p>
+<p>传递秘钥: (常识: 对称秘钥加密数据, 减轻服务器压力; 非对称秘钥传输加密秘钥)</p>
+<ul>
+<li>客户端: 你好，我要发起一个 HTTPS 请求，请给我公钥</li>
+<li>服务端会将自己的证书发送给客户端，其中包含了服务端的公钥(也就是说该公钥是由证书保证的, 证书是本次可靠性传输的基本)。</li>
+<li>客户端用该公钥加密之后对称秘钥, 该秘钥是之后c-s传输数据时给数据加密用的</li>
+<li>服务端收到这个加密后的秘钥, 用自己的私钥解密, 拿到秘钥; 并告知服务器”好, 以后就用这个秘钥进行数据加密”</li>
+</ul>
+<p>这实际上是个握手过程. (<code>别再问证书机构的公钥怎么传输的...</code>, 因为可能直接内置在电脑中了)<br><strong>HTTPS的四次握手可能会影响传输性能, 但更多的性能应该是算法问题, 这里几乎可以忽略不计</strong></p>
+<p>基于非对称加密的传输过程如下：(直接使用公钥密码术也行, 不过服务器运算压力可能比较大)</p>
 <ul>
 <li>客户端使用公钥将信息加密，密文发送给服务端</li>
 <li>服务端用自己的私钥解密，再将返回数据用私钥加密发回客户端</li>
 <li>客户端用公钥解密(公钥可以解密, 说明确实是相关服务器发过来的)</li>
 </ul>
-<p>其中发送的内容也会有<code>内容摘要</code>信息, 即hash数据(只要内容被篡改一点, 接收方解密数据拿到的hash值一定和篡改过的内容摘要信息值不同)</p>
+<p>其中发送的内容也会有<code>内容摘要</code>信息, 即hash数据(只要内容被篡改一点, 接收方解密数据拿到的hash值一定和篡改过的内容摘要信息值不同)<br>(内容或者数据是否被篡改, 统一看hash值即可)</p>
 <p>至于身份嘛, 用证书解决.(由权威机构颁发证书，再加上证书校验机制，避免第三方伪装参与通信) 这里的证书是服务器证明自己身份的工具，它由权威的证书颁发机构（CA）发给申请者。如果证书是虚假的，或者是自己给自己颁发的证书，服务器就会不认可这个证书并发出警告.</p>
 <blockquote>
-<p>具体扯到太多网络安全的内容(包括一些算法, 比如摘要算法, 加密算法 aes des等), 水平有限, 不展开说.</p>
+<p>核心内容我已经全部都说了, 其他扯到太多网络安全的内容(包括一些算法, 比如摘要算法, 加密算法 aes des等), 水平有限, 不展开说.</p>
 </blockquote>
+<p>哦, 服务器上开放 HTTPS 所需的443端口; 对于原先的80端口，需做重定向的跳转。将原先访问 HTTP 协议的用户，自动跳转用 HTTPS 上来.</p>
 <p><strong>我下面列举的参考资料最好读一下, 比我总结的好.</strong></p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li>《图解HTTP》 人民邮电出版社</li>
 <li><a href="http://www.jianshu.com/p/072a657337ae" target="_blank" rel="external">http://www.jianshu.com/p/072a657337ae</a></li>
-<li><a href="https://github.com/jasonGeng88/blog/blob/master/201705/https.md" target="_blank" rel="external">https://github.com/jasonGeng88/blog/blob/master/201705/https.md</a></li>
-<li><a href="https://segmentfault.com/a/1190000004523659" target="_blank" rel="external">https://segmentfault.com/a/1190000004523659</a></li>
+<li><a href="https://github.com/jasonGeng88/blog/blob/master/201705/https.md" target="_blank" rel="external">https://github.com/jasonGeng88/blog/blob/master/201705/https.md</a>  看它的证书部分</li>
+<li><a href="https://segmentfault.com/a/1190000004523659" target="_blank" rel="external">https://segmentfault.com/a/1190000004523659</a> 看它的加密部分</li>
 </ol>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
