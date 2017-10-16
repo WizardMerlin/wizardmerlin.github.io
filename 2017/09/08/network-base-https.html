@@ -20,7 +20,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-https.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-https1.png">
-<meta property="og:updated_time" content="2017-10-16T01:50:41.000Z">
+<meta property="og:updated_time" content="2017-10-16T01:52:01.515Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《图解HTTP》之 HTTPS">
 <meta name="twitter:description" content="在 《图解HTTP》 这本书后半部分, 讲述了 https. (该文不写很长)">
@@ -256,7 +256,10 @@ function tmpfobid()
 <li>客户端用该公钥加密之后对称秘钥, 该秘钥是之后c-s传输数据时给数据加密用的</li>
 <li>服务端收到这个加密后的秘钥, 用自己的私钥解密, 拿到秘钥; 并告知服务器”好, 以后就用这个秘钥进行数据加密”</li>
 </ul>
-<p>这实际上是个握手过程. (<code>别再问证书机构的公钥怎么传输的...</code>, 因为可能直接内置在电脑中了)<br><strong>HTTPS的四次握手可能会影响传输性能, 但更多的性能应该是算法问题, 这里几乎可以忽略不计</strong></p>
+<p>这实际上是个握手过程. (<code>别再问证书机构的公钥怎么传输的...</code>, 因为可能直接内置在电脑中了)</p>
+<blockquote>
+<p><strong>HTTPS的四次握手可能会影响传输性能, 但更多的性能应该是算法问题, 这里几乎可以忽略不计</strong></p>
+</blockquote>
 <p>基于非对称加密的传输过程如下：(直接使用公钥密码术也行, 不过服务器运算压力可能比较大)</p>
 <ul>
 <li>客户端使用公钥将信息加密，密文发送给服务端</li>
