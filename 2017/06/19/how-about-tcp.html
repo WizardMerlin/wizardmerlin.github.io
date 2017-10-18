@@ -22,10 +22,15 @@
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-tcp-header.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/network-tcp-conn.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/tcp-2msl.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/tcp-window2.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/tcp-window3.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/tcp-window1.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/tcp-pic.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/slow-start.png">
-<meta property="og:updated_time" content="2017-10-18T08:55:45.000Z">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/time-out.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/tcp-repeat.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/fast-recovery.png">
+<meta property="og:updated_time" content="2017-10-18T11:50:29.872Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深挖TCP模型">
 <meta name="twitter:description" content="summary of tcp protocol programming">
@@ -195,7 +200,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概览"><span class="toc-number">1.</span> <span class="toc-text">概览</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#协议本身"><span class="toc-number">2.1.</span> <span class="toc-text">协议本身</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#套接字模型"><span class="toc-number">2.2.</span> <span class="toc-text">套接字模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#连接管理"><span class="toc-number">2.3.</span> <span class="toc-text">连接管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2MSL"><span class="toc-number">2.4.</span> <span class="toc-text">2MSL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TIME-WAIT过多"><span class="toc-number">2.4.1.</span> <span class="toc-text">TIME_WAIT过多</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RTO"><span class="toc-number">2.5.</span> <span class="toc-text">RTO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#状态流转图-重要"><span class="toc-number">2.6.</span> <span class="toc-text">状态流转图(重要)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7种计时器"><span class="toc-number">2.7.</span> <span class="toc-text">7种计时器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#心跳保活"><span class="toc-number">2.8.</span> <span class="toc-text">心跳保活</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#窗口"><span class="toc-number">2.9.</span> <span class="toc-text">窗口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP窗口"><span class="toc-number">2.9.1.</span> <span class="toc-text">TCP窗口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#滑动窗口"><span class="toc-number">2.9.2.</span> <span class="toc-text">滑动窗口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拥塞窗口"><span class="toc-number">2.9.3.</span> <span class="toc-text">拥塞窗口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流量控制"><span class="toc-number">2.10.</span> <span class="toc-text">流量控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拥塞控制"><span class="toc-number">2.11.</span> <span class="toc-text">拥塞控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原则"><span class="toc-number">2.11.1.</span> <span class="toc-text">原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#慢启动"><span class="toc-number">2.11.2.</span> <span class="toc-text">慢启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拥塞避免"><span class="toc-number">2.11.3.</span> <span class="toc-text">拥塞避免</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#快重传"><span class="toc-number">2.11.4.</span> <span class="toc-text">快重传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#快恢复"><span class="toc-number">2.11.5.</span> <span class="toc-text">快恢复</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用编程选项"><span class="toc-number">2.12.</span> <span class="toc-text">常用编程选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概览"><span class="toc-number">1.</span> <span class="toc-text">概览</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#协议本身"><span class="toc-number">2.1.</span> <span class="toc-text">协议本身</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#套接字模型"><span class="toc-number">2.2.</span> <span class="toc-text">套接字模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#连接管理"><span class="toc-number">2.3.</span> <span class="toc-text">连接管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2MSL"><span class="toc-number">2.4.</span> <span class="toc-text">2MSL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TIME-WAIT过多"><span class="toc-number">2.4.1.</span> <span class="toc-text">TIME_WAIT过多</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RTO"><span class="toc-number">2.5.</span> <span class="toc-text">RTO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#状态流转图-重要"><span class="toc-number">2.6.</span> <span class="toc-text">状态流转图(重要)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7种计时器"><span class="toc-number">2.7.</span> <span class="toc-text">7种计时器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#心跳保活"><span class="toc-number">2.8.</span> <span class="toc-text">心跳保活</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#窗口"><span class="toc-number">2.9.</span> <span class="toc-text">窗口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP窗口"><span class="toc-number">2.9.1.</span> <span class="toc-text">TCP窗口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#滑动窗口"><span class="toc-number">2.9.2.</span> <span class="toc-text">滑动窗口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拥塞窗口"><span class="toc-number">2.9.3.</span> <span class="toc-text">拥塞窗口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流量控制"><span class="toc-number">2.10.</span> <span class="toc-text">流量控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拥塞控制"><span class="toc-number">2.11.</span> <span class="toc-text">拥塞控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原则"><span class="toc-number">2.11.1.</span> <span class="toc-text">原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#慢启动"><span class="toc-number">2.11.2.</span> <span class="toc-text">慢启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拥塞避免"><span class="toc-number">2.11.3.</span> <span class="toc-text">拥塞避免</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#快重传"><span class="toc-number">2.11.4.</span> <span class="toc-text">快重传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#快恢复"><span class="toc-number">2.11.5.</span> <span class="toc-text">快恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#改进"><span class="toc-number">2.11.6.</span> <span class="toc-text">改进</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nagle算法"><span class="toc-number">2.12.</span> <span class="toc-text">Nagle算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概述-思想"><span class="toc-number">2.12.1.</span> <span class="toc-text">概述(思想)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#详述"><span class="toc-number">2.12.2.</span> <span class="toc-text">详述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决"><span class="toc-number">2.12.3.</span> <span class="toc-text">解决</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用编程选项"><span class="toc-number">2.13.</span> <span class="toc-text">常用编程选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
     	</div>
 	
 
@@ -369,17 +374,34 @@ net.ipv4.tcp_max_tw_buckets = 5000
 <p>为什么要延迟应答呢？ 延迟应答是为了提高网络传输的效率(吞吐量)。<br>举例说明， 比如服务端收到客户端的数据后， 不是立刻回ACK给客户端， 而是等一段时间(一般最大200ms)，这样如果服务端要是有数据需要发给客户端，那么这个ACK就和服务端的数据一起发给客户端了， 这样比立即回给客户端一个ACK节省了一个数据包。</p>
 <p><strong>持续定时器</strong><br>persist timer.<br> 我们已经知道TCP通过让接收方指明希望从发送方接收的数据字节数（即窗口大小）来进行流量控制。如果窗口大小为 0会发生什么情况呢？<br>这将有效地阻止发送方传送数据，直到窗口变为非0为止。接收端窗口变为非0后，(发送端会定时定时探测)就会发送一个确认ACK指明需要的报文段序号以及窗口大小。</p>
 <p>如果这个确认ACK丢失了，则双方就有可能因为等待对方而使连接终止：接收方等待接收数据（因为它已经向发送方通告了一个非0的窗口），<br>而发送方在等待允许它继续发送数据的窗口更新。为防止这种死锁情况的发生，发送方使用一个坚持定时器 (persist timer)来周期性地向接收方查询，<br>以便发现窗口是否已增大。这些从发送方发出的报文段称为窗口探查 (window probe).</p>
-<p><strong>保活定时器</strong><br>keepalive timer.<br>在TCP连接建立的时候指定了SO_KEEPALIVE，保活定时器才会生效。<br>如果客户端和服务端长时间没有数据交互，那么需要保活定时器来判断是否对端还活着, 但是这个其实很不实用，因为默认是2小时没有数据交互才探测，时间实在是太长了。</p>
+<p><strong>保活定时器</strong><br>keepalive timer.<br>在TCP连接建立的时候指定了 SO_KEEPALIVE，保活定时器才会生效。<br>如果客户端和服务端长时间没有数据交互，那么需要保活定时器来判断是否对端还活着, 但是这个其实很不实用，因为默认是2小时没有数据交互才探测，时间实在是太长了。</p>
 <p>如果你真的要确认对端是否活着， 那么应该自己实现心跳包，而不是依赖于这个保活定时器。</p>
 <p><strong>FIN_WAIT_2定时器</strong><br><code>FIN_WAIT_2 timer</code><br>主动关闭的一端调用完close以后（即发FIN给被动关闭的一端， 并且收到其对FIN的确认ACK）则进入<code>FIN_WAIT_2</code>状态。<br>如果这个时候因为网络突然断掉、被动关闭的一段宕机等原因，导致主动关闭的一端不能收到被动关闭的一端发来的FIN，主动关闭的一段总不能一直傻等着，<br>占着资源不撒手吧？</p>
 <p>这个时候就需要FIN_WAIT_2定时器出马了， 如果在该定时器超时的时候，还是没收到被动关闭一端发来的FIN，那么不好意思， 不等了， 直接释放这个链接。<br><code>FIN_WAIT_2</code>定时器的时间可以从<code>/proc/sys/net/ipv4/tcp_fin_timeout</code>中查看和设置。</p>
 <p><strong>TIME_WAIT定时器</strong><br><code>TIME_WAIT timer</code>, 也叫 2MSL timer<br>TIME_WAIT是主动关闭连接的一端最后进入的状态， 而不是直接变成CLOSED的状态， 为什么呢？<br>第一个原因是万一被动关闭的一端在超时时间内没有收到最后一个ACK， 则会重发最后的FIN，2MSL（报文段最大生存时间）等待时间保证了重发的FIN会被主动关闭的一段收到且重新发送最后一个ACK；<br>另外一个原因是在2MSL等待时间时，任何迟到的报文段会被接收并丢弃，防止老的TCP连接的包在新的TCP连接里面出现。不可避免的，在这个2MSL等待时间内，不会建立同样(源IP, 源端口，目的IP，目的端口)的连接。</p>
-<h2 id="心跳保活"><a href="#心跳保活" class="headerlink" title="心跳保活"></a>心跳保活</h2><h2 id="窗口"><a href="#窗口" class="headerlink" title="窗口"></a>窗口</h2><p>在tcp协议头里看到, 有一个 <code>window size</code>字段. </p>
+<h2 id="心跳保活"><a href="#心跳保活" class="headerlink" title="心跳保活"></a>心跳保活</h2><p>网络编程中, 常见的比较有意思的内容.</p>
+<h2 id="窗口"><a href="#窗口" class="headerlink" title="窗口"></a>窗口</h2><p>在tcp协议头里看到, 有一个 <code>window size</code>字段. </p>
 <blockquote>
-<p>它和滑动窗口, 拥塞窗口是什么关系呢?<br>一语道破: <code>接收窗口</code>以及<code>发送窗口</code>.<br>先谈一下<strong>建立在TCP上的窗口</strong></p>
+<p>它和滑动窗口, 拥塞窗口是什么关系呢?<br>一语道破: <code>接收窗口</code>以及<code>发送窗口</code>. (实际上发送发比较特殊, 既存在拥塞控制, 同时也是存在流量控制的)</p>
 </blockquote>
-<h3 id="TCP窗口"><a href="#TCP窗口" class="headerlink" title="TCP窗口"></a>TCP窗口</h3><h3 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h3><p>滑动窗口其实是接收方的说法, 也就是说, 在TCP通信的<code>响应字段</code>里设置的<code>rwnd</code>, 来控制下次发送方发送报文的字节数, 通俗说就是<code>接收窗口</code>, <code>通告窗口</code>.</p>
-<p>该机制常用于<strong>流量控制</strong>, 详细信息请参考下面的流量控制部分.</p>
+<p>先说说 窗口本身(缓存或者缓存队列).</p>
+<h3 id="TCP窗口"><a href="#TCP窗口" class="headerlink" title="TCP窗口"></a>TCP窗口</h3><p>如果窗口过大，会导致接收方的缓存区数据溢出。这时候本该被接收的数据反而丢弃了，就会导致无意义的重传。<br>因此，窗口大小是一个可以改变的值，它由接收端主机控制，附加在 TCP 首部的“窗口大小”字段中。</p>
+<blockquote>
+<p>TCP 协议中的窗口是指发送方窗口和接收方窗口的较小值.</p>
+</blockquote>
+<p>如果数据包发出后，直至 ACK 确认返回以前，发送端都无法发送数据, 那么包的往返时间(RTT)越长，网络利用效率和通信性能就越低。<br>为了解决这个问题，TCP 使用了“窗口”这个概念(响应的一方采用 delayed ack, 一般都要延迟回复, 保证先到先回复)。窗口具有大小，<br>它表示无需等待确认应答就可以继续发送数据包的最大数量。(缓存或者缓存队列, 没有发送成功的, 根据ack判断,然后重发)</p>
+<blockquote>
+<p>引入窗口的概念后，被发送的数据不能立刻丢弃，需要缓存起来以备将来需要重发(真正收到具体的 ack 才会出队)</p>
+</blockquote>
+<p>比如窗口大小为 4 (K)时，数据发送的示意图如下：(无丢失时)<br><img src="http://omotkhw3y.bkt.clouddn.com/tcp-window2.png" alt=""></p>
+<p>如果是数据包没有丢失，但是确认包丢失了呢？这就是窗口最擅长处理的问题了。<br>假设发送发收到的确认包中的 ACK 第一次是 1001，第二次是 4001。那么我们完全可以相信中间的两个包是成功被接收的。</p>
+<blockquote>
+<p>因为<strong>如果有没接收到的包， 接收方是不会增加 ACK 的</strong>。</p>
+</blockquote>
+<p>即可以不必重新传递第1个数据包, 直接发送(收到ack 2001时就知道了即使ack 1001 没有收到也可以继续发送4001)<br><img src="http://omotkhw3y.bkt.clouddn.com/tcp-window3.png" alt=""></p>
+<p>在这种情况下，如果不使用窗口，发送方就需要重传第1、3, 4个数据包，但是有了窗口的概念后，发送方就省略了两次重传。</p>
+<h3 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h3><p>滑动窗口其实是接收方的说法, 也就是说, 在TCP通信的<code>响应字段</code>里设置的<code>rwnd</code>, 来控制下次发送方发送报文的字节数, 通俗说就是<code>接收窗口</code>, <code>通告窗口</code>.<br>该机制常用于<strong>流量控制</strong>, 详细信息请参考下面的流量控制部分.</p>
+<p>(单纯的窗口, 可以简单理解成缓冲区, 为了处理丢包问题; 而谈滑动窗口, 则更多的是说<code>通知窗口</code>)</p>
 <h3 id="拥塞窗口"><a href="#拥塞窗口" class="headerlink" title="拥塞窗口"></a>拥塞窗口</h3><p>类似的, 这其实是发送方的说法, 在请求字节序中, 发送方维持一个拥塞窗口 cwnd ( congestion window )的状态变量。<br>拥塞窗口的大小取决于网络的拥塞程度，并且动态地在变化。<br>发送方让自己的发送窗口等于拥塞窗口, 通俗说, 就是发送窗口.</p>
 <p>这里也提醒了我们:</p>
 <blockquote>
@@ -397,8 +419,9 @@ net.ipv4.tcp_max_tw_buckets = 5000
 <p>TCP为每一个连接设有一个持续计时器(persistence timer)。只要TCP连接的一方收到对方的零窗口通知，就启动持续计时器。若持续计时器设置的时间到期，就发送一个零窗口控测报文段（携1字节的数据），那么收到这个报文段的一方就重新设置持续计时器。</p>
 </blockquote>
 <p>B 向 A 发送的三个报文段都设置了 ACK = 1 ，只有在 ACK=1 时确认号字段才有意义。</p>
-<h2 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h2><p>主要涉及慢启动, 拥塞避免, 快重传, 快恢复, 拥塞窗口, RTT等内容.</p>
-<p>先接着上面的<code>拥塞窗口</code>讲. 拥塞控制, 总的来说, 就是<code>一系列对于拥塞窗口的控制流程或者算法</code>. </p>
+<p>严格来说, 流量控制, 算作拥塞控制的一部分; 因为网络处理能力不足时, 也会要求调整发送方的流量.</p>
+<h2 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h2><p>网络拥塞现象是指到达通信子网中某一部分的分组数量过多,使得该部分网络来不及处理,以致引起这部分乃至整个网络性能下降的现象,严重时甚至会导致网络通信业务陷入停顿,即出现死锁现象。<br>拥塞控制是处理网络拥塞现象的一种机制: <strong>通过增减单次发送量逐步调整，使之逼近当前网络的承载量。</strong>. </p>
+<p>先接着上面的<code>拥塞窗口</code>讲. 拥塞控制, 总的来说, 就是<code>一系列对于拥塞窗口的控制流程或者算法</code>.<br>主要涉及慢启动, 拥塞避免, 快重传, 快恢复, 拥塞窗口, RTT等内容.</p>
 <h3 id="原则"><a href="#原则" class="headerlink" title="原则"></a>原则</h3><p>但不管算法或者流程怎么变, 它总有一个原则:</p>
 <ul>
 <li>只要网络没有出现拥塞，拥塞窗口就再增大一些，以便把更多的分组发送出去</li>
@@ -409,39 +432,127 @@ net.ipv4.tcp_max_tw_buckets = 5000
 </blockquote>
 <p>理解了该原则, 下面的 慢启动, 拥塞避免, 快重传, 快恢复等, 都是非常容易理解的. 不过有些机制&amp;算法会引起麻烦, 实际开发中并不一定使用.</p>
 <p>这些手段综合作用, 对拥塞窗口的影响, 大概是这样的:<br><img src="http://omotkhw3y.bkt.clouddn.com/tcp-pic.png" alt=""></p>
-<p>其中算法部分涉及到对 拥塞窗口, 网络阈值的控制.</p>
+<p>其中算法部分涉及到对拥塞窗口, 网络阈值的控制.</p>
+<p>算法中 慢启动, 拥塞控制, 需要对<code>超时</code>,<code>三次重复确认</code>的理解, 可以简单认为是tcp的一种机制.</p>
 <h3 id="慢启动"><a href="#慢启动" class="headerlink" title="慢启动"></a>慢启动</h3><p>又称<code>慢开始算法</code>, 其核心就是<code>逐步增大探测</code>, <code>适当调整</code>.</p>
 <p>当主机开始发送数据时，如果立即把大量数据字节注入到网络，那么就有可能引起网络拥塞，因为现在并不清楚网络的负荷情况。<br>因此，较好的方法是 先探测一下，即由小到大逐渐增大发送窗口，也就是说，由小到大逐渐增大拥塞窗口数值。</p>
 <p>通常在刚刚开始发送报文段时，先把拥塞窗口 cwnd 设置为一个最大报文段<code>MSS</code>的数值, 而在每收到一个对新的报文段的确认后，把拥塞窗口翻倍.<br>用这样的方法逐步增大发送方的拥塞窗口 cwnd ，可以使分组注入到网络的速率更加合理, 其过程简述如下图:<br><img src="http://omotkhw3y.bkt.clouddn.com/slow-start.png" alt=""></p>
 <p>可以看到开始的时候, 是呈现出<code>指数级</code>增长(但是上图没有描述到拥塞的情况), 因为这样增长下去, 肯定会有一个点到达网络的传输极限, </p>
 <p>此时立马把发送窗口的极限(即发送超时时拥塞窗口的大小), 即字段大小(其实也是cwnd的阈值), 设置为超时时的一半(作为新阈值, <code>threshold</code>), 然后重复翻倍过程.<br><em>之后窗口大小增长到了上次的阈值就开始线性增长(不是翻倍了, 而是斜率恒定).</em></p>
 <p>这就是慢启动的整个过程, 总结如下:</p>
-<blockquote>
-<p>可以看到, 整个的思想非常简单, 如果指数增长极限了, 那么下次指数极限的前半段还是保持指数增长的方式逐步加大发送窗口, 但是后半段用线程增长的方式加大窗口.</p>
-<blockquote>
-<p>慢启动算法, 拥塞窗口一定是从0开始的; <code>仅仅探测到网络极限以及之后开始的前半段</code>, 后半段就是<code>拥塞避免</code>.</p>
-</blockquote>
-</blockquote>
+<ul>
+<li>如果指数增长极限了, 那么下次指数极限的前半段还是保持指数增长的方式逐步加大发送窗口, 但是后半段用线程增长的方式加大窗口.</li>
+<li>慢启动算法, 拥塞窗口一定是从0开始的; <code>仅仅探测到网络极限以及之后开始的前半段</code>, 后半段就是<code>拥塞避免</code>.</li>
+</ul>
 <p>其实安装字面意思也能理解, 慢启动, 就是慢慢开始嘛.</p>
-<h3 id="拥塞避免"><a href="#拥塞避免" class="headerlink" title="拥塞避免"></a>拥塞避免</h3><p>其实上面阐述的<code>线性增长</code>的部分就是拥塞避免算法.</p>
-<p>让拥塞窗口cwnd缓慢地增大，即每经过一个 <code>往返时间RTT</code>(即收到对方ACK)就把发送方的拥塞窗口cwnd加1，而不是加倍。<br>这样拥塞窗口cwnd按线性规律缓慢增长，比慢开始算法的拥塞窗口增长速率缓慢得多。</p>
-<p>无论在慢开始阶段还是在拥塞避免阶段，只要发送方判断网络出现拥塞（其根据就是没有收到确认），就要把慢开始门限ssthresh设置为出现拥塞时的发送方窗口值的一半（但不能小于2）。<br>然后把拥塞窗口cwnd重新设置为1，执行慢开始算法。</p>
-<p>为了防止拥塞窗口cwnd增长过大引起网络拥塞，还需要设置一个慢开始门限 ssthresh 状态变量<br>慢开始门限ssthresh的用法如下：</p>
+<p>这里注意下, 由于<code>拥塞避免</code>中也会对阈值进行折半, 所以这里强调一下: <strong>当探测到超时, 阀值=单次发送量÷2，单次发送量=1</strong><br>(可以看到上图中, 除了最开始, 每次<strong>超时</strong>也会再次重新进行慢启动, 同时如果接收端处理不了, 发送终止窗口也会停止发送)</p>
+<p>慢开始门限ssthresh的用法如下：</p>
 <ul>
 <li>当 cwnd &lt; ssthresh 时，使用上述的慢开始算法。</li>
 <li>当 cwnd &gt; ssthresh 时，停止使用慢开始算法而改用拥塞避免算法。</li>
 <li>当 cwnd = ssthresh 时，既可使用慢开始算法，也可使用拥塞控制避免算法。</li>
 </ul>
-<h3 id="快重传"><a href="#快重传" class="headerlink" title="快重传"></a>快重传</h3><h3 id="快恢复"><a href="#快恢复" class="headerlink" title="快恢复"></a>快恢复</h3><h2 id="常用编程选项"><a href="#常用编程选项" class="headerlink" title="常用编程选项"></a>常用编程选项</h2><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<h3 id="拥塞避免"><a href="#拥塞避免" class="headerlink" title="拥塞避免"></a>拥塞避免</h3><p>其实上面阐述的<code>线性增长</code>的部分就是拥塞避免算法.</p>
+<p>让拥塞窗口cwnd缓慢地增大，即每经过一个 <code>往返时间RTT</code>(即收到对方ACK)就把发送方的拥塞窗口cwnd加1，而不是加倍。<br>这样拥塞窗口cwnd按线性规律缓慢增长，比慢开始算法的拥塞窗口增长速率缓慢得多。</p>
+<p>无论在慢开始阶段还是在拥塞避免阶段，只要发送方判断网络出现拥塞（其根据就是没有收到确认），就要把慢开始门限ssthresh设置为出现拥塞时的发送方窗口值的一半（但不能小于2）。</p>
+<ul>
+<li><code>慢启动</code>中, 把拥塞窗口cwnd重新设置为1，执行慢开始算法; </li>
+<li><code>拥塞避免</code>中, 把阈值设置为此时最大值的一半, cwnd起点也是从改值开始(图中是 一半 + 3)</li>
+</ul>
+<p>即下图部分:<br><img src="http://omotkhw3y.bkt.clouddn.com/time-out.png" alt=""></p>
+<p>可以看到, 收到3个重复确认(简单认为拥塞开始阶段), 阈值减半, cwnd从一半+3开始. 然后又会线性增加，直至下一次出现三次重复确认应答或超时。</p>
+<p><strong>简单说区别</strong>:</p>
+<ul>
+<li>应答超时 : 慢开始</li>
+<li>出现三次重复确认 : 拥塞避免</li>
+</ul>
+<p><strong>应答超时</strong>, <strong>三次重复确认</strong>都是什么?<br>上面说了, 这两个内容是用来区分不同情况下, 到底是 慢启动还是拥塞避免的其中一个根据, 但是由此也引来了<code>快重传</code>, <code>快恢复</code>.</p>
+<p>先说<code>应答超时</code>,  如果发送方的一个分组或者多个分组都丢失了, 我接收方, 催了, 催了好几遍, 你发送方还没有重传, 说明啥? 说明我的ack你很可能就没有收到. 说明丢失的分组已经很多了, 说明网络现在已经严重拥塞了, 例如发送序号为0、10、20、30、40的5条长度为10字节的分组，其中序号30的丢了，则返回的确认是10、20、30、30。这才只有两条重复确认。然而刚刚说过，单次发送量往往大于3，所以超时更可能是因为不止一条分组或确认丢失而引起的，这说明网络比上一情况中的更加繁忙。那么咋办? 重新慢启动呀.</p>
+<p>然后<code>三次重复确认</code>, 这个是<code>快重传</code>算法的一个规定(具体规范见下面的部分), 但是出现这个说明, 已经出现分组丢失了, 例如:<br><em>发送序号为0、10、20、30、40的5条长度为10字节的分组，其中序号20的丢了，则返回的确认是10、20、20、20。3个20就是重复的确认。</em><br>这个时候, 其实说明, 网络有拥塞,但是不严重. 言下之意, 请减缓cnwd的增长速度, 即采用拥塞避免呀.</p>
+<p>btw: 实际上, <strong>快重传&amp;快恢复是为拥塞避免算法服务的</strong>.</p>
+<h3 id="快重传"><a href="#快重传" class="headerlink" title="快重传"></a>快重传</h3><blockquote>
+<p>快重传算法首先要求接收方每收到一个失序的报文段后就立即发出重复确认（为的是使发送方及早知道有报文段没有到达对方）而不要等到自己发送数据时才进行捎带确认。</p>
+</blockquote>
+<p>收到三次重复确认应答，进入“快速重发”阶段, 参考例子如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/tcp-repeat.png" alt=""><br>接收方收到了M1和M2后都分别发出了确认。现在假定接收方没有收到M3但接着收到了M4。<br>显然，接收方不能确认M4，因为M4是收到的失序报文段。根据 可靠传输原理，接收方可以什么都不做，也可以在适当时机发送一次对M2的确认。</p>
+<p>但按照快重传算法的规定，接收方应及时发送对M2的重复确认，这样做可以<code>让发送方及早知道报文段M3没有到达接收方</code>。发送方接着发送了M5和M6。<br>接收方收到这两个报文后，也还要再次发出对M2的重复确认。这样，发送方共收到了 接收方的四个对M2的确认，其中后三个都是重复确认。</p>
+<blockquote>
+<p>快重传算法还规定，发送方只要一连收到三个重复确认就应当立即重传对方尚未收到的报文段M3，而不必 继续等待M3设置的重传计时器到期。</p>
+</blockquote>
+<p><strong>实际上, 就是敦促发送方, 而不是让发送方在RTO结束时才知道, 哦, 有分组丢失了…</strong></p>
+<p>由于发送方尽早重传未被确认的报文段，因此采用快重传后可以使整个网络吞吐量提高约20%。</p>
+<h3 id="快恢复"><a href="#快恢复" class="headerlink" title="快恢复"></a>快恢复</h3><p>减半, 然后线性增长, 可以认为就是快速恢复的核心.</p>
+<p>其过程有以下两个要点：</p>
+<ul>
+<li>当发送方连续收到三个重复确认，就执行“拥塞避免”算法，把门限ssthresh减半</li>
+<li>与慢开始不同之处是现在不执行慢开始算法（即拥塞窗口cwnd现在不设置为1），而是把cwnd值设置为 慢开始门限ssthresh减半后的数值<br>然后开始执行拥塞避免算法（“加法增大”,），使拥塞窗口缓慢地线性增大</li>
+</ul>
+<p>实际上, 会有<code>快恢复</code>是历史原因:<br>原来在遇到<code>三次重复确认</code>时, 也是采用慢开始重新来的, 即cnwd=1重新增长, 而有了拥塞避免时, 发现可以不用从1开始, 具体如下图:<br><img src="http://omotkhw3y.bkt.clouddn.com/fast-recovery.png" alt=""></p>
+<p>看到了两个版本, 现在采用的是新版本的<code>拥塞避免</code>.<br><strong>快速重传”算法、”快速恢复”算法，避免了当网络拥塞不够严重时采用”慢启动”算法而造成过大地减小发送窗口尺寸的现象。</strong><br>不必从1开始, 并且每次增长是+1:</p>
+<blockquote>
+<p>当”旧”数据包离开网络后，才能发送”新”数据包进入网络，即同一时刻在网络中传输的数据包数量是恒定的。<br>如果发送方收到一个重复的ACK，则认为已经有一个数据包离开了网络，于是将拥塞窗口加1。</p>
+</blockquote>
+<p>(快速恢复主要还是指, 三次确认后, cwdn为阈值或者阈值+3)</p>
+<p>总结: </p>
+<ul>
+<li>拥塞严重, 使用慢启动; 不太严重, 但有丢包重传可以采用拥塞避免; </li>
+<li>快速重传是丢包后对方催促三次引发的(同时引发拥塞避免); 快速恢复则应对了丢包不是那么严重的场景的增长问题.</li>
+</ul>
+<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><p>该部分来自网络wiki, 参考连接已经在下面给出了, 下面是原文摘录:</p>
+<p><strong>对传统TCP拥塞控制机制的发展及改进</strong><br>(1)对慢启动的改进　　</p>
+<p>　　慢启动(slowstart)算法通过逐渐增加cwnd的大小来探测可用的网络容量，防止连接开始时采用不合适的发送量导致网络拥塞。然而有时该算法也会浪费可用的网络容量，因为慢启动算法总是从cwnd＝l开始，每收到一个ACK，cwnd增加l，对RTT时间长的网络，为使cwnd达到一个合适的值，需要花很长的时间，特别是网络实际容量很大时，会造成浪费。为此可采用大的初始窗口，大的初始窗口避免了延迟ACK机制下单个报文段初始窗口的等待超时问题，缩短了小TCP流的传输时间和大延迟链路上的慢启动时间。</p>
+<p>　　在慢启动阶段，在每个RTT时间内，cwnd增加一倍，这样当cwnd增加到一定的值时，就可能导致以网络能够处理的最大容量的2倍来发送数据，从而淹没网络。Hoe建议使用packet-pair算法和测量RTT来为ssthresh估计合适值，以此来适时地结束慢启动阶段。但是由于受各方面干扰，估算合理的ssthresh值并不容易，因此这个方法的效果是有限的。而Smooth-start较为平滑地从慢启动过渡到拥塞避免阶段，减少了报文段丢失和突发通讯量，提高了TCP拥塞控制的性能。</p>
+<p>　　(2)对重传与恢复的改进</p>
+<p>　　为了避免不必要的重传超时，有人提出了一种受限传输机制：如果接收方的广播窗口允许的话，发送方接收到一个或者两个重复的ACK(acknowledgment)后，继续传输新的数据报文段。受限的传输机制允许具有较小窗口的TCP连接进行错误恢复，而且避免了不必要的重传。</p>
+<p>　　有很多情况下，数据报文段并没有丢失，但TCP发送方可能会误判数据报文段丢失，然后调用拥塞控制规程减少拥塞窗口的大小。比如当重传定时器过早溢出时，发送方在重传数据报文段时不必要地减少了拥塞窗口，而这时并没有数据报文段丢失。如果是由于数据报文段的重新组织而不是数据报文段丢失，而导致3个重复的确认，同样会导致发送方不必要地在快速重传数据报文段后减少拥塞窗口。</p>
+<p>　　如果TCP的发送方在重传数据报文段一个RTT后发现接收方接收到了重传数据报文段的两个拷贝，则可以推断重传是不必要的。这时，TCP的发送方可以撤销对拥塞窗口的减少。发送方可以通过将慢启动门限增加到原始值，调用慢启动规程使拥塞窗口恢复原先值。除了恢复拥塞窗口，TCP发送方还可以调整重复确认门限或者重传超时参数来避免由于多次不必要的重传而浪费带宽。</p>
+<p>　　(3)对公平性的改进</p>
+<p>　　在拥塞避免阶段，如果没有发生丢包事件，则TCP发送方的cwnd在每个RTT时间内大约可以增加一个报文段大小，但这样会造成具有不同RTT时间或窗口尺寸的多个连接在瓶颈处对带宽竞争的不公平性，RTT时间或窗口小的连接，相应的cwnd增长速度也相对缓慢，所以只能得到很小一部分带宽。</p>
+<p>　　要解决上述问题，可以通过在路由器处使用公平队列和TCP友好缓存管理来进行控制以增加公平性。然而如没有路由器的参与，要增加公平性，就要求TCP发送端的拥塞控制进行相应的改变，在拥塞避免阶段使共享同一资源的各个TCP连接以相同速度发送数据，从而确保了各个连接间的公平性。</p>
+<h2 id="Nagle算法"><a href="#Nagle算法" class="headerlink" title="Nagle算法"></a>Nagle算法</h2><p>这里算作对拥塞控制的一点补充吧. 从问题入手谈谈 delayed ack 和 nagle algorithm.</p>
+<h3 id="概述-思想"><a href="#概述-思想" class="headerlink" title="概述(思想)"></a>概述(思想)</h3><p>在网络拥塞控制领域，有一个非常有名的算法叫做Nagle算法（Nagle algorithm），这是使用它的发明人John Nagle的名字来命名的，John Nagle在1984年首次用这个算法来尝试解决福特汽车公司的网络拥塞问题（RFC 896）。<br>该问题的具体描述是：如果我们的应用程序一次产生1个字节的数据，而这个1个字节数据又以网络数据包的形式发送到远端服务器，那么就很容易导致网络由于太多的数据包而过载。比如，当用户使用Telnet连接到远程服务器时，每一次击键操作就会产生1个字节数据，进而发送出去一个数据包，所以，在典型情况下，传送一个只拥有1个字节有效数据的数据包，却要发费40个字节长包头（即ip头20字节+tcp头20字节）的额外开销，这种有效载荷（payload）利用率极其低下的情况被统称之为愚蠢窗口症候群（Silly Window Syndrome）。可以看到，这种情况对于轻负载的网络来说，可能还可以接受，但是对于重负载的网络而言，就极有可能承载不了而轻易的发生拥塞瘫痪。<br>针对上面提到的这个状况，<strong>Nagle算法的改进在于</strong>：如果发送端欲多次发送包含少量字符的数据包（一般情况下，后面统一称长度小于MSS的数据包为小包，与此相对，称长度等于MSS的数据包为大包，为了某些对比说明，还有中包，即长度比小包长，但又不足一个MSS的包），则发送端会先将第一个小包发送出去，而将后面到达的少量字符数据都缓存起来而不立即发送，直到收到接收端对前一个数据包报文段的ACK确认、或当前字符属于紧急数据，或者积攒到了一定数量的数据（比如缓存的字符数据已经达到数据包报文段的最大长度）等多种情况才将其组成一个较大的数据包发送出去。</p>
+<blockquote>
+<p>通俗来说, 就是解决愚蠢的连续小包发送问题; 其实你完全可以应用层先把包组织好, 即在协议层面就优化好.</p>
+</blockquote>
+<h3 id="详述"><a href="#详述" class="headerlink" title="详述"></a>详述</h3><p>TCP/IP协议中，无论发送多少数据，总是要在数据前面加上协议头，同时，对方接收到数据，也需要发送ACK表示确认。为了尽可能的利用网络带宽，TCP总是希望尽可能的发送足够大的数据。（一个连接会设置MSS参数，因此，TCP/IP希望每次都能够以MSS尺寸的数据块来发送数据）。Nagle算法就是为了尽可能发送大块数据，避免网络中充斥着许多小数据块。基本定义是: <strong>任意时刻，最多只能有一个未被确认的小段。</strong><br>所谓“小段”，指的是小于MSS尺寸的数据块，所谓“未被确认”，是指一个数据块发送出去后，没有收到对方发送的ACK确认该数据已收到。</p>
+<p>举个例子，一开始client端调用socket的write操作将一个int型数据(称为A块)写入到网络中，由于此时连接是空闲的（也就是说还没有未被确认的小段），因此这个int型数据会被马上发送到server端，接着，client端<strong>又调用write操作写入一个int型数据</strong>（简称B块），这个时候，A块的ACK没有返回，所以可以认为已经存在了一个未被确认的小段，所以B块没有立即被发送，一直等待A块的ACK收到（大概40ms之后），B块才被发送。</p>
+<p>但是, 第一次write之后，因为no unconfirmed data in pipe, 所以包直接发送出去了，随后server返回response，client读取之后第二次write，同样，包正常出去。因此，设置TCP_NODELAY和没设置，在我们的模式里是没有任何影响的。(注意区别)</p>
+<p>这里, 就由 nagle 算法保证了, 仅有一个未确认的小块儿.</p>
+<p>btw: <strong>40ms</strong>是什么?<br>因为TCP/IP中不仅仅有Nagle算法(Nagle‘s Algorithm)，还有一个<code>ACK延迟机制</code>(TCP Delayed Ack) 。当Server端收到数据之后，它并不会马上向client端发送ACK，而是会将ACK的发送延迟一段时间（假设为t），它希望在t时间内server端会向client端发送应答数据，这样ACK就能够和应答数据一起发送，就像是应答数据捎带着ACK过去。</p>
+<blockquote>
+<p>意思说, 服务端最好不仅仅回复给客户端说我收到了, 最好把处理完的数据一起带回来呀</p>
+</blockquote>
+<p>也就是如果一个 TCP 连接的一端启用了Nagle算法，而另一端启用了ACK延时机制，而发送的数据包又比较小，则可能会出现这样的情况：发送端在等待接收端对上一个packet的Ack才发送当前的packet，而接收端则正好延迟了此Ack的发送，那么这个正要被发送的packet就会同样被延迟。</p>
+<p><strong>当然Delayed Ack是有个超时机制的，而默认的超时正好就是40ms。</strong> 具体是40ms还是200ms需要根据内核协议栈确定(即操作系统相关).<br>相关内容不多阐述, 可以参考<a href="https://stackoverflow.com/questions/11447809/winsock-200ms-delay-issue" target="_blank" rel="external">Winsock 200ms delay issue</a>:<br><strong>TCP will ACK every second packet immediately.</strong>(第二个packet，指连续收到两个数据包中的第二个)</p>
+<p>回到nagle算法和delayed ack:</p>
+<blockquote>
+<p>这边等你回复, 然后再发; 另一边偏偏延迟回复. 延迟增大了, 却没有提供吞吐量, 真的是太揪心了.</p>
+</blockquote>
+<p>现代的 TCP/IP 协议栈实现，默认几乎都启用了这两个功能，那岂不每次都会触发这个延迟问题？事实不是那样的。<br>仅当协议的交互是发送端连续发送两个packet，然后立刻read的时候才会出现问题。<br>(上面遇到的问题, 最后的那个一个小包传输, 就被nagle算法和ack delayed搞的延迟发送了, 导致吞吐量下降)</p>
+<p>此外delayed ack能保证先收到的包,先响应.(这在滑动窗口机制中强调过, 无需等待确认即可再发送)</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>1.优化协议<br>连续 write 小数据包，然后 read , 即<code>write+read+write+read</code>其实是一个不好的网络编程模式. </p>
+<blockquote>
+<p>连续 write 其实应该在<code>应用层合并</code>成一次 write.</p>
+</blockquote>
+<p>2.开启TCP_NODELAY<br>简单地说，这个选项的作用就是禁用Nagle算法，禁止后当然就不会有它引起的一系列问题了。使用setsockopt可以做到：</p>
+<pre><code>static void _set_tcp_nodelay(int fd) {  
+  int enable = 1;  
+  setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (void*)&amp;enable, sizeof(enable));  
+}
+</code></pre><h2 id="常用编程选项"><a href="#常用编程选项" class="headerlink" title="常用编程选项"></a>常用编程选项</h2><p>该部分单独写吧.</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li>《unp 卷1》</li>
 <li>《Linux系统编程》</li>
 <li>《unix高级编程》</li>
 <li>《图解tcp-ip》</li>
 <li>《TCP/IP协议详解》 </li>
 <li>《高效TCP/IP编程》</li>
-<li><a href="http://wiki.mbalib.com/wiki/%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6" target="_blank" rel="external">http://wiki.mbalib.com/wiki/%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6</a></li>
+<li><a href="http://wiki.mbalib.com/wiki/%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6" target="_blank" rel="external">http://wiki.mbalib.com/wiki/%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6</a>  对传统TCP拥塞控制机制的发展及改进</li>
 <li><a href="http://blog.csdn.net/dog250/article/details/53013410" target="_blank" rel="external">http://blog.csdn.net/dog250/article/details/53013410</a></li>
 <li><a href="http://blog.csdn.net/yunhua_lee/article/details/8146830" target="_blank" rel="external">http://blog.csdn.net/yunhua_lee/article/details/8146830</a></li>
+<li><a href="http://blog.csdn.net/hyman_yx/article/details/52065418" target="_blank" rel="external">http://blog.csdn.net/hyman_yx/article/details/52065418</a></li>
+<li><a href="http://www.choudan.net/2014/09/12/%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E7%82%B9%E6%BB%B4-%E4%B8%80.html" target="_blank" rel="external">http://www.choudan.net/2014/09/12/%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E7%82%B9%E6%BB%B4-%E4%B8%80.html</a>  delayed ack问题</li>
+<li><a href="http://www.jianshu.com/p/d9edbba4035b" target="_blank" rel="external">http://www.jianshu.com/p/d9edbba4035b</a></li>
+<li><a href="http://blog.csdn.net/xautgaozhe/article/details/48242381" target="_blank" rel="external">http://blog.csdn.net/xautgaozhe/article/details/48242381</a></li>
 </ol>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
