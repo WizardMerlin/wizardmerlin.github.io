@@ -34,7 +34,7 @@
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/time-out.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/tcp-repeat.png">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/fast-recovery.png">
-<meta property="og:updated_time" content="2017-10-26T09:36:17.000Z">
+<meta property="og:updated_time" content="2017-10-27T03:37:09.381Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深挖TCP模型">
 <meta name="twitter:description" content="summary of tcp protocol programming">
@@ -669,7 +669,36 @@ RTO = R*2; //2的倍数也可, 方便计算机做移位计算
 </code></pre><p>为什么禁用?<br>nagel算法有点儿类似udp中的TFTP协议, 非确认不发送, 但是传送效率还是太差了.</p>
 <p>对于大数据, 这里用的是滑动窗口机制, 即没有收到回复前, 可以连续发送窗口大小的内容(提高了发送量).<br>之所以可以这样做是因为采用了窗口做缓存, 内容在缓存里面存有备份, 丢失了可以重传, 并且只有收到确认才从缓存队列里清除.<br>(它的确认机制也是保证滑动窗口可以实时的重要原因, 只有当收到了才会增加确认ack序列号;)<br>并且有时候也会采用”隔一个报文段确认” (一次性确认俩或者更多, 中间没有确认的, 用ack序列号推断; 因为没收到ack序列号不会增加的)</p>
 <p>并且同样的报文, 可能由于发送方接收方代码, 网络拥塞程度等, 接收的时序也不一样.(有的包就是被延迟了很久才收到)</p>
-<h2 id="常用编程选项"><a href="#常用编程选项" class="headerlink" title="常用编程选项"></a>常用编程选项</h2><p>该部分单独写吧.</p>
+<h2 id="常用编程选项"><a href="#常用编程选项" class="headerlink" title="常用编程选项"></a>常用编程选项</h2><p>可以直接查看 <code>man 7 tcp</code>, 这里拿出最常用的来说一说.</p>
+<p>主要有:</p>
+<ul>
+<li>TCP_CORK</li>
+<li>TCP_NODELAY</li>
+<li>TCP_DEFER_ACCEPT</li>
+<li>TCP_KEEPCNT / TCP_KEEPIDLE / TCP_KEEPINTVL</li>
+</ul>
+<p><strong>TCP_NODELAY 和 TCP_CHORK选项</strong> :<br><code>TCP_NODELAY</code>和<code>TCP_CORK</code>基本上控制了包的“Nagle化”，Nagle化在这里的含义是采用Nagle算法把较小的包组装为更大的帧。<br>TCP_NODELAY和TCP_CORK都禁掉了Nagle算法，只不过他们的行为不同而已。<br>TCP_NODELAY 不使用Nagle算法，不会将小包进行拼接成大包再进行发送，直接将小包发送出去，会使得小包时候用户体验非常好。<br>TCP_CORK: 当在传送大量数据的时候，为了提高TCP发送效率，可以设置TCP_CORK，CORK顾名思义，就是”塞子”的意思:<br>它会尽量在每次发送最大的数据量。当设置了TCP_CORK后，会有延迟200ms，当阻塞时间过后，数据就会自动传送。</p>
+<p><strong>TCP_DEFER_ACCEPT选项</strong>:<br>defer accept，从字面上理解是推迟accept，实际上是当接收到第一个数据之后，才会创建连接，三次握手完成，连接还没有建立。<br>对于像HTTP等非交互式的服务器，这个很有意义，可以用来防御空连接攻击（只是建立连接，但是不发送任何数据）。<br>使用方法如下：</p>
+<pre><code class="C++">val = 5;
+setsockopt(srv_socket-&gt;fd, SOL_TCP, TCP_DEFER_ACCEPT, &amp;val, sizeof(val));
+</code></pre>
+<p>里面 val 的单位是秒，注意如果打开这个功能，kernel 在 val 秒之内还没有收到数据，不会继续唤醒进程，而是直接丢弃连接。<br>如果服务器设置 TCP_DEFER_ACCEPT 选项后，服务器受到一个CONNECT请求后，三次握手之后，新的socket状态依然为SYN_RECV，而不是ESTABLISHED，操作系统不会Accept。<br>由于设置TCP_DEFER_ACCEPT选项之后，三次握手后状态没有达到ESTABLISHED，而是SYN_RECV。<br>这个时候，如果客户端一直没有发送”数据”报文，服务器将重传SYN/ACK报文，重传次数受<code>net.ipv4.tcp_synack_retries</code>参数控制，<br>达到重传次数之后，才会再次进行setsockopt中设置的超时值，因此会出现SYN_RECV生存时间比设置值大一些的情况。</p>
+<p><strong>SO_KEEPALIVE选项</strong> :<br>通常这个选型关联: SO_KEEPALIVE, TCP_KEEPCNT, TCP_KEEPIDLE, TCP_KEEPINTVL</p>
+<p>如果一方已经关闭或异常终止连接，而另一方却不知道，我们将这样的TCP连接称为半打开的, TCP通过保活定时器(KeepAlive)来检测半打开连接.</p>
+<p>在高并发的网络服务器中，经常会出现漏掉socket的情况，对应的结果有一种情况就是出现大量的CLOSE_WAIT状态的连接(确认对端已经关闭了).<br>这个时候，可以通过设置 KEEPALIVE 选项来解决这个问题，当然还有其他的方法可以解决这个问题.</p>
+<p>使用方法如下：</p>
+<pre><code class="C++">//Setting For KeepAlive
+int keepalive = 1;
+setsockopt(incomingsock,SOL_SOCKET,SO_KEEPALIVE,(void*)(&amp;keepalive),(socklen_t)sizeof(keepalive));
+int keepalive_time = 30;
+setsockopt(incomingsock, IPPROTO_TCP, TCP_KEEPIDLE,(void*)(&amp;keepalive_time),(socklen_t)sizeof(keepalive_time));
+int keepalive_intvl = 3;
+setsockopt(incomingsock, IPPROTO_TCP, TCP_KEEPINTVL,(void*)(&amp;keepalive_intvl),(socklen_t)sizeof(keepalive_intvl));
+int keepalive_probes= 3;
+setsockopt(incomingsock, IPPROTO_TCP, TCP_KEEPCNT,(void*)(&amp;keepalive_probes),(socklen_t)sizeof(keepalive_probes));
+</code></pre>
+<p>设置<code>SO_KEEPALIVE</code>选项来开启KEEPALIVE，然后通过<code>TCP_KEEPIDLE</code>、<code>TCP_KEEPINTVL</code>和<code>TCP_KEEPCNT</code>设置keepalive的开始时间、间隔、次数等参数。</p>
+<p>当然，也可以通过设置 <code>/proc/sys/net/ipv4/tcp_keepalive_time</code>、<code>tcp_keepalive_intvl</code>和<code>tcp_keepalive_probes</code>等内核参数来达到目的，<br>但是这样的话，会影响所有的socket，因此建议使用setsockopt设置。</p>
 <h2 id="TCP的未来"><a href="#TCP的未来" class="headerlink" title="TCP的未来"></a>TCP的未来</h2><p>W.Richard Stevens的《TCP/IP详解》说的 TCP/IP的未来已经到来了.</p>
 <ul>
 <li>TCP在高速环境下获得最大吞吐量 (一般总是大的数据包发送效率高; 但是考虑到跳数和带宽, 即空闲跳的等待时间, 发送效率上未必是大的包比较好)<br>有人在做过实验, 当丢包率在5%时, 网络的吞吐量, 即传输性能会降低50%左右. (难以想象的恐怖, 并且是恶性循环)</li>

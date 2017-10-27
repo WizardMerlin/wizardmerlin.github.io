@@ -19,7 +19,7 @@
 <meta property="og:description" content="一些列工作经验的分享,干货">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/new_era_1.png">
-<meta property="og:updated_time" content="2017-10-27T01:43:03.325Z">
+<meta property="og:updated_time" content="2017-10-27T03:37:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="里程碑1(Linux后台开发经验分享)">
 <meta name="twitter:description" content="一些列工作经验的分享,干货">
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#版本记录"><span class="toc-number">1.</span> <span class="toc-text">版本记录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#milestone1-大巨变"><span class="toc-number">1.1.</span> <span class="toc-text">milestone1: 大巨变</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#milestone2-领域专家"><span class="toc-number">1.2.</span> <span class="toc-text">milestone2 : 领域专家</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心内容"><span class="toc-number">2.</span> <span class="toc-text">核心内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#服务端"><span class="toc-number">2.1.</span> <span class="toc-text">服务端</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编程语言"><span class="toc-number">2.1.1.</span> <span class="toc-text">编程语言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库"><span class="toc-number">2.1.2.</span> <span class="toc-text">数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息件"><span class="toc-number">2.1.3.</span> <span class="toc-text">消息件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#协议"><span class="toc-number">2.1.4.</span> <span class="toc-text">协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络框架"><span class="toc-number">2.1.5.</span> <span class="toc-text">网络框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关架构"><span class="toc-number">2.1.6.</span> <span class="toc-text">相关架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他技术"><span class="toc-number">2.1.7.</span> <span class="toc-text">其他技术</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux系统"><span class="toc-number">2.2.</span> <span class="toc-text">Linux系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#core文件"><span class="toc-number">2.2.1.</span> <span class="toc-text">core文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RESTful相关"><span class="toc-number">2.3.</span> <span class="toc-text">RESTful相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#restful简介"><span class="toc-number">2.3.1.</span> <span class="toc-text">restful简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#api返回值经验"><span class="toc-number">2.3.2.</span> <span class="toc-text">api返回值经验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C-语言"><span class="toc-number">2.4.</span> <span class="toc-text">C++语言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#window移植"><span class="toc-number">2.4.1.</span> <span class="toc-text">window移植</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#宽字符问题"><span class="toc-number">2.4.2.</span> <span class="toc-text">宽字符问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#操作大文件"><span class="toc-number">2.4.3.</span> <span class="toc-text">操作大文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C-标准库"><span class="toc-number">2.5.</span> <span class="toc-text">C++标准库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#变量初始化"><span class="toc-number">2.5.1.</span> <span class="toc-text">变量初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#std-bind"><span class="toc-number">2.5.2.</span> <span class="toc-text">std::bind</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#智能指针-多线程-问题"><span class="toc-number">2.5.3.</span> <span class="toc-text">智能指针(多线程)问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Boost-Asio"><span class="toc-number">2.6.</span> <span class="toc-text">Boost.Asio</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#read-util相关"><span class="toc-number">2.6.1.</span> <span class="toc-text">read_util相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#请求队列积压问题"><span class="toc-number">2.6.2.</span> <span class="toc-text">请求队列积压问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#linux-网络部分"><span class="toc-number">3.</span> <span class="toc-text">linux 网络部分</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#长连接"><span class="toc-number">3.1.</span> <span class="toc-text">长连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Delayed-ACK和Nagle算法"><span class="toc-number">3.2.</span> <span class="toc-text">Delayed ACK和Nagle算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用-tcp-选项"><span class="toc-number">3.3.</span> <span class="toc-text">常用 tcp 选项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#socket-编程问题"><span class="toc-number">3.4.</span> <span class="toc-text">socket 编程问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#心跳保活"><span class="toc-number">3.5.</span> <span class="toc-text">心跳保活</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP保活"><span class="toc-number">3.5.1.</span> <span class="toc-text">TCP保活</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP保活"><span class="toc-number">3.5.2.</span> <span class="toc-text">HTTP保活</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">4.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#版本记录"><span class="toc-number">1.</span> <span class="toc-text">版本记录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#milestone1-大巨变"><span class="toc-number">1.1.</span> <span class="toc-text">milestone1: 大巨变</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#milestone2-领域专家"><span class="toc-number">1.2.</span> <span class="toc-text">milestone2 : 领域专家</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心内容"><span class="toc-number">2.</span> <span class="toc-text">核心内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#服务端"><span class="toc-number">2.1.</span> <span class="toc-text">服务端</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编程语言"><span class="toc-number">2.1.1.</span> <span class="toc-text">编程语言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库"><span class="toc-number">2.1.2.</span> <span class="toc-text">数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息件"><span class="toc-number">2.1.3.</span> <span class="toc-text">消息件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#协议"><span class="toc-number">2.1.4.</span> <span class="toc-text">协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络框架"><span class="toc-number">2.1.5.</span> <span class="toc-text">网络框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关架构"><span class="toc-number">2.1.6.</span> <span class="toc-text">相关架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他技术"><span class="toc-number">2.1.7.</span> <span class="toc-text">其他技术</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux系统"><span class="toc-number">2.2.</span> <span class="toc-text">Linux系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#core文件"><span class="toc-number">2.2.1.</span> <span class="toc-text">core文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RESTful相关"><span class="toc-number">2.3.</span> <span class="toc-text">RESTful相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#restful简介"><span class="toc-number">2.3.1.</span> <span class="toc-text">restful简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#api返回值经验"><span class="toc-number">2.3.2.</span> <span class="toc-text">api返回值经验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C-语言"><span class="toc-number">2.4.</span> <span class="toc-text">C++语言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#window移植"><span class="toc-number">2.4.1.</span> <span class="toc-text">window移植</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#宽字符问题"><span class="toc-number">2.4.2.</span> <span class="toc-text">宽字符问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#操作大文件"><span class="toc-number">2.4.3.</span> <span class="toc-text">操作大文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C-标准库"><span class="toc-number">2.5.</span> <span class="toc-text">C++标准库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#变量初始化"><span class="toc-number">2.5.1.</span> <span class="toc-text">变量初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#std-bind"><span class="toc-number">2.5.2.</span> <span class="toc-text">std::bind</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#智能指针-多线程-问题"><span class="toc-number">2.5.3.</span> <span class="toc-text">智能指针(多线程)问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Boost-Asio"><span class="toc-number">2.6.</span> <span class="toc-text">Boost.Asio</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#read-util相关"><span class="toc-number">2.6.1.</span> <span class="toc-text">read_util相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#请求队列积压问题"><span class="toc-number">2.6.2.</span> <span class="toc-text">请求队列积压问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#linux-网络部分"><span class="toc-number">3.</span> <span class="toc-text">linux 网络部分</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#长连接"><span class="toc-number">3.1.</span> <span class="toc-text">长连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#禁用Nagle算法"><span class="toc-number">3.2.</span> <span class="toc-text">禁用Nagle算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用-tcp-选项"><span class="toc-number">3.3.</span> <span class="toc-text">常用 tcp 选项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#socket-编程问题"><span class="toc-number">3.4.</span> <span class="toc-text">socket 编程问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#socket-选项"><span class="toc-number">3.4.1.</span> <span class="toc-text">socket 选项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#心跳保活"><span class="toc-number">3.5.</span> <span class="toc-text">心跳保活</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP保活"><span class="toc-number">3.5.1.</span> <span class="toc-text">TCP保活</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP保活"><span class="toc-number">3.5.2.</span> <span class="toc-text">HTTP保活</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用保活"><span class="toc-number">3.5.3.</span> <span class="toc-text">应用保活</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">4.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol>
     	</div>
 	
 
@@ -698,7 +698,7 @@ handler(3,4);// 相当于 test(1,3,4);
 </ul>
 <p>那么第二个问题，如何解决无状态，通常web服务器是通过session，这个显然有性能问题，而且session是没有保证的。<br>于是我们反过来，长连接服务器同时作为session服务器，在把请求发给php时，同时将存储在长连接服务器的session也发给php，<br>php对session的任何更改也在响应中回传给服务器，由<strong>服务器保存(session)</strong>，下一次调用时再传回去。</p>
 <p>这样一来，从 php 服务器端看到的是一个有状态的请求序列。 </p>
-<h2 id="Delayed-ACK和Nagle算法"><a href="#Delayed-ACK和Nagle算法" class="headerlink" title="Delayed ACK和Nagle算法"></a>Delayed ACK和Nagle算法</h2><p>这个问题也差不多也是由大量小数据包引起的问题, 它影响了IO性能, 或者吞吐量. 核心思想就是, 延迟应答.</p>
+<h2 id="禁用Nagle算法"><a href="#禁用Nagle算法" class="headerlink" title="禁用Nagle算法"></a>禁用Nagle算法</h2><p>这个问题也差不多也是由大量小数据包引起的问题, 它影响了IO性能, 或者吞吐量. 核心思想就是, 延迟应答.</p>
 <p>和<code>TCP_NODELAY</code>选项有关, 简单地说，这个(启动)选项的作用就是禁用 Nagle 算法，禁止后当然就不会有它引起的一系列问题了。<br>使用setsockopt可以做到：</p>
 <pre><code class="C++">static void _set_tcp_nodelay(int fd) {  
     int enable = 1;  
@@ -706,8 +706,55 @@ handler(3,4);// 相当于 test(1,3,4);
 }
 </code></pre>
 <p>具体可以参考我的这篇文章 <a href="http://merlinblog.site/2017/06/19/how-about-tcp.html#Nagle算法" target="_blank" rel="external">how about tcp</a></p>
-<h2 id="常用-tcp-选项"><a href="#常用-tcp-选项" class="headerlink" title="常用 tcp 选项"></a>常用 tcp 选项</h2><p>TODO</p>
-<h2 id="socket-编程问题"><a href="#socket-编程问题" class="headerlink" title="socket 编程问题"></a>socket 编程问题</h2><p>TODO</p>
+<h2 id="常用-tcp-选项"><a href="#常用-tcp-选项" class="headerlink" title="常用 tcp 选项"></a>常用 tcp 选项</h2><p>关于这一点, 可以查看 <code>man 7 tcp</code>, 或者看一下<code>man 7 socket</code>, 里面详细列举了相关的参数.</p>
+<p>具体可以参考一下 我的文章 <strong>how-about-tcp</strong>.</p>
+<h2 id="socket-编程问题"><a href="#socket-编程问题" class="headerlink" title="socket 编程问题"></a>socket 编程问题</h2><h3 id="socket-选项"><a href="#socket-选项" class="headerlink" title="socket 选项"></a>socket 选项</h3><p>常用的有:</p>
+<ul>
+<li>SO_REUSEADDR</li>
+<li>SO_RECVBUF/SO_SNDBUF</li>
+<li>SO_KEEPALIVE</li>
+<li>SO_LINGER</li>
+</ul>
+<p>下面详细说一下:<br><strong>SO_REUSEADDR选项</strong> :<br>在服务器程序中，SO_REUSEADDR socket 选项通常在调用bind()之前被设置。<br>SO_REUSEADDR可以用在以下四种情况下： (摘自《Unix网络编程》卷一，即UNPv1)</p>
+<ul>
+<li>当有一个有相同本地地址和端口的socket1处于TIME_WAIT状态时，而你启动的程序的socket2要占用该地址和端口，你的程序就要用到该选项</li>
+<li>SO_REUSEADDR允许同一端口上启动同一服务器的多个实例(多个进程), 但每个实例绑定的IP地址是不能相同的。在有多块网卡或用IP Alias技术的机器可以测试这种情况。 </li>
+<li>SO_REUSEADDR允许单个进程绑定相同的端口到多个socket上，但每个socket绑定的ip地址不同。这和2很相似，区别请看UNPv1。 </li>
+<li>SO_REUSEADDR允许完全相同的地址和端口的重复绑定。但这只用于UDP的多播，不用于TCP。</li>
+</ul>
+<p><strong>SO_LINGER选项</strong> :<br>linger，顾名思义是延迟延缓的意思，这里是延缓面向连接的socket的close操作。<br>默认，close立即返回，但是当发送缓冲区中还有一部分数据的时候， 系统将会尝试将数据发送给对端, SO_LINGER可以改变close的行为.<br>控制SO_LINGER通过下面一个结构：</p>
+<pre><code class="C++">struct linger
+{
+      int l_onoff; /*0=off, nonzero=on*/
+      int l_linger; /*linger time, POSIX specifies units as seconds*/
+};
+</code></pre>
+<p>通过结构体中成员的不同赋值，可以表现为下面几种情况：</p>
+<ol>
+<li>l_onoff设置为0，选项被关闭。l_linger值被忽略，就是上面的默认情形，close立即返回。</li>
+<li>l_onoff设置为非0，l_linger被设置为0，则close()不被阻塞立即执行，丢弃socket发送缓冲区中的数据，并向对端发送一个RST报文。<br> 这种关闭方式称为“强制”或“失效”关闭。</li>
+<li>l_onoff设置为非0，l_linger被设置为非0，则close()调用阻塞进程，直到所剩数据发送完毕或超时。<br> 这种关闭称为“优雅的”关闭。</li>
+</ol>
+<p>注意： 这个选项需要谨慎使用，尤其是强制式关闭，会丢失服务器发给客户端的最后一部分数据。UNP中:</p>
+<blockquote>
+<p>The TIME_WAIT state is our friend and is there to help us(i.e., to let the old duplicate segments expire in the network).</p>
+</blockquote>
+<p><strong>SO_KEEPALIVE选项</strong> :<br>通常这个选型关联: SO_KEEPALIVE, TCP_KEEPCNT, TCP_KEEPIDLE, TCP_KEEPINTVL</p>
+<p>如果一方已经关闭或异常终止连接，而另一方却不知道，我们将这样的TCP连接称为半打开的, TCP通过保活定时器(KeepAlive)来检测半打开连接.</p>
+<p>在高并发的网络服务器中，经常会出现漏掉socket的情况，对应的结果有一种情况就是出现大量的CLOSE_WAIT状态的连接(确认对端已经关闭了).<br>这个时候，可以通过设置 KEEPALIVE 选项来解决这个问题，当然还有其他的方法可以解决这个问题.</p>
+<p>使用方法如下：</p>
+<pre><code class="C++">//Setting For KeepAlive
+int keepalive = 1;
+setsockopt(incomingsock,SOL_SOCKET,SO_KEEPALIVE,(void*)(&amp;keepalive),(socklen_t)sizeof(keepalive));
+int keepalive_time = 30;
+setsockopt(incomingsock, IPPROTO_TCP, TCP_KEEPIDLE,(void*)(&amp;keepalive_time),(socklen_t)sizeof(keepalive_time));
+int keepalive_intvl = 3;
+setsockopt(incomingsock, IPPROTO_TCP, TCP_KEEPINTVL,(void*)(&amp;keepalive_intvl),(socklen_t)sizeof(keepalive_intvl));
+int keepalive_probes= 3;
+setsockopt(incomingsock, IPPROTO_TCP, TCP_KEEPCNT,(void*)(&amp;keepalive_probes),(socklen_t)sizeof(keepalive_probes));
+</code></pre>
+<p>设置<code>SO_KEEPALIVE</code>选项来开启KEEPALIVE，然后通过<code>TCP_KEEPIDLE</code>、<code>TCP_KEEPINTVL</code>和<code>TCP_KEEPCNT</code>设置keepalive的开始时间、间隔、次数等参数。</p>
+<p>当然，也可以通过设置 <code>/proc/sys/net/ipv4/tcp_keepalive_time</code>、<code>tcp_keepalive_intvl</code>和<code>tcp_keepalive_probes</code>等内核参数来达到目的，<br>但是这样的话，会影响所有的socket，因此建议使用setsockopt设置。</p>
 <h2 id="心跳保活"><a href="#心跳保活" class="headerlink" title="心跳保活"></a>心跳保活</h2><p>有TCP侧的保活机制, 又有应用侧的保活机制, 但是他们的侧重不同.</p>
 <h3 id="TCP保活"><a href="#TCP保活" class="headerlink" title="TCP保活"></a>TCP保活</h3><p>检测连接是否可用, 是否还有数据继续发送.</p>
 <p>tcp的keepalive是侧重在保持客户端和服务端的连接，一方会不定期发送心跳包给另一方，当一方断掉的时候，没有断掉的定时发送几次心跳包，<br>如果间隔发送几次，对方都返回的是RST，而不是ACK，那么就释放当前链接。<br>设想一下，如果tcp层没有keepalive的机制，一旦一方断开连接却没有发送FIN给另外一方的话，那么另外一方会一直以为这个连接还是存活的，几天，几月。<br>那么这对服务器资源的影响是很大的。</p>
@@ -757,6 +804,19 @@ setsockopt(listenfd,SOL_TCP, TCP_KEEPCNT, (void *)&amp;opt, sizeof(opt));  //tcp
 <p><strong>联系TIME_WAIT</strong></p>
 <p>由于HTTP服务的发起方一般都是浏览器，即客户端。但是先执行完逻辑，传输完数据的一定是服务端。那么一旦没有keep-alive机制，服务端在传送完数据之后会率先发起连接断开的操作。由于TCP的四次挥手机制，先发起连接断开的一方会在连接断开之后进入到TIME_WAIT的状态达到2MSL之久。设想，如果没有开启HTTP的keep-alive，那么这个TIME_WAIT就会留在服务端，由于服务端资源是非常有限的，我们当然倾向于服务端不会同一时间hold住过多的连接，这种TIME_WAIT的状态应该尽量在客户端保持。那么这个http的keep-alive机制就起到非常重要的作用了。</p>
 <p>基于重用,性能和TIME_WAIT等原因, 现在浏览器发起web请求, 一般都会带上connection:keep-alive的头.</p>
+<h3 id="应用保活"><a href="#应用保活" class="headerlink" title="应用保活"></a>应用保活</h3><p>KeepAlive仅用于检测连接的死活，而应用层心跳机制还有一个目的是检测简练的存活状态。<br>考虑一个场景：当某台服务器处理负载过高，CPU利用率100%，无法处理任何业务请求，在这种情况下，TCP探针仍然确认对方可用，<br>而实际上，服务器已经不能处理任何请求了，这种情况下应该断开当前连接，重新建立连接，而不是认为服务器仍然可用。</p>
+<p>因此，从这个角度出发，应用层心跳机制也是必然需要的。</p>
+<p>另外, 应用层的心跳机制, 基本和HTTPS一致的要求需要<code>长连接</code>.</p>
+<p>对于客户端而言，保持长连接的长连接的有效性可以使得每次请求都只是简单的数据发送和接受，而不必要每次重新建立一个连接，重新解析DNS，<br>省去连接建立的时间，加快了于服务器之间的通信速度，有利于接收服务器的实时消息，前提都是连接必须可用。</p>
+<p>对于服务器而言，保持连接的有效性可以让服务器降低负载，及时清除无效的连接。</p>
+<p><strong>最简单的实现</strong></p>
+<p>定时心跳.</p>
+<p>例如:<br>由登录端每隔5秒向消息服务器发送心跳信息，如果30秒内没有收到消息服务器的相应，则关闭当前连接；<br>服务器每隔60s向移动端或者PC端发送定时心跳，60s没收到对端相应，则关闭当前连接。<br>(重发心跳保活指令，心跳超时时间为5S; 最长尝试时间为30秒和60s; 服务器还是客户端发送并不重要)</p>
+<p>其实需要应用层检测, 更主要的原因是可以更好的判断服务器状态, 以此给出是否保持或者断开连接.</p>
+<blockquote>
+<p>现在的很多框架, 系统都已经提供了相关的API, 定时器等, 实现起来也比较容易.</p>
+</blockquote>
+<p>实际上很多时候, 往往是UDP协议的应用才需要专门这么做.<br>虽然TCP本身的包头要比UDP多，但是<strong>UDP在实际应用中往往需要维护双向通道</strong>，就必须要通过大量的心跳包数据来维护端口资源。<br>总的比较起来，UDP的实际流量要比TCP还要大。很多使用者在初期的时候并不了解UDP需要大量心跳包来维持端口资源这个问题，往往都认为UDP要比TCP更节省流量，实际上这里存在着一个误区。<br>在某些特定的应用场合，例如一些银行的时时交互系统，对响应速度要求很高，此时数据传输频率较快，不需要大量心跳包维持UDP端口资源，采用UDP就比较有利了。</p>
 <h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>这篇文章会一直更新, 直到哪一天我不再在一线编码了, 希望能给看到的人提供一些帮助.</p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
 <li><a href="https://www.zhihu.com/question/28557115" target="_blank" rel="external">知乎大神们对restful的看法</a></li>
