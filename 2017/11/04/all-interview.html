@@ -8,22 +8,22 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   
-  <title>你说红黑树? | Merlin&#39;s Blog</title>
+  <title>全面经 | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="二叉树, 平衡二叉树, 二叉查找树; 我赶时间, 你们一起都上吧(笑)">
-<meta name="keywords" content="算法">
+  <meta name="description" content="面试经验呀">
+<meta name="keywords" content="面试">
 <meta property="og:type" content="article">
-<meta property="og:title" content="你说红黑树?">
-<meta property="og:url" content="www.merlinblog.site/2017/11/04/ur-tree.html">
+<meta property="og:title" content="全面经">
+<meta property="og:url" content="www.merlinblog.site/2017/11/04/all-interview.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
-<meta property="og:description" content="二叉树, 平衡二叉树, 二叉查找树; 我赶时间, 你们一起都上吧(笑)">
+<meta property="og:description" content="面试经验呀">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/rbtree.jpg">
-<meta property="og:updated_time" content="2017-11-04T13:35:48.555Z">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/interview1.jpg">
+<meta property="og:updated_time" content="2017-11-04T14:34:44.051Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="你说红黑树?">
-<meta name="twitter:description" content="二叉树, 平衡二叉树, 二叉查找树; 我赶时间, 你们一起都上吧(笑)">
-<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/rbtree.jpg">
+<meta name="twitter:title" content="全面经">
+<meta name="twitter:description" content="面试经验呀">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/interview1.jpg">
   
   
     <link href="/favicon.ico" rel="ico" />
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#强调"><span class="toc-number">1.</span> <span class="toc-text">强调</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">2.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#详述"><span class="toc-number">3.</span> <span class="toc-text">详述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#我的反思"><span class="toc-number">1.</span> <span class="toc-text">我的反思</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#给HR或招聘主管"><span class="toc-number">2.</span> <span class="toc-text">给HR或招聘主管</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TODO"><span class="toc-number">3.</span> <span class="toc-text">TODO</span></a></li></ol>
     	</div>
 	
 
@@ -205,7 +205,7 @@ function tmpfobid()
     <div class="container post-box">
         <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
             <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
-                <strong>你说红黑树?</strong>
+                <strong>全面经</strong>
             </div>
  
             <div class="is-flex align-center" style="margin-top:10px;">
@@ -217,7 +217,7 @@ function tmpfobid()
             
                 <div>
                     
-                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/算法/">算法</a>
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/面试/">面试</a>
                     
                 </div>
             
@@ -226,38 +226,54 @@ function tmpfobid()
 
 
         <div class="content" style="overflow: auto; align:center;">
-            <p>本文初稿 2017-07-28, 再面试过程中进行了更新:</p>
-<blockquote>
-<p>真的是没有想到, 社招的时候也会问到这些最基本的东西…那, <code>客户的需求永远是第一位的</code>.</p>
-<p>STL中set, map, 网络中 epoll 等好多地方都会使用 RB tree, 以前校招也曾经手写红黑树. 毫无压力.<br>但是工作久了(工作中基本都是直接用STL了), 该忘记的差不多都忘记了.</p>
+            <blockquote>
+<p>正好周末, 我对于一些过去的心态啊准备啊, 以及未来真正的想做的事儿, 做了全面而深入的思考.</p>
 </blockquote>
-<p>本文就一口气把<strong>所有的树</strong>说一遍, 权做复习面试了.</p>
-<p><img src="http://omotkhw3y.bkt.clouddn.com/rbtree.jpg" alt="post-cover"></p>
-<p>但是我已经不是刚毕业了, 我对数据结构也有一些简单的自己的思考, 先写在前面</p>
+<hr>
+<h1 id="我的反思"><a href="#我的反思" class="headerlink" title="我的反思"></a>我的反思</h1><p>我问了自己这样几个问题?</p>
 <ul>
-<li><strong>上学的时候</strong>, 我们学习数据结构, 会去思考它的逻辑结构, 构成, 物理结构存储, 比如说树中如何存储他的父节点, 它的子节点</li>
-<li><strong>工作之后</strong>, 基本不会让你去实现, 一来一个库需要经历大量的检测和实践才可以放到生产环境中商用; 其次现在轮子已经很多了.<br>更重要的是, 我们现在关注的点是, 该数据结构的<code>物理结构带来了哪些特性和适用性</code>,<br>比如物理内存受限的环境, 或者对查询效率要求非常高, 需要用哪写结构<br>至于它是怎么保证它为何有如此高效的效率, 能说明白和指出来就够了(一般不会让你去实现, 职业搞算法的同学例外)</li>
+<li>是否随便一家公司给钱你就愿意过去干? 你是这样的人么?</li>
+<li>你明白自己的价值和定位么?</li>
+<li>你是不是一个可以讨价还价的人?</li>
+<li>你自己觉得自己实力和别人觉得你实力究竟相差多少?</li>
 </ul>
-<h1 id="强调"><a href="#强调" class="headerlink" title="强调"></a>强调</h1><p><strong>这些东西比较严禁, 最好是去找本专业的参考书</strong> (但是参考书理论偏多, 实际应用方面则论述不足) </p>
-<ul>
-<li>比如说<code>算法导论</code></li>
-<li>比如说 清华大学老师实现的<code>C++版的数据结构与算法</code>, 具体可以见参考部分.</li>
-</ul>
-<p>如果网友的博客, 算法或者数据结构部分没有写明参考资料或者书籍, 最好不要去看他写的, 因为印刷出来的, 一般都比网络上的博文可靠.<br>(当然, 本文的目的, 帮助我记录成长, 也是给你一个参考, 帮助你理解, 但是不能代替你思考)</p>
-<a id="more"></a>
-<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>我是不太知道面试的时候, 不同的公司会考什么样的树的, 但是我知道大公司是一定要的, 小公司未必, 但是<strong>如果招聘的是核心开发者, 应该也会问到的</strong>.</p>
-<p>本文主要涉及:</p>
-<ul>
-<li>AVL tree</li>
-<li>RB tree</li>
-<li>B+ tree</li>
-<li>trie tree</li>
-</ul>
+<p>答案是显而易见的, 虽然现在不是招聘旺季(11月初), 但是并不意味着我需要或者可以违背自己的原则做事情. 正确评估自己的市场价值的同时, 也要据理力争.</p>
 <blockquote>
-<p>本文一般简单说完概念之后, 解析其设计精妙之处, 然后给予C++实现. (不会扯太多理论)</p>
+<p>别人什么情况下不会跟你讨价还价, 你想清楚了么?</p>
 </blockquote>
-<h1 id="详述"><a href="#详述" class="headerlink" title="详述"></a>详述</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1.《算法导论》第三版 机械工业出版社 (晦涩, 深入, 完美)<br>2.《数据结构与算法分析新视角》 中国工信出版集团 &amp; 电子工业出版社  (清晰, 简单, 方便理解)<br>3.《数据结构(C++语言版)带习题解析第三版》邓俊辉 清华大学出版社 (主要参考, 写的比较完善)<br>4.《数据结构,算法与应用 C++语言描述》 Sartaj Sahni 美 (这是我上学时代用的书, 简单易懂; 罗里吧嗦)</p>
-<p>我<strong>个人推荐</strong>, 专业搞算法的同学参考1, 其他码农参考3.</p>
+<p>笑. 被拒绝不可怕, 因为有些环境就是不适合你的, 他们挑选你的时候, 其实你也在挑选他.<br>(除非你是真的水平很差, 别人用你也是将就着用, 你也是将就这去工作; 两边儿不欢快, 何必呢?)</p>
+<blockquote>
+<p><code>It&#39;s just that nobody likes people who stay where they don&#39;t belong</code>.</p>
+</blockquote>
+<p>顺其自然(let it be), 但不违背原则: do one thing, do it well.</p>
+<p>其实<code>关键还是看, 你到底是个认真&amp;较真的人还是个稀里糊涂就能过的人</code>.<br> <strong>每个人都应该为自己的人生负责</strong>, 你说呢?</p>
+<hr>
+<h1 id="给HR或招聘主管"><a href="#给HR或招聘主管" class="headerlink" title="给HR或招聘主管"></a>给HR或招聘主管</h1><p>To <strong>之后看到本文的</strong> <code>招聘主管</code>, <code>HR姐姐</code> : (首先感谢你们严谨的态度, 来调查我)</p>
+<ul>
+<li>首先, 请相信我对于应聘过的公司的评价是很客观的, 至少我实地考察和交流过了 (当然出于道德和保护等原因, 不会透露公司的名字)</li>
+<li>其次, 我去面试都是带着足够的诚意和尊重的 (不要认为我敷衍啥的…汗~)</li>
+<li>最后, 无论最后有没有一起共事, 我都希望有一个愉快的碰面或者交流, 顺便在业界可以多认识一个朋友.</li>
+<li>最后的最后, 如果您给了我offer, 但是我没有回应, 那一定是在仔细考虑(我不喜欢换工作, 慎重地选择好的就一定会坚持到底, 同事资源也会特别珍惜), 请给予我一些时间考虑(感激)</li>
+</ul>
+<p>当然技术方面, 如果您不放心, <strong>plz test me as u like</strong>. (当然, 知之为知之不知为不知; 瞎说就是打脸, 没有必要, 我也不会那么<strong>没趣</strong>)<br>(请不要问一些隐私的问题, 我想我会拒绝回答您; <strong>如果我有言语上的措辞不当, 也请您一定一定一定, 给我一些反馈, 感激</strong>)</p>
+<p>补充:</p>
+<blockquote>
+<p>I do not wanna a job or occupation, I choice a way of life and I chose my own career or furture.</p>
+</blockquote>
+<p><strong>翻译</strong>: 我的<code>每次投递都是精心调研过的单位</code>, 不会乱投递; 其次, 我想找一家有潜力的, 接下来能工作5-7年的单位, 和能长期共事的战友.</p>
+<p><strong>别误会, 我只是对我的人生负责.(笑)</strong></p>
+<p>当然, <strong>如果您(技术前辈, 大佬)认为我是个可以培养的人才, 请务必给我这个机会, 感谢.(伏地, 叩首)</strong></p>
+<p>btw: 以前面试过的技术同行, 如果有啥需要交流的, 可以发邮件给我.</p>
+<ul>
+<li>技术交流 : <code>wizardmerlin945@gmail.com</code> </li>
+<li>招聘专用 : <code>yuyankai945@hotmail.com</code></li>
+</ul>
+<h1 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h1><p>我<code>先把内容记录在本子上</code>, 后期整理之后, 上传.</p>
+<blockquote>
+<p>并且, 我是想找一家, 可以待上&amp;为之<code>效力5-7年的单位</code>, 所以过程可能有点儿长, 但一定会完整上传的</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/interview1.jpg" alt=""></p>
+<p>这一本大概有300多页 (妹子送我的速写本&amp;绘画本), 正反加起来大概可以写600多页, 足够了.</p>
 <hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 
@@ -275,8 +291,8 @@ function tmpfobid()
   <blockquote>
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
-	<span><b>本文标题</b>：你说红黑树?</span><br/>
-	<span><b>本文链接</b>：www.merlinblog.site/2017/11/04/ur-tree.html</span>
+	<span><b>本文标题</b>：全面经</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/11/04/all-interview.html</span>
 
   </blockquote>
 </div>
