@@ -10,19 +10,19 @@
   
   <title>你说红黑树? | Merlin&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="平衡树, 二叉树, 平衡二叉树, 二叉查找树; 我赶时间, 你们一起都上吧(笑)">
+  <meta name="description" content="二叉树, 平衡二叉树, 二叉查找树; 我赶时间, 你们一起都上吧(笑)">
 <meta name="keywords" content="算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="你说红黑树?">
-<meta property="og:url" content="www.merlinblog.site/2017/07/28/ur-tree.html">
+<meta property="og:url" content="www.merlinblog.site/2017/11/04/ur-tree.html">
 <meta property="og:site_name" content="Merlin&#39;s Blog">
-<meta property="og:description" content="平衡树, 二叉树, 平衡二叉树, 二叉查找树; 我赶时间, 你们一起都上吧(笑)">
+<meta property="og:description" content="二叉树, 平衡二叉树, 二叉查找树; 我赶时间, 你们一起都上吧(笑)">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/rbtree.jpg">
-<meta property="og:updated_time" content="2017-09-24T06:32:57.899Z">
+<meta property="og:updated_time" content="2017-11-04T12:35:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="你说红黑树?">
-<meta name="twitter:description" content="平衡树, 二叉树, 平衡二叉树, 二叉查找树; 我赶时间, 你们一起都上吧(笑)">
+<meta name="twitter:description" content="二叉树, 平衡二叉树, 二叉查找树; 我赶时间, 你们一起都上吧(笑)">
 <meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/rbtree.jpg">
   
   
@@ -189,7 +189,7 @@ function tmpfobid()
 		×
 		</div>
 		<strong class="toc-title"> 目录</strong>
-           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#强调"><span class="toc-number">1.</span> <span class="toc-text">强调</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">2.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#详述"><span class="toc-number">3.</span> <span class="toc-text">详述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
     	</div>
 	
 
@@ -211,7 +211,7 @@ function tmpfobid()
             <div class="is-flex align-center" style="margin-top:10px;">
                 <span style="padding:0 10px;">post time:</span>
 				
-                <span class="post-date">2017-07-28</span>
+                <span class="post-date">2017-11-04</span>
             </div>
 			
             
@@ -226,14 +226,34 @@ function tmpfobid()
 
 
         <div class="content" style="overflow: auto; align:center;">
-            <blockquote>
-<p>STL中set, map, 网络中 epoll 等好多地方都会使用 RB tree, 以前也曾经手写红黑树. 但是工作久了, 该忘记的差不多都忘记了, 群里有人说到这些的时候感觉自己很牛13一样.</p>
+            <p>本文初稿 2017-07-28, 再面试过程中进行了更新:</p>
+<blockquote>
+<p>真的是没有想到, 社招的时候也会问到这些最基本的东西…那, <code>客户的需求永远是第一位的</code>.</p>
+<p>STL中set, map, 网络中 epoll 等好多地方都会使用 RB tree, 以前校招也曾经手写红黑树. 毫无压力.<br>但是工作久了(工作中基本都是直接用STL了), 该忘记的差不多都忘记了.</p>
 </blockquote>
-<p>所以本文就一口气把所有的树说一遍, 权做复习了.</p>
-<p><img src="http://omotkhw3y.bkt.clouddn.com/rbtree.jpg" alt=""></p>
+<p>本文就一口气把<strong>所有的树</strong>说一遍, 权做复习面试了.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/rbtree.jpg" alt="post-cover"></p>
+<h1 id="强调"><a href="#强调" class="headerlink" title="强调"></a>强调</h1><p><strong>这些东西比较严禁, 最好是去找本专业的参考书</strong> (但是参考书理论偏多, 实际应用方面则论述不足) </p>
+<ul>
+<li>比如说<code>算法导论</code></li>
+<li>比如说 清华大学老师实现的<code>C++版的数据结构与算法</code>, 具体可以见参考部分.</li>
+</ul>
+<p>如果网友的博客, 算法或者数据结构部分没有写明参考资料或者书籍, 最好不要去看他写的, 因为印刷出来的, 一般都比网络上的博文可靠.<br>(当然, 本文的目的, 帮助我记录成长, 也是给你一个参考, 帮助你理解, 但是不能代替你思考)</p>
 <a id="more"></a>
-<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>TODO</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><hr>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>我是不太知道面试的时候, 不同的公司会考什么样的树的, 但是我知道大公司是一定要的, 小公司未必, 但是<strong>如果招聘的是核心开发者, 应该也会问到的</strong>.</p>
+<p>本文主要涉及:</p>
+<ul>
+<li>AVL tree</li>
+<li>RB tree</li>
+<li>B+ tree</li>
+<li>trie tree</li>
+</ul>
+<blockquote>
+<p>本文一般简单说完概念之后, 解析其设计精妙之处, 然后给予C++实现. (不会扯太多理论)</p>
+</blockquote>
+<h1 id="详述"><a href="#详述" class="headerlink" title="详述"></a>详述</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1.《算法导论》第三版 机械工业出版社 (晦涩, 深入, 完美)<br>2.《数据结构与算法分析新视角》 中国工信出版集团 &amp; 电子工业出版社  (清晰, 简单, 方便理解)<br>3.《数据结构(C++语言版)带习题解析第三版》邓俊辉 清华大学出版社 (主要参考, 写的比较完善)<br>4.《数据结构,算法与应用 C++语言描述》 Sartaj Sahni 美 (这是我上学时代用的书, 简单易懂; 罗里吧嗦)</p>
+<p>我个人推荐, 专业搞算法的同学参考1, 其他码农参考3.</p>
+<hr>
 <p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
 
         </div>
@@ -251,7 +271,7 @@ function tmpfobid()
 	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
 	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
 	<span><b>本文标题</b>：你说红黑树?</span><br/>
-	<span><b>本文链接</b>：www.merlinblog.site/2017/07/28/ur-tree.html</span>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/11/04/ur-tree.html</span>
 
   </blockquote>
 </div>
