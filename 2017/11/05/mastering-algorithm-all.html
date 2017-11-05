@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>思考算法系列汇总 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="只是因为在人群中多看了你一眼. 其实是, 思考算法汇总篇.">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="思考算法系列汇总">
+<meta property="og:url" content="www.merlinblog.site/2017/11/05/mastering-algorithm-all.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="只是因为在人群中多看了你一眼. 其实是, 思考算法汇总篇.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/algorithm0.jpg">
+<meta property="og:updated_time" content="2017-11-05T15:07:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="思考算法系列汇总">
+<meta name="twitter:description" content="只是因为在人群中多看了你一眼. 其实是, 思考算法汇总篇.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/algorithm0.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#缘由"><span class="toc-number">1.</span> <span class="toc-text">缘由</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基础算法思考"><span class="toc-number">2.</span> <span class="toc-text">基础算法思考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#特殊领域算法"><span class="toc-number">3.</span> <span class="toc-text">特殊领域算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#推荐书籍"><span class="toc-number">4.</span> <span class="toc-text">推荐书籍</span></a></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>思考算法系列汇总</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-11-05</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/算法/">算法</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <p><img src="http://omotkhw3y.bkt.clouddn.com/algorithm0.jpg" alt="post-cover"></p>
+<blockquote>
+<p>老板, 小炒一盘算法, 不要放葱呀</p>
+</blockquote>
+<p><strong>应该说是非常偶然的机会吧, 我发现了算法的乐趣.</strong> </p>
+<p>我其实是<code>非常享受和面试官交流的过程</code>, 首先</p>
+<ul>
+<li>短时间内(时间限制)</li>
+<li>没有计算机给你跑一下结果看看(材料限制)</li>
+</ul>
+<p>你的大脑要飞速运转, 把<code>以往学过的知识</code>, 以及当前脑子里汇聚和生产出来的(<code>反应和思维能力</code>), 拿来解决碰到的问题, 是不是很刺激, 很有趣.<br>(就像打游戏一样, 不仅需要想着赢的策略, 还要手速操作)</p>
+<p>但是我通常不跟别人在面试的时候扯太多的东西, 而尽可能谈工作需要的技能和态度(然而面试官貌似喜欢开拓) :</p>
+<ol>
+<li>一方面我工作经验有限, 有些东西我知道, 但是不够深入, 说出来没有太多可说的(说不透, 也说不出太多思考).</li>
+<li>其次, 有些东西, 我熟悉的, 说的太深&amp;太多, 我技术面试官可能很满意, 但是HR的薪资恐怕上限都兜不住.</li>
+</ol>
+<p>真的, 这绝对不是开玩笑, 已经有三次案例了.<br>(如果一件事儿, 做了没有收入, 而且没有<strong>意义</strong>, 那么去做就是非常愚蠢的, 不管出于什么目的)</p>
+<p><code>爱好当然属于意义</code>啦. 我也希望, 如果有同样爱好者, 或者前辈看到这篇文章, 能够邮件我, 指导一下我. 感谢.</p>
+<hr>
+<h1 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h1><p>为什么会有这么一篇文章?</p>
+<p>最近在面试的时候, 多次有前辈&amp;主管面试的时候, 都会考验我的分析和思维能力, 当然我个人也是欢迎的.<br>一方面我对自己的分析和思维能力有信心, <strong>其次这也是一种锻炼</strong>, 我来面试不仅仅是来找一份工作, 我同时也是来长见识的.</p>
+<p><em>不同的公司&amp;环境, 人员的水平, 也是考量的范围; 毕竟水平相差太远的人, 在一起共事, 也非常尴尬.</em></p>
+<p>面试官最喜欢问题的问题是:</p>
+<blockquote>
+<p><code>还有更好的方法么?</code></p>
+</blockquote>
+<p>当然有的面试官的观点是, 有时候能实现了再说, 至于优化, 以后再说. (happen before perfect) 我个人是赞同这种观点的.</p>
+<p>但是, 现在毕竟是在面试, 我会尝试着, 尽自己最大的智力水平去思考改良和替代方案.<br>因为这其实是一个很好的自我测试手段:</p>
+<ul>
+<li>测试思维的开拓程度 &amp; 思维能力 &amp; 甚至是创新能力</li>
+<li>脑子里有多少知识储备, 有没有完善的知识组织架构</li>
+<li>手里有多少可用的工具(有多少已有积累)</li>
+</ul>
+<p>其次, 不光面试, <strong>因为研究算法, 对于人的思维的训练是非常好的</strong>. 再者, 我们毕竟都是程序员, 保持高水准的思维能力不是什么坏事情.</p>
+<p>后期(工作稳定之后), 我打算做两件事儿:</p>
+<ul>
+<li>成立算法&amp;策略研究小分队 (如果已经存在这样的开源组织, 我就加入)</li>
+<li>每周一个leecode题解 (多个人给出不同的优化方法, 然后周六晚上讨论一下, 或者当场profile对比一下)</li>
+</ul>
+<p>我希望营造一个健康的, 没有利益纠纷的开源小组. 目的纯碎, 当然也是为了能找到更多志同道合的朋友.</p>
+<hr>
+<h1 id="基础算法思考"><a href="#基础算法思考" class="headerlink" title="基础算法思考"></a>基础算法思考</h1><p>这里是我对于基础算法的思考和整理, 当然, 我们已经不是学生了, 有很多问题, 比如0-1背包问题, 8皇后问题等, 已经不再是研究范围了,<br>当然也能说, <code>当前集中说的是算法思维</code>, 以及日常工作中遇到的一些应用.</p>
+<p>主要就是基础算法, 详细内容, 已经单独成篇, 请参考, 下面的列表: btw: 暂且只提供<code>c/c++实现</code>, java或者python, 后期再补上.</p>
+<blockquote>
+<p>因为都是很<code>基础的东西</code>, 我写的很快, 并且思考也很快; </p>
+</blockquote>
+<p>1.<a href="">基础算法之思考排序</a>       2017/11/5 晚上<br>2.<a href="">基础算法之思考查找</a>       2017/11/5 晚上<br>3.<a href="">基础算法之思考贪心</a>       2017/11/5 晚上<br>4.<a href="">基础算法之思考动态规划</a>   2017/11/5 晚上</p>
+<p>好; 先停一下, 要去写一写数据结构了, 就像一部好车, 它的性能极限还是<code>受限于物理结构</code>(这么说其实是不准确的, 但是80%的情况是这样的)<br>比如, 底盘, 变速箱, 发动机; 而算法走到一定程度, 也取决于所采用的物理存储结构.</p>
+<p>那就是<code>数据结构</code>, 先停一下, 我去把数据结构, 给搞一波. (<code>写代码, 思考不是很有趣么?</code>) 具体参考: <a href="">思考数据结构汇总</a></p>
+<p>最后, <strong>如果你的工作是主搞算法, 那么没有任何一个人会原谅你写出来的算法复杂是O(n^2)的.</strong>因为研究算法</p>
+<p>所以啊, <code>来一盘算法啊</code>!</p>
+<hr>
+<h1 id="特殊领域算法"><a href="#特殊领域算法" class="headerlink" title="特殊领域算法"></a>特殊领域算法</h1><p>其实有些专业的科学和研究领域的算法, 我估计还没有这个能力;<br><strong>可能需要顶级或者至少是科学家级别的人, 才能去发明的.</strong></p>
+<p>根据各自所在的领域不同, 再来完善和补充: </p>
+<ul>
+<li>大数据算法</li>
+<li>随机算法</li>
+<li>哈希算法</li>
+<li>压缩算法</li>
+<li>加密算法</li>
+<li>策略算法</li>
+<li>模式识别算法</li>
+<li>神经网络算法</li>
+</ul>
+<p>等等</p>
+<p>(当然有些算法是要钱的, 只在线下讨论, 不公开; 比如一些交易的策略算法)</p>
+<hr>
+<h1 id="推荐书籍"><a href="#推荐书籍" class="headerlink" title="推荐书籍"></a>推荐书籍</h1><ol>
+<li>《啊哈算法》 啊哈磊, 入门书, 有趣, 简单.</li>
+<li>《编程之法, 面试和算法心得》 July</li>
+<li>《算法最优解》 左程云</li>
+<li>《算法神探》 啊哈磊 李嘉浩 译</li>
+<li>《算法精解-C语言描述》 机械工业出版社</li>
+</ol>
+<p>在算法方法, <code>July</code>, <code>左程云</code>, <code>啊哈磊</code>, 真的不愧为大神, 或者领跑者.<br>多的不说, 你可以参考他的博客或者网站(虽然他博客有些东西没有说清楚, 但是你看他写的书, 还是有水平的)</p>
+<p>第5本也是我经常参考的, 不过我以前用它太过关注于具体的语言实现, 而忘记了去思考算法本身的思想以及运用.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：思考算法系列汇总</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/11/05/mastering-algorithm-all.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY SA 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
