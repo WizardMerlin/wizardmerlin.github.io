@@ -172,35 +172,34 @@ function tmpfobid()
                 
 <div class="primary-container content-box is-flex-desktop clear-padding bottom-line" style="margin-bottom: 25px;">
     <div class="column  is-7-desktop">
-        <a href="/2017/04/10/hashtable-in-cpp.html">
+        <a href="/2017/04/08/range-base-for.html">
             <div class="full-height post-hover"
                  style="
-                         background-image: url('http://omotkhw3y.bkt.clouddn.com/unorder-container.png');
+                         background-image: url('http://omotkhw3y.bkt.clouddn.com/range_for.png');
                          height: 350px;
                          background-size: cover;
                          background-repeat: no-repeat;
                          ">
                     <div class=" is-flex flex-column center content has-text-centered full-height has-padding content-bg-mask">
                         <h1 class="title text-shadow" style="margin-bottom: 15px;">
-                            C++11 hashtable 结构
+                            C++11 RangeFor注意事项&探究
                         </h1>
                         <div>
                         
                             `
                                 <span class="tag is-post-tag">cpp</span>
-                            `
-                                <span class="tag is-post-tag">stl</span>
                             
                         
                         </div>
                         <p class="post-content-text is-marginless has-padding text-shadow">
                             
-基本的 hash table结构(桶+链表)在大学数据结构的课程就已经学过; 本文主要介绍如果要使用 unorder container要hash配合什么
+range based for 可以看做 boost 的 FOR_EACH 或者 java 的增强版本的 for, 但它不同于stl 的for_each算法
 
 
-hash table结构其实这里谈散列表, 也只是为了用好新容器, 而已...
+方式对比旧方式原来的循环:
+int arr[10] = { 1, 2, ..
                         </p>
-                        <p class="date text-shadow">2017-04-10</p>
+                        <p class="date text-shadow">2017-04-08</p>
                         <button class="button is-info is-small">阅读详情</button>
                     </div>
             </div>
@@ -210,11 +209,11 @@ hash table结构其实这里谈散列表, 也只是为了用好新容器, 而已
         <div class="full-height is-flex flex-column justify-space-between" style="min-height: 350px;">
             
                 
-<a class="post-hover" href="/2017/04/08/uniform-initialization.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/initializer-list.png')">
+<a class="post-hover" href="/2017/04/08/explicit-constructor.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/explicit.png')">
         <div class="content-bg-mask full-width full-height has-padding">
             <h3 class="title is-marginless text-shadow">
-                C++11一致性初始化探究
+                C++11 explicit注意事项
             </h3>
             
             
@@ -224,7 +223,7 @@ hash table结构其实这里谈散列表, 也只是为了用好新容器, 而已
             <p class="sub-title text-shadow"></p>
             <p class="is-marginless text-shadow post-content-text">
                 
-C++11之前, 各种大括号, 小括号, 赋值符号初始化变量, 对象; 乱七八糟, 不同编译器..
+避免根据参数隐式转换, 隐式类型提升, 调用(拷贝)构造器; 简而言之, 禁止编译器自动调用相..
             </p>
             <p class="date text-shadow is-marginless">2017-04-08</p>
         </div>
@@ -233,11 +232,11 @@ C++11之前, 各种大括号, 小括号, 赋值符号初始化变量, 对象; �
             
             
                 
-<a class="post-hover" href="/2017/04/08/range-base-for.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/range_for.png')">
+<a class="post-hover" href="/2017/04/07/nullptr.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/nullptr.png')">
         <div class="content-bg-mask full-width full-height has-padding">
             <h3 class="title is-marginless text-shadow">
-                C++11 RangeFor注意事项&探究
+                C++11 nullptr探究
             </h3>
             
             
@@ -247,9 +246,11 @@ C++11之前, 各种大括号, 小括号, 赋值符号初始化变量, 对象; �
             <p class="sub-title text-shadow"></p>
             <p class="is-marginless text-shadow post-content-text">
                 
-range based for 可以看做 boost 的 FOR_EACH 或者 java 的..
+现在说的nullptr不仅仅是规范的问题.
+
+本文主要涉及, nullptr关键字(其实是个对..
             </p>
-            <p class="date text-shadow is-marginless">2017-04-08</p>
+            <p class="date text-shadow is-marginless">2017-04-07</p>
         </div>
     </div>
 </a>
@@ -259,11 +260,11 @@ range based for 可以看做 boost 的 FOR_EACH 或者 java 的..
     <div class="column is-12 is-hidden-desktop">
         
         
-<a class="post-hover" href="/2017/04/08/uniform-initialization.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/initializer-list.png')">
+<a class="post-hover" href="/2017/04/08/explicit-constructor.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/explicit.png')">
         <div class="content-bg-mask full-width full-height has-padding">
             <h3 class="title is-marginless text-shadow">
-                C++11一致性初始化探究
+                C++11 explicit注意事项
             </h3>
             
             
@@ -273,7 +274,7 @@ range based for 可以看做 boost 的 FOR_EACH 或者 java 的..
             <p class="sub-title text-shadow"></p>
             <p class="is-marginless text-shadow post-content-text">
                 
-C++11之前, 各种大括号, 小括号, 赋值符号初始化变量, 对象; 乱七八糟, 不同编译器..
+避免根据参数隐式转换, 隐式类型提升, 调用(拷贝)构造器; 简而言之, 禁止编译器自动调用相..
             </p>
             <p class="date text-shadow is-marginless">2017-04-08</p>
         </div>
@@ -282,11 +283,11 @@ C++11之前, 各种大括号, 小括号, 赋值符号初始化变量, 对象; �
         
         
         
-<a class="post-hover" href="/2017/04/08/range-base-for.html" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/range_for.png')">
+<a class="post-hover" href="/2017/04/07/nullptr.html" style="height: 48.5%">
+    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://omotkhw3y.bkt.clouddn.com/nullptr.png')">
         <div class="content-bg-mask full-width full-height has-padding">
             <h3 class="title is-marginless text-shadow">
-                C++11 RangeFor注意事项&探究
+                C++11 nullptr探究
             </h3>
             
             
@@ -296,9 +297,11 @@ C++11之前, 各种大括号, 小括号, 赋值符号初始化变量, 对象; �
             <p class="sub-title text-shadow"></p>
             <p class="is-marginless text-shadow post-content-text">
                 
-range based for 可以看做 boost 的 FOR_EACH 或者 java 的..
+现在说的nullptr不仅仅是规范的问题.
+
+本文主要涉及, nullptr关键字(其实是个对..
             </p>
-            <p class="date text-shadow is-marginless">2017-04-08</p>
+            <p class="date text-shadow is-marginless">2017-04-07</p>
         </div>
     </div>
 </a>
@@ -311,110 +314,6 @@ range based for 可以看做 boost 的 FOR_EACH 或者 java 的..
                 
                     
                        <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
-                       <!-- a -->
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/initializer-list.png')">
-                                    </div>
-                                
-								
-                                <div class="column is-8-desktop post-content is-flex">
-								
-                                    <div class="content" style="margin-right:7px; align-center">
-									    <a class="post-hover" href="/2017/04/08/uniform-initialization.html">
-                                            <p style="font-size: 24px;">C++11一致性初始化探究</p>
-									    </a>
-                                        
-                                            <span class="sub-title">uniform-initialization 是C++11专门为变量&对象而引入的初始化概念, 实现借助了 initializer_list 容器</span>
-                                        
-                
-                                        <p>
-                                            
-												<a class="post-hover" href="/tags/cpp/">
-                                                <span class="tag is-post-tag">
-												  cpp
-												</span>
-												</a>
-                                            
-                                        </p>
-                                        <p >
-                                         
-C++11之前, 各种大括号, 小括号, 赋值符号初始化变量, 对象; 乱七八糟, 不同编译器的对待方式也不太一样, 现在C++11统一了.
-
-中间也会说说新容器 initializer_list 容器
-
-
-
-旧方式如下:单个对象:...
-                                        </p>
-									<a class="post-hover" href="/2017/04/08/uniform-initialization.html" >
-                                        <button class="button is-info is-small">阅读详情</button>
-                        			</a>
-
-                                    </div> <!-- class content-->
-									
-                                </div> <!--class column -->
-
-                            </div>
-
-						<!-- a -->
-                        </div>
-                    
-                
-                    
-                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
-                       <!-- a -->
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/range_for.png')">
-                                    </div>
-                                
-								
-                                <div class="column is-8-desktop post-content is-flex">
-								
-                                    <div class="content" style="margin-right:7px; align-center">
-									    <a class="post-hover" href="/2017/04/08/range-base-for.html">
-                                            <p style="font-size: 24px;">C++11 RangeFor注意事项&amp;探究</p>
-									    </a>
-                                        
-                                            <span class="sub-title">本文主要讲讲C++11引入的For EACH, 以及其用于容器的注意事项</span>
-                                        
-                
-                                        <p>
-                                            
-												<a class="post-hover" href="/tags/cpp/">
-                                                <span class="tag is-post-tag">
-												  cpp
-												</span>
-												</a>
-                                            
-                                        </p>
-                                        <p >
-                                         
-range based for 可以看做 boost 的 FOR_EACH 或者 java 的增强版本的 for, 但它不同于stl 的for_each算法
-
-
-方式对比旧方式原来的循环:
-int arr[10] = { 1, 2,...
-                                        </p>
-									<a class="post-hover" href="/2017/04/08/range-base-for.html" >
-                                        <button class="button is-info is-small">阅读详情</button>
-                        			</a>
-
-                                    </div> <!-- class content-->
-									
-                                </div> <!--class column -->
-
-                            </div>
-
-						<!-- a -->
-                        </div>
-                    
-                
-                    
-                       <div class="content-box  " style="margin-bottom: 27px;">
                        <!-- a -->
                             <div class="columns" style="min-height: 230px;">
                                 
@@ -468,7 +367,7 @@ pub...
                     
                 
                     
-                       <div class="content-box  " style="margin-bottom: 27px;">
+                       <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
                        <!-- a -->
                             <div class="columns" style="min-height: 230px;">
                                 
@@ -665,6 +564,105 @@ C++是一门好用但不好学的语言，相比起Java，Ｃ，Ｇroovy等，�
                         </div>
                     
                 
+                    
+                       <div class="content-box  " style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/black-swan.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/04/02/black-swan.html">
+                                            <p style="font-size: 24px;">《黑天鹅——如何应对不可预知的未来》</p>
+									    </a>
+                                        
+                                            <span class="sub-title">在一个短暂的时期里经历全部痛苦胜过在很长的时间里分散这些痛苦</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/思考/">
+                                                <span class="tag is-post-tag">
+												  思考
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         说先作者, 即黑天鹅之父绝对是一个厉害的人; 而唯一让我觉得有必要去读一读此书的是, 避免风险(详见下面我的思考); 其次如果你关心经济, 关心金融, 财经, 那么这本书, 推荐一下.
+
+一个事件要成为黑天鹅事件，它不仅要稀有，或者疯...
+                                        </p>
+									<a class="post-hover" href="/2017/04/02/black-swan.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
+                    
+                       <div class="content-box  " style="margin-bottom: 27px;">
+                       <!-- a -->
+                            <div class="columns" style="min-height: 230px;">
+                                
+                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
+                                         style="margin: 10px; background-size: cover;background-image: url('http://omotkhw3y.bkt.clouddn.com/tcp.jpg')">
+                                    </div>
+                                
+								
+                                <div class="column is-8-desktop post-content is-flex">
+								
+                                    <div class="content" style="margin-right:7px; align-center">
+									    <a class="post-hover" href="/2017/03/27/keep-it-simple-and-stupid.html">
+                                            <p style="font-size: 24px;">KISS原则-读《图解TCP/IP》</p>
+									    </a>
+                                        
+                                            <span class="sub-title">最早是在《Unix编程艺术》这本书里接触到kiss原则，后来学习网络模型时产生了共鸣</span>
+                                        
+                
+                                        <p>
+                                            
+												<a class="post-hover" href="/tags/思考/">
+                                                <span class="tag is-post-tag">
+												  思考
+												</span>
+												</a>
+                                            
+                                        </p>
+                                        <p >
+                                         主要说说计算机编程领域, 不, 应该说 Unix 领域, 谈的比较多的, Kiss原则.
+
+
+引子下面要谈论的不是管理或者哲学，而是设计和思想—来自于我对网络模型的思考。
+本文可以看做《图解TCP/IP》的思考。
+我并不是一个非常懂设...
+                                        </p>
+									<a class="post-hover" href="/2017/03/27/keep-it-simple-and-stupid.html" >
+                                        <button class="button is-info is-small">阅读详情</button>
+                        			</a>
+
+                                    </div> <!-- class content-->
+									
+                                </div> <!--class column -->
+
+                            </div>
+
+						<!-- a -->
+                        </div>
+                    
+                
 
                 <!--翻頁-->
                 <nav class="pagination is-flex" style="justify-content: flex-end;">
@@ -811,7 +809,7 @@ C++是一门好用但不好学的语言，相比起Java，Ｃ，Ｇroovy等，�
         <div class="site-box is-flex">
             <div class="flex-1 is-flex flex-column center full-height right-line">
                 <p>博文总计</p>			
-                <strong>121</strong>
+                <strong>119</strong>
             </div>
             <div class="flex-1 is-flex flex-column center full-height">
                 <p>标签数</p>
@@ -833,8 +831,8 @@ C++是一门好用但不好学的语言，相比起Java，Ｃ，Ｇroovy等，�
                     cpp<span class="tags-item-span"><b>45</span></b>
              </a>
             
-             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="23">
-                    思考<span class="tags-item-span"><b>23</span></b>
+             <a class="tags-item" href="tags/思考/" title="点击 思考 详情" rel="22">
+                    思考<span class="tags-item-span"><b>22</span></b>
              </a>
             
              <a class="tags-item" href="tags/网络/" title="点击 网络 详情" rel="19">
@@ -865,24 +863,24 @@ C++是一门好用但不好学的语言，相比起Java，Ｃ，Ｇroovy等，�
                     线程<span class="tags-item-span"><b>7</span></b>
              </a>
             
-             <a class="tags-item" href="tags/交易/" title="点击 交易 详情" rel="5">
-                    交易<span class="tags-item-span"><b>5</span></b>
+             <a class="tags-item" href="tags/stl/" title="点击 stl 详情" rel="5">
+                    stl<span class="tags-item-span"><b>5</span></b>
+             </a>
+            
+             <a class="tags-item" href="tags/交易/" title="点击 交易 详情" rel="4">
+                    交易<span class="tags-item-span"><b>4</span></b>
              </a>
             
              <a class="tags-item" href="tags/框架/" title="点击 框架 详情" rel="6">
                     框架<span class="tags-item-span"><b>6</span></b>
              </a>
             
-             <a class="tags-item" href="tags/stl/" title="点击 stl 详情" rel="5">
-                    stl<span class="tags-item-span"><b>5</span></b>
+             <a class="tags-item" href="tags/piano/" title="点击 piano 详情" rel="1">
+                    piano<span class="tags-item-span"><b>1</span></b>
              </a>
             
              <a class="tags-item" href="tags/里程碑/" title="点击 里程碑 详情" rel="1">
                     里程碑<span class="tags-item-span"><b>1</span></b>
-             </a>
-            
-             <a class="tags-item" href="tags/piano/" title="点击 piano 详情" rel="1">
-                    piano<span class="tags-item-span"><b>1</span></b>
              </a>
             
              <a class="tags-item" href="tags/mysql/" title="点击 mysql 详情" rel="1">
@@ -916,7 +914,7 @@ C++是一门好用但不好学的语言，相比起Java，Ｃ，Ｇroovy等，�
             <strong>分类</strong>
         </div>
         <div class="content-inner">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">84</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">13</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/books/">books</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/codings/">codings</a><span class="category-list-count">84</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/domains/">domains</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/managements/">managements</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/music/">music</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/musings/">musings</a><span class="category-list-count">12</span></li></ul>
         </div>
     </div>
     <div class="content-inner content-box">
@@ -924,7 +922,7 @@ C++是一门好用但不好学的语言，相比起Java，Ｃ，Ｇroovy等，�
             <strong>归档</strong>
         </div>
         <div class="content-inner">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">32</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">22</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">17</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">8</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">32</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">17</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">8</span></li></ul>
         </div>
     </div>
 
