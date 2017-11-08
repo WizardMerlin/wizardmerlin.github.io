@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>思考算法之排序 | Merlin&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="25字以内">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="思考算法之排序">
+<meta property="og:url" content="www.merlinblog.site/2017/11/05/mastering-al-sort.html">
+<meta property="og:site_name" content="Merlin&#39;s Blog">
+<meta property="og:description" content="25字以内">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/bucket_sort.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/bubble_sort.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/bubble_sort1.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/selection_sort1.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/insert_sort1.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/insert_sort3.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/shell_sort2.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/shell_sort1.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/quick-sort.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/merge_sort.jpg">
+<meta property="og:updated_time" content="2017-11-08T12:56:57.323Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="思考算法之排序">
+<meta name="twitter:description" content="25字以内">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/bucket_sort.jpg">
+  
+  
+    <link href="/favicon.ico" rel="ico" />
+  
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+
+  <div class="preloader">
+    <div class="preloader-inner">
+      <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </div>
+  <div>
+	<header id="navbar" class="overflow-hidden">
+  <div class="container">
+
+    <nav class="nav">
+
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Merlin</span>'s Blog
+            </a>
+           <span style="margin-top:20px; font-size:0.85em; color:grey;">
+		      version: 2.0
+		   </span>
+         </div>
+
+
+
+
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search" onclick="tmpfobid()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                主页
+            </a>
+            
+            <a class="nav-item flex-1" href="/tags">
+                标签集合
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                开源作品
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                关于博主
+            </a>
+            
+            <a class="nav-item flex-1" href="/atom.xml">
+                Rss
+            </a>
+            
+        </div>
+
+    </nav>
+  </div>
+</header>
+
+<script>
+function tmpfobid()
+{
+	alert("搜索效果太差, 暂时禁用 Local Search.");
+}
+</script>
+
+  </div>
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 170px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: darkgrey;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+
+
+<section>
+<!--这里添加toc内容, 一定是在article entry之前-->
+<link rel="stylesheet" href="/css/toc.css">
+
+
+       <p class="show-toc-btn" id="show-toc-btn"  style="display:none" onclick="showToc()">
+       <span class="btn-bg"></span>
+       <span class="btn-text">文章导航</span></p>
+
+	<div id="toc-article" class="toc-article">
+	    <div id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">
+		×
+		</div>
+		<strong class="toc-title"> 目录</strong>
+           	<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#思考"><span class="toc-number">1.</span> <span class="toc-text">思考</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要排序"><span class="toc-number">1.1.</span> <span class="toc-text">为什么要排序?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#怎么实现"><span class="toc-number">1.2.</span> <span class="toc-text">怎么实现?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#稳定性"><span class="toc-number">1.3.</span> <span class="toc-text">稳定性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#排序枚举"><span class="toc-number">2.</span> <span class="toc-text">排序枚举</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#桶排序"><span class="toc-number">2.1.</span> <span class="toc-text">桶排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#冒泡排序"><span class="toc-number">2.2.</span> <span class="toc-text">冒泡排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择排序"><span class="toc-number">2.3.</span> <span class="toc-text">选择排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插入排序"><span class="toc-number">2.4.</span> <span class="toc-text">插入排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#希尔排序"><span class="toc-number">2.5.</span> <span class="toc-text">希尔排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序"><span class="toc-number">2.6.</span> <span class="toc-text">快速排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#归并排序"><span class="toc-number">2.7.</span> <span class="toc-text">归并排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#堆排序"><span class="toc-number">2.8.</span> <span class="toc-text">堆排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">2.9.</span> <span class="toc-text">其他</span></a></li></ol></li></ol>
+    	</div>
+	
+
+
+
+
+<script  language="javascript">
+
+
+</script>
+
+
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 2px; overflow: auto;">
+            <div class="has-text-centered" style="font-size:36px; padding-bottom: 7px; border-bottom: 2px solid #000">
+                <strong>思考算法之排序</strong>
+            </div>
+ 
+            <div class="is-flex align-center" style="margin-top:10px;">
+                <span style="padding:0 10px;">post time:</span>
+				
+                <span class="post-date">2017-11-05</span>
+            </div>
+			
+            
+                <div>
+                    
+                         <a style="margin-right:5px" class="tag is-post-tag" href="/tags/算法/">算法</a>
+                    
+                </div>
+            
+        </div>
+        <hr/>           
+
+
+        <div class="content" style="overflow: auto; align:center;">
+            <blockquote>
+<p>算法之思考排序</p>
+</blockquote>
+<h1 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h1><h2 id="为什么要排序"><a href="#为什么要排序" class="headerlink" title="为什么要排序?"></a>为什么要排序?</h2><p>方便查找, 方便查看; 比如说, 现在N个商品(数目太多了), 我只想看前面便宜的10个, 那么很简单啊,<br>按照价格, 来10次小顶堆的构建(每次把最小的拿出来), 然后就知道前面10个价格最低的了. (实际上Top 10问题)</p>
+<h2 id="怎么实现"><a href="#怎么实现" class="headerlink" title="怎么实现?"></a>怎么实现?</h2><ul>
+<li>一些数据结构是依赖其物理存储或者逻辑结构, 比如说RB-tree, 它存储的时候就是有序的, 有规则的, 采用一定的遍历方式, 则能得到有序输出</li>
+<li>依赖后续的比较和交换思路, 进行</li>
+</ul>
+<p>其实第二类, 一旦数据量庞大的话, 它额劣势就明显了.<br>所以最好在一开始存储的时候, 就设计好其物理结构. (当然桶排序之类的, 太浪费存储空间了, 不可取)</p>
+<p>其实还取决于你的硬件计算水平, 以及是否采用了并行运算算法.</p>
+<p>关于<code>比较&amp;交换</code>排序, 也就是平常所说的八大排序或者九大排序, 其实不管他们的实现思路是怎么样的, 本质而言, 他们优化的方面都是,<br> <strong>根据元素的性质或者特征涉及存储结构, 同时减少比较次数, 减少交换次数.</strong><br>(严格来说, 堆排序不在此范围内, 因为它的排序过程主要是构建大顶堆或者小顶堆的过程, 随后也会有交换, 即根元素和最后一个元素交换)</p>
+<p>比较排序的时间复杂度通常为 O(n^2) 或 O(n)  .</p>
+<p>考虑存储和时间, 很难两者兼顾.</p>
+<h2 id="稳定性"><a href="#稳定性" class="headerlink" title="稳定性"></a>稳定性</h2><p>探究一下算法稳定性.<br>这个稳定性的意思就是说，在排序过程中，具有相同数值的对象的相对顺序被不被打乱。如果可以保证不被打乱就是稳定的，如果不能保证就是不稳定的。</p>
+<blockquote>
+<p>不稳定也不是说一定会打乱相对顺序，只是说不对相对顺序提供任何保证</p>
+</blockquote>
+<p><strong>稳定性的意义</strong><br>由稳定性的定义我们知道，只有对象的某个属性相同，才有稳定性的概念。<br>而稳定性的意义更多是因为，除了相同的属性，剩下的那些不同的属性。<br>试想，如果A和B两个对象，B是A的引用或者B是A的拷贝。那么A和B的值就是完全一样的，那么其实谁在前面，谁在后面没有什么差别。<br>就是因为如果两个对象的其余部分不同，谁在前面和谁在后面，在关注它们不同属性的问题的时候，它们的顺序也才有了意义。</p>
+<p><strong>具体算法的稳定性</strong><br>稳定：插入排序、冒泡排序、归并排序、计数排序、基数排序、桶排序<br>不稳定：快速排序、堆排序、希尔排序、选择排序</p>
+<p>这里主要就是说一下它们为什么是稳定的或者不稳定的。</p>
+<ul>
+<li>如果每次比较变换都只是交换相邻的两个元素，那么就是稳定的<br>所以，冒泡排序、插入排序、归并排序是稳定的</li>
+<li>如果每次都有某个元素和比较远的元素的交换操作，那么就是不稳定的<ul>
+<li>比如，选择排序，每次选出当前最大值，就要和最后的元素交换</li>
+<li>比如，快排，在partition的最后要将hi元素和pivot元素交换</li>
+<li>比如，堆排，每次排一个元素就要将堆顶元素和最后一个元素交换</li>
+<li>比如希尔排序, 希尔排序是一种对于插入排序的改进, 但是由于它中间将所有元素分为了若干个不同的排序序列, 如果两个比较属性相同的元素被分到了不同的序列.<br>很可能就会打乱相对顺序，所以希尔排序是不稳定的。</li>
+</ul>
+</li>
+</ul>
+<p>下面就来仔细说说排序, 以及其涉及的思想.</p>
+<hr>
+<h1 id="排序枚举"><a href="#排序枚举" class="headerlink" title="排序枚举"></a>排序枚举</h1><h2 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h2><p>bucket sort, 这种排序虽然快, 但是比较傻, 典型的是拿空间换时间的做法.</p>
+<p>如果说它又什么特定, 我觉得是, 基于非比较方式进行的排序, 因为它的排序方式, 其实是<code>基于位置</code>.</p>
+<blockquote>
+<p>比如给全校学生做个分数排序，最大分100分。我们使用一个100个空间的辅助数据，以key为分数，value为命中的次数。<br>也就是分配一个hash[100]的空间，初始化为0,遍历一遍，出现的数字就hash[k]++,这样再次遍历一次，就可以得到n个数的顺序了。</p>
+</blockquote>
+<p>通过O(n)复杂度就可以完成排序任务。这种排序方式就是桶排序。</p>
+<p>如果我要升序, 那么我就从 hash[0], 到hash[99]这样的次序遍历; 反之降序的时候, 则是从hash[99]到hash[0].<br>(why? 因为数组的index就是要排序的元素对应的值, 并且仅当hash[i]值大于1的时候, 才会输出)</p>
+<p>核心逻辑大概是: (升序)<br><img src="http://omotkhw3y.bkt.clouddn.com/bucket_sort.jpg" alt=""></p>
+<p>以空间换时间, 如果数据量一旦, 空间一定会爆炸的, 一般不推荐, 仅仅知道即可.</p>
+<h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><blockquote>
+<p>冒泡排序的基本思想是：每次比较两个相邻的元素，如果它们的顺序错误就把它们交换过来。</p>
+</blockquote>
+<p>这个排序是时间效率最垃圾的之一, 因为它的思想是<code>相邻的元素</code>, 逐个比较, 然后交换的. 无论是比较次数, 还是交换次数都是非常多的, 所以造成了性能异常的差. (虽然比较稳定)</p>
+<p>直接配合图来说吧: (升序, 注意<code>相邻</code>, 而选择排序是非相邻)<br><img src="http://omotkhw3y.bkt.clouddn.com/bubble_sort.jpg" alt=""></p>
+<p>看到啦, 先不说交换(因为交换是比较之后确定需要交换才会去调用swap方法), 仅仅比较的次数,<br>都达到了: <code>5 + 4 + 3 + 2 + 1 = 15</code> 次 (共5趟)</p>
+<p>实际上, 每一趟排序只是把当前需要排序的最大元素给弄到最后了.</p>
+<p>这样的结果, 让整个比较集合都保持在全部数据上, 所以比较次数自然少不了, 还不谈还有交换成本.</p>
+<p>直接手写了, 不验证了:<code>核心逻辑</code> (未经验证)<br><img src="http://omotkhw3y.bkt.clouddn.com/bubble_sort1.jpg" alt=""></p>
+<p>网上有个图片, 可以打开看看 <a href="http://omotkhw3y.bkt.clouddn.com/bubblesort.gif" target="_blank" rel="external">动图演示</a></p>
+<p>总结一下: </p>
+<ul>
+<li>算法思想: 相邻的各元素比较，大的向后移，经过一轮比较，最大的元素排在最后(第二轮，第二大的元素排倒数第二个位置)</li>
+<li>时间开销全部在 逐相邻 元素的比较上</li>
+<li>算法复杂度 O(n^2) 即使一开始就排列好了</li>
+</ul>
+<p>不得不说, 这个算法还是蛮垃圾的, O(n^2) 我是面试官, 我也不能接受这样的算法处理.</p>
+<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p>select sort<br>简单选择排序, 算法思想是, 通过每次逐一比较, 然后每一轮确定一个位置的元素. 也是非常垃圾的算法, 基本上可以算是暴力了.</p>
+<ol>
+<li>从未排序的序列中选择最小的元素，与放在第一个位置的元素交换</li>
+<li>依次类推，直到全部排序</li>
+</ol>
+<p>在a【i,n】中最小的元素和 a[i]交换位置。空间复杂度O(1)，时间复杂度 O(n^2)</p>
+<p>简单实现:<br>(可以选择出最小的放在最开始, 也可以选择出最大的放在最末尾)<br>(找一个中间变量, 暂存一下, 不然每次比较, 比他大就交换太傻了; 减少交换次数)<br><img src="http://omotkhw3y.bkt.clouddn.com/selection_sort1.jpg" alt=""></p>
+<p>虽然借助中间变量把 min_index 保存下来, 但是但从比较次数来看, 也是不少的; 所以其实也比较慢.</p>
+<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>这个算法稍微动了下脑子, 学会了分区, <code>从未排序区拿出一个元素, 插入已排序区</code>.<br>慢慢的已经排序的区会越来越大, 直至整个元素集合都是已经排序的.</p>
+<p>核心描述:</p>
+<ol>
+<li>第一个元素算作已经排好</li>
+<li>取下一个元素，从已经排好的序列元素中，从后向前扫描</li>
+<li>如果排好序的元素大于新元素，排好序的元素移到下一个位置</li>
+<li>重复3，直到直到最后的插入位置</li>
+<li>重复2</li>
+</ol>
+<p>大致上, 看看下面两张图, 就知道了.  (其实<code>核心逻辑</code>还是在倒腾有序区, 看看怎么腾出空间, 或者具体把元素放在哪)<br><img src="http://omotkhw3y.bkt.clouddn.com/insert_sort1.jpg" alt=""></p>
+<p>大致上实现是<br><img src="http://omotkhw3y.bkt.clouddn.com/insert_sort3.jpg" alt=""></p>
+<p>具体的排序过程, 可以参考这个动画, <a href="http://omotkhw3y.bkt.clouddn.com/selectsort.gif" target="_blank" rel="external">排序动画</a></p>
+<p><strong>实际上从插入排序开始, 这里才懂得 不需要再全部集合里面进行比较&amp;交换, 减少了比较次数</strong></p>
+<p>最坏: 待排序的是一个逆序排放的数组，这样导致每一轮都要移动元素；此时复杂度是是o(n^2)<br>最好: 待排序的是一已经顺序排放的数字，此时只需要做一轮比较就够了O(n)</p>
+<p><strong>适用于差不多已经有序的集合</strong></p>
+<p>但是还是可以优化的, 因为<code>为什么不进行多组一起插入排序呢?</code>, 于是引入了希尔排序.</p>
+<h2 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h2><p>递减增量排序算法，对 <code>插入排序</code>的改进，<strong>实质是分组插入排序</strong>，又叫<code>缩小增量排序</code> (再一次优化比较次数)</p>
+<ol>
+<li>先将待排数列分割成若干子序列（增量为m)</li>
+<li>对每个子序列使用插入排序</li>
+<li>减小增量，再排序</li>
+<li>对全体元素做一次插入排序</li>
+</ol>
+<p><strong>通俗的理解?</strong><br>在插入排序的时候, 做了两件事儿:</p>
+<ul>
+<li>划分有序区和无序区</li>
+<li>倒腾有序区, 腾出空间放要插入的元素</li>
+</ul>
+<p>但是注意了, 插入排序<strong>每次只交换相邻两个元素</strong>, 当然你看到的情况是, 按照一定间隔把元素分组, 然后每组进行插入排序.</p>
+<p>说不大能说明白, 我画个图:<br><img src="http://omotkhw3y.bkt.clouddn.com/shell_sort2.jpg" alt=""></p>
+<p>从上面的分析可以看到, (每次最后间隔为1的时候, 相当于原始的插入排序) <code>希尔排序</code>提升排序的奥秘就在于<code>数据元素越有序，使用插入排序效率越高</code>.</p>
+<p>代码实现, 其实就是在外层再套了一层循环, 用于表示间隔数的递减的次数. (但是每次最后间隔都是会变成1)<br>核心代码如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/shell_sort1.jpg" alt=""></p>
+<p>但是这个排序, 最坏的情况: 0(n^2), 注意是 C Ta, 不是大O.</p>
+<p><strong>问题处在哪?</strong><br>如果途中选取的间隔, 比如说8间隔, 之后4间隔, 2间隔这样分组的数字, 但后面间隔排序都是有序的(本次的排序, 是包含上次间隔序列的);<br>此时前两轮算是白跑了; 最后还是要在1间隔的分组上进行大幅度的调整(这就搞的根原始的插入排序一样了).</p>
+<p>此时就要调整一下增量序列, 就是<code>间隔数字之间最好是互质的</code>.</p>
+<p>我查了下资料, 大概, 可以用 <strong>Hibbard增量序列</strong>, 即<code>D(k) = 2^k -1</code>. (但是这个的复杂度分析就比较难了, 数学上证明难)</p>
+<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><p>那么现在问题来了, <strong>如何把比较次数减少一半左右?</strong></p>
+<p>快速排序就是为了这样的目的而产生的, 它本身不是什么复杂的思想, <code>就是二分</code>.<br>即采用一个 pivot 元素, 不断划分两半, 经过划分, 左边儿的一半, 就不必和右边儿的一半比较了.<br>(保证左边儿的集合的每一个元素都小于右边儿集合的每一个元素, 所以属于其中一半的元素根本不需要和另外一半进行比较就知道比另外一半小)</p>
+<p>递归一次, pivot 左边都比它小, 右边都比它大. </p>
+<p>这里有一个直观的视频可以参考一下, <a href="http://v.youku.com/v_show/id_XMzMyODk4NTQ4.html?from=s1.8-1-1.2" target="_blank" rel="external">视频演示</a></p>
+<p>画个图, 大致上如下:<br><img src="" alt=""></p>
+<p>直接手写试试:</p>
+<p>注意两个问题:</p>
+<ul>
+<li>递归的问题, 小心爆栈; </li>
+<li>快速排序是否稳定, 跟你实现有关(扫描pivot元素两边儿的时候, 看看有没有加上等号判断, 比如 &gt;= 判断, 而不是仅仅用 &gt; 判断)</li>
+</ul>
+<p>对 A[p…r] :  </p>
+<ol>
+<li>分解：A[p..q-1]  A[q+1..r],使得 A[p…q-1]&lt;A[q]&lt;A[q+1..r]  </li>
+<li>解决：递归调用 快排，，对子数组A[p..q-1],A[q+1..r]排序  </li>
+<li>合并（子问题相互独立的，因此用分治算法就可以了）  </li>
+</ol>
+<p>具体步骤：</p>
+<ol>
+<li>从数列中选择一个元素，作为基准 pivot。通常取分区的第一个或最后一个</li>
+<li>重排数列，比 pivot 小得排左边，比pivot大的排右边，相等的随便, 一句话就是<code>挖坑填数</code> (pivot是被拿走的)</li>
+<li>递归的，使用相同的方式，重排左右两边的子序列</li>
+</ol>
+<p>扫描过程分2种：  </p>
+<ol>
+<li>挖坑排序，2头向中间扫描，先从后向前找，再从前向后找。  </li>
+<li><p>单向扫描  </p>
+<pre><code class="C++"> void quicksort(int *a, int left, int right){
+     if (left&lt;right)//加上这个，不然有死循环，造成堆栈溢出，这也是递归结束条件
+     {
+         int i = partion(a,left,right);//使得局部有序，i作为分隔
+         quicksort(a,left,i-1); 
+         quicksort(a,i+1,right);
+     }
+ }
+
+ // 挖坑填数，2边向中间扫描
+ int partion(int *a, int start,int end){
+     int i=start,j=end;
+     int tmp = a[i]; // 这里要做越界检查, tmp即pivot
+     while(i&lt;j){
+         // 从后向前扫描，找到第一个小于tmp的值，来填a[i]
+          while(i&lt;j &amp;&amp; a[j]&gt;=tmp){
+              j--;
+         }   
+          if (i&lt;j)//找到了,这时候a[j]为坑 
+         {   
+             a[i++] = a[j];  
+         }
+         // 从左向右扫描，找一个大于 tmp的 数， 去填坑a[j]
+         while(i&lt;j &amp;&amp; a[i]&lt;tmp){
+             i++;
+         }
+         if (i&lt;j)
+         {
+             a[j++]=a[i];
+         }
+     }
+     //扫描完成后，i==j
+     a[i]=tmp;
+     return i;
+ }
+</code></pre>
+</li>
+</ol>
+<p>当然也可以以右边界为pivot, 不过这个时候需要先进行start++, 核心实现如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/quick-sort.jpg" alt=""> </p>
+<p>平均复杂度 O(n<em>logn) , 最坏O(n^2)<br>空间复杂度 O(n</em>logn) </p>
+<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><p>和快排思想不同的是, 快排主要是分的时候, 用pivot作为划分元素, 保证一边儿的元素全部比另一边小, 划分的过程中伴随着交换.<br>直到不能在划分左右两边儿的时候, 序列其实已经就是有序的了.</p>
+<p>但是归并不是, 归并是一直划分, 中途不进行交换, 直到划分到不能再分, 比如说每个部分只有一个元素了, 在两两比较&amp;结合; 然后之后的比较就是小的有序集合和集合之间的比较了.<br>试想, 如果一个集合的左右两边儿都已经是有序的序列, 那么你完全可以, 只进行一次比较, 把左边儿集合的最大值和右边集合的边界值比较就可以了.</p>
+<p>也就是说, 它其实是在结合的时候才进行判断和交换(合并算法写的不好, 可能会造成大量的元素移动, 这时效率就非常差了).<br><code>其实分不是它的核心, 合并算法才是核心</code><br>实际上也会省去一般的比较时间.</p>
+<p><strong>归并的过程</strong><br>现在有两个有序数组, 合并到一个大的数组中, 合并操作的复杂度是 O(n).</p>
+<p>比如说, 一个数组的前半部分和后半部分都是有序的了, 如何合并这两个有序的子数组?<br>大致实现思路如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/merge_sort.jpg" alt=""></p>
+<p>如果两边都没有序的话, 就先让他们有序; 当然对于整个数组, 可以采用分治的思想, 先划分小数组, 让小数组有序, 之后再进行排序.</p>
+<ul>
+<li>不断递归划分</li>
+<li>处理递归终止条件 (L == R 或者 划分的子数组长度为1)</li>
+</ul>
+<p>代码写出来就是:</p>
+<pre><code class="C++">void merge_sort(int arr[], int L, int R) //注意是下标
+{
+    if( L ==R ) return; //或者 R-L&gt;0
+    int M = (L+R)/2;
+    merge_sort(arr, L, M);
+    merge_sort(arr, M+1, R);
+    merge(arr, L, M+1, R); //因为merge函数的入参M是指向Right数组的第一个元素
+}
+</code></pre>
+<p>其实主要逻辑还是在 merge上面(即假设已经给你俩有序的了), 分治的过程就注意一下终止条件即可.</p>
+<p>一般认为归并排序是稳定的(分往合的过程中, 其实是相邻比较&amp;交换)</p>
+<hr>
+<p>下面要说的这种算法, 其实是比较特殊的, 利用结构进行排序, 而不是纯粹的比较+交换.</p>
+<h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><p>堆这种结构其实也非常容易理解。关键在代码的实现上怎么去做，堆初始化调整，插入删除元素的调整。堆虽然是一种完全二叉树，但是因为它独特的性质，所以在代码使用数组来模拟堆。</p>
+<p>先来了解下 <code>堆</code> 结构</p>
+<p>堆分小根堆和大根堆</p>
+<p>堆： 任一节点小于（或大于）其所有的孩子节点，如果是大于所有孩子节点，这就是一颗大根堆，也就是根节点是堆上的最大值；如果节点小于所有的子节点，<br>这就是一颗小跟堆，也即是根节点是堆上所有节点的最小值。</p>
+<p>堆也被称为<code>优先队列</code>, 堆总是一颗完全树 (也就是拥有树的性质), i节点的父节点就是(i-1)/2, 左右子节点小标是 2i+1, 2i+2.</p>
+<p><code>堆用数组来存储</code>，</p>
+<p>堆的操作有:</p>
+<p>建堆<br>插入: 都是插入到数组最后，然后再调整满足堆次序<br>删除: 删除总是发生在 A[0]处，也就是只删除根节点 </p>
+<p>这样难怪<code>堆</code>被称为 <code>优先队列</code>. 插入和删除分别在数组尾部和头部, 只是需要再次调整以满足堆次序.</p>
+<p><code>堆</code>的应用场景有:</p>
+<ul>
+<li>优先队列</li>
+<li>堆排序  </li>
+</ul>
+<p>我们来看看如何使用<code>堆</code> 来做排序?    </p>
+<p>1.将待排序数列看做一颗完全二叉树的存储结构<br>2.<code>堆化数组</code>，结束后，根a[0]变成了最小的值（小根堆）<br>3.取a[0]值，然后对<code>堆</code>做删除操作，此时，<code>堆</code>会重新 <code>堆化数组</code>，a[0]又是下一个最小的值。<br>删除操作通常是先把数组最后的元素提到a[0]位置，然后从根节点开始进行一次从上向下的调整；调整时，先从左右孩子中找最小的交换。如果父节点比每个节点都小就不用调整。（因此，在<code>堆排序</code>是可以直接让 a[0]和数组最后一个元素互换，但要先保存好a[0],或者a[n-1],这样导致了使用<code>堆排序</code>时，递增排序使用大根堆，递减排序使用小根堆。）     </p>
+<ol>
+<li>循环3，就可以按从小到大的顺序取出所有数组元素。  </li>
+</ol>
+<p>堆排序主要时间花在建堆期间和<code>堆化数组</code>，找数列中最大树只需要O(1)时间复杂度  </p>
+<pre><code class="C++">    void heap_sort(int *a, int length){
+        // 建立堆 大根堆，递增排序
+        heap_build(a,length);
+        for (int i = length-1; i &gt;0; --i)
+        {
+         //交换
+         heap_swop(&amp;a[0],&amp;a[i]);
+            //调整
+         heap_adjust(a,i);
+        }
+    }
+</code></pre>
+<p>推排序还可以用来求 top-K 大(小)的问题.<br>用堆来维护序列，每次都能通过sink或者swim找到最值元素，这样不断对排除了最值元素的子序列递归调用，便能排序。</p>
+<p>C语言里面用到了<code>qsort</code>来进行排序.</p>
+<pre><code class="C++">qsort(void *base, size_t num, size_t size, int (*compare)(const void*, const void*));
+</code></pre>
+<p>例如:</p>
+<pre><code class="C++">int compare(const void * a, const void *b)
+{
+    return *((int*)a) - *((int*)b);
+}
+
+int arr[8] = {1, 2, 3, 4, 5, 6};
+qsort(arr, 8, sizeof(int), compare);
+</code></pre>
+<p>对于其他类型, 比如float或者struct做一下相应的调整就好了.</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>比如说像二叉搜索树的<code>中序遍历</code>, 其实也可以看做是排序(毕竟输出是有序的).</p>
+<p>先这样.</p>
+<hr>
+<p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>
+
+        </div>
+
+<!-下面是评论模块 ->
+        <div class="post-reply">
+            
+            
+        </div>
+
+		<!-- 下面是版权声明模块-->
+        
+<div id="copyright" class="content blockquote">
+  <blockquote>
+	<span><b>版权声明</b>：本文采用<b>署名(BY)</b>-<b>非商业性使用(NC)</b>-<b>相同方式共享(SA)</b>许可协议授权,转载请注明作者及出处</span><br/>
+	<span><b>本文作者</b>：<a href="/" target="_blank" title="Merlin Yu">Merlin Yu</a></span><br/>
+	<span><b>本文标题</b>：思考算法之排序</span><br/>
+	<span><b>本文链接</b>：www.merlinblog.site/2017/11/05/mastering-al-sort.html</span>
+
+  </blockquote>
+</div>
+
+
+    </div>
+</section>
+
+ 
+
+
+
+<script type="text/javascript">
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+
+
+<!-- for code block highlight --> 
+<!-- theme.block_highlight -->
+<!-- we do not guarantee the char sequences spell right, usr himself do it -->
+<link rel="stylesheet" href="/css/highlight_rainbow.css">
+<script src="/js/highlight.min.js"></script>
+<script type="text/javascript"> hljs.initHighlightingOnLoad();</script>
+  
+
+<!--设置内部长度 -->                
+<script type="text/javascript"> 
+
+ $('code').attr('style', 'overflow:auto; font-size:18px; margin-left:2px; margin-right:2px;');
+
+ 
+</script>
+
+
+
+
+
+
+      </div>
+  </div>
+
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Copyright © <b><a href="#">Merlin Yu</a></b> 2017
+        <br>
+        Themed by <a href="http://haojen.github.io/">Haojen Ma</a>
+		<br>
+		Articles of this site licensed under <b>CC BY SA 4.0<b>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
+
