@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="www.merlinblog.site/"/>
-  <updated>2017-11-08T12:56:47.043Z</updated>
+  <updated>2017-11-09T15:17:02.633Z</updated>
   <id>www.merlinblog.site/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>全面经</title>
+    <link href="www.merlinblog.site/2017/11/09/all-interview.html"/>
+    <id>www.merlinblog.site/2017/11/09/all-interview.html</id>
+    <published>2017-11-09T13:40:19.000Z</published>
+    <updated>2017-11-09T15:17:02.633Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>2017年, 不管别人的路怎么走; 我决定, 一心走技术路了.</p></blockquote><p>(初稿11-03, 11-09晚了更新此文)</p><p><img src="http://omotkhw3y.bkt.clouddn.com/interview1.jpg" alt="post-cover"></p><hr><p>如果有啥需要交流的, 可以发邮件给我.</p><ul><li>技术交流 : <code>wizardmerlin945@gmail.com</code> </li><li>招聘专用 : <code>yuyankai945@hotmail.com</code></li></ul><h1 id="技术无止境"><a href="#技术无止境" class="headerlink" title="技术无止境"></a>技术无止境</h1><p>截止于<code>2017/11/9</code>, 9天的面试中, 除了第一场和最后一场(11月8号, 礼拜三); 总共面了6场.</p><p>有大公司, 有小公司, 基本都是态度非常好的. 除了第一场没有给我offer, 是因为不喜欢我代码狂的身份, 其他都表示OK.<br>期间我发现了两个问题:</p><ul><li>找工作, 钱真的不是主要目的; 我还是希望找到一个我喜欢的工作<br>基本上是: 分布式后台, 金融后台, 游戏后台; 仔仔细细比较之后, 我发现还是喜欢游戏后台. (刷了几天面经还不错)</li><li>技术的道路上, 永远没有止境. (最近面试的几个面试官, 在我非常自信的方面竟然也能和我正面碰撞, 非常厉害)</li><li>距离<code>世界级的水平</code>还有一段很远的距离(说明我努力还是不够啊)</li></ul><p>也就是昨天(11/8), 非常高兴, 我的简历通过了他们的筛选, 并且在一轮电话面试之后, 还是给了我二面的机会(三轮).<br>可是, 之后发现<strong>一旦和世界级的高手站在一个起跑线上</strong>, 就会发现自己还很弱:</p><ul><li>工作经验不够(对方基本上10年上下)</li><li>基础知识也没有我认为的那么扎实<br>(工作的这两年, 不断的玩库和框架, 有很多基础算法和基本数据结构有点儿的实现有点儿遗忘了)</li></ul><p><strong>说明:</strong><br>11月8号, 也就是昨天面试的一家公司, 可以说是世界一流的; </p><p><code>怎么说?</code><br><strong>因为和它对标的是IBM, Facebook这类强调开放, 和单兵作战变态强能力的公司.</strong><br>(不是360啊…)</p><p><code>我是在哪里挂了?</code></p><ul><li>C++ 相关的全部OK</li><li>涉及数据结构OK</li><li>白板算法-跪了</li></ul><p>他们效仿的是 google, 一上来就是算法题, 现场写. 就是阿里校招时候的<code>白板测试</code>.<br>(工作久的, 特别是我这种全心全意专注于单位项目上的人, 没有太多时间关注那些).<br><code>白板算法测试</code> 确实是一个非常好的测试方法, 只是这种要求对于国内大部分程序员都稍高(他们给的薪水也非常高), 不过我个人不排斥.</p><p>不过很遗憾, <strong>规则就是规则</strong>. 没啥抱怨的.  知道自己的不足, 才有机会赶上去, 你说呢?</p><h1 id="暂停更新"><a href="#暂停更新" class="headerlink" title="暂停更新"></a>暂停更新</h1><blockquote><p>后期我会把所有的<code>面经</code>更新到这里, 我整理了一个<code>小册子</code> (内容非常丰富), 到时发到 github 上面去.</p></blockquote><p>(我<code>先把内容记录在本子上</code>, 后期整理之后, 上传; 大概可以写600多页)</p><p>此外, <strong>博客从今天起, 暂停更新一段时间, 全心全意开始新的游戏了!</strong></p><hr><p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>]]></content>
+    
+    <summary type="html">
+    
+      面试经验呀, 博客暂停更新一段时间
+    
+    </summary>
+    
+      <category term="musings" scheme="www.merlinblog.site/categories/musings/"/>
+    
+    
+      <category term="面试" scheme="www.merlinblog.site/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+  </entry>
   
   <entry>
     <title>思考算法系列汇总</title>
@@ -79,28 +101,6 @@
     
     
       <category term="算法" scheme="www.merlinblog.site/tags/%E7%AE%97%E6%B3%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>全面经</title>
-    <link href="www.merlinblog.site/2017/11/04/all-interview.html"/>
-    <id>www.merlinblog.site/2017/11/04/all-interview.html</id>
-    <published>2017-11-04T13:40:19.000Z</published>
-    <updated>2017-11-04T14:34:44.051Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>正好周末, 我对于一些过去的心态啊准备啊, 以及未来真正的想做的事儿, 做了全面而深入的思考.</p></blockquote><hr><h1 id="我的反思"><a href="#我的反思" class="headerlink" title="我的反思"></a>我的反思</h1><p>我问了自己这样几个问题?</p><ul><li>是否随便一家公司给钱你就愿意过去干? 你是这样的人么?</li><li>你明白自己的价值和定位么?</li><li>你是不是一个可以讨价还价的人?</li><li>你自己觉得自己实力和别人觉得你实力究竟相差多少?</li></ul><p>答案是显而易见的, 虽然现在不是招聘旺季(11月初), 但是并不意味着我需要或者可以违背自己的原则做事情. 正确评估自己的市场价值的同时, 也要据理力争.</p><blockquote><p>别人什么情况下不会跟你讨价还价, 你想清楚了么?</p></blockquote><p>笑. 被拒绝不可怕, 因为有些环境就是不适合你的, 他们挑选你的时候, 其实你也在挑选他.<br>(除非你是真的水平很差, 别人用你也是将就着用, 你也是将就这去工作; 两边儿不欢快, 何必呢?)</p><blockquote><p><code>It&#39;s just that nobody likes people who stay where they don&#39;t belong</code>.</p></blockquote><p>顺其自然(let it be), 但不违背原则: do one thing, do it well.</p><p>其实<code>关键还是看, 你到底是个认真&amp;较真的人还是个稀里糊涂就能过的人</code>.<br> <strong>每个人都应该为自己的人生负责</strong>, 你说呢?</p><hr><h1 id="给HR或招聘主管"><a href="#给HR或招聘主管" class="headerlink" title="给HR或招聘主管"></a>给HR或招聘主管</h1><p>To <strong>之后看到本文的</strong> <code>招聘主管</code>, <code>HR姐姐</code> : (首先感谢你们严谨的态度, 来调查我)</p><ul><li>首先, 请相信我对于应聘过的公司的评价是很客观的, 至少我实地考察和交流过了 (当然出于道德和保护等原因, 不会透露公司的名字)</li><li>其次, 我去面试都是带着足够的诚意和尊重的 (不要认为我敷衍啥的…汗~)</li><li>最后, 无论最后有没有一起共事, 我都希望有一个愉快的碰面或者交流, 顺便在业界可以多认识一个朋友.</li><li>最后的最后, 如果您给了我offer, 但是我没有回应, 那一定是在仔细考虑(我不喜欢换工作, 慎重地选择好的就一定会坚持到底, 同事资源也会特别珍惜), 请给予我一些时间考虑(感激)</li></ul><p>当然技术方面, 如果您不放心, <strong>plz test me as u like</strong>. (当然, 知之为知之不知为不知; 瞎说就是打脸, 没有必要, 我也不会那么<strong>没趣</strong>)<br>(请不要问一些隐私的问题, 我想我会拒绝回答您; <strong>如果我有言语上的措辞不当, 也请您一定一定一定, 给我一些反馈, 感激</strong>)</p><p>补充:</p><blockquote><p>I do not wanna a job or occupation, I choice a way of life and I chose my own career or furture.</p></blockquote><p><strong>翻译</strong>: 我的<code>每次投递都是精心调研过的单位</code>, 不会乱投递; 其次, 我想找一家有潜力的, 接下来能工作5-7年的单位, 和能长期共事的战友.</p><p><strong>别误会, 我只是对我的人生负责.(笑)</strong></p><p>当然, <strong>如果您(技术前辈, 大佬)认为我是个可以培养的人才, 请务必给我这个机会, 感谢.(伏地, 叩首)</strong></p><p>btw: 以前面试过的技术同行, 如果有啥需要交流的, 可以发邮件给我.</p><ul><li>技术交流 : <code>wizardmerlin945@gmail.com</code> </li><li>招聘专用 : <code>yuyankai945@hotmail.com</code></li></ul><h1 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h1><p>我<code>先把内容记录在本子上</code>, 后期整理之后, 上传.</p><blockquote><p>并且, 我是想找一家, 可以待上&amp;为之<code>效力5-7年的单位</code>, 所以过程可能有点儿长, 但一定会完整上传的</p></blockquote><p><img src="http://omotkhw3y.bkt.clouddn.com/interview1.jpg" alt=""></p><p>这一本大概有300多页 (妹子送我的速写本&amp;绘画本), 正反加起来大概可以写600多页, 足够了.</p><hr><p>who is sponsoring the site? - i shall say merlin (<code>wizardmerlin945@gmail.com</code>)<br>欢迎发邮件给我(生活问题，请高抬贵手)</p>]]></content>
-    
-    <summary type="html">
-    
-      面试经验呀
-    
-    </summary>
-    
-      <category term="musings" scheme="www.merlinblog.site/categories/musings/"/>
-    
-    
-      <category term="面试" scheme="www.merlinblog.site/tags/%E9%9D%A2%E8%AF%95/"/>
     
   </entry>
   
