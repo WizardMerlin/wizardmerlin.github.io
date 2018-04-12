@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="C++11之前, 初始化方式，乱七八糟，不同编译器的对待方式也不太一样。">
+<meta name="keywords" content="cpp,initializer_list">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: C++11 一致性初始化探究">
+<meta property="og:url" content="http://www.merlinblog.site/posts/4bb5bf03/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="C++11之前, 初始化方式，乱七八糟，不同编译器的对待方式也不太一样。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.617Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: C++11 一致性初始化探究">
+<meta name="twitter:description" content="C++11之前, 初始化方式，乱七八糟，不同编译器的对待方式也不太一样。">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: C++11 一致性初始化探究 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-uniform-initialization" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/4bb5bf03/" class="article-date">
+      <time datetime="2016-04-08T02:40:17.000Z" itemprop="datePublished">2016-04-08</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: C++11 一致性初始化探究
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/">cpp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/initializer-list/">initializer_list</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>C++11之前, 初始化方式，乱七八糟，不同编译器的对待方式也不太一样。<br><a id="more"></a></p>
+<p>新容器 <code>initializer_list</code> 容器，统一了初始化方式。</p>
+<h1 id="旧方式"><a href="#旧方式" class="headerlink" title="旧方式"></a>旧方式</h1><p>如下:<br><strong>单个对象</strong>:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">s</span><span class="params">(<span class="string">"hello"</span>)</span></span>;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">string</span> s=<span class="string">"hello"</span>;</span><br></pre></td></tr></table></figure>
+<p>数组结构体(POD):</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> arr[<span class="number">4</span>]=&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;  或者&#123;<span class="number">0</span>&#125;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">tm</span> <span class="title">today</span>=&#123;</span><span class="number">0</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>类数据成员: 初始化列表.</p>
+<h1 id="新方式"><a href="#新方式" class="headerlink" title="新方式"></a>新方式</h1><p>C++11统一用大括号进行处理了(可能看上去初始化成员数据时候比较奇怪)<br>例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span>  </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">int</span> a = <span class="number">10</span>; <span class="comment">//C++允许你直接在这里进行初始化, 有点儿像Java  </span></span><br><span class="line">	<span class="keyword">int</span> b;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">	C(<span class="keyword">int</span> i, <span class="keyword">int</span> j);  </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">C c &#123;<span class="number">0</span>,<span class="number">0</span>&#125;; <span class="comment">//C++11 only. 相当于 C c(0,0);  </span></span><br><span class="line"><span class="keyword">int</span>* a = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">3</span>] &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span> &#125;; /C++<span class="number">11</span> only  </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">X</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">int</span> a[<span class="number">4</span>];  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">  X(): a&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125; &#123;<span class="comment">//具体的实现逻辑&#125; //C++11, 初始化数组成员  </span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中对象的初始化也用大括号<code>C c {0,0}; //C c(0,0);</code>感觉稍稍也有点不适应.</p>
+<p>其实我觉得, 最实用的就是, 容器&amp;数组的初始化, 太棒了:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//array</span></span><br><span class="line"><span class="keyword">int</span> values[]&#123;<span class="number">1</span>,<span class="number">2</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// C++11 container initializer  </span></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; vs &#123; <span class="string">"first"</span>, <span class="string">"second"</span>, <span class="string">"third"</span>&#125;;  </span><br><span class="line"></span><br><span class="line"><span class="built_in">map</span>&lt;<span class="built_in">string</span>, <span class="built_in">string</span>&gt; singers</span><br><span class="line">  &#123; &#123;<span class="string">"Lady Gaga"</span>, <span class="string">"+1 (212) 555-7890"</span>&#125;,  </span><br><span class="line">    &#123;<span class="string">"Beyonce Knowles"</span>, <span class="string">"+1 (212) 555-0987"</span>&#125;</span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="实现剖析"><a href="#实现剖析" class="headerlink" title="实现剖析"></a>实现剖析</h1><h2 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a>内部实现</h2><p>所有的简单机制背后, 都有一个稍稍复杂的机制, 或者对你透明(隐藏)的工程细节.</p>
+<p>其实借助了 统一的初始化列表, 即<code>initializer_list&lt;T&gt;</code>, 在大括号内的所有内容, 都会被装入initializer_list<t>然后用于给不同的变量&amp;对象, 进行初始化.</t></p>
+<p>initializer_list背后关联了一个array<t,n>容器, 初始化时, array内部的元素会被编译器逐一传递给相关的变量&amp;对象&amp;容器, 如果初始化函数, 比如构造器的参数本身就是一个initializer_list<t>, 那么你可以按照要求传递即可(此时不用从里面拆分元素了). 如果没有这样构造器来初始化变量&amp;对象, 那么它会把大括号形成的initializer_list进行拆解, 然后去匹配相应的调用构造器.</t></t,n></p>
+<p>如果还不满足, 比如构造器只有接受两个int的版本, 你在大括号里写了3个int值, 所以拆解也匹配不了, 此时你需要自己再重载相应构造器来满足要求.</p>
+<p>具体的说, <code>vector&lt;string&gt; vs { &quot;first&quot;, &quot;second&quot;, &quot;third&quot;};</code>之所以成功, 是因为编译器可以找到<code>vector&lt;string&gt;</code>类中, 接收<code>initializer_list&lt;string&gt;</code>的构造器或者拆解之后, 找到了接收三个参数的构造器.<br>(<code>initializer_list&lt;string&gt;</code>背后关联了<code>array&lt;string, 6&gt;</code>这个容器, 你看这个类的数据成员又一个<code>_M_array</code>)</p>
+<p>如果是对象, 比如<code>C c{1,2};</code> (原来的写法, <code>C c(1,2);</code>)之所以能够编译通过, 也是因为C类有接收<code>initializer_list&lt;int&gt;</code>(<code>array&lt;int,2&gt;</code>)为参数的构造器. 如果没有这样的构造器, 要么你手动提供一个这样的重载, 要么编译器报错.</p>
+<blockquote>
+<p>看到了吧, 所有的简单机制背后, 都有一个稍稍复杂的机制, 或者对你透明(隐藏)的工程细节.</p>
+<blockquote>
+<p>其实标准库做了很多改进工作.</p>
+</blockquote>
+</blockquote>
+<h2 id="内部array"><a href="#内部array" class="headerlink" title="内部array"></a>内部array</h2><p>这部分你要看initializer_list这个类的私有构造器.</p>
+<p>其实从大括号的参数, 到构件完成一个initializer对象, 编译器调用的是私有构造器, 这个时候才会在内部关联一个array对象. 或者说编译器再调用私有构造器之前就准备好了一个array用来盛放具体的初始化参数, 然后私有构造器接收的是array的头迭代器以及array的长度.</p>
+<blockquote>
+<p>注意, initializer_list只是保存了array的引用, 以及array的长度, 没有傻傻的把它拷贝进来. (即浅拷贝)</p>
+</blockquote>
+<p>那么问题来了:</p>
+<blockquote>
+<p>浅拷贝问题? (浅拷贝不安全)不用担心</p>
+</blockquote>
+<p>除非是编译器可以调用的私有构造器, 只接受array的指针和长度; 你手动调用的构造器不存在浅拷贝的问题(如果你要单独使用 initializer_list 这个容器的话).</p>
+<blockquote>
+<p>私有构造器, 只有编译器有权利调用</p>
+</blockquote>
+<p>btw, 那么array是啥?<br>通俗的理解, array就是C++的数组, 和<code>[]</code>中括号指定的没有本质区别, 都是顺序存储, 但是比C数组好的地方在于, <code>它和容器接口统一</code>, begin, end, size等函数都是有的, 调用方式上完成了统一, 准确来说, 是迭代器和容器统一了, 当然和容器保持一致的好处是, <code>你可以用标准库的算法</code>了.</p>
+<p>下面专门说收initializer</p>
+<h1 id="initializer-list"><a href="#initializer-list" class="headerlink" title="initializer_list"></a>initializer_list</h1><p>使用initializer有很多好处, 默认赋值, 安全检查等.</p>
+<h2 id="默认赋值"><a href="#默认赋值" class="headerlink" title="默认赋值"></a>默认赋值</h2><p>例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> j&#123;&#125;; <span class="comment">//默认赋值为0, 因为是int型</span></span><br><span class="line"><span class="keyword">int</span>* q&#123;&#125;; <span class="comment">//默认赋值为nullptr</span></span><br></pre></td></tr></table></figure>
+<h2 id="安全检查"><a href="#安全检查" class="headerlink" title="安全检查"></a>安全检查</h2><p>以往的初始化, 有一些处理会难以察觉, 比如<code>char</code>类型赋值<code>9999</code>, 溢出了, 当然有的会自动截断, 例如: <code>int x1 = 5.3</code>, 但是使用initializer_list时, 情况就不一样, 它会让编译器报错(或者警告), 例如<code>int x1{5.3}</code> 或 <code>int x1 = {5.3}</code>, 因为从double隐式转换到int, 会进行截断(narrowing cast), 这是不安全的.</p>
+<h2 id="单独使用"><a href="#单独使用" class="headerlink" title="单独使用"></a>单独使用</h2><p>直接使用<code>std::initializer_list&lt;&gt;</code> 也可以. 并且他也能用于实现变参模板(毕竟参数个数不限定), 但是比variadic templates弱的是, 所有参数的类型要一样.</p>
+<p>比如下面的代码:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">initializer_list</span>&lt;<span class="keyword">int</span>&gt; vals)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">auto</span> p=vals.begin(); p!=vals.end(); ++p) &#123;</span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; *p &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用的时候:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>只要你加上了大括号, 调用重载的时候, 都是优先找参数为<code>std::initializer_list&lt;int&gt;</code>的构造器.</p>
+<blockquote>
+<p>拷贝问题? 不要担心数据成员array的浅拷贝问题, 上面也解释了.</p>
+</blockquote>
+<p>但是劝你不要这么用, 因为容器保存的元素的引用, 而不是拷贝.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">initializer_list</span>&lt;<span class="keyword">int</span>&gt; func(<span class="keyword">void</span>)  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="keyword">auto</span> a = <span class="number">2</span>, b = <span class="number">3</span>;  </span><br><span class="line">    <span class="keyword">return</span>&#123; a, b &#125;;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外, 它只能被整体的初始化和赋值，遍历只能通过begin和end迭代器来，遍历取得的<code>数据是只读的</code>，是不能对单个进行修改的</p>
+<h2 id="算法适配"><a href="#算法适配" class="headerlink" title="算法适配"></a>算法适配</h2><p>有一些算法, 随着<code>initializer_list</code>容器的引入, 也做了适配, 比如<code>std::max</code>, <code>std::min</code>原来只接受两个参数, 现在你直接把要比较的参数用<code>{}</code>中括号包起来起来就能用了, 因为这些算法, 有新的重载版本, 它们接收initializer_list作为参数.</p>
+<h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><blockquote>
+<p>总结一句话, initilizer-list是依赖于构造器的(基本类型的变量除外)</p>
+</blockquote>
+<p>如果你想不提供构造器, 使用编译器生成的默认的完成使用initializer-list的任务, 最好的情况是<code>类是聚合体</code>,</p>
+<ul>
+<li>无用户自定义构造函数</li>
+<li>无私有或者受保护的非静态数据成员</li>
+<li>无基类</li>
+<li>无虚函数</li>
+<li>无{}和=直接初始化的非静态数据成员</li>
+</ul>
+<p>例如, 没有定义构造器的情况, 可以使用默认的进行, 如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Foo</span>  </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line">    <span class="keyword">int</span> x;  </span><br><span class="line">    <span class="keyword">int</span> y;</span><br><span class="line">&#125;;  </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Foo foo&#123; <span class="number">123</span>, <span class="number">321</span> &#125;;  </span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; foo.x &lt;&lt; <span class="string">" "</span> &lt;&lt; foo.y; </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是一旦用户制定了构造器(或者有了非私有成员, 比如受保护的, 或者有静态成员, 或者有虚函数, 或者有基类, 或者在类的默认初始化成员了), 就要负责成员的初始化问题,<br>否则编译器用initializaer-list找不到初始化方式(默认构造器已经失效了).</p>
+<p>下面的结果就非常奇怪:(提供了构造器, 却不手动进行成员的初始化处理)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Foo</span>  </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line">    <span class="keyword">int</span> x;  </span><br><span class="line">    <span class="keyword">int</span> y;</span><br><span class="line">    Foo(<span class="keyword">int</span>, <span class="keyword">int</span>)&#123; <span class="built_in">cout</span> &lt;&lt; <span class="string">"Foo construction"</span>; &#125;  </span><br><span class="line">&#125;;  </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Foo foo&#123; <span class="number">123</span>, <span class="number">321</span> &#125;;  <span class="comment">//此时初始化列表失效, 对象的成员根本没有初始化</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; foo.x &lt;&lt; <span class="string">" "</span> &lt;&lt; foo.y; </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>好了, 源码也说了, 先这样, 其他请参考, <code>《Effective Modern  C++》</code>, <code>《深入应用C++11 代码优化与工程机应用》</code></p>
+<blockquote>
+<p>C++11引入了很多机制, 为了这些机制又引入了更多的机制; 好在编译器做的多, 我们稍微少做一点儿</p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2016-04-08, 10:40:17</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/4bb5bf03/" title="技术: C++11 一致性初始化探究">http://www.merlinblog.site/posts/4bb5bf03/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/4bb5bf03/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/656a02b/">
+                    技术: C++11 hashtable 结构
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/e6f297fb/">
+                    技术: C++11 RangeFor探究
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#旧方式"><span class="toc-number">1.</span> <span class="toc-text">旧方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#新方式"><span class="toc-number">2.</span> <span class="toc-text">新方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实现剖析"><span class="toc-number">3.</span> <span class="toc-text">实现剖析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#内部实现"><span class="toc-number">3.1.</span> <span class="toc-text">内部实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内部array"><span class="toc-number">3.2.</span> <span class="toc-text">内部array</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#initializer-list"><span class="toc-number">4.</span> <span class="toc-text">initializer_list</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#默认赋值"><span class="toc-number">4.1.</span> <span class="toc-text">默认赋值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全检查"><span class="toc-number">4.2.</span> <span class="toc-text">安全检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单独使用"><span class="toc-number">4.3.</span> <span class="toc-text">单独使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法适配"><span class="toc-number">4.4.</span> <span class="toc-text">算法适配</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注意事项"><span class="toc-number">5.</span> <span class="toc-text">注意事项</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/656a02b/" title="上一篇: 技术: C++11 hashtable 结构">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/e6f297fb/" title="下一篇: 技术: C++11 RangeFor探究">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

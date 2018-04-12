@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="本文涉及到模板别名, 类型别名, 以及模板的模板参数问题.">
+<meta name="keywords" content="cpp,template,模板别名">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: C++11 模板别名探究">
+<meta property="og:url" content="http://www.merlinblog.site/posts/b7fe58b8/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="本文涉及到模板别名, 类型别名, 以及模板的模板参数问题.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.619Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: C++11 模板别名探究">
+<meta name="twitter:description" content="本文涉及到模板别名, 类型别名, 以及模板的模板参数问题.">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: C++11 模板别名探究 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-template-alias-in-cpp" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/b7fe58b8/" class="article-date">
+      <time datetime="2016-05-18T05:48:07.000Z" itemprop="datePublished">2016-05-18</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: C++11 模板别名探究
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/">cpp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/template/">template</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/模板别名/">模板别名</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>本文涉及到模板别名, 类型别名, 以及模板的模板参数问题.<br><a id="more"></a></p>
+<p>模板别名(template alias) 或者 template typedef, 以及类型 type alias</p>
+<p>两者都是借助using关键字, 先花大力气理解<code>template typedef</code>,<br>之后再补充说下<code>type alias</code>以及默认模板参数问题</p>
+<blockquote>
+<p>可能会说一些元编程中比较晦涩的问题, 尽量说清楚</p>
+</blockquote>
+<hr>
+<h1 id="模板别名"><a href="#模板别名" class="headerlink" title="模板别名"></a>模板别名</h1><blockquote>
+<p>这里面有些问题, 整的我一度有些奔溃; 因为涉及到模板, 一旦出问题, 调用深度大, 参数多也不好理解.</p>
+<blockquote>
+<p>比如模板模板参数问题, 比如说别名中还要使用模板类型问题</p>
+</blockquote>
+</blockquote>
+<p>我尝试着说清楚, 一方面检验我的理解, 另外一方面说一些这里面的一些技巧或者已经可以舍弃了的C++03的技巧.</p>
+<h2 id="模板出现在typedef中"><a href="#模板出现在typedef中" class="headerlink" title="模板出现在typedef中"></a>模板出现在typedef中</h2><p>就是模板参数和typedef混合了, 或者说,</p>
+<blockquote>
+<p>typedef的增强, 你可以在typedef的时候, 同时运用模板参数.</p>
+</blockquote>
+<p>重点其实是落在了<code>typedef</code>上, 加入模板参数的 typedef, <code>更加强大的typedef</code>.</p>
+<p>C++03的时候, 我们是这么做的:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">std</span>::<span class="built_in">map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, <span class="keyword">int</span>&gt; <span class="keyword">map_t</span>;  </span><br><span class="line"><span class="comment">//...  </span></span><br><span class="line"><span class="keyword">typedef</span> <span class="built_in">std</span>::<span class="built_in">map</span> &lt; <span class="built_in">std</span>::<span class="built_in">string</span>, <span class="built_in">std</span>::<span class="built_in">string</span> &gt; map_str;</span><br></pre></td></tr></table></figure>
+<p>完全OK, 但是如果这样做:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;  </span><br><span class="line"><span class="keyword">typedef</span> <span class="built_in">std</span>::<span class="built_in">map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, T&gt; <span class="built_in">map</span>;  </span><br><span class="line"></span><br><span class="line"><span class="built_in">map</span>&lt;<span class="keyword">int</span>&gt;  map_i;  </span><br><span class="line"><span class="built_in">map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt;  map_str;</span><br></pre></td></tr></table></figure>
+<p>直接报错了, 在typedef的内容中, 使用模板参数, 03语法不支持, 所以<code>一般我们会借助模板类型定义, 函数模板或者类模板, 甚至 functor 模板</code><br>例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;  </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">alias_map</span>  </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line">    <span class="keyword">typedef</span> <span class="built_in">std</span>::<span class="built_in">map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, T&gt; <span class="built_in">map</span>;  </span><br><span class="line">	<span class="comment">//using map = std::map&lt;std::string, T&gt;; //具体参考下面的type alias</span></span><br><span class="line">&#125;;  </span><br><span class="line">  </span><br><span class="line">alias_map&lt;<span class="keyword">int</span>&gt;::<span class="built_in">map</span> <span class="keyword">map_t</span>;  <span class="comment">//借助了 alias_map 类模板</span></span><br><span class="line">alias_map&lt;<span class="keyword">int</span>&gt;::<span class="built_in">map</span> map_str;</span><br></pre></td></tr></table></figure>
+<p>也就是说, 此时能具体的指定typedef的类型, 还是要借助类(结构体)模板, 还不能直接和<code>typedef</code>结合.</p>
+<blockquote>
+<p>C++11 直接可以使用别名是指定模板, 不需要间接的, 通过定义一个类型才能用模板机制.</p>
+</blockquote>
+<p>但是又不能破坏以前的规则, 所以干脆不用 typedef 了, 使用<code>using</code>吧, 即</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;  </span><br><span class="line"><span class="keyword">using</span> alias_map = <span class="built_in">std</span>::<span class="built_in">map</span> &lt; <span class="built_in">std</span>::<span class="built_in">string</span>, T &gt; ;  </span><br><span class="line">  </span><br><span class="line">alias_map&lt;<span class="keyword">int</span>&gt;  <span class="keyword">map_t</span>;  </span><br><span class="line">alias_map&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; map_str;</span><br></pre></td></tr></table></figure>
+<p>更多的例子, 比如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;  </span><br><span class="line"><span class="keyword">using</span> func_using = <span class="keyword">void</span>(*func)(T, T);</span><br></pre></td></tr></table></figure>
+<h2 id="模板模板参数问题"><a href="#模板模板参数问题" class="headerlink" title="模板模板参数问题"></a>模板模板参数问题</h2><p>想从模板参数中直接取出内部类型怎么办? 即模板参数特化时具体类型的参数(即<code>模板模板参数</code>).</p>
+<blockquote>
+<p>从函数模板中的模板参数中取出具体的参数内部的类型</p>
+</blockquote>
+<p>举个例子, 有一个函数模板, 例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">(T t)</span></span>&#123;</span><br><span class="line">	<span class="comment">//...具体实现, 实现中需要用到t中内部的类型, 可能是元素类型</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而我具体调用的时候, 是这样的</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">list</span>&lt;<span class="built_in">string</span>&gt; li;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span> <span class="params">(li)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>我需要传递li对象, 是因为我想获取string类型</p>
+<p>所以可以知道, 函数模板特化出来的模板函数是:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">(<span class="built_in">list</span>&lt;<span class="built_in">string</span>&gt; t)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>那么问题来了, 如果我的最初的函数模板里面的实现代码中, 需要T中的具体模板参数怎么办? 此处<code>T</code>即<code>list&lt;string&gt;</code> 需要拿到T中的模板参数<code>string</code><br>例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">(T t)</span></span>&#123;</span><br><span class="line">	<span class="comment">//具体实现</span></span><br><span class="line">	<span class="comment">//抱歉拿不出来.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>尝试这么写, 在声明模板参数的时候, 就声明模板为模板参数</p>
+<blockquote>
+<p>即模板套模板</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span>&gt; <span class="title">class</span> <span class="title">P</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">X</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    P&lt;T&gt; p; <span class="comment">//注意这里用的是P模板, 下面分析时用到了.</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>相当于在外层模板里面又嵌套了一层内层模板, <strong>P</strong>作为外层模板, 相当于上面的<code>list&lt;string&gt;</code>类型,<br>而<strong>T</strong>则作为内层模板类型&amp;参数, 这个案例中相当于<code>string</code>.</p>
+<p>等价于<code>template &lt;typename T, template&lt;class T&gt; class P&gt;</code>, 但 T 可以省略, 因为外层模板<code>P</code>没有使用内层模板参数<code>T</code>.</p>
+<p>调用的时候, 也简单<code>X&lt;string, list&gt;</code>, 当然如果上面的内层模板我指定的话, 完整应该写成<code>X&lt;string, list&lt;string&gt;&gt;</code>.</p>
+<p>直接就拿到了内层的模板参数<code>string</code>了. <strong>抱歉, 编译器报错了: (模板的二次编译问题)</strong></p>
+<blockquote>
+<p>第一次检查模板语法OK, 但是一旦根据你的调用逻辑进行二次编译的时候, 就报错了.</p>
+</blockquote>
+<p>第二个模板定义和实际调用不匹配, 需要<code>template&lt;class T&gt; class P</code>, 实际拿到的却是<code>template&lt;class _Tp, class _Alloc&gt; class std::vector</code>.<br>其实很奇怪, 因为<code>class _Alloc</code>有默认值, 翻看源码知道<code>class _Alloc=std::allocator&lt;_Tp&gt;</code>.</p>
+<blockquote>
+<p>只能说编译器不够智能吧, 根据我们的调用, 第二参数string, 完全是可以省略默认模板参数的.</p>
+<blockquote>
+<p>关键是调用时不对, 调用时如果能指定 allocator 就很好了</p>
+</blockquote>
+</blockquote>
+<p>但是上面 class X里面成员, 我们是这么用的<code>P&lt;T&gt; p</code>, <code>对于模板模板参数而言, 编译器不知道第二个模板参数有默认值</code>, 尤其是第二个模板参数有默认值的情况.</p>
+<blockquote>
+<p>嵌套的嵌套来拿到模板参数的参数, 编译器确实没有办法了</p>
+</blockquote>
+<p>但是对于最开始的设计方式, 标准库的容器的话, 可以尝试这样拿出来:<br><code>容器--&gt; 迭代器 --&gt; value_type</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">(T t)</span></span>&#123;</span><br><span class="line">	<span class="comment">//具体实现</span></span><br><span class="line">	<span class="keyword">typedef</span> <span class="keyword">typename</span> iterator_traits&lt;<span class="keyword">typename</span> T::iterator&gt;::value_type Valtype;</span><br><span class="line">	<span class="comment">//或者</span></span><br><span class="line">	<span class="keyword">typedef</span> <span class="keyword">typename</span> T::iterator::value_type Valtype;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时拿到了T内部元素的类型了, 即<code>typename iterator_traits&lt;typename T::iterator&gt;::value_type</code>别名为Valtype;</p>
+<p>对应上面的例子, 就是<code>string</code>. 如果你不定义别名, 那么就要写很长的名字, 用于函数内部代码. 此处重点不在typedef , 在于拿到模板参数T内部的元素类型.</p>
+<blockquote>
+<p>这只是对于标准库可以这么<code>traits</code>萃取到类型特征.</p>
+</blockquote>
+<p>一般性情况如何解决?<br>我就想这么用, 在模板里面再套一个模板, 这个时候, 就用 template typedef 吧(还是using语法那个), 妙不可言.</p>
+<p>我还是想这么用<code>X&lt;string, list&lt;string&gt;&gt;</code>, 定义的时候, 形式也不变, 即:<br>(<code>内部模板的模板参数, 是以第一个模板参数为参数的</code>)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span>&gt; <span class="title">class</span> <span class="title">P</span>&gt;</span></span><br><span class="line"><span class="class">//等价于<span class="title">template</span> &lt;typename T, template&lt;class T&gt; class P&gt;, 但 <span class="title">T</span> 可以省略.</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">X</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    P&lt;T&gt; p; <span class="comment">//注意这里用的是P模板, 下面分析时用到了.</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>关键是在调用时, 调用的时候借用一下<code>模板别名</code>:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">using</span> Lst=<span class="built_in">list</span>&lt;T, allocator&lt;T&gt;&gt;;</span><br><span class="line"></span><br><span class="line">X&lt;<span class="built_in">string</span>, Lst&lt;<span class="built_in">string</span>&gt;&gt; x; <span class="comment">//注意没有指定第二个模板参数哦</span></span><br></pre></td></tr></table></figure>
+<p>超级难题, 一下子解决了… (), 苦笑不得啊. </p>
+<p>展开<code>X&lt;string, lis&lt;string, allocator&lt;string&gt; &gt; &gt;</code>, 为什么是这种展开?<br>因为<code>对于模板模板参数而言, 编译器不知道第二个模板参数有默认值</code>. </p>
+<blockquote>
+<p>拿到内部类型干啥?</p>
+</blockquote>
+<p>你可能看到<code>typedef basic_string&lt;char&gt; string</code> 但是其实他默认是单字节字符, 直接拿有点儿困难.</p>
+<p>当我要拿到string内部的类型用于函数&amp;类模板内部时(可能是单字节,双字节, 宽字符等), 我依旧只能:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">CharT</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> <span class="title">common_string</span>=<span class="title">std</span>:</span>:basic_string&lt;CharT, <span class="built_in">std</span>::char_traits&lt;charT&gt; &gt;;</span><br></pre></td></tr></table></figure>
+<p>此时调用如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X&lt;wchar, common_string&lt;wchar&gt;&gt;</span><br></pre></td></tr></table></figure>
+<p>才能特化出我要的模板类&amp;函数版本.</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><p>简单说, 就是这样的东西:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">using</span> Vec = <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//以后直接使用Vec即可.</span></span><br><span class="line">Vec&lt;<span class="keyword">int</span>&gt; v;</span><br><span class="line"><span class="comment">//相当于 std::vector&lt;int&gt; v;</span></span><br></pre></td></tr></table></figure>
+<p>方便了很多: </p>
+<ul>
+<li>代替了宏定义define, 只是宏定义不带有类型, 且是预处理的;<br>宏定义很多时候, 达不到效果的, 特别是在模板中</li>
+<li>增强了typedef</li>
+</ul>
+<p>好比说, 你用<code>typedef</code>, 例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; Vec</span><br></pre></td></tr></table></figure>
+<p>那么后面使用的时候, 就直接<code>Vec v;</code>, 根本不必要, 也<strong>不能</strong>传递泛型参数了.</p>
+<blockquote>
+<p>其实我觉得最大的优点是解决了模板中嵌套模板的难题. (template template在使用的时候, 即编译器二次编译时, 对调用形式要求很高)</p>
+</blockquote>
+<h3 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h3><p>一旦你这样<code>using</code>了别名, 你就放弃了模板的特化(全特化或者偏特化), 也就是说, 你只能拿到<code>用</code>, 而不能拿来定义模板了.<br>(上面的例子, 也说明了这个问题, 我只是在<code>使用的场景</code>中才用到了模板别名)</p>
+<blockquote>
+<p>模板别名, 只用在<code>使用的场景</code>, 不用于定义的场景.</p>
+</blockquote>
+<p>下面补充说明一下<code>type alias</code>.</p>
+<h1 id="类型别名"><a href="#类型别名" class="headerlink" title="类型别名"></a>类型别名</h1><p><code>type alias</code>这个只能算是个小小的方便, 例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*func)</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>现在也可以用 using 来写, 而且更加简单, <code>更加突出类型的地位</code>.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> func = <span class="keyword">void</span>(*)(<span class="keyword">int</span>, <span class="keyword">int</span>);</span><br></pre></td></tr></table></figure>
+<p>使用起来完全当做<code>类型</code>去考虑即可:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">func fn = f1;</span><br><span class="line">fn();</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>也就是说, 彻底侧重于,<code>以类型为中心</code>, 我这么写是在定义类型, 而不是以对象&amp;变量为中心; </p>
+</blockquote>
+<p>其他用途:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">X</span>&#123;</span></span><br><span class="line">	<span class="keyword">using</span> value_type = T; <span class="comment">//给模板参数起别名</span></span><br><span class="line">	<span class="comment">//相当于</span></span><br><span class="line">	<span class="comment">//typedef T value_type;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="默认模板参数"><a href="#默认模板参数" class="headerlink" title="默认模板参数"></a>默认模板参数</h1><p>在 C++11 中, 支持默认模板参数, 例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>, <span class="title">class</span> <span class="title">U</span> = <span class="title">int</span>, <span class="title">U</span> <span class="title">n</span>= 0&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">Foo</span>  </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line">    <span class="comment">//  </span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在函数模板中当所有模板参数都有默认参数时，函数的调用就如同普通的函数调用，</p>
+<blockquote>
+<p>但是对于类模板而言，哪怕所有模板参数都有默, 认构造函数在使用时还是必须在模板名后跟随&lt;&gt;来实例化</p>
+</blockquote>
+<p>C++11中函数的默认模板参数在使用规则上和其他的默认参数也有一些区别，普通函数的默认参数必须写在参数列表的最后，而函数的模板参数就没有这个限制.</p>
+<p>因此当使用默认模板参数和模板参数自动推导时就显示十分灵活，可以指定函数中的一部分参数是默认参数，另一部分采用自动推导(其实是从左到右顺序, 优先匹配).</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> R = <span class="keyword">int</span>, <span class="keyword">typename</span> U&gt;</span><br><span class="line">R func(U val)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>建议在使用的时候尽量还是价格默认模板参数写在模板参数的末尾</p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2016-05-18, 13:48:07</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/b7fe58b8/" title="技术: C++11 模板别名探究">http://www.merlinblog.site/posts/b7fe58b8/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/b7fe58b8/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/d93a00e8/">
+                    技术: C++11 异常争论
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/72ae9d55/">
+                    技术: C++11 默认函数问题探究
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#模板别名"><span class="toc-number">1.</span> <span class="toc-text">模板别名</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#模板出现在typedef中"><span class="toc-number">1.1.</span> <span class="toc-text">模板出现在typedef中</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模板模板参数问题"><span class="toc-number">1.2.</span> <span class="toc-text">模板模板参数问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.3.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#优点"><span class="toc-number">1.3.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#限制"><span class="toc-number">1.3.2.</span> <span class="toc-text">限制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#类型别名"><span class="toc-number">2.</span> <span class="toc-text">类型别名</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#默认模板参数"><span class="toc-number">3.</span> <span class="toc-text">默认模板参数</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/d93a00e8/" title="上一篇: 技术: C++11 异常争论">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/72ae9d55/" title="下一篇: 技术: C++11 默认函数问题探究">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

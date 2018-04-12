@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="疑问差不多解决了，是时候看看 Dockerfile 的语法规则了。(自己过滤了一遍，精华)">
+<meta name="keywords" content="docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: 深耕 Docker 生态圈(六){Dockerfile 文法}">
+<meta property="og:url" content="http://www.merlinblog.site/posts/cd70a238/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="疑问差不多解决了，是时候看看 Dockerfile 的语法规则了。(自己过滤了一遍，精华)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-24-dockers53.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-24-dockers54.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-24-dockers51.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-24-dockers52.jpg">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.645Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: 深耕 Docker 生态圈(六){Dockerfile 文法}">
+<meta name="twitter:description" content="疑问差不多解决了，是时候看看 Dockerfile 的语法规则了。(自己过滤了一遍，精华)">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-24-dockers53.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: 深耕 Docker 生态圈(六){Dockerfile 文法} | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-haste2docker6" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/cd70a238/" class="article-date">
+      <time datetime="2018-02-19T14:36:00.000Z" itemprop="datePublished">2018-02-19</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: 深耕 Docker 生态圈(六){Dockerfile 文法}
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>疑问差不多解决了，是时候看看 Dockerfile 的语法规则了。(自己过滤了一遍，精华)<br><a id="more"></a></p>
+<p>主要解决两个问题:</p>
+<ul>
+<li>Docker build 的相关用法(包括不同的构建方式)</li>
+<li>Dockerfile 的指令怎么写</li>
+</ul>
+<p>参考: <a href="https://docs.docker.com/engine/reference/builder/#usage" target="_blank" rel="noopener">https://docs.docker.com/engine/reference/builder/#usage</a></p>
+<hr>
+<h2 id="Build"><a href="#Build" class="headerlink" title="Build"></a>Build</h2><p>有趣的是，使用不同的构建方式可能得到的镜像的大小也不一样。可以参考下面 <strong>多钟构建方式</strong>。</p>
+<blockquote>
+<p>提一个问题: <code>docker build -t nginx:v3 .</code> 最后那个点是真的指定的 dockfile的目录么？</p>
+</blockquote>
+<p>以为这个路径是在指定 Dockerfile 所在路径，这么理解其实是不准确的。如果对应上面的命令格式，你可能会发现，这是在指定上下文路径。</p>
+<p>当我们进行镜像构建的时候，并非所有定制都会通过 RUN 指令完成，经常会需要将一些本地文件复制进镜像，比如通过 COPY 指令、ADD 指令等。而 docker build 命令构建镜像，其实并非在本地构建，而是在服务端，也就是 Docker 引擎中构建的。Docker 引擎要获取文件路径，那么这个时候就需要镜像上下文了。docker build 命令得知这个路径后，会将路径下的所有内容打包，然后上传给 Docker 引擎。这样 Docker 引擎收到这个上下文包后，展开就会获得构建镜像所需的一切文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 可以看到发送上下文的过程</span></span><br><span class="line">$ docker build -t nginx:v3 .</span><br><span class="line">Sending build context to Docker daemon 2.048 kB</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>不信的话，可以试试 COPY 指令，这里借助的就是上下文，而不是当前 dockerfile 所在目录。</p>
+<blockquote>
+<p>其实意思就是， docker 引擎拿到的是打包的目录，接收的目录 &amp;&amp; 和原来那个 dockerfile文件所在目录已经没有关系了。</p>
+</blockquote>
+<p>btw: <code>.dockerignore</code> 写入这个文件的内容，不会被打包进镜像。</p>
+<p>此外 <code>build -f 指定具体dockerfile</code> ，此时可以指定某个文件作为指令文件，然后发送给 docker 引擎的就是该文件所在的目录文件。不指定的话默认发送的就是当前路径下的 Dockerfile。</p>
+<p><strong>Build 可以从 Dockfile进行，也可以从其他方式进行</strong>:</p>
+<p>从一个 git repo :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker build https://github.com/twang2218/gitlab-ce-zh.git</span><br></pre></td></tr></table></figure>
+<p>从 tar 文件:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker build http://server/context.tar.gz</span><br></pre></td></tr></table></figure>
+<p>从 stdin :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ docker build - &lt; Dockerfile</span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line"></span><br><span class="line">$ cat Dockerfile | docker build -</span><br></pre></td></tr></table></figure>
+<p>这种情况不能用 COPY 指令，因为没有上下文环境，除非 <code>docker build - &lt; context.tar.gz</code> 这种情况会将压缩包展开，展开的目录视为上下文发送。</p>
+<h2 id="构建过程"><a href="#构建过程" class="headerlink" title="构建过程"></a>构建过程</h2><p>说白了，不让我们手动 commit, 而是交给 docker引擎去 commit。</p>
+<ul>
+<li>从基础镜像运行一个容器</li>
+<li>执行一条指令，对容器作出修改 (容器可写)</li>
+<li>执行类似 docker commit 的操作，提交到一个新的镜像层</li>
+<li>以此新镜像运行一个新容器</li>
+<li>运行下一条指令，直至 dockerfile中全部指令执行完毕。</li>
+</ul>
+<p>仔细看看:</p>
+<p>dockerfile 如下:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 说明该镜像以哪个镜像为基础</span></span><br><span class="line"><span class="keyword">FROM</span> ubuntu:latest</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建者的基本信息</span></span><br><span class="line"><span class="keyword">MAINTAINER</span> merlin</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在 build 这个镜像时执行的操作</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apt-get update</span></span><br><span class="line"><span class="bash">RUN apt-get install -y git</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 拷贝本地文件到镜像中</span></span></span><br><span class="line"><span class="bash">COPY ./* /usr/share/gitdir/</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-24-dockers53.jpg" alt=" "></p>
+<p>构建过程中生成的容器会被移除，但是中间的镜像是没有被移除的，可以运行看看其操作的结果:</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-24-dockers54.jpg" alt=" "></p>
+<p>中间层镜像可以用于调试，查找错误。</p>
+<blockquote>
+<p>查看完整的构建过程，还可以使用 <code>docker history 镜像id</code> 命令。</p>
+</blockquote>
+<p><strong>缓存</strong>:</p>
+<p>不使用缓存的话可以使用 <code>--no-cache=true</code> 选项，或者使用 ENV 设置环境变量 <code>REFERESH_DATE</code>，每次构建修改这个变量，那么构建则不会在使用缓存。</p>
+<h2 id="Dockfile指令"><a href="#Dockfile指令" class="headerlink" title="Dockfile指令"></a>Dockfile指令</h2><p>Dockerfile 中每一个指令都会建立一层，我们可以把每一层修改、安装、构建、操作的命令都写入一个脚本。</p>
+<p>我下面偷个懒，直接列出作用:</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>作用</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FROM</td>
+<td>指定基础镜像</td>
+<td>在基础镜像之上进行定制(基于官方镜像的好处是，官方镜像一般很小，比如 alpine)</td>
+</tr>
+<tr>
+<td>RUN</td>
+<td>用来执行命令行命令</td>
+<td>支持 exec脚本, shell命令；一般是对镜像做一些环境部署</td>
+</tr>
+<tr>
+<td>CMD</td>
+<td>容器启动命令</td>
+<td>容器启动后执行的命令，而不是针对镜像；RUN是针对于镜像</td>
+</tr>
+<tr>
+<td>COPY</td>
+<td>复制文件</td>
+<td>注意指定发送的上下文环境，前者是相对路径，后者是容器内的绝对路径</td>
+</tr>
+<tr>
+<td>ADD</td>
+<td>复制文件</td>
+<td>源文件可以是远端文件或者压缩包(该指令不实用，因为下载的文件同样需要 RUN 指令处理)</td>
+</tr>
+<tr>
+<td>ENTRYPOINT</td>
+<td>入口点命令</td>
+<td>需要通过 docker run 的参数 –entrypoint 来指定</td>
+</tr>
+<tr>
+<td>ENV</td>
+<td>设置环境变量给指令用</td>
+<td>环境变量可以在构建和容器运行期间使用；可以使用等号或者空格，多个环境变量也可以定义在同一行</td>
+</tr>
+<tr>
+<td>ARG</td>
+<td>设置环境变量</td>
+<td>只用在构建阶段，容器运行期间则不存在了，只是build的过程有</td>
+</tr>
+<tr>
+<td>EXPOSE</td>
+<td>声明暴露的端口</td>
+<td>将容器端口暴露出来，允许外部连接这个端口(仅仅是声明)</td>
+</tr>
+<tr>
+<td>VOLUME</td>
+<td>本地的路径的映射</td>
+<td>容器存储层是不能写的，动态数据都保存在卷中，可以事先指定匿名卷，避免用户忘记挂载</td>
+</tr>
+<tr>
+<td>WORKDIR</td>
+<td>是执行的路径，也就是cmd entry point执行的路径</td>
+<td>容器内部应用的执行路径，比如容器内部shell跑起来的当前目录</td>
+</tr>
+<tr>
+<td>USER</td>
+<td>指定当前用户</td>
+<td>改变当前用户，影响之后层的执行(相当于切换用户，前提是用户一定要存在)</td>
+</tr>
+<tr>
+<td>ONBUILD</td>
+<td>子级构建时才执行</td>
+<td>只有当以当前镜像为基础镜像，去构建下一级镜像的时候才会被执行</td>
+</tr>
+<tr>
+<td>MAINTAINER</td>
+<td>指定镜像作者信息</td>
+<td>相当于 commit -a 选项</td>
+</tr>
+<tr>
+<td>LABEL</td>
+<td>给镜像添加多个标签</td>
+<td>最好一次 LABEL 指令设置完所有标签</td>
+</tr>
+</tbody>
+</table>
+<p>下面补充&amp;详细说明:</p>
+<ul>
+<li>hello-world 那个镜像？ FROM SCRATCH</li>
+</ul>
+<p>如果你以 scratch 为基础镜像的话，意味着你不以任何镜像为基础，接下来所写的指令将作为镜像第一层开始存在。<br>不以任何系统为基础，直接将可执行文件复制进镜像的做法并不罕见，比如 swarm、coreos/etcd。对于 Linux 下静态编译的程序来说，并不需要有操作系统提供运行时支持，所需的一切库都已经在可执行文件里了，因此直接 FROM scratch 会让镜像体积更加小巧。使用 Go 语言 开发的应用很多会使用这种方式来制作镜像，这也是为什么有人认为 Go 是特别适合容器微服务架构的语言的原因之一。</p>
+<ul>
+<li>RUN指令</li>
+</ul>
+<p>每一个 RUN 的行为，就和刚才我们手工建立镜像的过程一样：新建立一层，在其上执行这些命令，执行结束后，commit 这一层的修改，构成新的镜像。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RUN <span class="built_in">echo</span> <span class="string">'&lt;h1&gt;Hello, Docker!&lt;/h1&gt;'</span> &gt; /usr/share/nginx/html/index.html</span><br><span class="line"></span><br><span class="line">或者 <span class="built_in">exec</span>其他命令</span><br><span class="line">RUN apt-get update</span><br><span class="line">RUN make -C /usr/src/redis install</span><br></pre></td></tr></table></figure>
+<p>正确的写法，应该是合并为一个命令: (Union FS 是有最大层数限制的，比如 AUFS，曾经是最大不得超过 42 层，现在是不得超过 127 层)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">FROM debian:jessie</span><br><span class="line"></span><br><span class="line">RUN buildDeps=<span class="string">'gcc libc6-dev make'</span> \</span><br><span class="line">    &amp;&amp; apt-get update \</span><br><span class="line">    &amp;&amp; apt-get install -y <span class="variable">$buildDeps</span> \</span><br><span class="line">    &amp;&amp; wget -O redis.tar.gz <span class="string">"http://download.redis.io/releases/redis-3.2.5.tar.gz"</span> \</span><br><span class="line">    &amp;&amp; mkdir -p /usr/src/redis \</span><br><span class="line">    &amp;&amp; tar -xzf redis.tar.gz -C /usr/src/redis --strip-components=1 \</span><br><span class="line">    &amp;&amp; make -C /usr/src/redis \</span><br><span class="line">    &amp;&amp; make -C /usr/src/redis install \</span><br><span class="line">    &amp;&amp; rm -rf /var/lib/apt/lists/* \</span><br><span class="line">    &amp;&amp; rm redis.tar.gz \</span><br><span class="line">    &amp;&amp; rm -r /usr/src/redis \</span><br><span class="line">    &amp;&amp; apt-get purge -y --auto-remove <span class="variable">$buildDeps</span></span><br></pre></td></tr></table></figure>
+<p>这里要清除中间文件，缓存文件；写 RUN 指令，不是写 shell 脚本。</p>
+<ul>
+<li>COPY 指令</li>
+</ul>
+<p>目标路径不需要事先创建，如果目录不存在会在复制文件前先行创建缺失目录。<br>使用 COPY 指令，源文件的各种元数据都会保留。比如读、写、执行权限、文件变更时间等。</p>
+<p>容器构建过程中需要执行的指令。</p>
+<ul>
+<li>CMD 指令</li>
+</ul>
+<blockquote>
+<p>CMD 的意思和 docker run 时候指定的 command 是一样的，表示容器运行之后，自动执行的命令。</p>
+</blockquote>
+<p>一个 Dockerfile 可以包含多个RUN命令，但是只能有一个CMD命令。指定了CMD命令以后，docker run 命令就不能附加命令了（比如前面的/bin/bash），否则它会覆盖CMD命令。</p>
+<ul>
+<li>RUN 命令在 image 文件的构建阶段执行(构建新层)，执行结果都会打包进入 image 文件</li>
+<li>CMD 命令则是在容器启动后执行</li>
+</ul>
+<p>下面两种形式等价：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CMD <span class="built_in">echo</span> <span class="variable">$HOME</span></span><br><span class="line">CMD [ <span class="string">"sh"</span>, <span class="string">"-c"</span>, <span class="string">"echo <span class="variable">$HOME</span>"</span> ]</span><br></pre></td></tr></table></figure>
+<p>容器就是一个应用，不要把他当做虚拟机，还去跑什么后台服务。一个容器就是一个应用程序:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## (主进程仍然是 sh, 它执行完就退出了)</span></span><br><span class="line">CMD service nginx start</span><br><span class="line">CMD [ <span class="string">"sh"</span>, <span class="string">"-c"</span>, <span class="string">"service nginx start"</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">## 主程序是 nginx</span></span><br><span class="line">CMD [<span class="string">"nginx"</span>, <span class="string">"-g"</span>, <span class="string">"daemon off;"</span>]</span><br></pre></td></tr></table></figure>
+<p>CMD 命令一般是在 COPY，RUN 等命令之后执行(不管其位置？至少基于某个镜像是这样的)，因为它是启动容器主进程的命令。</p>
+<p>my-node镜像如下:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> node:slim</span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> mkdir /app</span></span><br><span class="line"><span class="bash">WORKDIR /app</span></span><br><span class="line"><span class="bash">CMD [ <span class="string">"npm"</span>, <span class="string">"start"</span> ]</span></span><br></pre></td></tr></table></figure>
+<p>子镜像如下:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> my-node</span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> ./package.json /app</span></span><br><span class="line"><span class="bash">RUN [ <span class="string">"npm"</span>, <span class="string">"install"</span> ]</span></span><br><span class="line"><span class="bash">COPY . /app/</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>ENTRYPOINT</li>
+</ul>
+<p>个人觉得这个命令主要是弥补 CMD 的一些限制。(被覆盖 &amp; 只能用一次)<br>NTRYPOINT 的目的和 CMD 一样，都是在指定容器启动程序及参数。当指定了 ENTRYPOINT 后，CMD 的含义就发生了改变，不再是直接的运行其命令，而是将 CMD 的内容作为参数传给 ENTRYPOINT 指令:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;ENTRYPOINT&gt; <span class="string">"&lt;CMD&gt;"</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>出现它的原因是 跟在镜像名后面的是 command，运行时会替换 CMD 的默认值；所以有必要先把 CMD 存储在 ENTRYPOINT。</p>
+</blockquote>
+<p>动手实践一下: (对比下面的代码很容易发现问题)</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">16.04</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apt-get update \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apt-get install -y curl \</span></span><br><span class="line"><span class="bash">    &amp;&amp; rm -rf /var/lib/apt/lists/*</span></span><br><span class="line"><span class="bash">CMD [ <span class="string">"curl"</span>, <span class="string">"-s"</span>, <span class="string">"http://ip.cn"</span> ]</span></span><br></pre></td></tr></table></figure>
+<p>运行时输入 <code>docker run myip</code>，如果要增加命令参数，<strong>只能覆盖</strong>: <code>docker run myip curl -s http://ip.cn -i</code>。</p>
+<p>但是用 ENTRYPOINT 的情况:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">16.04</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apt-get update \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apt-get install -y curl \</span></span><br><span class="line"><span class="bash">    &amp;&amp; rm -rf /var/lib/apt/lists/*</span></span><br><span class="line"><span class="bash">ENTRYPOINT [ <span class="string">"curl"</span>, <span class="string">"-s"</span>, <span class="string">"http://ip.cn"</span> ]</span></span><br></pre></td></tr></table></figure>
+<p>增加参数，直接用就好了 <code>docker run myip -i</code> 。</p>
+<p>ENTRYPOINT 在运行时也可以替代，不过比 CMD 要略显繁琐，需要通过 docker run 的参数 –entrypoint 来指定。(但是 CMD 是只要 docker run 后面跟着命令了，自动被替代)</p>
+<p>另外的例子(redis 官方镜像):</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> alpine:<span class="number">3.4</span></span><br><span class="line">...</span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> addgroup -S redis &amp;&amp; adduser -S -G redis redis</span></span><br><span class="line"><span class="bash">...</span></span><br><span class="line"><span class="bash">ENTRYPOINT [<span class="string">"docker-entrypoint.sh"</span>]</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">EXPOSE 6379</span></span><br><span class="line"><span class="bash">CMD [ <span class="string">"redis-server"</span> ]</span></span><br></pre></td></tr></table></figure>
+<p>docker-entrypoint.sh文件:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">...</span><br><span class="line"><span class="comment"># allow the container to be started with `--user`</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$1</span>"</span> = <span class="string">'redis-server'</span> -a <span class="string">"<span class="variable">$(id -u)</span>"</span> = <span class="string">'0'</span> ]; <span class="keyword">then</span></span><br><span class="line">    chown -R redis .</span><br><span class="line">    <span class="built_in">exec</span> su-exec redis <span class="string">"<span class="variable">$0</span>"</span> <span class="string">"<span class="variable">$@</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> <span class="string">"<span class="variable">$@</span>"</span></span><br></pre></td></tr></table></figure>
+<p>这里 CMD 中的内容就作为第一个参数了(第0个参数是脚本本身)。</p>
+<p>总之就是，<strong>CMD 会被当做参数传递给 ENTRYPOINT</strong>，所以一旦有 ENTRYPOINT，那么 CMD 可以之存储命令参数。</p>
+<p>CMD 应该在极少的情况下才能以 CMD [“param”, “param”] 的形式与 ENTRYPOINT 协同使用，除非你和你的镜像使用者都对 ENTRYPOINT 的工作方式十分熟悉。</p>
+<ul>
+<li>VOLUME</li>
+</ul>
+<p>运行时指定的 -v 参数可以覆盖 dockerfile 中指定的匿名卷配置，例如 dockerfile 写了:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">VOLUME</span><span class="bash"> /data</span></span><br></pre></td></tr></table></figure>
+<p>构建生成镜像，然后运行时指定了 -v 参数</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="keyword">run</span><span class="bash"> -d -v mydata:/data 镜像id</span></span><br></pre></td></tr></table></figure>
+<p>就使用了 mydata 这个命名卷挂载到了 /data 这个位置，替代了 Dockerfile 中定义的匿名卷的挂载配置。</p>
+<p>VOLUME 指令用于暴露任何数据库存储文件，配置文件，或容器创建的文件和目录。强烈建议使用 VOLUME 来管理镜像中的可变部分和用户可以改变的部分。</p>
+<ul>
+<li>EXPOSE</li>
+</ul>
+<p>EXPOSE 指令是声明运行时容器提供服务端口，这只是一个声明，在运行时并不会因为这个声明应用就会开启这个端口的服务。在 Dockerfile 中写入这样的声明有两个好处，一个是帮助镜像使用者理解这个镜像服务的守护端口，以方便配置映射；另一个用处则是在运行时使用随机端口映射时，也就是 docker run -P 时，会自动随机映射 EXPOSE 的端口。</p>
+<p>此外，在早期 Docker 版本中还有一个特殊的用处。以前所有容器都运行于默认桥接网络中，因此所有容器互相之间都可以直接访问，这样存在一定的安全性问题。于是有了一个 Docker 引擎参数 –icc=false，当指定该参数后，容器间将默认无法互访，除非互相间使用了 –links 参数的容器才可以互通，并且只有镜像中 EXPOSE 所声明的端口才可以被访问。这个 –icc=false 的用法，在引入了 docker network 后已经基本不用了，通过自定义网络可以很轻松的实现容器间的互联与隔离。</p>
+<p>要将 EXPOSE 和在运行时使用 -p &lt;宿主端口&gt;:&lt;容器端口&gt; 区分开来。-p，是映射宿主端口和容器端口，换句话说，就是将容器的对应端口服务公开给外界访问，而 EXPOSE 仅仅是声明容器打算使用什么端口而已，并不会自动在宿主进行端口映射。</p>
+<ul>
+<li>WORKDIR</li>
+</ul>
+<p>容器和直接运行 shell 命令是不一样的， 运行如下命令:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RUN</span><span class="bash"> <span class="built_in">cd</span> /app</span></span><br><span class="line"><span class="bash">RUN <span class="built_in">echo</span> <span class="string">"hello"</span> &gt; world.txt</span></span><br></pre></td></tr></table></figure>
+<p>在 Shell 中，连续两行是同一个进程执行环境，因此前一个命令修改的内存状态，会直接影响后一个命令；而在 Dockerfile 中，这两行 RUN 命令的执行环境根本不同，是两个完全不同的容器。每一个 RUN 都是启动一个容器、执行命令、然后提交存储层文件变更。第一层 RUN cd /app 的执行仅仅是当前进程的工作目录变更，一个内存上的变化而已，其结果不会造成任何文件变更。而到第二层的时候，启动的是一个全新的容器，跟第一层的容器更完全没关系，自然不可能继承前一层构建过程中的内存变化。</p>
+<p>因此如果需要改变以后各层的工作目录的位置，那么应该使用 WORKDIR 指令。<strong>相当于 Cd</strong>，改变当前运行目录。</p>
+<blockquote>
+<p>WORKDIR 应该使用容器内的绝对路径；如果使用相对路径，那么多次 WORKDIR 其实是继承前面的路径</p>
+</blockquote>
+<ul>
+<li>USER</li>
+</ul>
+<p>WORKDIR 是改变工作目录，USER 则是改变之后层的执行 RUN, CMD 以及 ENTRYPOINT 这类命令的身份。<br>切换用户，改变环境状态并影响以后的层。(相当于 su 用户名 )</p>
+<p>当然，和 WORKDIR 一样，USER 只是帮助你切换到指定用户而已，这个用户必须是事先建立好的，否则无法切换。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RUN</span><span class="bash"> groupadd -r redis &amp;&amp; useradd -r -g redis redis</span></span><br><span class="line"><span class="bash">USER redis</span></span><br><span class="line"><span class="bash">RUN [ <span class="string">"redis-server"</span> ]</span></span><br></pre></td></tr></table></figure>
+<p>使用模式也有多种: (不指定，默认就是 root 用户)</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-24-dockers51.jpg" alt=" "></p>
+<p>注意：在镜像中，用户和用户组每次被分配的 UID/GID 都是不确定的，下次重新构建镜像时被分配到的 UID/GID 可能会不一样。如果要依赖确定的 UID/GID，你应该显示的指定一个 UID/GID。</p>
+<blockquote>
+<p>在执行期间希望改变身份，建议使用 gosu；因为用 USER 需要麻烦的配置 (su/sudo 肯定不能用，容器不是 shell)</p>
+</blockquote>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 建立 redis 用户，并使用 gosu 换另一个用户执行命令</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> groupadd -r redis &amp;&amp; useradd -r -g redis redis</span></span><br><span class="line"><span class="bash"><span class="comment"># 下载 gosu</span></span></span><br><span class="line"><span class="bash">RUN wget -O /usr/<span class="built_in">local</span>/bin/gosu <span class="string">"https://github.com/tianon/gosu/releases/download/1.7/gosu-amd64"</span> \</span></span><br><span class="line"><span class="bash">    &amp;&amp; chmod +x /usr/<span class="built_in">local</span>/bin/gosu \</span></span><br><span class="line"><span class="bash">    &amp;&amp; gosu nobody <span class="literal">true</span></span></span><br><span class="line"><span class="bash"><span class="comment"># 设置 CMD，并以另外的用户执行</span></span></span><br><span class="line"><span class="bash">CMD [ <span class="string">"exec"</span>, <span class="string">"gosu"</span>, <span class="string">"redis"</span>, <span class="string">"redis-server"</span> ]</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>ONBUILD</li>
+</ul>
+<p>ONBUILD 是一个特殊的指令，它后面跟的是其它指令，比如 RUN, COPY 等，而这些指令，在当前镜像构建时并不会被执行。只有当以当前镜像为基础镜像，去构建下一级镜像的时候才会被执行。(就像条件触发器)</p>
+<p>例如有这样的一个 nodejs 环境配置:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> node:slim</span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> mkdir /app</span></span><br><span class="line"><span class="bash">WORKDIR /app</span></span><br><span class="line"><span class="bash">ONBUILD COPY ./package.json /app</span></span><br><span class="line"><span class="bash">ONBUILD RUN [ <span class="string">"npm"</span>, <span class="string">"install"</span> ]</span></span><br><span class="line"><span class="bash">ONBUILD COPY . /app/</span></span><br><span class="line"><span class="bash">CMD [ <span class="string">"npm"</span>, <span class="string">"start"</span> ]</span></span><br></pre></td></tr></table></figure>
+<p>由于不同项目的 node 依赖不同，所以当以此镜像为基础镜像构建时在执行 <code>npm install</code> 才好。<br>而子镜像的构建脚本可以是简单的一句话 <code>FROM my-node</code> 。</p>
+<ul>
+<li>MAINTAINER</li>
+</ul>
+<p>具体的，例如:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">MAINTAINER</span> merlinwizard <span class="string">"wizardmerlin945@gmail.com"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>LABEL</li>
+</ul>
+<p>你可以给镜像添加标签来帮助组织镜像、记录许可信息、辅助自动化构建等。每个标签一行，由 LABEL 开头加上一个或多个标签对。</p>
+<p>例如:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set multiple labels at once, using line-continuation characters to break long lines</span></span><br><span class="line"><span class="keyword">LABEL</span><span class="bash"> vendor=ACME\ Incorporated \</span></span><br><span class="line"><span class="bash">      com.example.is-beta= \</span></span><br><span class="line"><span class="bash">      com.example.is-production=<span class="string">""</span> \</span></span><br><span class="line"><span class="bash">      com.example.version=<span class="string">"0.0.1-beta"</span> \</span></span><br><span class="line"><span class="bash">      com.example.release-date=<span class="string">"2015-02-12"</span></span></span><br></pre></td></tr></table></figure>
+<p>标签必须唯一且以键值对的方式。<br>理论上对于key没有要求，但是最好按照一定的格式，比如上面的情况，其他的可以参考 <a href="https://docs.docker.com/config/labels-custom-metadata/#label-keys-and-values" target="_blank" rel="noopener">《Key format recommendations》</a>。</p>
+<p>而不是这样写:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set one or more individual labels</span></span><br><span class="line"><span class="keyword">LABEL</span><span class="bash"> com.example.version=<span class="string">"0.0.1-beta"</span></span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">LABEL vendor=<span class="string">"ACME Incorporated"</span></span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">LABEL com.example.release-date=<span class="string">"2015-02-12"</span></span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">LABEL com.example.version.is-production=<span class="string">""</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="多种构建方式"><a href="#多种构建方式" class="headerlink" title="多种构建方式"></a>多种构建方式</h2><ul>
+<li>单一 Dockerfile 构建(全部放入一个 Dockerfile 中，各种 Dockfile 指令混杂；构建的镜像大)</li>
+<li>分散到多个 Dockerfile (单个dockerfile指令简单，但是部署复杂，需要些构建脚本；把工作转嫁到 shell 脚本上使用 docker 指令；不放入镜像)</li>
+<li>多阶段构建 (一个 Docker 但是多个阶段&amp;步骤构建; 其实是对第二种方式的优化，构建的镜像和第二种方式相差无几)</li>
+</ul>
+<p>多阶段构建的案例:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> golang:<span class="number">1.9</span>-alpine</span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apk --no-cache add git</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">WORKDIR /go/src/github.com/go/helloworld/</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">RUN go get -d -v github.com/go-sql-driver/mysql</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">COPY app.go .</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">FROM alpine:latest</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">RUN apk --no-cache add ca-certificates</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">WORKDIR /root/</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">COPY --from=0 /go/src/github.com/go/helloworld/app .</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">CMD [<span class="string">"./app"</span>]</span></span><br></pre></td></tr></table></figure>
+<p>然后构建语法 <code>docker build go/helloworld:v1 .</code> ，如果不这么做，那么多个 dockerfile 的话，还要写一个类似下列脚本的内容:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="built_in">echo</span> Building go/helloworld:build</span><br><span class="line"></span><br><span class="line">docker build -t go/helloworld:build . -f Dockerfile.build</span><br><span class="line"></span><br><span class="line"><span class="comment">## 以上面的镜像为基础构建临时容器</span></span><br><span class="line">docker create --name extract go/helloworld:build</span><br><span class="line">docker cp extract:/go/src/github.com/go/helloworld/app ./app</span><br><span class="line">docker rm -f extract</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> Building go/helloworld:2</span><br><span class="line"></span><br><span class="line">docker build --no-cache -t go/helloworld:2 . -f Dockerfile.copy</span><br><span class="line">rm ./app</span><br></pre></td></tr></table></figure>
+<p>可以看到中途以上一阶段镜像为基础创建了一个临时容器，把容器内 app 拷贝到当前 app 目录下，然后删除临时容器，进行下一阶段构建，即创建一个容器来运行它。</p>
+<h2 id="导入导出"><a href="#导入导出" class="headerlink" title="导入导出"></a>导入导出</h2><p>镜像和容器都可以导入导出</p>
+<ul>
+<li>镜像导入导出到 tar 文件，save/load</li>
+<li>容器导入导出到 tar 文件，import/export (相当于快照到本地文件)</li>
+</ul>
+<p>有趣的是保存进行和加载镜像不一定是 tar 格式，也可以自己指定，比如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 保存 (不使用 -o 参数)</span></span><br><span class="line">$ docker save alpine | gzip &gt; alpine-latest.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment">## 加载</span></span><br><span class="line">$ docker load -i alpine-latest.tar.gz</span><br></pre></td></tr></table></figure>
+<p>高级玩法，生成镜像然后迁移 (不同于 scp ，这里直接在另一台装有 docker 环境的机器上load 了)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## pv 是 linux 的进度条查看工具 progress viewer</span></span><br><span class="line">$ docker save &lt;镜像名&gt; | bzip2 | pv | ssh &lt;用户名&gt;@&lt;主机名&gt; <span class="string">'cat | docker load'</span></span><br></pre></td></tr></table></figure>
+<p>(没有 pv 进度条的话可以不使用)，我的玩法如下：</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-24-dockers52.jpg" alt=" "></p>
+<p>容器的快照导入导出我一般不用，因为导入之后还是按照镜像处理，参考如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ docker container ls -a</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                    PORTS               NAMES</span><br><span class="line">7691a814370e        ubuntu:14.04        <span class="string">"/bin/bash"</span>         36 hours ago        Exited (0) 21 hours ago                       <span class="built_in">test</span></span><br><span class="line">$ docker <span class="built_in">export</span> 7691a814370e &gt; ubuntu.tar</span><br><span class="line"></span><br><span class="line">$ cat ubuntu.tar | docker import - <span class="built_in">test</span>/ubuntu:v1.0</span><br><span class="line">$ docker image ls</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED              VIRTUAL SIZE</span><br><span class="line"><span class="built_in">test</span>/ubuntu         v1.0                9d37a6082e97        About a minute ago   171.3 MB</span><br></pre></td></tr></table></figure>
+<p>并且导入为镜像之后，还丢失了所有的历史记录和元数据信息（即仅保存容器当时的快照状态），而镜像存储文件将保存完整记录(体积也要大)。</p>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>官方仓库里面有好多示例可以看，不过当前最推荐的还是这个<a href="https://yeasy.gitbooks.io/docker_practice/content/appendix/best_practices.html" target="_blank" rel="noopener">《最佳实践》</a>，我简单梳理如下:</p>
+<p>上面已经多多少涉及到了，下面在补充一下:</p>
+<ul>
+<li>容器的部署所需的配置和设置应该是极小的，方便随时开启和销毁容器</li>
+<li>单一任务原则，一个容器只运行一个进程(多个容器互相协作，通过网络进行通信)</li>
+<li>镜像的层数应该尽量少</li>
+<li>多行参数时，分行写，特别是 <code>RUN</code> 指令</li>
+<li>加快构建可以尝试使用缓存(默认生效；但要知道其失效的时机)，如果不用可以使用 –no-cache=true 选项<ul>
+<li>通常这个过程由 docker 引擎控制(也只是检查本镜像和子镜像的构建指令)</li>
+<li>缓存部分可以参考上面的 <code>构建过程</code> 部分</li>
+</ul>
+</li>
+</ul>
+<p>指令部分的建议不说了，上面已经说得好清晰了。</p>
+<hr>
+<p>Merlin 2018.2 简单的东西，整理起来真的很耗时啊…</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2018-02-19, 22:36:00</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/cd70a238/" title="技术: 深耕 Docker 生态圈(六){Dockerfile 文法}">http://www.merlinblog.site/posts/cd70a238/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/cd70a238/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/b3512db9/">
+                    技术: 深耕 Docker 生态圈(七){Docker 的底层实现}
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/36bc3b47/">
+                    技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Build"><span class="toc-number">1.</span> <span class="toc-text">Build</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建过程"><span class="toc-number">2.</span> <span class="toc-text">构建过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dockfile指令"><span class="toc-number">3.</span> <span class="toc-text">Dockfile指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多种构建方式"><span class="toc-number">4.</span> <span class="toc-text">多种构建方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#导入导出"><span class="toc-number">5.</span> <span class="toc-text">导入导出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最佳实践"><span class="toc-number">6.</span> <span class="toc-text">最佳实践</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/b3512db9/" title="上一篇: 技术: 深耕 Docker 生态圈(七){Docker 的底层实现}">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/36bc3b47/" title="下一篇: 技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="main tools of linux programming(gcc, gdb, make)">
+<meta name="keywords" content="linux,gcc,gdb,make">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: Linux 编程三大件儿">
+<meta property="og:url" content="http://www.merlinblog.site/posts/640d4b5f/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="main tools of linux programming(gcc, gdb, make)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.621Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: Linux 编程三大件儿">
+<meta name="twitter:description" content="main tools of linux programming(gcc, gdb, make)">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: Linux 编程三大件儿 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-three-major-tools-of-linux" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/640d4b5f/" class="article-date">
+      <time datetime="2016-06-24T14:38:06.000Z" itemprop="datePublished">2016-06-24</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: Linux 编程三大件儿
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gcc/">gcc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gdb/">gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/make/">make</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>main tools of linux programming(gcc, gdb, make)<br><a id="more"></a></p>
+<p>在刷apue或者学习Linux系统编程的时候, 最开始学习的是? 三大件儿:</p>
+<ul>
+<li>gcc</li>
+<li>gdb</li>
+<li>makefile</li>
+</ul>
+<p>正好礼拜天, 有时间总结一下(笑).</p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>gcc, gdb, makefile当前在Linux下编程比windows下编程困难的, 莫过于先跨过他们.<br>本文是一个常用选项的总结(不是教程), 说的都是工作经验, 工程实践.</p>
+<p>btw: 感谢 <code>《Linux C一站式编程这本书》</code>, 当初由这本书入坑…</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="gcc"><a href="#gcc" class="headerlink" title="gcc"></a>gcc</h2><p>gcc 是 GNU Compiler Collection 的缩写, gcc 是按模块化设计的, 可以加入新语言和新 CPU 架构的支持.<br>(g++也涵盖在此范围内)</p>
+<h3 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h3><p>GCC的编译过程:</p>
+<ul>
+<li>预处理（Pre-Processing）</li>
+<li>编译（Compiling）</li>
+<li>汇编（Assembling）</li>
+<li>链接（Linking）</li>
+</ul>
+<p>步骤示例:</p>
+<pre><code>Gcc *.c –o 1exe (总的编译步骤)
+Gcc –E 1.c –o 1.i //宏定义 宏展开
+Gcc –S 1.i –o 1.s
+Gcc –c 1.s –o 1.o
+Gcc 1.o –o 1exe
+</code></pre><p>文本: 源程序, 预处理后被修改的源程序, 汇编替换后的程序<br>二进制: 可重定向的目标程序(.o), 可执行的目标程序(真正的可执行程序)</p>
+<p>注意一下第二个阶段是编译阶段而不是汇编阶段, 将预处理过的代码编译成汇编代码, 第三阶段才是汇编, 由汇编指令生成机器代码.</p>
+<h3 id="编译选项"><a href="#编译选项" class="headerlink" title="编译选项"></a>编译选项</h3><p>gcc常用编译选项:</p>
+<pre><code>-o 产生目标（.i、 .s、 .o、 可执行文件等）
+-c 通知 gcc 取消链接步骤， 即编译源码并在最后生成目标文件
+-E 只运行 C 预编译器
+-S 告诉编译器产生汇编语言文件后停止编译， 产生的汇编语言文件扩展名为.s
+-Wall 使 gcc 对源文件的代码有问题的地方发出警告(-W打开输出警告)
+-Idir 将 dir 目录加入搜索头文件的目录路径
+-Ldir 将 dir 目录加入搜索库的目录路径
+-llib 链接 lib 库
+-g 在目标文件中嵌入调试信息(地址和符号建立关联) 以便 gdb 之类的调试程序调试
+-D 编译时提供宏(gcc -D__DEBUG__)
+</code></pre><p>-L只能指定编译时路径, 动态库在运行时可能还要提供环境变量支持.</p>
+<p>举例:<br>    gcc -E hello.c -o hello.i（预处理）<br>    gcc -S hello.i -o hello.s（编译）<br>    gcc -c hello.s -o hello.o（汇编）<br>    gcc hello.o -o hello（链接）</p>
+<p>以上四个步骤， 可合成一个步骤:</p>
+<ul>
+<li>gcc hello.c -o hello<br>（直接编译链接成可执行目标文件）</li>
+</ul>
+<p>一般都是需要中间文件的.o的, 因为一般都是多文件编程, 避免一个文件的改动导致需要全盘重新编译.</p>
+<ul>
+<li>gcc -c hello.c 或 gcc -c hello.c -o hello.o<br>（编译生成可重定位目标文件）</li>
+</ul>
+<p>其他一些疑惑的问题:</p>
+<ul>
+<li>可重定向? 链接的时候链接器ld会检查一个可重定向的目标文件是否有其他文件提供其所需要的符号.</li>
+<li>只编译不链接会不会编译时报错? 如果没有用到具体的定义则不会, 比如<code>ClassA *a</code>; 但是<code>ClassA *a = new ClassA</code>则会报错(实例化没有定义的声明类型)</li>
+<li><p>gcc调用编译工具链, 前一个命令的执行结果会传递给下一个命令, 可以使用 <code>-pipe</code>　选项查看在 <code>/tmp</code>目录下生成的临时文件.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">g++ main.cpp &amp;</span><br><span class="line">sleep 0.05</span><br><span class="line">ls --color=auto /tmp/cc*</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>debug版本和release版本需要靠<code>__DEBUG__</code>宏来控制.</p>
+</li>
+</ul>
+<h3 id="优化相关"><a href="#优化相关" class="headerlink" title="优化相关"></a>优化相关</h3><p>调用函数之后, 返回值压栈, 之后需要给另外函数传参的时候又出栈到寄存器, 之后调用完成在压栈.<br>一系列过程, 汇编代码看起来有很多, 但是内存和寄存器来回其实浪费很多时间资源, 比如说入栈和出栈的过程.</p>
+<p>编译器完全可以在编译期间进行代码优化以及编译过程优化:<br>一共有三级: -O1, -O2, -O3; (-O0是默认的)<br>低级别的时候就是进行的编译过程优化, 高级别的时候可能涉及修改代码编译优化(例如循环过程的步长增长优化)<br>并且级别越高, 需要编译器做的优化工作也就越多, 需要的运行内存也可能更多, 那么编译时间越长.</p>
+<blockquote>
+<p>执行效率和编译时间之间, 就看你怎么选了.</p>
+</blockquote>
+<ul>
+<li>-O1 提高运行效率, 减少可执行文件大小</li>
+<li>-O2 进一步提高代码执行效率(优化器几乎全打开了)</li>
+<li>-O3 优化器全部打开</li>
+</ul>
+<p>一般O2就好; 但是你要debug时, 不要加优化.</p>
+<h3 id="链接原理"><a href="#链接原理" class="headerlink" title="链接原理"></a>链接原理</h3><p>这一部分主要涉及两个内容:</p>
+<ul>
+<li>符号解析(声明引用和符号定义相联系)</li>
+<li>重定向((运行时)模块定义的绝对地址替换)</li>
+</ul>
+<p>要说清楚, 就要说符号表, ELF文件格式(包括其各个段, 运行时加载的段);<br>具体可以参考<a href="http://www.cnblogs.com/xiaomanon/p/4210016.html" target="_blank" rel="noopener">ELF格式</a></p>
+<hr>
+<h2 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h2><p>gdb部分还是内容蛮多的, 基本的就一笔带过(其实也蛮多), 重点在于 <code>多进程</code> 和 <code>多线程的调试</code>.<br>但是法无常法, 每个人都可能采用不同的手段进行, 这里只是说一些通用的, 常用的手段.</p>
+<h3 id="查看源码"><a href="#查看源码" class="headerlink" title="查看源码"></a>查看源码</h3><pre><code>l/list
+list &lt;line-number&gt;
+list &lt;function&gt;
+list &lt;line1, line2&gt;
+</code></pre><p>这里没有用 <code>info &lt;line-num&gt;</code> 这种查看源码对应内存地址的方式.</p>
+<h3 id="带参数运行"><a href="#带参数运行" class="headerlink" title="带参数运行"></a>带参数运行</h3><p>   run/r<br>   run <arg1 arg2="" ...=""></arg1></p>
+<p>如果启动gdb运行可执行文件时忘记传入参数(gdb已经启动), 这个时候可以设置参数</p>
+<pre><code>set args 参数1 参数2 ...
+</code></pre><p>(设置以后再run/r)<br>查看参数 <code>show args</code></p>
+<p>或者使用file命令<br><code>file &lt;excutable&gt;</code> 载入文件, 之后在 <code>run</code></p>
+<h3 id="继续执行"><a href="#继续执行" class="headerlink" title="继续执行"></a>继续执行</h3><ul>
+<li><code>continue/c</code> 运行到下一个断点或者观察点</li>
+<li><code>next/n</code> 运行下一个语句</li>
+<li><code>step/s</code> 步入函数执行</li>
+<li><code>finish</code> 跳出函数执行</li>
+</ul>
+<h3 id="断点"><a href="#断点" class="headerlink" title="断点"></a>断点</h3><p>break/b<br>(断电通常设置在关键执行语句上, 不要设置在空行和注释上)</p>
+<ul>
+<li><p>设置断电</p>
+<p>  break <line-num><br>  break <function> (break main 表示在进入main函数就中断)<br>  break <line-number> if <cond-expression></cond-expression></line-number></function></line-num></p>
+</li>
+</ul>
+<p>一般用在控制循环的次数 例如: <code>b 16 if i==9</code> , 如果已经在16行设置了断点, 那么可以用condition设置变量 <code>condition 16 if i==9</code> .<br>(不加条件则是取消断点)</p>
+<p>多文件的时候设置断点?</p>
+<pre><code>break &lt;filename:line-num&gt;
+break &lt;filename:function&gt;
+</code></pre><ul>
+<li><p>删除断点</p>
+<p>  delete/d<br>  delete breakpoint <point-num></point-num></p>
+</li>
+</ul>
+<ul>
+<li><p>禁用启用断点</p>
+<p>  enable breakpoint <point-num><br>  disable breakpoint <point-num><br>  (简写 d b <point-num>)</point-num></point-num></point-num></p>
+</li>
+</ul>
+<ul>
+<li><p>清除断点</p>
+<p>  clear 删除所有断点</p>
+<pre><code>clear &lt;breakpiont-num&gt;
+</code></pre></li>
+</ul>
+<h3 id="观察点"><a href="#观察点" class="headerlink" title="观察点"></a>观察点</h3><p>   watch <condition></condition></p>
+<p>观察点是cpu对某地址读写时触发中断, 通俗说就是 condition里设置的变量值改变时中断; 断点则是cpu执行某指令时.<br>设置观察点, 一般是设置对某个变量的预判条件. 观察点的其他命令(禁用启用,删除,查看等)都和断点类似.</p>
+<h3 id="查看信息"><a href="#查看信息" class="headerlink" title="查看信息"></a>查看信息</h3><p>i/info<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">info locals  查看局部变量(特别是你尝试用print/call func(...)主动调用某函数时)</span><br><span class="line">info break  查看断电(注意前面的编号)</span><br><span class="line">info display 查看display设置的自动显示信息</span><br><span class="line">info registers &lt;reg-num&gt; 查看寄存器</span><br><span class="line">info all-registers</span><br></pre></td></tr></table></figure></p>
+<p>p/print<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print &lt;variable&gt;  查看任何变量</span><br><span class="line">print &lt;file::variable&gt; 指定查看全局变量</span><br><span class="line">print &lt;function::variable&gt; 指定查看局部变量</span><br></pre></td></tr></table></figure></p>
+<p>例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p &apos;main.cpp&apos;:func::count</span><br><span class="line">p func::count</span><br></pre></td></tr></table></figure></p>
+<p>(查看main.cpp中func函数中count的值)<br>(不用担心和c++的域作用福重复)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print func_name(arg1, arg2, ...) 进行函数调用</span><br><span class="line">print &lt;expression&gt; 查看表达式的值(可以带上变量) 例如 print a-b</span><br><span class="line">print &lt;array-name/string-name&gt;  查看数组或者容器的值 (但是不能查看指定长度, 看到的是全部)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>(指定)内存查看<br>使用<code>@</code>, 具体说:  <code>第一个地址的值@长度</code></p>
+<p>   print &lt;*pointer-name/array-name&gt;@len</p>
+</li>
+</ul>
+<p>(一般用于查看动态分配的,或者指定长度的)</p>
+<ul>
+<li>print 输出格式</li>
+</ul>
+<p>p/格式 <code>&lt;variable-name/array-name/string-name&gt;</code><br>其中格式:</p>
+<pre><code>x/a 十六进制
+u 十六进制无符号
+d 十进制
+o 八进制
+t 二进制
+c 字符类型
+f 浮点格式
+</code></pre><p>(查看一个变量的值, 之后可以用 <code>print $num</code> 的形式查看其历史值)</p>
+<ul>
+<li><p>查看内存(一般用于汇编调试)</p>
+<p>examine/x<br>x[/nfu] <address></address></p>
+</li>
+</ul>
+<p>(多个参数可以一起使用, address可以是变量地址名)</p>
+<ul>
+<li><p>自动显示<br>每次停住都会显示变量或者表达式的值</p>
+<p>  display[/格式] <expr></expr></p>
+</li>
+</ul>
+<p>这里多一个格式 <code>i</code> 表示汇编指令<br><code>display/i $pc</code>  显示gdb的环境变量(汇编指令的形式)</p>
+<ul>
+<li><p>取消自动显示</p>
+<p>  undisplay 删除所有自动显示<br>  delete display <num>  删除指定编号display信息(info display 可以查看到具体的信息)</num></p>
+</li>
+</ul>
+<p>(可以一次性写多个num)</p>
+<ul>
+<li><p>启用/禁用自动显示</p>
+<p>  enable display <num></num></p>
+<pre><code>disable display &lt;num&gt;
+</code></pre></li>
+</ul>
+<p>(不加<num>时是作用于所有)</num></p>
+<ul>
+<li><p>设置显示选项</p>
+<p>  set print address on/off 默认print的时候是显示地址的<br>  show print address 查看当前是否打开显示地址选项</p>
+</li>
+<li><p>查看数组元素地址设置(默认不显示地址)</p>
+<p>  set print elements on/off<br>  show print elements </p>
+</li>
+<li><p>设置结构体/联合的显示<br>(打开时是具体显示每个字段, 否则可能省略性显示)</p>
+<p>  set print union on/off<br>  show print union</p>
+</li>
+<li><p>设置分行显示</p>
+<p>  set pretty on/off<br>  show print pretty </p>
+</li>
+</ul>
+<ul>
+<li><p>设置虚函数表显示(特别是指针指向子类对象的时候)默认是关闭的</p>
+<p>  set print object on/off<br>  show print object</p>
+</li>
+</ul>
+<ul>
+<li><p>是否显示虚函数表 (默认关闭)</p>
+<pre><code>set print vtbl on/off
+</code></pre><p>  show print vtbl</p>
+</li>
+</ul>
+<ul>
+<li><p>设置显示类的静态成分设置</p>
+<p>  set print static-members on/off<br>  show print static-members</p>
+</li>
+</ul>
+<ul>
+<li><p>设置环境变量</p>
+<p>  set <expression><br>  print <expression></expression></expression></p>
+</li>
+</ul>
+<p>主要是为了调试方便, 需要临时量的时候. 表达式里面可以包含赋值 <code>set $variable_num= *ptr</code> , 之后也可以做一些运算 <code>print array[$i]</code><br>(注意: 一旦包含了对变量的赋值, 可能改变程序的执行流程)</p>
+<ul>
+<li><p>查看某变量的类型</p>
+<p>  whatis <variable></variable></p>
+</li>
+</ul>
+<h3 id="使用shell"><a href="#使用shell" class="headerlink" title="使用shell"></a>使用shell</h3><pre><code>`shell [command]`
+</code></pre><p>找出问题之后, 可以直接在gdb里面使用shell命令修改源程序 然后重新编译</p>
+<pre><code>shell gcc -g main.cpp -o main
+</code></pre><p>编译后再运行, run.</p>
+<h3 id="栈帧"><a href="#栈帧" class="headerlink" title="栈帧"></a>栈帧</h3><p>backtrace/bt和frame<br>一个栈就是一次函数调用, 一般跟踪栈的原因是:</p>
+<ul>
+<li>info locals  查看调用某函数时该作用域的局部变量(比如查看main函数调用别的函数时, main函数内的变量)</li>
+<li>切换到具体的调用栈, 查看问题</li>
+</ul>
+<p>特别是用bt查看栈帧之后, 就可以初步判断, 适当<code>frame &lt;num&gt;</code> 到具体编号的栈上.<br>(frame到具体的栈编号时, 已经可以看到调用信息和该调用的源码, 当然也可以借助 <code>info locals</code> 来看)</p>
+<h3 id="绑定"><a href="#绑定" class="headerlink" title="绑定"></a>绑定</h3><p><code>attach</code> 绑定到已经运行的进程上:</p>
+<pre><code>gdb &lt;excutable&gt; &lt;pid&gt;
+</code></pre><p>一般是拿来调试多进程程序或者后台运行的守护程序的. gdb进去之后, <code>bt</code> 可以看调用栈, 然后切换到你关心的地方进行查看, frame和info locals, print等. 已经载入gdb的可执行文件, 也可以使用<code>attach &lt;pid&gt;</code> 在gdb内部绑定.</p>
+<p>调试完毕<code>detach</code> 脱离绑定, 让进行继续执行 或者 <code>kill</code>结束当前进程.</p>
+<h3 id="core文件"><a href="#core文件" class="headerlink" title="core文件"></a>core文件</h3><p><code>ulimit -c ulimited</code>  (Ubuntu平台默认不产生core dump文件, 所以要设置产生)</p>
+<p>特别是在命令行运行的时候, 发生错误应该让它产生core dump文件. 运行时载入: </p>
+<pre><code>gdb &lt;excutable&gt; [core-file]
+</code></pre><p>这样生成的调试信息就在你指定的core文件中. (gdb中仍旧可以查看info locals, print, info args) (如果一个程序有异常报错, gdb加载进去之后, 就直接run就行, 自然会停在报错的位置)</p>
+<h3 id="其他部分"><a href="#其他部分" class="headerlink" title="其他部分"></a>其他部分</h3><ul>
+<li><p>跳转执行(特别在循环里)</p>
+<p>  jump <location></location></p>
+</li>
+</ul>
+<p>(跳转不会修改栈的内容, 但是跨函数跳跃的时候则难说, 一般都在一个函数里面跳跃)<br>(jump的本质是修改保存当前执行代码地址的寄存器的值, 相当于 <code>set $pc=下一条指令的地址</code> )</p>
+<ul>
+<li><p>信号处理</p>
+<p>  signal <signum>   一般是1-15号信号, 写可以写SIGINT这种程序名字</signum></p>
+</li>
+</ul>
+<p>(外部发送的信号是被gdb截获的, 但是这里signal发送的直接发给被调试的程序)<br>一般用于程序中处理信号的代码调试.</p>
+<pre><code>hanle &lt;sig-name&gt; &lt;what-to-do&gt;
+</code></pre><p>what-to-do, 可以把接收到的信号发送给程序, 打印一条信息, 停止程序或者只是停止程序而发送:</p>
+<pre><code>nostop 接收到信号, 不要停止, 自然也不发送给程序
+stop  停止(不发送), 方便调试
+print 接收到信号打印一条消息
+noprint 收到信号不要显示消息
+pass    发送消息, 但具体停止与否自行处理
+nopass 停止运行, 但是不发消息
+</code></pre><p>一般使用的是停止, 具体发不发送要看具体的需求. 例如:  <code>handle SIGPIPE stop print</code></p>
+<ul>
+<li><p>强制调用</p>
+<p>  call func-name(arg1, arg2…)</p>
+</li>
+</ul>
+<ul>
+<li><p>强制返回(某值)</p>
+<p>  return [value]</p>
+</li>
+</ul>
+<ul>
+<li>gdb内搜索相关源码<br><code>search regexpr</code> 和 <code>reverse-search regexpr</code></li>
+</ul>
+<ul>
+<li><p>程序源码语言相关</p>
+<p>  show language<br>  set [language-name] 或者 set language [language-name]<br>  info frame 当前调用函数的程序语言<br>  info source 当前文件的程序语言</p>
+</li>
+</ul>
+<h3 id="高级调试"><a href="#高级调试" class="headerlink" title="高级调试"></a>高级调试</h3><p>这部分适合高级玩家, 对于计算机原理, 汇编语言比较熟悉的, 而不仅仅涉及栈帧层面.</p>
+<pre><code>info &lt;line/func-name/file:line/file:func-name&gt;  查看对应源码的内存地址
+</code></pre><p>查看4个通用寄存器(使用 print 查看)</p>
+<ul>
+<li><code>$ip</code> 程序当前运行的指令地址</li>
+<li><code>$pc</code> 程序计数器</li>
+<li><code>$fp</code> 当前堆栈帧</li>
+<li><code>$sp</code> 栈指针</li>
+<li><code>$pc</code> 处理器状态</li>
+</ul>
+<p>查看某函数的具体汇编代码:<br><code>disassemble &lt;function&gt;</code></p>
+<hr>
+<h2 id="makefile"><a href="#makefile" class="headerlink" title="makefile"></a>makefile</h2><p>make 这个东西, 从上学的时候, 开始就学过, 期间不断的巩固, 有些规则还是学了忘学了忘. 后来我总结了一条: 到用的时候再去查看手册吧.<br>btw: make在c/c++中的地位和maven,ant在java中地位相当, 一般都是用于工程管理, 不过现在用Cmake或者Xmake的比较多, 然而Makefile必须熟悉.</p>
+<p>下面我以一个案例去简单说说其注意点:</p>
+<h3 id="核心内容"><a href="#核心内容" class="headerlink" title="核心内容"></a>核心内容</h3><p>(主要牢记变量,包括自动变量(系统预定义的符号); 规则; 函数(主要是内置函数))</p>
+<ul>
+<li>make的作用<ul>
+<li>通过读入 Makefile 文件来执行大量的编译工作</li>
+<li>自动管理器能根据文件时间自动发现更新过的文件而减少编译的工作量</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>make的格式<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">target: dependency_files //目标项:依赖项</span><br><span class="line">	command //必须以 tab 开头, command 编译命令</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>一个最简单的案例: (main函数调用一个简单的打印函数, main.cpp, func.cpp)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">main:main.o func.o</span><br><span class="line">	g++ -o main main.o func.o</span><br><span class="line">main.o:main.cpp</span><br><span class="line">	g++ -c main.cpp</span><br><span class="line">func.o:func.cpp</span><br><span class="line">	g++ -c func.cpp</span><br></pre></td></tr></table></figure></p>
+<p>放心吧, 工程项目中绝对没有这么简单, 这里只是讲一个demo. 但是有一点是一样的, make的执行流程都是: 为目标文件的依赖文件.</p>
+<ul>
+<li>特殊处理(伪目标)<br><code>.PHONY</code> 是 makefile 文件的关键字, 表示它后面列表中的目标均为伪目标, 例如:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.PHONY:sub_target</span><br><span class="line">sub_target:</span><br><span class="line">	echo ‘b’ //通常用@echo “hello”</span><br></pre></td></tr></table></figure>
+<p>实体目标是为了编译出具体的文件, 那么伪目标呢?<br>通常用于清理文件, 强制重新编译等情况.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">main:main.o func.o</span><br><span class="line">        g++ -o main main.o func.o</span><br><span class="line">main.o:main.cpp</span><br><span class="line">	g++ -c main.cpp</span><br><span class="line">func.o:func.cpp</span><br><span class="line">	g++ -c func.cpp</span><br><span class="line"></span><br><span class="line">.PHONY:rebuild clean</span><br><span class="line">rebuild:clean main</span><br><span class="line">clean:</span><br><span class="line">rm –rf main.o func.o main</span><br></pre></td></tr></table></figure></p>
+<p>最后的俩目标 rebuild 和 clean 都是伪目标, rebuild又依赖clean和main这俩目标(并且先执行clean 在执行main, 即在下一次编译之前先清理上一次的编译结果)</p>
+<ul>
+<li>执行目标<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">make  //直接make表示执行 makefile文件的第一个目标</span><br><span class="line">make clean  //执行具体的目标, 此处是clean目标</span><br><span class="line">make func.o   //执行具体的目标, 此处是func.o目标</span><br><span class="line">make rebuild  //执行为目标 rebuild</span><br><span class="line">make -f xxx clean //当你的makefile指定为xxx名字时, -f来指定具体的规则文件</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>下面说 变量, 规则, 函数, 这三个机制是保证makefile更加通用, 提升编译效率的手段.</p>
+<hr>
+<ul>
+<li>变量<br>变量用来代表字符串(通常可以是目标, 或者需要编译的文件等)</li>
+<li>定义变量:<ul>
+<li>变量名=变量值 递规变量展开, 真正引用值得时候才展开//不推荐, 容易引发问题</li>
+<li>变量名:=变量值 立即展开 //通常采用这种形式</li>
+</ul>
+</li>
+<li>引用变量<ul>
+<li><code>$(变量名)</code>  和shell类似, 不同的是, 可以做左值   </li>
+</ul>
+</li>
+</ul>
+<p>最开始的那个例子, 就可以写成:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">OBJS:=main.o func.o</span><br><span class="line">EXE:=main</span><br><span class="line"></span><br><span class="line"><span class="variable">$(EXE)</span>:<span class="variable">$(OBJS)</span></span><br><span class="line">	g++ -o <span class="variable">$(EXE)</span> <span class="variable">$(OBJS)</span></span><br><span class="line"><span class="section">main.o:main.cpp</span></span><br><span class="line">	g++ -c main.cpp –o main.o</span><br><span class="line"><span class="section">func.o:func.cpp</span></span><br><span class="line">	g++ -c func.cpp –o func.o</span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm –rf <span class="variable">$(EXE)</span> <span class="variable">$(OBJS)</span></span><br></pre></td></tr></table></figure></p>
+<p>(有过编程经验的人就能体会这样写的对于后续维护的好处, 我不说了)</p>
+<p>变量种类:</p>
+<ul>
+<li>用户自定义变量, 预定义: 量, 自动变量, 环境变量</li>
+<li>自动变量: 指在使用的时候, 自动用特定的值替换</li>
+</ul>
+<p>自动变量, 常用的有:</p>
+<ul>
+<li><code>$@</code> 当前规则的目标(文件)</li>
+<li><code>$&lt;</code> 当前规则的第一个依赖(文件)</li>
+<li><code>$^</code> 当前规则的全部依赖文件, 以逗号分隔</li>
+<li><code>$?</code> 规则中日期新于目标文件的所有相关文件(即做过修改的文件), 以逗号分隔</li>
+<li><code>$(@D)</code> 目标文件的目录名部分</li>
+<li><code>$(@F)</code> 目标文件的文件名部分</li>
+</ul>
+<p>还是上面那个例子, 再修改试试:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">OBJS:= main.o func.o</span><br><span class="line">EXE:=main</span><br><span class="line">CFLAGS:=-Wall -g -O2 -fPIC</span><br><span class="line">LIBFUNCSO:= libfunc.so</span><br><span class="line">LIBFUNCA:= libfunc.a</span><br><span class="line"></span><br><span class="line"><span class="variable">$(EXE)</span>:<span class="variable">$(OBJS)</span> <span class="variable">$(LIBFUNCSO)</span> <span class="variable">$(LIBFUNCA)</span></span><br><span class="line"><span class="section">main.o: main.c</span></span><br><span class="line">	gcc -c <span class="variable">$(CFLAGS)</span> <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"><span class="section">func.o: func.c</span></span><br><span class="line">	gcc -c <span class="variable">$(CFLAGS)</span> <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"><span class="section">libfunc.a: func.o</span></span><br><span class="line">	ar srcv <span class="variable">$@</span> <span class="variable">$&lt;</span></span><br><span class="line"><span class="section">libfunc.so: func.o</span></span><br><span class="line">	gcc -shared -o <span class="variable">$@</span> <span class="variable">$&lt;</span></span><br><span class="line">	<span class="comment">#cp -f $@ /lib</span></span><br><span class="line"></span><br><span class="line"><span class="section">.PHNOY:rebuild clean</span></span><br><span class="line"><span class="section">rebuild:clean <span class="variable">$(EXE)</span></span></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm -rf <span class="variable">$(EXE)</span> <span class="variable">$(OBJS)</span> <span class="variable">$(LIBFUNCSO)</span> <span class="variable">$(LIBFUNCA)</span></span><br></pre></td></tr></table></figure></p>
+<p>内部预定义的变量:</p>
+<ul>
+<li>AR        库文件打包程序默认为 ar</li>
+<li>AS        汇编程序，默认为 as</li>
+<li>CC         c 编译器默认为 cc</li>
+<li>CPP        c 预编译器，默认为$(CC) –E</li>
+<li>CXX        c++编译器，默认为 g++</li>
+<li>RM         删除，默认为 rm –f</li>
+<li>ARFLAGS    库选项，无默认</li>
+<li>ASFLAGS    汇编选项，无默认</li>
+<li>CFLAGS     c 编译器选项，无默认</li>
+<li>CPPFLAGS   c 预编译器选项，无默认</li>
+<li>CXXFLAGS   c++编译器选项</li>
+</ul>
+<p>(注意预处理器cpp)<br>一般用c少不了 <code>CC</code> 和 <code>CFLAGS</code>, 用c++少不了 <code>CXX</code> 和 <code>CXXFLAGS</code> .</p>
+<p>现在再修改一下上面的例子:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">OBJS:=main.o func.o</span><br><span class="line">CC:=g++</span><br><span class="line"></span><br><span class="line"><span class="section">main:<span class="variable">$(OBJS)</span></span></span><br><span class="line">	<span class="variable">$(CC)</span>  <span class="variable">$^</span> -o <span class="variable">$@</span></span><br><span class="line"><span class="section">main.o:main.cpp</span></span><br><span class="line">	<span class="variable">$(CC)</span> -c <span class="variable">$^</span> -o <span class="variable">$@</span></span><br><span class="line"><span class="section">func.o:func.cpp</span></span><br><span class="line">	<span class="variable">$(CC)</span> -c <span class="variable">$^</span> -o <span class="variable">$@</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>规则</li>
+</ul>
+<p>规则主要分为: 普通规则, 隐含规则, 模式规则.说起来也简单, 下面总结:</p>
+<ul>
+<li>普通规则就是你写的规则, 非常明确指定的规则</li>
+<li>隐含规则就是你不写的时候默认(生成)的规则</li>
+</ul>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">OBJS:=main.o fun.o</span><br><span class="line">CFLAGS:=-Wall -O2 -g</span><br><span class="line">CC:=gcc</span><br><span class="line"></span><br><span class="line"><span class="section">main:<span class="variable">$(OBJS)</span></span></span><br><span class="line">	<span class="variable">$(CC)</span> <span class="variable">$^</span> -o <span class="variable">$@</span></span><br><span class="line"><span class="comment">#后面不用写了, *.o 文件自动依赖*.c 或*.cc 文件</span></span><br><span class="line"><span class="comment">#所以可以省略 main.o:main.cpp 等</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>模式规则<br>就是使用了通配符, 模式匹配的规则 : <code>%匹配 1 或多个任意字符串</code>, 例如: <code>%.o: %.cpp</code> . 任何.o依赖相应的.cpp.</li>
+</ul>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">OBJS:=main.o fun.o</span><br><span class="line">CFLAGS:= -Wall –O2 –g</span><br><span class="line">	 </span><br><span class="line"><span class="section">main.exe:<span class="variable">$(OBJS)</span></span></span><br><span class="line">	 gcc <span class="variable">$^</span> -o <span class="variable">$@</span></span><br><span class="line"><span class="section">%.o:%.cpp</span></span><br><span class="line">     gcc -o <span class="variable">$@</span> -c <span class="variable">$^</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>函数<br>你是否承认, 这个部分是最难记忆的一部分, 我只说几个最最常用的(<code>wildcard</code>, <code>patsubst</code>, <code>addprefix</code>), 其他的你查查表吧.</p>
+</li>
+<li><p><code>wildcard</code> wildcard 搜索当前目录下的文件名, 结合提供的参数, 展开成一列所包含参数的文件名; 多个文件之间用空格分隔.<br>例如 <code>SOURCES = $(wildcard *.cpp)</code> , 把当前目录下所有’.cpp’文件存入变量 SOURCES 里</p>
+</li>
+<li><code>patsubst</code> 字符串替换, 一般是这么用 <code>$(ptsubst, 要查找的子串, 替换后的目标子串, 源字符串)</code> , 其中源字符串是以空格分隔的<br>例如: <code>OBJS = $(patsubst %.cpp, %.o, $(SOURCES))</code> , 把 SOURCES 中’.cpp’ 替换为’.o’ .</li>
+<li><code>addprefix</code> 添加前缀,  $(addprefix 前缀，源字符串), $(addprefix -l, $(LIBS); 一般用引用静态或者动态库 <code>$(addprefix -l, $(LIBS)</code><br>例如: <code>$(addprefix -l, $(LIBS)</code></li>
+</ul>
+<p>一个完整的例子</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">DIR := ./debug</span><br><span class="line">EXE := <span class="variable">$(DIR)</span>/main</span><br><span class="line">CC := g++</span><br><span class="line">LIBS :=</span><br><span class="line">SRCS := <span class="variable">$(<span class="built_in">wildcard</span> *.cpp)</span> <span class="variable">$(<span class="built_in">wildcard</span> *.c)</span> <span class="variable">$(<span class="built_in">wildcard</span> *.cc)</span></span><br><span class="line"></span><br><span class="line">OCPP := <span class="variable">$(<span class="built_in">patsubst</span> %.cpp, <span class="variable">$(DIR)</span>/%.o, $(<span class="built_in">wildcard</span> *.cpp)</span>)</span><br><span class="line"><span class="comment">#OC := $(patsubst %.c, $(DIR)/%.co, $(wildcard *.c))</span></span><br><span class="line"><span class="comment">#OCC := $(patsubst %.cc, $(DIR)/%.cco, $(wildcard *.cc))</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#OBJS := $(OC) $(OCC) $(OCPP)</span></span><br><span class="line">OBJS := <span class="variable">$(OCPP)</span></span><br><span class="line">RM := rm -rf</span><br><span class="line">CXXFLAGS := -Wall -g -O2</span><br><span class="line"></span><br><span class="line">start : mkdebugdir <span class="variable">$(EXE)</span></span><br><span class="line">mkdebugdir :</span><br><span class="line">	@if [ ! -d <span class="variable">$(DIR)</span> ]; then mkdir <span class="variable">$(DIR)</span>; fi;</span><br><span class="line"></span><br><span class="line"><span class="variable">$(EXE)</span> : <span class="variable">$(OBJS)</span></span><br><span class="line">       	 <span class="variable">$(CC)</span> -o <span class="variable">$@</span> <span class="variable">$^</span> <span class="variable">$(<span class="built_in">addprefix</span> -l,<span class="variable">$(LIBS)</span>)</span></span><br><span class="line"><span class="variable">$(DIR)</span>/%.o : %.cpp</span><br><span class="line">	 <span class="variable">$(CC)</span> -c <span class="variable">$(CXXFLAGS)</span> <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#$(DIR)/%.co : %.c</span></span><br><span class="line"><span class="comment">#	 $(CC) -c $(CXXFLAGS) $&lt; -o $@</span></span><br><span class="line"><span class="comment">#$(DIR)/%.cco : %.cc</span></span><br><span class="line"><span class="comment">#	 $(CC) -c $(CXXFLAGS) $&lt; -o $@</span></span><br><span class="line"></span><br><span class="line">.PHONY : clean rebuild</span><br><span class="line">clean :</span><br><span class="line">      <span class="variable">$(RM)</span> <span class="variable">$(DIR)</span>/main <span class="variable">$(DIR)</span>/*.o <span class="comment">#$(DIR)/*.co $(DIR)/*.cco</span></span><br><span class="line"><span class="section">rebuild: clean start</span></span><br></pre></td></tr></table></figure>
+<p>(注意第一个目标是start, 而不是$(exe))</p>
+<p>说过了函数比较多, 不说了, 查手册去.</p>
+<p>最后一点, 怎么调试make?</p>
+<ul>
+<li>make常用命令</li>
+<li><code>-C dir</code>  指定执行makefile的目录</li>
+<li><code>-f file</code> 指定make需要的file (通常用于不是makefile的文件)</li>
+<li><code>-i</code> 忽略所有执行的错误</li>
+<li><code>-I dir</code> 指定被包含的makefile所在目录</li>
+<li><code>-n</code> dry-run, just-print 只打印,不真正执行</li>
+<li><code>-p</code> 显示make编译库和隐藏规则</li>
+<li><code>-s</code> slient静默编译, 编译时不显示命令</li>
+<li><code>-w</code> 如果make执行中改变目录, 则打印当前目录名字</li>
+<li><code>-d</code> 打印debug信息</li>
+</ul>
+<h3 id="详细讲解"><a href="#详细讲解" class="headerlink" title="详细讲解"></a>详细讲解</h3><p>实际上编写 <code>makefile</code> 就是为了提高我们的工作效率, 而不是增加我们的工作量.</p>
+<p>我上面只是说了核心内容, 还有很多细节没有说, 也没有那么多时间去说.</p>
+<p>这方面写的好的是 <code>陈硕</code> 大佬的 《跟我学Makefile》, 敬请参考.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>写的好辛苦, 明明是很基础的东西, 写出来, 整理出来, 真的比看别人的累太多了.<br>就这样, 以后有时间再慢慢修正吧.</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2016-06-24, 22:38:06</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/640d4b5f/" title="技术: Linux 编程三大件儿">http://www.merlinblog.site/posts/640d4b5f/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/640d4b5f/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/bc67b8cb/">
+                    技术: 探究一下STL常用算法
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/24da8a94/">
+                    技术: C++ 迭代器失效问题
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#gcc"><span class="toc-number">2.1.</span> <span class="toc-text">gcc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编译过程"><span class="toc-number">2.1.1.</span> <span class="toc-text">编译过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译选项"><span class="toc-number">2.1.2.</span> <span class="toc-text">编译选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优化相关"><span class="toc-number">2.1.3.</span> <span class="toc-text">优化相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#链接原理"><span class="toc-number">2.1.4.</span> <span class="toc-text">链接原理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gdb"><span class="toc-number">2.2.</span> <span class="toc-text">gdb</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#查看源码"><span class="toc-number">2.2.1.</span> <span class="toc-text">查看源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#带参数运行"><span class="toc-number">2.2.2.</span> <span class="toc-text">带参数运行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#继续执行"><span class="toc-number">2.2.3.</span> <span class="toc-text">继续执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#断点"><span class="toc-number">2.2.4.</span> <span class="toc-text">断点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#观察点"><span class="toc-number">2.2.5.</span> <span class="toc-text">观察点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看信息"><span class="toc-number">2.2.6.</span> <span class="toc-text">查看信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用shell"><span class="toc-number">2.2.7.</span> <span class="toc-text">使用shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#栈帧"><span class="toc-number">2.2.8.</span> <span class="toc-text">栈帧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绑定"><span class="toc-number">2.2.9.</span> <span class="toc-text">绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#core文件"><span class="toc-number">2.2.10.</span> <span class="toc-text">core文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他部分"><span class="toc-number">2.2.11.</span> <span class="toc-text">其他部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#高级调试"><span class="toc-number">2.2.12.</span> <span class="toc-text">高级调试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#makefile"><span class="toc-number">2.3.</span> <span class="toc-text">makefile</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#核心内容"><span class="toc-number">2.3.1.</span> <span class="toc-text">核心内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#详细讲解"><span class="toc-number">2.3.2.</span> <span class="toc-text">详细讲解</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/bc67b8cb/" title="上一篇: 技术: 探究一下STL常用算法">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/24da8a94/" title="下一篇: 技术: C++ 迭代器失效问题">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

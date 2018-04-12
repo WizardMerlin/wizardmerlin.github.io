@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="经典的跨语言编程框架Thrift, 有着protobuffer无法匹敌的, 庞大…">
+<meta name="keywords" content="框架,thrift">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: Thrift">
+<meta property="og:url" content="http://www.merlinblog.site/posts/6acc3344/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="经典的跨语言编程框架Thrift, 有着protobuffer无法匹敌的, 庞大…">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/thrift_sequence.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/thrift_c_s_1.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/Apache_Thrift_architecture.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/thrift_real.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/thrift_thread_selector.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/thrift_call_1.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/thrift_call_2.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/thrift_rpc.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/thrift_load.jpg">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.635Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: Thrift">
+<meta name="twitter:description" content="经典的跨语言编程框架Thrift, 有着protobuffer无法匹敌的, 庞大…">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/thrift_sequence.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: Thrift | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-thrift" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/6acc3344/" class="article-date">
+      <time datetime="2017-08-22T00:08:22.000Z" itemprop="datePublished">2017-08-22</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: Thrift
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/thrift/">thrift</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/框架/">框架</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>经典的跨语言编程框架Thrift, 有着protobuffer无法匹敌的, 庞大…<br><a id="more"></a></p>
+<p>有同行老早就在实践这个库了.毫无疑问, 本文是继 protobuffer 之后, 又要花大力气讲解的一个(FB的)库(而且绝对是值得你花一个晚上自习看看的库). 不过可惜的是, 实际开发中它并不如pb应用广泛, 可能很大一个原因是因为太重了, 而且代码还依赖了外部库boost, libevent等, 相比之下, RESTful的做法就会简单很多.(我不得不说, 花了很多时间在踩开源的坑…最终结论, 于开源来说, Thrift可能不是最好的选择) </p>
+<p>还是强调一些最基本的概念吧:</p>
+<blockquote>
+<p>框架的协议是指传输时候的编码方式(而不是网络协议); 框架的传输方式包括文件, 缓存buffer, 压缩二进制或者文本, 以及其他需要服务器端同步阻塞或者非阻塞操作,多线程或者异步IO支持的方式(因为可能传输方式使用了一些同步或者异步的IO), 传输方式也会(包括)指定传输的网络协议. 服务器类型是指服务器的工作模式, 是同步阻塞处理请求还是非阻塞操作(轮询检查IO-fd), 是否支持多线程模型, 还是异步多路IO.</p>
+</blockquote>
+<p>本篇也作为 <code>跨语言编程实践</code> 的最后一篇, 后期可能会有更新(主要是补充 <code>源码分析</code> 部分).</p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>From Wikipedia, the free encyclopedia:</p>
+<blockquote>
+<p>Thrift is an interface definition language and binary communication protocol that is used to define and create services for numerous languages.</p>
+</blockquote>
+<p>wiki上的一句话概括了: 用于使用接口定义语言和二进制通信协议定义并创建跨语言服务的框架.(通信格式是二进制, 和pb一样)</p>
+<p>实际上, 谈thrift更多的也是从服务架构, 传输, RPC上说它的作用(可以简单把RPC理解成非同一进程调用, 非异步网络情况下的阻塞调用), 简单的了解可以说它如何构建服务, 深入的可以分析一下它的rpc调用机制. 总之, 你不仅可以了解它的序列化机制, c-s服务模型, 传输体系, 还能学习它内部代码生成引擎. (看样子是应该不支持协程的)</p>
+<p>(有时间可以学习一下它的源码)</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>下面记录在Ubuntu64上进行编译安装的过程, 我不得不说, 编译安装是个很坑爹的过程, 所有我接触过的开源产品里面, thrift做的支持最差了.<br>安装绝对没有那么顺利, 上述任何过程出错, 请根据相关提示拍错, 下面是我遇到的:</p>
+<p>首先确保你的环境里面安装了 libssl-dev, libtool, flex, bison(即yacc), pkg-config, boost和libevent(a minimal RPC framework), 之后再去安装thrift. 下面是一个详细记录.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># 先安装我缺失的</span><br><span class="line"># automake</span><br><span class="line">$ sudo apt-get install automake</span><br><span class="line"># yacc: command not found</span><br><span class="line">$ sudo apt-get install -y byacc</span><br><span class="line"></span><br><span class="line"># flex: command not found</span><br><span class="line">$ sudo apt-get install -y flex</span><br><span class="line"></span><br><span class="line"># 安装libevent-dev</span><br><span class="line">$ sudo apt-get install libevent-dev</span><br><span class="line"></span><br><span class="line"># 安装ssl</span><br><span class="line">$ sudo apt-get install libssl-dev</span><br><span class="line"></span><br><span class="line"># 下载</span><br><span class="line">$ wget http://mirror.bit.edu.cn/apache/thrift/0.10.0/thrift-0.10.0.tar.gz -P Desktop/apps</span><br><span class="line">$ tar xzvf thrift-0.10.0.tar.gz</span><br><span class="line">$ cd thrift-0.10.0</span><br><span class="line"></span><br><span class="line"># 配置</span><br><span class="line">$ ./configure</span><br></pre></td></tr></table></figure>
+<p>注意一下日志, 如果你还要编译其他语言的, 请注意安装相应的库, 比如我要再去装Go语言支持, 那么我就要在日志中找Go语言相关的依赖库.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">thrift 0.10.0</span><br><span class="line"></span><br><span class="line">Building Plugin Support ...... : yes</span><br><span class="line">Building C++ Library ......... : yes</span><br><span class="line">Building C (GLib) Library .... : yes</span><br><span class="line">Building Java Library ........ : yes</span><br><span class="line">Building C# Library .......... : no</span><br><span class="line">Building Python Library ...... : yes</span><br><span class="line">Building Ruby Library ........ : no</span><br><span class="line">Building Haxe Library ........ : no</span><br><span class="line">Building Haskell Library ..... : no</span><br><span class="line">Building Perl Library ........ : no</span><br><span class="line">Building PHP Library ......... : no</span><br><span class="line">Building Dart Library ........ : no</span><br><span class="line">Building Erlang Library ...... : no</span><br><span class="line">Building Go Library .......... : yes</span><br><span class="line">Building D Library ........... : no</span><br><span class="line">Building NodeJS Library ...... : yes</span><br><span class="line">Building Lua Library ......... : no</span><br><span class="line"></span><br><span class="line">C++ Library:</span><br><span class="line">   Build TZlibTransport ...... : yes</span><br><span class="line">   Build TNonblockingServer .. : yes</span><br><span class="line">   Build TQTcpServer (Qt4) .... : yes</span><br><span class="line">   Build TQTcpServer (Qt5) .... : no</span><br><span class="line"></span><br><span class="line">Java Library:</span><br><span class="line">   Using javac ............... : javac</span><br><span class="line">   Using java ................ : java</span><br><span class="line">   Using ant ................. : /usr/bin/ant</span><br><span class="line"></span><br><span class="line">Python Library:</span><br><span class="line">   Using Python .............. : /usr/bin/python</span><br><span class="line">   Using Python3 ............. : /usr/bin/python3</span><br><span class="line"></span><br><span class="line">Go Library:</span><br><span class="line">   Using Go................... : /usr/lib/go-1.7/bin/go</span><br><span class="line">   Using Go version........... : go version go1.7.4 linux/amd64</span><br><span class="line"></span><br><span class="line">NodeJS Library:</span><br><span class="line">   Using NodeJS .............. : /home/merlin/Software/node-v6.11.2-linux-x64/bin/node</span><br><span class="line">   Using NodeJS version....... : v6.11.2</span><br><span class="line"></span><br><span class="line">If something is missing that you think should be present,</span><br><span class="line">please skim the output of configure to find the missing</span><br><span class="line">component.  Details are present in config.log.</span><br></pre></td></tr></table></figure></p>
+<p>但是注意:</p>
+<blockquote>
+<p>你支持的库越多, 后期编译出问题的可能性越大.</p>
+</blockquote>
+<p>最好禁用一些选项, 和自定义一些选项.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --libdir=/usr/local/lib --without-java --without-python</span><br></pre></td></tr></table></figure></p>
+<p>编译安装<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ make -j8 &amp;&amp; make check</span><br><span class="line"></span><br><span class="line"># 跨语言测试</span><br><span class="line">$ sh test/test.sh</span><br><span class="line"></span><br><span class="line"># 编译</span><br><span class="line">$ sudo make install</span><br></pre></td></tr></table></figure></p>
+<p>查看一下目录, 发现勉强还是安装成功了.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">ls /usr/local/lib | grep libthrift</span><br><span class="line">libthrift-0.10.0.jar</span><br><span class="line">libthrift-0.10.0-javadoc.jar</span><br><span class="line">libthrift-0.10.0.so</span><br><span class="line">libthrift.a</span><br><span class="line">libthriftc.a</span><br><span class="line">libthrift_c_glib.a</span><br><span class="line">libthrift_c_glib.la</span><br><span class="line">libthrift_c_glib.so</span><br><span class="line">libthrift_c_glib.so.0</span><br><span class="line">libthrift_c_glib.so.0.0.0</span><br><span class="line">libthriftc.la</span><br><span class="line">libthriftc.so</span><br><span class="line">libthriftc.so.0</span><br><span class="line">libthriftc.so.0.0.0</span><br><span class="line">libthrift.la</span><br><span class="line">libthriftnb-0.10.0.so</span><br><span class="line">libthriftnb.a</span><br><span class="line">libthriftnb.la</span><br><span class="line">libthriftnb.so</span><br><span class="line">libthriftqt-0.10.0.so</span><br><span class="line">libthriftqt.a</span><br><span class="line">libthriftqt.la</span><br><span class="line">libthriftqt.so</span><br><span class="line">libthrift.so</span><br><span class="line">libthriftz-0.10.0.so</span><br><span class="line">libthriftz.a</span><br><span class="line">libthriftz.la</span><br><span class="line">libthriftz.so</span><br><span class="line"></span><br><span class="line">$ ls /usr/local/include | grep thrift</span><br><span class="line">thrift</span><br><span class="line"></span><br><span class="line">$ which thrift </span><br><span class="line">/usr/local/bin/thrift</span><br></pre></td></tr></table></figure></p>
+<p>(先跑起来再说)</p>
+<p>编译日志里有一大段比较重要:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">If you ever happen to want to link against installed libraries</span><br><span class="line">in a given directory, LIBDIR, you must either use libtool, and</span><br><span class="line">specify the full pathname of the library, or use the `-LLIBDIR&apos;</span><br><span class="line">flag during linking and do at least one of the following:</span><br><span class="line">   - add LIBDIR to the `LD_LIBRARY_PATH&apos; environment variable</span><br><span class="line">     during execution</span><br><span class="line">   - add LIBDIR to the `LD_RUN_PATH&apos; environment variable</span><br><span class="line">     during linking</span><br><span class="line">   - use the `-Wl,-rpath -Wl,LIBDIR&apos; linker flag</span><br><span class="line">   - have your system administrator add LIBDIR to `/etc/ld.so.conf&apos;</span><br><span class="line"></span><br><span class="line">See any operating system documentation about shared libraries for</span><br><span class="line">more information, such as the ld(1) and ld.so(8) manual pages.</span><br></pre></td></tr></table></figure></p>
+<p>去检查一下<code>/etc/ld.so.conf</code>是否已经囊括了你安装库的目录.</p>
+<h2 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h2><p>一般的开发流程是这样的(和pb类似):</p>
+<ul>
+<li>规矩需求编写thrift接口定义文件</li>
+<li>使用thrift binary为不同的语言生成代码</li>
+<li>根据需求, 修改生成的代码(主要是Server端骨架代码), 编写实际的业务逻辑</li>
+<li>编译, 集成</li>
+</ul>
+<p>通过IDL, 即thrft描述文件, 对其中定义的<code>数据结构</code>, 如struct等, 以及传输业务逻辑, 根据不同的运行环境构建相应的代码. 至于内部序列化, 压缩, 文本交互, 并发, 这个在其框架内部已经解决, 描述起来就是下图:<br><img src="http://omotkhw3y.bkt.clouddn.com/thrift_sequence.jpg" alt=""></p>
+<p>整个过程非常清晰, 只是中间有一些小细节需要注意一下, 比如说thrift文件怎么写才规范, 怎么生成代码, 运行生成的代码加入实际业务逻辑等. 下面给出一个案例.(我习惯用cpp语言, 当然别的语言也有案例, 暂时小的案例用cpp)</p>
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h3 id="rpc"><a href="#rpc" class="headerlink" title="rpc"></a>rpc</h3><p>按照上面讲的流程, 先跑起来; 为了简单, 我先不管目录结构. 下面的例子, 演示一下rpc.</p>
+<p>先创建必要的目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir thrift_test</span><br><span class="line">$ cd thrift_test</span><br><span class="line">$ touch ping.thrift</span><br></pre></td></tr></table></figure></p>
+<p>ping.thrift的代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># ping.thrift</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Thrift files can namespace, package, or prefix their output in various</span><br><span class="line"> * target languages.</span><br><span class="line"> */</span><br><span class="line">namespace cpp pingtest</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Defining a class named pinger</span><br><span class="line"> */</span><br><span class="line">service pinger</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * client calls ping method to make sure service process is active or dead</span><br><span class="line">   */</span><br><span class="line">   void ping()</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>(注意我使用的关键词 <code>service</code>)<br>代码比较简单, 然后就在本目录下生成server端的骨架(框架模板代码):<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ thrift --gen cpp -o . ping.thrift </span><br><span class="line"></span><br><span class="line">$ tree -L 2</span><br><span class="line">.</span><br><span class="line">├── gen-cpp</span><br><span class="line">│   ├── ping_constants.cpp</span><br><span class="line">│   ├── ping_constants.h</span><br><span class="line">│   ├── pinger.cpp</span><br><span class="line">│   ├── pinger.h</span><br><span class="line">│   ├── pinger_server.skeleton.cpp</span><br><span class="line">│   ├── ping_types.cpp</span><br><span class="line">│   └── ping_types.h</span><br><span class="line">└── ping.thrift</span><br><span class="line"></span><br><span class="line">1 directory, 8 files</span><br></pre></td></tr></table></figure></p>
+<p>也就是说服务器端的模板代码全部产品了, 但是这些代码基本不涉及业务, 所以还要写自己的业务server端代码来调用上述框架代码, 但是这里仅仅是演示, 不需要写了, 直接利用<code>pinger_server.skeleton.cpp</code> 这个主文件就好(这个文件你可以改名为server.cpp, 它就是server端的主文件, 含有main函数).</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cp gen-cpp/* .</span><br><span class="line">$ cat pinger_server.skeleton.cpp</span><br></pre></td></tr></table></figure>
+<p>代码如下: (中间我就加了一句打印)<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This autogenerated skeleton file illustrates how to build a server.</span></span><br><span class="line"><span class="comment">// You should copy it to another filename to avoid overwriting it.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"pinger.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/protocol/TBinaryProtocol.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/server/TSimpleServer.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/transport/TServerSocket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/transport/TBufferTransports.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift::protocol;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift::transport;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift::server;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> boost::<span class="built_in">shared_ptr</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span>  ::pingtest;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">pingerHandler</span> :</span> <span class="keyword">virtual</span> <span class="keyword">public</span> pingerIf &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  pingerHandler() &#123;</span><br><span class="line">    <span class="comment">// Your initialization goes here</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * client calls ping method to make sure service process is active or dead</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">ping</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Your implementation goes here</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"ping\n"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">  <span class="comment">//默认9090端口</span></span><br><span class="line">  <span class="keyword">int</span> port = <span class="number">9090</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//下面是一些通讯必要的协议等内容</span></span><br><span class="line">  <span class="built_in">shared_ptr</span>&lt;pingerHandler&gt; handler(<span class="keyword">new</span> pingerHandler());</span><br><span class="line">  <span class="built_in">shared_ptr</span>&lt;TProcessor&gt; processor(<span class="keyword">new</span> pingerProcessor(handler));</span><br><span class="line">  <span class="built_in">shared_ptr</span>&lt;TServerTransport&gt; serverTransport(<span class="keyword">new</span> TServerSocket(port));</span><br><span class="line">  <span class="built_in">shared_ptr</span>&lt;TTransportFactory&gt; transportFactory(<span class="keyword">new</span> TBufferedTransportFactory());</span><br><span class="line">  <span class="built_in">shared_ptr</span>&lt;TProtocolFactory&gt; protocolFactory(<span class="keyword">new</span> TBinaryProtocolFactory());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">//创建一个TSimpleServer对象， 虽然效率不高， 但是仅仅做远端检查足够了</span></span><br><span class="line">  <span class="function">TSimpleServer <span class="title">server</span><span class="params">(processor, serverTransport, transportFactory, protocolFactory)</span></span>;</span><br><span class="line">  server.serve();<span class="comment">//开始监听了</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>好了, 先把server端可执行文件编译出来:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -g -Wall -std=c++11  -lthrift ./*.cpp -o server</span><br></pre></td></tr></table></figure></p>
+<p>如果你没有配置环境, 完整的应该是这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -g -Wall -std=c++11 -I/usr/local/include -L/usr/local/lib -lthrift ./*.cpp -o server</span><br></pre></td></tr></table></figure></p>
+<p>如果不是需要客户端调用, 可以用curl或者nc进行调试, 但是这里是RPC, 不仅仅是通讯或者交换数据, 所以这里客户端要手写 <code>client.cpp</code>. 代码如下:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/protocol/TBinaryProtocol.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/transport/TSocket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/transport/TTransportUtils.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"pinger.h"</span> <span class="comment">//使用pingerClient对象</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> apache::thrift;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> apache::thrift::protocol;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> apache::thrift::transport;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> pingtest;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//连接远端服务器</span></span><br><span class="line">  boost::<span class="built_in">shared_ptr</span>&lt;TTransport&gt; socket(<span class="keyword">new</span> TSocket(<span class="string">"localhost"</span>, <span class="number">9090</span>));</span><br><span class="line">  boost::<span class="built_in">shared_ptr</span>&lt;TTransport&gt; transport(<span class="keyword">new</span> TBufferedTransport(socket));</span><br><span class="line">  boost::<span class="built_in">shared_ptr</span>&lt;TProtocol&gt; protocol(<span class="keyword">new</span> TBinaryProtocol(transport));</span><br><span class="line">  <span class="function">pingerClient <span class="title">client</span><span class="params">(protocol)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    transport-&gt;open();</span><br><span class="line"></span><br><span class="line">    client.ping();<span class="comment">//远端调用</span></span><br><span class="line"></span><br><span class="line">    transport-&gt;close();</span><br><span class="line"></span><br><span class="line">  &#125; <span class="keyword">catch</span> (TException&amp; tx) &#123;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"ERROR: "</span> &lt;&lt; tx.what() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -g -Wall -std=c++11  -lthrift client.cpp ping_constants.cpp pinger.cpp ping_types.cpp  -o client</span><br></pre></td></tr></table></figure></p>
+<p>运行一下(开两个端口, 先开server, 在开client)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./server </span><br><span class="line">ping</span><br><span class="line">ping</span><br></pre></td></tr></table></figure></p>
+<p>server一直运行(死循环), 然后client运行一次, server端打印ping一次.</p>
+<p>远端调用就是这么简单? 其实是骨架代码做了很多, 先不探讨源码(这里只说简单的案例)</p>
+<p>最后补充关于目录组织, makefile, 请按照你们研发经理的要求来.</p>
+<h3 id="数据传递"><a href="#数据传递" class="headerlink" title="数据传递"></a>数据传递</h3><p>上面那个仅仅有远端调用, 没有实际的c-s传输数据, 下面这个案例带有数据传递.<br><img src="http://omotkhw3y.bkt.clouddn.com/thrift_c_s_1.jpg" alt="数据传递"><br>先写thrift接口文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"># transfer.thrift</span><br><span class="line">namespace cpp transfertest</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">enum ResponseState</span><br><span class="line">&#123;</span><br><span class="line">    StateOk = 0,</span><br><span class="line">    StateError = 1,</span><br><span class="line">    StateEmpty = 2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*请求时的数据*/</span><br><span class="line">struct Request</span><br><span class="line">&#123;</span><br><span class="line">    1: i32 studentID = 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/*响应时的数据*/</span><br><span class="line">struct Response</span><br><span class="line">&#123;</span><br><span class="line">    1: i32 studentID = 0,</span><br><span class="line">    2: string name,</span><br><span class="line">    3: list&lt;string&gt; infos,</span><br><span class="line">    4: ResponseState state</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*远端调用*/</span><br><span class="line">service TransferService</span><br><span class="line">&#123;</span><br><span class="line">    Response getStudentInfo(1: Request request); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意 <code>Response getStudentInfo(1: Request request)</code> 原型和生成的代码有区别, 当然你的IDL文件里面写很多crud的servcie都没有关系, 根据你的业务需要来.</p>
+<p>生成框架代码.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ thrift --gen cpp transfer.thrift</span><br><span class="line">$ cp gen-cpp/* .</span><br><span class="line">$ ll</span><br><span class="line">总用量 68</span><br><span class="line">drwxr-xr-x 3 merlin merlin  4096 9月   2 17:23 .</span><br><span class="line">drwxr-xr-x 4 merlin merlin  4096 9月   2 17:11 ..</span><br><span class="line">drwxr-xr-x 2 merlin merlin  4096 9月   2 17:22 gen-cpp</span><br><span class="line">-rw-r--r-- 1 merlin merlin   305 9月   2 17:23 transfer_constants.cpp</span><br><span class="line">-rw-r--r-- 1 merlin merlin   393 9月   2 17:23 transfer_constants.h</span><br><span class="line">-rw-r--r-- 1 merlin merlin 12831 9月   2 17:23 TransferService.cpp</span><br><span class="line">-rw-r--r-- 1 merlin merlin  9888 9月   2 17:23 TransferService.h</span><br><span class="line">-rw-r--r-- 1 merlin merlin  1423 9月   2 17:23 TransferService_server.skeleton.cpp</span><br><span class="line">-rw-r--r-- 1 merlin merlin   433 9月   2 17:20 transfer.thrift</span><br><span class="line">-rw-r--r-- 1 merlin merlin  7347 9月   2 17:23 transfer_types.cpp</span><br><span class="line">-rw-r--r-- 1 merlin merlin  3205 9月   2 17:23 transfer_types.h</span><br></pre></td></tr></table></figure></p>
+<p>修改<code>TransferService_server.skeleton.cpp</code>代码.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TransferService_server.skeleton.cpp</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"TransferService.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/protocol/TBinaryProtocol.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/server/TSimpleServer.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/transport/TServerSocket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/transport/TBufferTransports.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift::protocol;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift::transport;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift::server;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> boost::<span class="built_in">shared_ptr</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span>  ::transfertest;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TransferServiceHandler</span> :</span> <span class="keyword">virtual</span> <span class="keyword">public</span> TransferServiceIf &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  TransferServiceHandler() &#123;</span><br><span class="line">    <span class="comment">// Your initialization goes here</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">getStudentInfo</span><span class="params">(Response&amp; _return, <span class="keyword">const</span> Request&amp; request)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Your implementation goes here</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"getStudentInfo called\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//处理请求数据， 发送响应给客户端</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"client request studentID: %d\n"</span>, request.studentID);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//给Response设置数据</span></span><br><span class="line">    _return.studentID = request.studentID;</span><br><span class="line">    _return.name = <span class="string">"merlin"</span>;</span><br><span class="line">    _return.infos.push_back(<span class="string">"信息1"</span>);</span><br><span class="line">    _return.infos.push_back(<span class="string">"信息2"</span>);</span><br><span class="line">    _return.state = ResponseState::StateOk;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"data has benn sent to client\n"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> port = <span class="number">9090</span>;</span><br><span class="line">  <span class="built_in">shared_ptr</span>&lt;TransferServiceHandler&gt; handler(<span class="keyword">new</span> TransferServiceHandler());</span><br><span class="line">  <span class="built_in">shared_ptr</span>&lt;TProcessor&gt; processor(<span class="keyword">new</span> TransferServiceProcessor(handler));</span><br><span class="line">  <span class="built_in">shared_ptr</span>&lt;TServerTransport&gt; serverTransport(<span class="keyword">new</span> TServerSocket(port));</span><br><span class="line">  <span class="built_in">shared_ptr</span>&lt;TTransportFactory&gt; transportFactory(<span class="keyword">new</span> TBufferedTransportFactory());</span><br><span class="line">  <span class="built_in">shared_ptr</span>&lt;TProtocolFactory&gt; protocolFactory(<span class="keyword">new</span> TBinaryProtocolFactory());</span><br><span class="line"></span><br><span class="line">  <span class="function">TSimpleServer <span class="title">server</span><span class="params">(processor, serverTransport, transportFactory, protocolFactory)</span></span>;</span><br><span class="line">  server.serve();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数<code>void getStudentInfo(Response&amp; _return, const Request&amp; request)</code>原型和我们在thrift里面指定的有区别.</p>
+<p>编译服务端:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -g -Wall -std=c++11 *.cpp -o server -lthrift</span><br></pre></td></tr></table></figure></p>
+<p>然后在写客户端client.cpp, 发送请求:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/protocol/TBinaryProtocol.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/transport/TSocket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/transport/TBufferTransports.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/protocol/TCompactProtocol.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"TransferService.h"</span> <span class="comment">//使用TransferServiceClient对象</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::transfertest; <span class="comment">//Request, Response</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> apache::thrift;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> apache::thrift::protocol;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> apache::thrift::transport;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> boost::<span class="built_in">shared_ptr</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//如果和服务端信息不匹配就报错</span></span><br><span class="line">  boost::<span class="built_in">shared_ptr</span>&lt;TSocket&gt; socket(<span class="keyword">new</span> TSocket(<span class="string">"localhost"</span>, <span class="number">9090</span>));</span><br><span class="line">  boost::<span class="built_in">shared_ptr</span>&lt;TTransport&gt; transport(<span class="keyword">new</span> TBufferedTransport(socket));</span><br><span class="line">  boost::<span class="built_in">shared_ptr</span>&lt;TProtocol&gt; protocol(<span class="keyword">new</span> TBinaryProtocol(transport));</span><br><span class="line"></span><br><span class="line">  <span class="comment">//设置响应的数据(发给服务端, 其实是rpc)</span></span><br><span class="line">  Request quest;</span><br><span class="line">  quest.studentID = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//用于接收服务端信息</span></span><br><span class="line">  Response resp;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//打开连接</span></span><br><span class="line">  transport-&gt;open();</span><br><span class="line">  <span class="function">TransferServiceClient <span class="title">client</span><span class="params">(protocol)</span></span>;</span><br><span class="line">  client.getStudentInfo(resp, quest);</span><br><span class="line">  <span class="comment">//关闭连接</span></span><br><span class="line">  transport-&gt;close();</span><br><span class="line"></span><br><span class="line">  <span class="comment">//输出信息</span></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"get response: ID=%d  name=%s  state=%d\n"</span>, resp.studentID,</span><br><span class="line">   resp.name.c_str(), resp.state);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -g -Wall -std=c++11 -lthrift client.cpp \ </span><br><span class="line">transfer_constants.cpp transfer_types.cpp TransferService.cpp -o client</span><br></pre></td></tr></table></figure></p>
+<p>运行一下, 效果如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ ./server </span><br><span class="line">getStudentInfo called</span><br><span class="line">client request studentID: 1</span><br><span class="line">data has benn sent to client</span><br><span class="line">^C</span><br><span class="line"></span><br><span class="line">##另外一个terminal</span><br><span class="line">$ ./client</span><br><span class="line">get response: ID=1  name=merlin  state=0</span><br></pre></td></tr></table></figure></p>
+<p>这个例子就这样了, 当然官网还有一个类似的, 稍稍复杂的 <a href="https://thrift.apache.org/tutorial/cpp" target="_blank" rel="noopener">例子</a> , 就不再多说了.</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p>本段内容是对 <a href="https://en.wikipedia.org/wiki/Apache_Thrift" target="_blank" rel="noopener">thrift-wiki</a> 架构部分的剖析.</p>
+<p>总体的架构图如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/Apache_Thrift_architecture.png" alt="架构"></p>
+<p>可以看到, thrift实际跨了两层: 应用层和传输层(有些博文非要把它的那个颜色认为是不同的层, 我也就无话可说了), 也就是我们再网络编程中最长需要打交道的, 并且<code>read/write</code>以下的部分, 即TProtocol, TTransport属于thrift框架的传输体系, 如果不是研究源码, 可以暂时不关注(使用的时候具体选择以下使用哪种类型的传输协议).  实际上研究源码, 发现也就是我们通常需要手工完成的:</p>
+<ul>
+<li>服务器端这里还有一个TProcessor负责读写 消息体等操作(客户端对应TProcessor的是TriftClient)</li>
+<li>服务器端这里还有Tserver, 负责接收Client的请求, 并将请求转换给TProcessor</li>
+<li>编码封装 (TProtocol) 把用户的数据封装成一个 消息体, 通常是二进制的; (注意原来的数据是带有类型的, 消息体的数据只管encode编码字节数)</li>
+<li>字节流转换 (TTransport) 把消息体以字节流的方式发送给底层IO(或者从其接收字节流再转换成消息体), 到底是流式IO还是文件IO; 每一种底层IO对应这里的一种TTransport</li>
+<li>底层IO (socket/file/zip)</li>
+</ul>
+<p>我们真正需要处理(修改)的也就是<code>Input code</code>部分和<code>Service Client</code>.</p>
+<p>如下图:(详细架构)<br><img src="http://omotkhw3y.bkt.clouddn.com/thrift_real.jpg" alt=""></p>
+<p>准确说 <code>TProtocol</code>定义了传输协议规范(编码规范-大体上分为二进制和文本方式), <code>TTransport</code>定义了传输数据标准(根据不同的方式把说句做转换), 以及服务器类型, 当然服务器类型不仅仅包含IO类型. </p>
+<p>Processor(或者TProcessor)负责对Client的请求做出响应, 包括 RPC 请求转发(TProcessor.process), 调用参数解析和用户逻辑调用, 返回值写回等处理步骤, 也包括thrift消息结构体的读取和写入. Processor是服务器端从Thrift框架转入用户业务逻辑的关键流程, 你简单理解成这个复杂系统中统一的输入和输出处理即可.(针对详细结构体和远端调用)</p>
+<p>其模块设计, 层次界限非常到位.</p>
+<p>强调一些最基本的概念.</p>
+<blockquote>
+<p>框架的协议是指编码方式; 框架的传输方式包括文件,缓存buffer, 压缩或者需要服务器端同步异步工作支持的IO类型(因为传输方式使用了一些同步或者异步的IO), 传输方式也会指定传输协议. 服务器类型是指服务器的工作模式, 是同步阻塞处理请求还是非阻塞操作, 是否支持多线程模型, 还是异步多路IO.</p>
+</blockquote>
+<h3 id="协议规范"><a href="#协议规范" class="headerlink" title="协议规范"></a>协议规范</h3><p>Thrift可以让用户选择客户端与服务端之间传输通信协议的类别，在传输协议上总体划分为文本(text)和二进制(binary)传输协议，为节约带宽，提高传输效率，一般情况下使用二进制类型的传输协议为多数，有时还会使用基于文本类型的协议，这需要根据项目/产品中的实际需求.<br>常用协议有以下几种: </p>
+<ul>
+<li>BinaryProtocol: 二进制编码格式进行数据传输使</li>
+<li>TCompactProtocol: 高效率的、密集的二进制编码格式进行数据传输</li>
+<li>TJSONProtocol: 使用 JSON 数据编码协议进行数据传输</li>
+</ul>
+<p>wiki中说到的其他的:</p>
+<ul>
+<li>TDebugProtocol(调试时使用的文本格式)</li>
+<li>TDenseProtocol(类似TCompactProtocol, 但不包含 meta info)</li>
+<li>TSimpleJSONProtocol(drops metadata using JSON, 所以只用于只读解析).</li>
+</ul>
+<h3 id="传输标准"><a href="#传输标准" class="headerlink" title="传输标准"></a>传输标准</h3><p>这里的传输标准通俗说就是读写方式, 可能有一些方式需要服务器以同步或者异步的工作形式支持, 也可能有些形式仅用于服务端或者客户端等, 比如下面名字中带有Server字样的, 仅用于服务器端. (不强调Server字样的, 一般既可以用于服务器端也可以用于客户端)</p>
+<p>由于一些语言有限制,或者标准不同, thrift定义的标准在具体语言中可能处理情况不一样.</p>
+<ul>
+<li>TSocket : 使用阻塞式 I/O 进行传输，是最常见的模式(就是简单的阻塞IO: read, write)</li>
+<li>TServerSocket：非阻塞型 socket 传输, 轮询的时候, 没有IO读写就直接返回, 但一旦 accecpt 到, 还是阻塞读写, 即TSocket(即阻塞型 socket).</li>
+</ul>
+<p>wiki里面也谈到了其他种类:(可能不太常用)</p>
+<ul>
+<li>TFDTransport 是非常简单地写数据到文件和从文件读数据，它的 write 和 read 函数都是直接调用系统函数 write 和 read 进行写和读文件</li>
+<li>TSimpleFileTransport 直接继承 TFDTransport，没有添加任何成员函数和成员变量, 算是对TFDTransport的轻量扩展</li>
+<li>TFileTransport - (一些写线程, 一个读线程)以文件的方式传输, 主线程负责将事件入列，写线程将事件入列，并将事件里的数据写入磁盘.(继承自TTransport)</li>
+<li>TBufferedTransport - 带缓存的传输形式(需要使用non-blocking IO)</li>
+<li>TFramedTransport -  带缓存(以帧的)形式传输(要求使用非阻塞IO, 可能因为帧指定了长度; 头4个字节指定了长度; int32_t)</li>
+<li>TMemoryTransport - 这个使用内存做IO(用于程序内部通信用，不涉及任何网络I/O)<ul>
+<li>OBSERVE模式，不可写数据到缓存</li>
+<li>TAKE_OWNERSHIP模式，需负责释放缓存</li>
+<li>COPY模式, 拷贝外面的内存块到TMemoryBuffer</li>
+</ul>
+</li>
+<li>TZlibTransport - 压缩传输需要配合其他传输协议一起.</li>
+</ul>
+<p>(一般用于缓存读写的方式是TMemoryTransport, 没有调用flush方法之前, 不涉及网络)</p>
+<p>还有2个比较特殊的:</p>
+<ul>
+<li>TSSLSocket 继承 TSocket,阻塞型 socket, 用于<code>客户端</code>. (采用 openssl 的接口进行读写数据)<br>checkHandshake()函数调用 SSL_set_fd 将 fd 和 ssl 绑定在一起，之后就可以通过 ssl 的 SSL_read和SSL_write 接口进行读写网络数据</li>
+<li>TSSLServerSocket 继承 TServerSocket, 非阻塞型 socket, 用于<code>服务器端</code>. accecpt 到的 socket 类型都是 TSSLSocket 类型.</li>
+</ul>
+<p>当然, 也提供了基于 <code>HTTP协议</code> 的传输类型: (继承 THttpTransport, 基于Http1.1)</p>
+<ul>
+<li>THttpClient 用于客户端</li>
+<li>THttpServer 用于服务器端<br>两者都调用下一层 <code>TTransport</code> 类进行读写操作, 均用到 TMemoryBuffer 作为读写缓存, 只有调用 flush() 函数才会将真正调用网络 I/O 接口发送数据; 并且这里的TTransport为上层提供的类似多态的方法, 通过TTransport接口可以调用其子类的不同实现. (TTransport 是所有 Transport 类的父类; 而THttpTransport是Transport的子类)</li>
+</ul>
+<h3 id="服务端类型"><a href="#服务端类型" class="headerlink" title="服务端类型"></a>服务端类型</h3><p>根据传输标准的不同, 并发程度的要求, 也有多种不同类型的服务器(也就是服务端的工作模式), 并且生成不同语言代码时, 实现也不一样, 比如说非阻塞IO, Java使用NIO, 而C++借助Lievent库. 根据不同场合选择不同的server类型, 需要对网络模型非常熟悉.</p>
+<p>下面是主要的服务端类型:(源码剖析的时候会再说)</p>
+<ul>
+<li>TSimpleServer : 单线程服务器端使用标准的阻塞式 I/O</li>
+<li>TNonblockingServer : 单线程异步IO(多路轮询检测, 处理读写的时候还是阻塞IO), 该类型Server必须使用TFramedTransport.</li>
+<li>THsHaServer : select轮询 + 线程池工作线程处理读任务, 写任务还是阻塞IO. (半同步半异步)</li>
+<li>TThreadPoolServer : 线程池+标准的阻塞式 I/O</li>
+<li>TThreadedSelectorServer : AcceptThread + SelectorThread + SelectorThreadLoadBalancer(调度器) + ExecutorService(工作线程池)</li>
+</ul>
+<p>(如果看源码, 我局的最后这一种高级方式, 值得一看)</p>
+<p>TSimpleServer 接受一个连接，处理连接请求，直到客户端关闭了连接，它才回去接受一个新的连接。正因为它只在一个单独的线程中以阻塞 I/O 的方式完成这些工作，所以它只能服务一个客户端连接，其他所有客户端在被服务器端接受之前都只能等待. 可以看到TSimpleServer基本只能用于测试.</p>
+<p>TThreadPoolServer 如果有连接请求来了, 那么从线程池中拿一个工作线程来应对网络IO事件, 主线程是非阻塞的, worker线程则是使用阻塞IO. (但是吞吐量是原来的N倍, N为work线程的个数)</p>
+<p>TNonblockingServer 这种模式对应linux网络编程中的select模型; 所以socket都注册到select, 然后一个线程中通过seletor循环监控所有的socket，每次selector结束时，处理所有的处于就绪状态的socket，对于有数据到来的socket进行数据读取操作，对于有数据发送的socket则进行数据发送，对于监听socket则产生一个新业务socket并将其注册到selector中. (如果没有则进行下一次轮询, 如果有, 就必须处理完相关的socket IO才能进行下一次轮询) 该模式比TSimpleServer好的地方在于, 原来是单线程阻塞, 即一旦连接上了, 非要你IO完毕, 我服务端才处理下一个请求. (该模型是, 我都(监听)处理, 你都来吧, 但是真正有IO读写的, select才去调用阻塞IO去处理读写任务)监听的多, 但是真正处理起来还是一个一个顺序执行, 一旦有耗时任务, 效率就不高了.</p>
+<p>THsHaServer类是TNonblockingServer类的子类, 是TThreadPoolServer单线程的部分解决方(引入了一个线程池做优化), 专门进行读业务处理. 也就是原来selector的主线程主要负责写任务, 之后进入下一次轮询(主线程也处理就绪需要accept的socket); 但是读任务全部交给线程池中的工作线程, 不阻塞主线程. 只能说部分优化了, 当并发请求数较大时，且发送数据量较多时，监听socket上新连接请求不能被及时接受(毕竟主线程还是会被写任务阻塞住)。</p>
+<p>TThreadPoolServer模式, 这种模式没有使用select这类异步操作, 而是同步的去判断是否由socket就绪(accept), 对仅仅是处理accept, 没有的话阻塞整个进程在那儿等待, 然后一旦有连接, 不管有没有IO任务, 它都会启动一个专门的线程去处理这个连接上的所有任务(方式是把socket封装成一个新任务交给线程池, 之后工作线程才去从socket拿出请求, 完成具体调用返还客户客户端), 这样得以把主线程空出来继续阻塞等待别的连接请求. 这个缺点就很明显了, 受限于线程池中线程的数量(并发量大于线程池数量时, 能扩展线程数最好, 不能的话, 那么只能进入队列等待了), 并发量不大. (最好你知道有多少个, 最多有多少个客户端会连接的情况)</p>
+<p>TThreadedSelectorServer : 这种模型, 把网络中的任务细致划分. 可谓足够精细, 多个部分协作工作. 如果说上面的都是个人&amp;两三个人, 这个模型就是一个小团队, 请直接看图.<br><img src="http://omotkhw3y.bkt.clouddn.com/thrift_thread_selector.jpg" alt=""></p>
+<p>稍微解释一下, 普通的网络编程中成功用例是这么工作的: (服务端)</p>
+<blockquote>
+<p>接受连接请求 –&gt; 检测是否有IO就绪 —&gt; 处理真正的IO操作</p>
+</blockquote>
+<p>但是引入线程池之后, 这个模型变成了:(流程自上而下)</p>
+<ul>
+<li>线程AcceptThread阻塞(或者非阻塞)等待是否由心的连接  (这个是<code>销售顾问</code>, 拿到订单)</li>
+<li>有新的连接就把它交给SelectorThread以检测socket是否就绪(是否由IO读写请求)  (这个是<code>项目经理</code>, 负责拿到的订单项目)</li>
+<li>被accept的连接,需要SelectorThreadLoadBalancer来调度,以免某个SelectorThread压力过大(这个是<code>研发经理</code>, 分派任务)</li>
+<li>SelectorThread读取具体的请求, 但是实际完成耗时IO(或者具体调用)的却是ExecutorService. (这个就是<code>高级工程师</code>)</li>
+</ul>
+<blockquote>
+<p>如果你的场景不需要某种支持高并发的姿态, 就不要浪费资源选择高级模式; 够用就好. 但是还有一句, 如果几种模型的优缺点你不知道, 那么选择最好的总不会错, 直接上TThreadedSelectorServer也没事儿.</p>
+</blockquote>
+<hr>
+<h2 id="详细说明"><a href="#详细说明" class="headerlink" title="详细说明"></a>详细说明</h2><p>这一部分是阅读其官网文档的总结, 你可以把它看做使用手册.</p>
+<h3 id="传输框架"><a href="#传输框架" class="headerlink" title="传输框架"></a>传输框架</h3><p>该部分请 <code>参考架构部分</code>. (上面)</p>
+<p>主要是协议protocol, transport方式, 以及server类型即可. 协议部分我们在pb里面以及涉及到编码规则内容了,没有必要详细深挖; 主要值得研究的是在 <code>传输方式</code>和<code>服务器类型</code>上, 不同的方式有不同的实现细节, 以及后端思想; 并且效率也可能相差很多.</p>
+<blockquote>
+<p>后期有时间, 可以像Libevent一样, 把TSocket等传输方式, 以及TSimpleServer等服务器类型; 源码剖析一下.</p>
+</blockquote>
+<p>(见下面 <code>源码分析</code> 部分)</p>
+<h3 id="名字空间"><a href="#名字空间" class="headerlink" title="名字空间"></a>名字空间</h3><p>越来越多的语言使用package作为代码控制机制, 到具体的语言可能是模块(Python), 包(Java), 或者namespace(Cpp)</p>
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><p>thrift定义了几大数据类型, 在不同环境中翻译成不同语言时候mapping关系也不大一样; 幸运的是, 这一层抽象被thrift框架处理了, 我们只用关心thrift数据类型即可.</p>
+<p>类型主要包括: 基本类型、结构体和异常类型(异常使用关键字exception)、容器类型、服务(service)类型;</p>
+<p>基本类型:</p>
+<ul>
+<li>bool：布尔值 (true or false), 1 字节</li>
+<li>byte：有符号字节</li>
+<li>i16：16位有符号整型</li>
+<li>i32：32位有符号整型</li>
+<li>i64：64位有符号整型</li>
+<li>double：64位浮点型</li>
+<li>string：未知编码或者二进制的字符串</li>
+</ul>
+<p>结构体:<br>例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct UserDemo &#123;</span><br><span class="line">　　1: i32 id;</span><br><span class="line">　　2: string name;</span><br><span class="line">　　3: i32 age = 25;</span><br><span class="line">　　4： string phone;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>必须注意:</p>
+<ul>
+<li>struct 不能继承，但是可以嵌套别人，不能嵌套自己</li>
+<li>其成员都是有明确类型</li>
+<li>成员是被正整数编号过的，其中的编号使不能重复的，这个是为了在传输过程中编码是用(和pb一样)</li>
+<li>成员分割符可以是逗号或是分号, 而且可以混用(建议使用分号, C语言习惯)</li>
+<li>字段会有optional和required之分(和pb一样)</li>
+<li>每个字段可以设置默认值(和pb一样)</li>
+<li>同一文件可以定义多个struct; 可以用include包含别的文件的struct定义</li>
+</ul>
+<p>补充说明:</p>
+<ul>
+<li>编码值, 不要随便编; </li>
+<li>字段类型required或者optional(没有赋值则不进行序列化), 不指定则默认是会被序列化的(基本和required相同, 但required会被框架提示)</li>
+</ul>
+<p>容器类型:<br>主要使用编程语言无关的数据结构作为容器, 一般就三个:</p>
+<ul>
+<li>list<t>: 有序表, 允许元素重复</t></li>
+<li>set<t>: 无序表, 不容许元素重复</t></li>
+<li>map<t,t>: 键类型为t, 值类型为t的kv对, 键不容许重复</t,t></li>
+</ul>
+<p>生成的代码中, 不同语言对应的数据结构可能有一些差异, 但是不影响其功能.</p>
+<p>服务类型:<br>就是trift文件中的service, 代码中等价于类或者接口集合(代码中支持继承, 但如果继承这个类, 其方法必须实现), 但接口里面定义的方法不支持重载.<br>由上面的实践来看, 参数一般是const类型, 并且最终生成的代码和你定义的service函数原型可能不一样, 可能会根据具体的语言进行调整(具体规则, 需要参考它的gen代码生成器).</p>
+<h3 id="代码生成"><a href="#代码生成" class="headerlink" title="代码生成"></a>代码生成</h3><p>Thrift自动生成代码的代码框架被直接硬编码(hardcode)到了代码生成器里(不知道Facebook有没有工具)，因此对生成代码的结构进行修改需要重新编译Thrift，并不是十分方便。如果Thrift将代码结构保存到一个模板文件里，修改生成代码就会相对容易一些。</p>
+<p>自动生成的代码就会遵守一定的命名规则。Thrift中几种主要的命名规则为:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1.	IDLName + ”_types.h” ：用户自定义数据类型头文件</span><br><span class="line">2.	IDLName + ”_constants.h” ：用户自定义的枚举和常量数据类型头文件</span><br><span class="line">3.	ServiceName + “.h” ：Server端Processor定义和Client定义头文件</span><br><span class="line"></span><br><span class="line">----------------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">4.	ServericeName + ”_” + RPC名称 + “_args” ：服务器端RPC参数解析类---统一参数解析类</span><br><span class="line">5.	ServericeName + ”_” + RPC名称 + “_result” ：服务器端RPC返回值打包类</span><br><span class="line">6.	ServericeName + ”_” + RPC名称 + “_pargs” ：客户端RPC参数打包类</span><br><span class="line">7.	ServericeName + ”_” + RPC名称 + “_presult” ：客户端RPC返回值解析类</span><br><span class="line">8.	“process_” + RPC名称：服务器端RPC调用处理函数</span><br><span class="line">9.	“send_” + RPC名称：客户端发送RPC请求的方法</span><br><span class="line">10.	“recv_” + RPC名称：客户端接收RPC返回的方法</span><br></pre></td></tr></table></figure>
+<p>统一参数解析类和处理方法的设想:<br>客户端和服务器的参数解析和返回值解析, 虽然针对的是同样的数据结构, 但是 thrift 并没有使用同一个类来完成任务, 而是将客户端和服务器的解析类分开. (TProcess和Client)</p>
+<blockquote>
+<p>当 RPC 调用参数含有相同信息并需要进行相同操作的时候, 对参数解析类的集中管理就会变得非常有必要了. 比如在一些用 thrift 实现访问控制的系统中, 每一个 RPC 调用都会加一个参数token作为访问凭证(是否可以访问), 并在每一个用户函数里进行权限检查. 使用 <code>统一的参数解析类接口</code> 的话, 就可以将分散的权限检查集中到一块进行处理. thrift 中有众多的解析类, 这些解析类的接口类似, 但是却没有一个共有的基类. 对参数的集中管理造成了一定的困难. 如果Thrift为解析类建立一个基类, 并把解析类指针放到一个Map中, 这样参数就可以进行集中管理, 不仅可以进一步减小自动生成代码的体积, 也满足了对参数进行统一管理的需求.</p>
+</blockquote>
+<p>下面开始重头戏.</p>
+<hr>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>框架本身有很多精华, 我抽取其中我熟悉的进行分析.</p>
+<h3 id="调用流程"><a href="#调用流程" class="headerlink" title="调用流程"></a>调用流程</h3><p>该部分其实是解释thrift框架如何工作的, 形式上是c-s一次通信的过程; 这个要结合源码起来看(下面图片请在新窗口中打开观看), 不同源码版本可能不一样.</p>
+<p>服务端主要流程如下:</p>
+<blockquote>
+<p>TThreadPoolServer 的 serve() 方法后，server 进入阻塞监听状态，其阻塞在 TServerSocket 的 accept()方法上。当接收到来自客户端的消息后，服务器发起一个新线程处理这个消息请求，原线程再次进入阻塞状态。在新线程中，服务器通过 TBinaryProtocol 协议读取消息内容，调用 HelloServiceImpl 的 helloVoid() 方法，并将结果写入 helloVoid_result 中传回客户端。</p>
+</blockquote>
+<p>过程如下图:(下面的图请单独拉开网页看)<br><img src="http://omotkhw3y.bkt.clouddn.com/thrift_call_1.png" alt="server"></p>
+<p>(整理处理流程比较简单, 就是调用过程负责)</p>
+<p>客户端的处理流程如下: (下面的图请单独拉开网页看)</p>
+<blockquote>
+<p>程序调用了 Hello.Client 的 helloVoid() 方法，在 helloVoid() 方法中，通过 send_helloVoid() 方法发送对服务的调用请求，通过 recv_helloVoid() 方法接收服务处理请求后返回的结果。远程rpc调用过程,以及网络传输过程, 全部被封装在框架里了.</p>
+</blockquote>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/thrift_call_2.png" alt="client"></p>
+<h3 id="Server工作模式"><a href="#Server工作模式" class="headerlink" title="Server工作模式"></a>Server工作模式</h3><p>但凡后端人员接触这个库, 我觉得最感兴趣的, 一定是server的类型, 即服务器的工作模式. 当然网络编程玩烂的后端人员真正剖析的识货, 也就是见怪不怪了. (不知道我说啥的同学, 可以补一下 apue的9种网络模式或者参考unp 卷1)</p>
+<p>下面主要剖析一下(权做复习):</p>
+<ul>
+<li>TSimpleServer</li>
+<li>TNonblockingServer</li>
+<li>THsHaServer</li>
+<li>TThreadPoolServer</li>
+<li>TThreadedSelectorServer—优先剖析</li>
+</ul>
+<h3 id="连接池实现"><a href="#连接池实现" class="headerlink" title="连接池实现"></a>连接池实现</h3><p>再讲线程相关的内容时, 我连着对象池, 连接池, 线程池一起说了. 请参考本博客里线程池相关内容.</p>
+<p>(谁有时间再来看它的连接池接口代码吧—不懂源码不影响使用流程的)</p>
+<h2 id="对比其他框架"><a href="#对比其他框架" class="headerlink" title="对比其他框架."></a>对比其他框架.</h2><p>看到的RPC框架或者有RPC功能的框架已经算比较多的了, protobuffer, soap, grpc, 甚至libevent也说自己是rpc框架.</p>
+<p>pb更多的是提供了跨语言的序列化和反序列化机制, 而thrift则是在数据结构信息中提供了消息头用来进行RPC, 详细信息可以参考下图:(thrift消息体逻辑结构)</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/thrift_rpc.jpg" alt=""></p>
+<p>优点:</p>
+<ul>
+<li>用于搭建大型数据交换及存储的通用工具， 对于大型系统中的内部数据传输相对于 JSON 和 XML 无论在性能、传输大小上有明显的优势.</li>
+<li>拥有比较完整的体系(内嵌完整的RPC层次), 省去了很多手工编码的机会.</li>
+<li>多语言, 多数据类型支持(支持的语言比pb多, 还支持容器数据结构)</li>
+<li>运行开销性能比pb略好(cpu占用率维持在30%以内)<br><img src="http://omotkhw3y.bkt.clouddn.com/thrift_load.jpg" alt=""></li>
+</ul>
+<p>缺点:</p>
+<ul>
+<li>框架庞大(IDL借鉴与CORBA, 完成了整个服务端和客户端的架构体系), 排查错误费时间</li>
+<li>thrift是完全静态化的描述文件(生成器是硬编码而不是依据模板来的), 一旦数据结构发生改变, 须重新编辑IDL文件, 代码生成, 再编译载入的流程(和pb相比较弱)</li>
+<li>传输性能上比pb要略差(即使是压缩二进制 TCompactProtocol方式)</li>
+<li>参考资料少啊!</li>
+</ul>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>综合一圈玩下来, 这个库太棒了, 把我从学习网络以来的绝大部分工作全部整合成流程了, 而且效率也不差(参考网友的评测).</p>
+<p>但是就是坑太多! 如果你没有把它大部分源码吃透, 目前还不适合用于实际工程项目(我是指你负责这个项目工程的兜底工作), 并且由于其框架太重, 所以可能学习成本会稍高.</p>
+<p>墨镜王(王家卫导演啦)东邪西毒里有一句话, </p>
+<blockquote>
+<p>“男人看见一座山总想翻过去, 看看山的那一边是什么, 等真正翻过去了, 也没发现有什么好, 说不定山的这一边儿反而更好.”</p>
+</blockquote>
+<p>以后等它成熟了再来, 目前libevent + 手写代码(或者pb), 挺好的. (但是这个 <code>库的学习价值真的很高</code> , 比如说在线程管理上, 它用 boost::shared_ptr 弱引用保证被多个线程接纳的已死对象的清理工作; 并且在保证返回给调用者一定能拿到操作系统创建的线程时使用了弱引用指向自身, 这样在真正拿到线程之前就能保证不被操作系统过早清理掉–过早返回给ThreadMain的调用者是有可能被清理掉的…等等技巧)</p>
+<blockquote>
+<p>这个库没有说完, 以后有时间再回来更新.</p>
+</blockquote>
+<p>好累.</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="http://thrift.apache.org/" target="_blank" rel="noopener">http://thrift.apache.org/</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Apache_Thrift" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Apache_Thrift</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/java/j-lo-apachethrift" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/java/j-lo-apachethrift</a></li>
+<li><a href="http://thrift.apache.org/static/files/thrift-20070401.pdf" target="_blank" rel="noopener">http://thrift.apache.org/static/files/thrift-20070401.pdf</a></li>
+<li><a href="https://wiki.apache.org/thrift/ThriftInstallation" target="_blank" rel="noopener">https://wiki.apache.org/thrift/ThriftInstallation</a></li>
+<li><a href="https://wiki.apache.org/thrift/FrontPage" target="_blank" rel="noopener">https://wiki.apache.org/thrift/FrontPage</a></li>
+<li><a href="http://www.cnblogs.com/cyfonly/p/6059374.html" target="_blank" rel="noopener">和 Thrift 的一场美丽邂逅</a> 文章有一些地方讲述错误</li>
+<li><a href="http://blog.csdn.net/houjixin/article/details/42779915" target="_blank" rel="noopener">http://blog.csdn.net/houjixin/article/details/42779915</a></li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/6acc3344/">技术: Thrift</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2017-08-22, 08:08:22</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/6acc3344/" title="技术: Thrift">http://www.merlinblog.site/posts/6acc3344/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/6acc3344/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/8804d39c/">
+                    技术: 网络开发常用工具
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/8276c32/">
+                    技术: rapid-json
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开发流程"><span class="toc-number">2.2.</span> <span class="toc-text">开发流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#案例"><span class="toc-number">2.3.</span> <span class="toc-text">案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#rpc"><span class="toc-number">2.3.1.</span> <span class="toc-text">rpc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据传递"><span class="toc-number">2.3.2.</span> <span class="toc-text">数据传递</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#架构"><span class="toc-number">2.4.</span> <span class="toc-text">架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#协议规范"><span class="toc-number">2.4.1.</span> <span class="toc-text">协议规范</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#传输标准"><span class="toc-number">2.4.2.</span> <span class="toc-text">传输标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务端类型"><span class="toc-number">2.4.3.</span> <span class="toc-text">服务端类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#详细说明"><span class="toc-number">2.5.</span> <span class="toc-text">详细说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#传输框架"><span class="toc-number">2.5.1.</span> <span class="toc-text">传输框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#名字空间"><span class="toc-number">2.5.2.</span> <span class="toc-text">名字空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据类型"><span class="toc-number">2.5.3.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码生成"><span class="toc-number">2.5.4.</span> <span class="toc-text">代码生成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码分析"><span class="toc-number">2.6.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#调用流程"><span class="toc-number">2.6.1.</span> <span class="toc-text">调用流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Server工作模式"><span class="toc-number">2.6.2.</span> <span class="toc-text">Server工作模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#连接池实现"><span class="toc-number">2.6.3.</span> <span class="toc-text">连接池实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对比其他框架"><span class="toc-number">2.7.</span> <span class="toc-text">对比其他框架.</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/8804d39c/" title="上一篇: 技术: 网络开发常用工具">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/8276c32/" title="下一篇: 技术: rapid-json">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="熟悉客户端 GUI 编程, 一个 Qt 综合小案例。(2018年 重新整理了一下)">
+<meta name="keywords" content="cpp,qt,客户端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: Qt 实践(汽车销量管理)">
+<meta property="og:url" content="http://www.merlinblog.site/posts/5d0a2cfa/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="熟悉客户端 GUI 编程, 一个 Qt 综合小案例。(2018年 重新整理了一下)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-04-qt_car04.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-04-qt_car02.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-07-qt_car03.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-07-qt_car05.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-07-qt_car06.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-07-qt_car07.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-07-qt_car09.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-07-qt_car08.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-09-qt_car11.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-09-qt_car12.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-20-qt_car13.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-20-qtcar14.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-20-qtcar15.jpg">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.626Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: Qt 实践(汽车销量管理)">
+<meta name="twitter:description" content="熟悉客户端 GUI 编程, 一个 Qt 综合小案例。(2018年 重新整理了一下)">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/2018-01-04-qt_car04.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: Qt 实践(汽车销量管理) | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-prj_qt_car" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/5d0a2cfa/" class="article-date">
+      <time datetime="2017-01-11T06:30:44.000Z" itemprop="datePublished">2017-01-11</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: Qt 实践(汽车销量管理)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/">cpp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qt/">qt</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/客户端/">客户端</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>熟悉客户端 GUI 编程, 一个 Qt 综合小案例。(2018年 重新整理了一下)<br><a id="more"></a></p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本练习参考&amp;改造于 <qt5开发及实例> 电子工业出版社, 第16章 “汽车销售管理系统”。<br>(配套书籍中讲的非常简单，核心代码给与了实现，但是实际上跑起来各种出错)</qt5开发及实例></p>
+<p>目的，纯练手或者作为新手的练习项目，至于为啥选”汽车”主题，可能兴趣使然吧.</p>
+<p>涉及到的技术:</p>
+<ul>
+<li>多窗口切换</li>
+<li>stacked widget/Tool Box容器</li>
+<li>级联菜单</li>
+<li>Qt数据库操作(mysql)</li>
+<li>XML读写</li>
+<li>界面设计, 布局, 图像绘制(直方图)</li>
+<li>自定义控件等等</li>
+</ul>
+<p>功能简单，代码量不多，重点也不在业务逻辑上(汽车销售业务的子集)，中间穿插了其他的事情，不是一口气写完的。<br>总之 just for fun。</p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><h3 id="准备数据"><a href="#准备数据" class="headerlink" title="准备数据"></a>准备数据</h3><p>可以用代码先导入数据，我这边儿还是直接用 sql 语句直接导入了数据，方便。</p>
+<p>sql 语句: (没有使用外键约束，人为控制)<br><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-04-qt_car04.jpg" alt=""></p>
+<p>代码如下:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> qt_car <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci;</span><br><span class="line"></span><br><span class="line"><span class="keyword">USE</span> qt_car;</span><br><span class="line"></span><br><span class="line">## 品牌表</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> brand(<span class="keyword">id</span> <span class="built_in">int</span> PRIMARY <span class="keyword">KEY</span> AUTO_INCREMENT, <span class="keyword">name</span> <span class="built_in">varchar</span>(<span class="number">255</span>)) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;;</span><br><span class="line"></span><br><span class="line">### 插入数据</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> brand(<span class="keyword">name</span>) <span class="keyword">values</span>(<span class="string">'宝马'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> brand(<span class="keyword">name</span>) <span class="keyword">values</span>(<span class="string">'保时捷'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> brand(<span class="keyword">name</span>) <span class="keyword">values</span>(<span class="string">'雷克萨斯'</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 产品表</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>  product (<span class="keyword">id</span> <span class="built_in">int</span> PRIMARY <span class="keyword">KEY</span> AUTO_INCREMENT, brand <span class="built_in">varchar</span>(<span class="number">255</span>), <span class="keyword">name</span> <span class="built_in">varchar</span>(<span class="number">255</span>), price <span class="built_in">int</span>, <span class="keyword">sum</span> <span class="built_in">int</span>, sell <span class="built_in">int</span>, <span class="keyword">last</span> <span class="built_in">int</span>) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br><span class="line"></span><br><span class="line">### 插入数据</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> product(brand, <span class="keyword">name</span>, price, <span class="keyword">sum</span>, sell, <span class="keyword">last</span>) <span class="keyword">VALUES</span> (<span class="string">'宝马'</span>, <span class="string">'5系'</span>, <span class="number">56</span>, <span class="number">50</span>, <span class="number">18</span>, <span class="number">32</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> product(brand, <span class="keyword">name</span>, price, <span class="keyword">sum</span>, sell, <span class="keyword">last</span>) <span class="keyword">VALUES</span> (<span class="string">'宝马'</span>, <span class="string">'7系'</span>, <span class="number">176</span>, <span class="number">90</span>, <span class="number">8</span>, <span class="number">82</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> product(brand, <span class="keyword">name</span>, price, <span class="keyword">sum</span>, sell, <span class="keyword">last</span>) <span class="keyword">VALUES</span> (<span class="string">'宝马'</span>, <span class="string">'3系'</span>, <span class="number">33</span>, <span class="number">90</span>, <span class="number">40</span>, <span class="number">50</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> product(brand, <span class="keyword">name</span>, price, <span class="keyword">sum</span>, sell, <span class="keyword">last</span>) <span class="keyword">VALUES</span> (<span class="string">'保时捷'</span>, <span class="string">'Panamera'</span>, <span class="number">200</span>, <span class="number">30</span>, <span class="number">18</span>, <span class="number">12</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> product(brand, <span class="keyword">name</span>, price, <span class="keyword">sum</span>, sell, <span class="keyword">last</span>) <span class="keyword">VALUES</span> (<span class="string">'保时捷'</span>, <span class="string">'911'</span>, <span class="number">56</span>, <span class="number">33</span>, <span class="number">1</span>, <span class="number">32</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> product(brand, <span class="keyword">name</span>, price, <span class="keyword">sum</span>, sell, <span class="keyword">last</span>) <span class="keyword">VALUES</span> (<span class="string">'保时捷'</span>, <span class="string">'Macan'</span>, <span class="number">58</span>, <span class="number">110</span>, <span class="number">11</span>, <span class="number">99</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> product(brand, <span class="keyword">name</span>, price, <span class="keyword">sum</span>, sell, <span class="keyword">last</span>) <span class="keyword">VALUES</span> (<span class="string">'雷克萨斯'</span>, <span class="string">'IS'</span>, <span class="number">56</span>, <span class="number">50</span>, <span class="number">18</span>, <span class="number">32</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> product(brand, <span class="keyword">name</span>, price, <span class="keyword">sum</span>, sell, <span class="keyword">last</span>) <span class="keyword">VALUES</span> (<span class="string">'雷克萨斯'</span>, <span class="string">'NX'</span>, <span class="number">156</span>, <span class="number">50</span>, <span class="number">18</span>, <span class="number">32</span>);</span><br></pre></td></tr></table></figure>
+<p>效果：<br><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-04-qt_car02.jpg" alt=""></p>
+<p>说明：<em>也可以程序中操作数据库，不过一般开发，没人这么干</em></p>
+<h3 id="环境说明"><a href="#环境说明" class="headerlink" title="环境说明"></a>环境说明</h3><p>macOS + Qt5.5 + Mysql5.7(远端数据库) + Clang-900.0.39.2</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>主要功能切换都在主菜单上: 车辆管理 + 销售统计.</p>
+<h3 id="车辆管理"><a href="#车辆管理" class="headerlink" title="车辆管理"></a>车辆管理</h3><p><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-07-qt_car03.jpg" alt=""></p>
+<p>级联下拉框<br><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-07-qt_car05.jpg" alt=""><br><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-07-qt_car06.jpg" alt=""></p>
+<p>spinBox下拉框联动<br><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-07-qt_car07.jpg" alt=""></p>
+<p>提交写入数据库, 取消撤销操作.<br><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-07-qt_car09.jpg" alt=""></p>
+<p>整体效果:<br><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-07-qt_car08.jpg" alt=""></p>
+<p>XML读写正常:<br><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-09-qt_car11.jpg" alt=""><br>读写日志正常:<br><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-09-qt_car12.jpg" alt=""></p>
+<p>该部分的核心代码:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br></pre></td><td class="code"><pre><span class="line">MainWindow::MainWindow(QWidget *parent) :</span><br><span class="line">    QMainWindow(parent),</span><br><span class="line">    ui(<span class="keyword">new</span> Ui::MainWindow)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(<span class="keyword">this</span>);</span><br><span class="line">    setWindowTitle(<span class="string">"Merlin's Qt Car"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//一开始就可以锁定在第一个页面(直接调用槽函数)</span></span><br><span class="line">    on_actionCar_triggered();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化界面的数据 "车辆管理"</span></span><br><span class="line">    <span class="comment">//1.连接数据库</span></span><br><span class="line">    connectDB();</span><br><span class="line">    <span class="comment">//2.初始化数据</span></span><br><span class="line">    initData();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//3.创建日志xml</span></span><br><span class="line">    DomXML::createXML(<span class="string">"demo.xml"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//模拟添加</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> 0</span></span><br><span class="line">    QStringList <span class="built_in">list</span>;</span><br><span class="line">    <span class="built_in">list</span> &lt;&lt; "宝马" &lt;&lt; "5系" &lt;&lt; "38" &lt;&lt; "2" &lt;&lt; "39";</span><br><span class="line">    DomXML::appendXML("demo.xml", <span class="built_in">list</span>);</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">    //初始化统计 Model</span><br><span class="line">    createChartModelView();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*车辆管理*/</span><br><span class="line"><span class="keyword">void</span> MainWindow::on_actionCar_triggered()</span><br><span class="line">&#123;</span><br><span class="line">    //切换到车辆管理界面</span><br><span class="line">    ui-&gt;stackedWidget-&gt;setCurrentWidget(ui-&gt;car);</span><br><span class="line">    ui-&gt;label-&gt;setText(<span class="string">"车辆管理"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*销售统计*/</span></span><br><span class="line"><span class="keyword">void</span> MainWindow::on_actionCalc_triggered()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//切换到销售统计页面</span></span><br><span class="line">    ui-&gt;stackedWidget-&gt;setCurrentWidget(ui-&gt;calc);</span><br><span class="line">    ui-&gt;label-&gt;setText(<span class="string">"销售统计"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化图标数据界面</span></span><br><span class="line">    qDebug() &lt;&lt; <span class="string">"显示统计界面"</span>;</span><br><span class="line">    showChart();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//连接数据库</span></span><br><span class="line"><span class="keyword">void</span> MainWindow::connectDB()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//添加数据库</span></span><br><span class="line">    QSqlDatabase db = QSqlDatabase::addDatabase(<span class="string">"QMYSQL"</span>);</span><br><span class="line">    db.setHostName(<span class="string">"192.168.10.103"</span>);</span><br><span class="line">    db.setUserName(<span class="string">"root"</span>);</span><br><span class="line">    db.setPassword(<span class="string">"admin"</span>);</span><br><span class="line">    db.setDatabaseName(<span class="string">"qt_car"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//打开数据库</span></span><br><span class="line">    <span class="keyword">if</span> (!db.open()) &#123; <span class="comment">//失败的话</span></span><br><span class="line">        QMessageBox::warning(<span class="keyword">this</span>, <span class="string">"错误警告"</span>, <span class="string">"打开数据库失败: "</span>+db.lastError().text());</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//初始化数据</span></span><br><span class="line"><span class="keyword">void</span> MainWindow::initData()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//直接用 model 初始化</span></span><br><span class="line">    QSqlQueryModel *queryModel = <span class="keyword">new</span> QSqlQueryModel(<span class="keyword">this</span>);</span><br><span class="line">    queryModel-&gt;setQuery(<span class="string">"select name from brand"</span>); <span class="comment">//模型里面设置 sql 语句, 并存储其运行结果</span></span><br><span class="line"></span><br><span class="line">    ui-&gt;comboBoxFactory-&gt;setModel(queryModel);</span><br><span class="line">    ui-&gt;lineEditTotal-&gt;setEnabled(<span class="literal">false</span>); <span class="comment">//总价</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//品牌下拉框槽函数</span></span><br><span class="line"><span class="keyword">void</span> MainWindow::on_comboBoxFactory_currentIndexChanged(<span class="keyword">const</span> QString &amp;arg1)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (arg1 == <span class="string">""</span>) &#123;</span><br><span class="line">        ui-&gt;comboBoxBrand-&gt;clear();</span><br><span class="line">        ui-&gt;lineEditTotal-&gt;clear();</span><br><span class="line">        ui-&gt;lineEditTotal-&gt;clear();</span><br><span class="line">        ui-&gt;labelLast-&gt;setText(<span class="string">"0"</span>);</span><br><span class="line">        ui-&gt;spinBox-&gt;setValue(<span class="number">0</span>); <span class="comment">//数量选择框</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        QSqlQuery sql;</span><br><span class="line">        QString sqlStr = QString(<span class="string">"select name from product where brand ='%1'"</span>).arg(arg1);</span><br><span class="line">        sql.exec(sqlStr);</span><br><span class="line"></span><br><span class="line">        ui-&gt;comboBoxBrand-&gt;clear();<span class="comment">// 先清空产品</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (sql.next()) &#123;</span><br><span class="line">            QString productName = sql.value(<span class="number">0</span>).toString();</span><br><span class="line">            ui-&gt;comboBoxBrand-&gt;addItem(productName);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//产品下拉框改变时</span></span><br><span class="line"><span class="keyword">void</span> MainWindow::on_comboBoxBrand_currentIndexChanged(<span class="keyword">const</span> QString &amp;arg1)</span><br><span class="line">&#123;</span><br><span class="line">    QSqlQuery sql;</span><br><span class="line">    QString sqlStr = QString(<span class="string">"select price,last from product where brand ='%1' and name = '%2'"</span>)</span><br><span class="line">            .arg(ui-&gt;comboBoxFactory-&gt;currentText()).arg(arg1);</span><br><span class="line">    sql.exec(sqlStr);</span><br><span class="line"></span><br><span class="line">    ui-&gt;spinBox-&gt;setValue(<span class="number">0</span>); <span class="comment">//清空上次选择的数量</span></span><br><span class="line">    ui-&gt;btnSure-&gt;setEnabled(<span class="literal">false</span>); <span class="comment">//提交按钮失效</span></span><br><span class="line">    ui-&gt;lineEditTotal-&gt;clear(); <span class="comment">//清除上次计算的总价</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//应该只有一行数据</span></span><br><span class="line">    <span class="keyword">while</span> (sql.next()) &#123;</span><br><span class="line">        <span class="comment">//报价</span></span><br><span class="line">        <span class="keyword">int</span> price = sql.value(<span class="string">"price"</span>).toInt();</span><br><span class="line">        <span class="comment">//剩余数量</span></span><br><span class="line">        <span class="keyword">int</span> last = sql.value(<span class="string">"last"</span>).toInt();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//更新 ui (单价, 以及剩余数量)</span></span><br><span class="line">        ui-&gt;lineEditPrice-&gt;setText(QString::number(price));</span><br><span class="line">        ui-&gt;labelLast-&gt;setText(QString::number(last));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*spinBox 联动: 卖出的数量，剩余数量*/</span></span><br><span class="line"><span class="keyword">void</span> MainWindow::on_spinBox_valueChanged(<span class="keyword">int</span> count)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    QString brandStr = ui-&gt;comboBoxFactory-&gt;currentText(); <span class="comment">//获取品牌</span></span><br><span class="line">    QString proStr = ui-&gt;comboBoxBrand-&gt;currentText(); <span class="comment">//获取的车型</span></span><br><span class="line"></span><br><span class="line">    QSqlQuery query;</span><br><span class="line">    QString sql = QString(<span class="string">"select last from product where brand = '%1' and name = '%2'"</span>)</span><br><span class="line">            .arg(brandStr).arg(proStr);</span><br><span class="line"></span><br><span class="line">    query.exec(sql);</span><br><span class="line">    <span class="keyword">int</span> last;</span><br><span class="line">    <span class="keyword">while</span> (query.next()) &#123;</span><br><span class="line">        last = query.value(<span class="string">"last"</span>).toInt(); <span class="comment">//真正的剩余</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> tmpNum = last - count;</span><br><span class="line">    <span class="comment">//如果已经最大量了,就直接退出,    ui-&gt;spinBox-&gt;setMaximum();</span></span><br><span class="line">    <span class="keyword">if</span> (tmpNum &lt; <span class="number">0</span> ) &#123;</span><br><span class="line">        QMessageBox::warning(<span class="keyword">this</span>,<span class="string">"数量非法"</span>,<span class="string">"请确保销量不超过剩余库存量"</span>);</span><br><span class="line">        ui-&gt;spinBox-&gt;setValue(last);</span><br><span class="line">        ui-&gt;labelLast-&gt;setText(<span class="string">"0"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ui-&gt;labelLast-&gt;setText(QString::number(tmpNum));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//设置提交按钮可用</span></span><br><span class="line">    <span class="keyword">if</span>(ui-&gt;spinBox-&gt;value()&gt;<span class="number">0</span>) &#123;</span><br><span class="line">        ui-&gt;btnSure-&gt;setEnabled(<span class="literal">true</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ui-&gt;btnSure-&gt;setEnabled(<span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//同时计算总价</span></span><br><span class="line">    <span class="keyword">int</span> price = ui-&gt;lineEditPrice-&gt;text().toInt(); <span class="comment">//报价</span></span><br><span class="line">    <span class="keyword">int</span> cnt = ui-&gt;spinBox-&gt;value();</span><br><span class="line">    <span class="keyword">int</span> sum = price * cnt;</span><br><span class="line">    ui-&gt;lineEditTotal-&gt;setText(QString::number(sum));</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*确定录入*/</span></span><br><span class="line"><span class="keyword">void</span> MainWindow::on_btnSure_clicked()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//获取信息</span></span><br><span class="line">    <span class="keyword">int</span> cnt = ui-&gt;spinBox-&gt;value(); <span class="comment">// 获取销售数量</span></span><br><span class="line">    <span class="keyword">int</span> last = ui-&gt;labelLast-&gt;text().toInt(); <span class="comment">//获取剩余数量</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (cnt &lt;= <span class="number">0</span> ) &#123;</span><br><span class="line">        ui-&gt;btnSure-&gt;setEnabled(<span class="literal">false</span>);</span><br><span class="line">        QMessageBox::information(<span class="keyword">this</span>,<span class="string">"提交错误"</span>, <span class="string">"提交数量非法"</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取数据库的销量</span></span><br><span class="line">    QSqlQuery query;</span><br><span class="line">    QString sql = QString(<span class="string">"select sell from brand where brand='%1' and name='%2'"</span>)</span><br><span class="line">            .arg(ui-&gt;comboBoxFactory-&gt;currentText())</span><br><span class="line">            .arg(ui-&gt;comboBoxBrand-&gt;currentText());</span><br><span class="line">    query.exec(sql);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> sell;</span><br><span class="line">    <span class="keyword">while</span>( query.next()) &#123;</span><br><span class="line">        sell = query.value(<span class="string">"sell"</span>).toInt();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//更新数据库，剩余数量, 销售总量</span></span><br><span class="line">    sell += cnt;</span><br><span class="line"></span><br><span class="line">    sql = QString(<span class="string">"update product set sell=%1, last=%2 where brand='%3' and name='%4'"</span>)</span><br><span class="line">            .arg(sell)</span><br><span class="line">            .arg(last)</span><br><span class="line">            .arg(ui-&gt;comboBoxFactory-&gt;currentText())</span><br><span class="line">            .arg(ui-&gt;comboBoxBrand-&gt;currentText());</span><br><span class="line">    query.exec(sql);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//把确认后的数据更新到 XML 中</span></span><br><span class="line">    QStringList <span class="built_in">list</span>;</span><br><span class="line">    <span class="built_in">list</span> &lt;&lt; ui-&gt;comboBoxFactory-&gt;currentText()</span><br><span class="line">         &lt;&lt; ui-&gt;comboBoxBrand-&gt;currentText()</span><br><span class="line">         &lt;&lt; ui-&gt;lineEditPrice-&gt;text()</span><br><span class="line">         &lt;&lt; QString::number(cnt)</span><br><span class="line">         &lt;&lt; ui-&gt;lineEditTotal-&gt;text();</span><br><span class="line"></span><br><span class="line">    DomXML::appendXML(<span class="string">"demo.xml"</span>,<span class="built_in">list</span>); <span class="comment">//已经写入了XML</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//把当日销量, 显示在 右边儿 textEdit 上</span></span><br><span class="line">    QStringList readList[<span class="number">5</span>];</span><br><span class="line">    DomXML::readXML(<span class="string">"demo.xml"</span>, readList);</span><br><span class="line">    <span class="comment">//组装字符串，然后显示出来</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt; readList[<span class="number">0</span>].size(); i++) &#123;</span><br><span class="line">        QString str = QString(<span class="string">"%1:%2: 卖出了%3, 单价:%4, 总价:%5"</span>)</span><br><span class="line">                .arg(readList[<span class="number">0</span>].at(i))</span><br><span class="line">                .arg(readList[<span class="number">1</span>].at(i))</span><br><span class="line">                .arg(readList[<span class="number">2</span>].at(i))</span><br><span class="line">                .arg(readList[<span class="number">3</span>].at(i))</span><br><span class="line">                .arg(readList[<span class="number">4</span>].at(i));</span><br><span class="line">        qDebug() &lt;&lt; str.toUtf8().data();</span><br><span class="line">        ui-&gt;textEdit-&gt;append(str); <span class="comment">//显示</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    QMessageBox::information(<span class="keyword">this</span>,<span class="string">"成功"</span>,<span class="string">"数据已经入库"</span>);</span><br><span class="line">    <span class="comment">//然后重新初始化一次</span></span><br><span class="line">    on_comboBoxBrand_currentIndexChanged(ui-&gt;comboBoxBrand-&gt;currentText());</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//取消录入</span></span><br><span class="line"><span class="keyword">void</span> MainWindow::on_btnCancel_clicked()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//直接调用 initData()</span></span><br><span class="line">    <span class="comment">//initData();</span></span><br><span class="line"></span><br><span class="line">    QString currentProduct = ui-&gt;comboBoxBrand-&gt;currentText();</span><br><span class="line">    on_comboBoxBrand_currentIndexChanged(currentProduct);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码中，很多地方都直接忽略的错误处理。</p>
+<h3 id="销售统计"><a href="#销售统计" class="headerlink" title="销售统计"></a>销售统计</h3><p>这里采用了两个自定义控件: 直方图.</p>
+<p>以模块的方式组织进来的，<strong>可重用到其他项目</strong>.</p>
+<p>直接在 第二个界面，提升组件为 “PieView” 即可，见下图。<br><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-20-qt_car13.jpg" alt=""></p>
+<p>核心代码如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*ui构造的时候就应该设置 model*/</span></span><br><span class="line"><span class="keyword">void</span> MainWindow::createChartModelView()</span><br><span class="line">&#123;</span><br><span class="line">    chartModel = <span class="keyword">new</span> QStandardItemModel(<span class="keyword">this</span>);</span><br><span class="line">    chartModel-&gt;setColumnCount(<span class="number">2</span>);</span><br><span class="line">    chartModel-&gt;setHeaderData(<span class="number">1</span>, Qt::Horizontal, QString(<span class="string">"品牌"</span>));</span><br><span class="line">    chartModel-&gt;setHeaderData(<span class="number">0</span>, Qt::Vertical, QString(<span class="string">"销售数量"</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">//PieView *pieChart = new PieView;</span></span><br><span class="line"></span><br><span class="line">    ui-&gt;pieChart-&gt;setModel(chartModel);</span><br><span class="line"></span><br><span class="line">    QItemSelectionModel *selectModel = <span class="keyword">new</span> QItemSelectionModel(chartModel);</span><br><span class="line">    ui-&gt;pieChart-&gt;setSelectionModel(selectModel);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*菜单跳转的时候调用*/</span></span><br><span class="line"><span class="keyword">void</span> MainWindow::showChart()</span><br><span class="line">&#123;</span><br><span class="line">    QSqlQuery query;</span><br><span class="line">    query.exec(QString(<span class="string">"select name, sell from product where brand='%1'"</span>)</span><br><span class="line">               .arg(ui-&gt;comboBoxFactory-&gt;currentText()));</span><br><span class="line">    chartModel-&gt;removeRows(<span class="number">0</span>,chartModel-&gt;rowCount(QModelIndex()),QModelIndex());</span><br><span class="line">    <span class="keyword">int</span> row = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(query.next())&#123;</span><br><span class="line">        <span class="keyword">int</span> r = qrand()%<span class="number">256</span>;</span><br><span class="line">        <span class="keyword">int</span> g = qrand()%<span class="number">256</span>;</span><br><span class="line">        <span class="keyword">int</span> b = qrand()%<span class="number">256</span>;</span><br><span class="line"></span><br><span class="line">        chartModel-&gt;insertRows(row,<span class="number">1</span>,QModelIndex());</span><br><span class="line">        chartModel-&gt;setData(chartModel-&gt;index(row,<span class="number">0</span>,QModelIndex()),query.value(<span class="number">0</span>).toString());</span><br><span class="line">        chartModel-&gt;setData(chartModel-&gt;index(row,<span class="number">1</span>,QModelIndex()),query.value(<span class="number">1</span>).toInt());</span><br><span class="line">        chartModel-&gt;setData(chartModel-&gt;index(row,<span class="number">0</span>,QModelIndex()),QColor(r,g,b),Qt::DecorationRole);</span><br><span class="line">        row++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*销售统计*/</span></span><br><span class="line"><span class="keyword">void</span> MainWindow::on_actionCalc_triggered()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//切换到销售统计页面</span></span><br><span class="line">    ui-&gt;stackedWidget-&gt;setCurrentWidget(ui-&gt;calc);</span><br><span class="line">    ui-&gt;label-&gt;setText(<span class="string">"销售统计"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化图标数据界面</span></span><br><span class="line">    qDebug() &lt;&lt; <span class="string">"显示统计界面"</span>;</span><br><span class="line">    showChart();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>效果大致如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-20-qtcar14.jpg" alt=""><br><img src="http://omotkhw3y.bkt.clouddn.com/2018-01-20-qtcar15.jpg" alt=""></p>
+<p>但是自定义 UI 是个技术活，需要为当前项目定制或者微调。不展开。</p>
+<p>该控件的核心代码:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//.h文件中声明</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    QItemSelectionModel *selections;</span><br><span class="line">    QList&lt;QRegion&gt; RegionList;</span><br><span class="line"></span><br><span class="line"><span class="comment">//.cpp代码中实现核心逻辑 (由于是在主界面绘制，所以重写 paintEvent)</span></span><br><span class="line"><span class="keyword">void</span> PieView::paintEvent(QPaintEvent *)</span><br><span class="line">&#123;</span><br><span class="line">    QPainter painter(viewport());</span><br><span class="line">    painter.setPen(Qt::black);</span><br><span class="line">    <span class="keyword">int</span> x0=<span class="number">40</span>;</span><br><span class="line">    <span class="keyword">int</span> y0=<span class="number">250</span>;</span><br><span class="line">    <span class="comment">//y坐标轴</span></span><br><span class="line">    painter.drawLine(x0,y0,<span class="number">40</span>,<span class="number">30</span>);</span><br><span class="line">    painter.drawLine(<span class="number">38</span>,<span class="number">32</span>,<span class="number">40</span>,<span class="number">30</span>);</span><br><span class="line">    painter.drawLine(<span class="number">40</span>,<span class="number">30</span>,<span class="number">42</span>,<span class="number">32</span>);</span><br><span class="line">    painter.drawText(<span class="number">20</span>,<span class="number">15</span>,tr(<span class="string">"销售数量"</span>));</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;<span class="number">5</span>;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        painter.drawLine(<span class="number">-1</span>,-i*<span class="number">50</span>,<span class="number">1</span>,-i*<span class="number">50</span>);</span><br><span class="line">        painter.drawText(<span class="number">-20</span>,-i*<span class="number">50</span>,tr(<span class="string">"%1"</span>).arg(i*<span class="number">5</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//x 坐标轴</span></span><br><span class="line">    painter.drawLine(x0,y0,<span class="number">540</span>,<span class="number">250</span>);</span><br><span class="line">    painter.drawLine(<span class="number">538</span>,<span class="number">248</span>,<span class="number">540</span>,<span class="number">250</span>);</span><br><span class="line">    painter.drawLine(<span class="number">540</span>,<span class="number">250</span>,<span class="number">538</span>,<span class="number">252</span>);</span><br><span class="line">    painter.drawText(<span class="number">445</span>,<span class="number">240</span>,tr(<span class="string">"品牌"</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> pos=x0+<span class="number">60</span>;</span><br><span class="line">    <span class="keyword">int</span> row;</span><br><span class="line">    <span class="keyword">for</span>(row=<span class="number">0</span>;row&lt;model()-&gt;rowCount(rootIndex());row++)</span><br><span class="line">    &#123;</span><br><span class="line">        QModelIndex index=model()-&gt;index(row,<span class="number">0</span>,rootIndex());</span><br><span class="line">        QString dep=model()-&gt;data(index).toString();</span><br><span class="line"></span><br><span class="line">        painter.drawText(pos,y0+<span class="number">20</span>,dep);</span><br><span class="line">        pos+=<span class="number">50</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> posN=x0+<span class="number">60</span>;</span><br><span class="line">    <span class="keyword">for</span>(row=<span class="number">0</span>;row&lt;model()-&gt;rowCount(rootIndex());row++)</span><br><span class="line">    &#123;</span><br><span class="line">        QModelIndex index=model()-&gt;index(row,<span class="number">1</span>,rootIndex());</span><br><span class="line">        <span class="keyword">int</span> sell=model()-&gt;data(index).toDouble();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> width=<span class="number">10</span>;</span><br><span class="line">        QModelIndex colorIndex = model()-&gt;index(row,<span class="number">0</span>,rootIndex());</span><br><span class="line">        QColor color = QColor(model()-&gt;data(colorIndex,Qt::DecorationRole).toString());</span><br><span class="line">        <span class="keyword">if</span>(selections-&gt;isSelected(index))</span><br><span class="line">            painter.setBrush(QBrush(color,Qt::Dense3Pattern));</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            painter.setBrush(QBrush(color));</span><br><span class="line"></span><br><span class="line">        painter.drawRect(QRect(posN,y0-sell*<span class="number">5</span>,width,sell*<span class="number">5</span>));</span><br><span class="line">        <span class="function">QRegion <span class="title">regionM</span><span class="params">(posN,y0-sell*<span class="number">5</span>,width,sell*<span class="number">5</span>)</span></span>;</span><br><span class="line">        RegionList&lt;&lt;regionM;</span><br><span class="line"></span><br><span class="line">        posN+=<span class="number">50</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">QRegion PieView::itemRegion(QModelIndex index)</span><br><span class="line">&#123;</span><br><span class="line">    QRegion region;</span><br><span class="line">    <span class="keyword">if</span> (index.column() == <span class="number">1</span>)		<span class="comment">// 销售数量</span></span><br><span class="line">        region = RegionList[index.row()];</span><br><span class="line">    <span class="keyword">return</span> region;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">QModelIndex PieView::indexAt(<span class="keyword">const</span> QPoint &amp;point) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    QPoint newPoint(point.x(),point.y());</span><br><span class="line">    QRegion region;</span><br><span class="line">    foreach(region,RegionList)				<span class="comment">// 销售数量-列</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (region.contains(newPoint))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> row = RegionList.indexOf(region);</span><br><span class="line">            QModelIndex index = model()-&gt;index(row,<span class="number">1</span>,rootIndex());</span><br><span class="line">            <span class="keyword">return</span> index;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> QModelIndex();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本来只是基于 <qt5开发及实例> 电子工业出版社 这本书的练习代码，但是整个做下来。<br>几乎 Qt 关键的技术点都用到了， 收获还是不错的；至于离 Qt 高手的境界，还有很远的路呀。</qt5开发及实例></p>
+<p>btw: 那本书中错误不少呀。。。</p>
+<p>如需完整代码，请邮件 gmail我。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2017-01-11, 14:30:44</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/5d0a2cfa/" title="技术: Qt 实践(汽车销量管理)">http://www.merlinblog.site/posts/5d0a2cfa/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/5d0a2cfa/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/e3b79a82/">
+                    技巧: linux下查看二进制文件
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/77d8483b/">
+                    技巧: Qt 快捷键
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境配置"><span class="toc-number">2.</span> <span class="toc-text">环境配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#准备数据"><span class="toc-number">2.1.</span> <span class="toc-text">准备数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#环境说明"><span class="toc-number">2.2.</span> <span class="toc-text">环境说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码实现"><span class="toc-number">3.</span> <span class="toc-text">代码实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#车辆管理"><span class="toc-number">3.1.</span> <span class="toc-text">车辆管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#销售统计"><span class="toc-number">3.2.</span> <span class="toc-text">销售统计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">4.</span> <span class="toc-text">小结</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/e3b79a82/" title="上一篇: 技巧: linux下查看二进制文件">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/77d8483b/" title="下一篇: 技巧: Qt 快捷键">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

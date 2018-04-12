@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="设计模式, 仅此一文.">
+<meta name="keywords" content="cpp,设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: 设计模式 C++ 实现">
+<meta property="og:url" content="http://www.merlinblog.site/posts/be09a73/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="设计模式, 仅此一文.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.jpg">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.620Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: 设计模式 C++ 实现">
+<meta name="twitter:description" content="设计模式, 仅此一文.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: 设计模式 C++ 实现 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-about-design-patterns" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/be09a73/" class="article-date">
+      <time datetime="2016-06-10T09:29:25.000Z" itemprop="datePublished">2016-06-10</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: 设计模式 C++ 实现
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/">cpp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>设计模式, 仅此一文.<br><a id="more"></a></p>
+<blockquote>
+<p>没别的, 就是把设计模式过一遍, 最后还补充了Boost库中用到的几个设计模式.</p>
+<blockquote>
+<p>相关代码可以参考我的github库 <a href="https://github.com/WizardMerlin/design_pattern_life" target="_blank" rel="noopener">设计模式C++实现</a></p>
+</blockquote>
+</blockquote>
+<p>除了CTO之外, 技术领域的最高阶”架构师”的必修之术.<br>因为即使有机会, 我也不会去做”架构师”, 所以此篇是 <code>最终篇</code> , 博客以后再不说设计模式.</p>
+<p>(后续可能会有修订)</p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>设计模式, 面试的时候常考, 但是实际上工作中用到的, 也就那么几种: 工厂方法, 观察者, 代理, 装饰者, 单例等.</p>
+<p>面向对象设计模式是一套被反复使用, 多数人知晓的代码设计经验总结. 一般分为: 创建型模式, 机构型模式, 行为模式.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.jpg" alt=""></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h2><p>解决如何创建对象的问题, 详细内容可以参考: <a href="https://github.com/WizardMerlin/design_pattern_life/blob/master/创建模型.md" target="_blank" rel="noopener">https://github.com/WizardMerlin/design_pattern_life/blob/master/创建模型.md</a></p>
+<h3 id="简单工厂"><a href="#简单工厂" class="headerlink" title="简单工厂"></a>简单工厂</h3><p>在工厂中集中相关的产品创建逻辑, 内部判断要创建那种具体的产品.</p>
+<h3 id="工厂方法-Factory-Method"><a href="#工厂方法-Factory-Method" class="headerlink" title="工厂方法(Factory Method)"></a>工厂方法(Factory Method)</h3><p>在简单工厂的基础上, 改善扩展性, 定义接口用于创建对象, 但是具体的实现创建逻辑推迟到具体的子类中.<br>(每种具体的产品需要一个对应的具体工厂)</p>
+<h3 id="抽象工厂-Abstract-Factory"><a href="#抽象工厂-Abstract-Factory" class="headerlink" title="抽象工厂(Abstract Factory)"></a>抽象工厂(Abstract Factory)</h3><p>在工厂方法的基础上(创建还是交给子类去实现), 提供更多统一的创建接口, 可以一下生产一个产品族, 即每次一个子类工厂可以生成多个具体的产品.</p>
+<h3 id="建造者-Builder"><a href="#建造者-Builder" class="headerlink" title="建造者(Builder)"></a>建造者(Builder)</h3><p>将复杂对象的构建(创建)与表示(组装)分离, 使得同样的构建过程可以创建不同的表示(不同的组合体).<br>先一个个的创建对象的每一个部件(builder里面不同的抽象方法来创建), 再统一组装成一个对象(从产品生成器中生成产品, 传入builder引用)</p>
+<h3 id="原型-Prototype"><a href="#原型-Prototype" class="headerlink" title="原型(Prototype)"></a>原型(Prototype)</h3><p>原型模式使用类的实例通过拷贝的方式创建对象, 具体的拷贝行为可以定制.<br>最常见的用法为类实现一个 <code>Clone()</code> 成员函数(或者拷贝构造函数), 这个函数创建一个与原型相同或者相似的新对象</p>
+<h3 id="单例-Singleton"><a href="#单例-Singleton" class="headerlink" title="单例(Singleton)"></a>单例(Singleton)</h3><p>运行时, 类有且仅有一个实例(避免产生多个实例对象), 但是注意线程同步问题.</p>
+<h2 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h2><p>如何组合类或者对象, 更而形成更大更有用的新对象; 减小耦合, 防止臃肿.</p>
+<p>详细解释可以参考 : <a href="https://github.com/WizardMerlin/design_pattern_life/blob/master/结构型模型.md" target="_blank" rel="noopener">https://github.com/WizardMerlin/design_pattern_life/blob/master/结构型模型.md</a></p>
+<h3 id="适配器-Adapter"><a href="#适配器-Adapter" class="headerlink" title="适配器(Adapter)"></a>适配器(Adapter)</h3><p>把一个类的接口转换成另一个接口, 在不改变原有代码的基础上复用原代码; 或者使原来不同共同工作的相关类可以兼容工作.<br>(注意原有代码, 这一点是前提)</p>
+<h3 id="桥接-Bridge"><a href="#桥接-Bridge" class="headerlink" title="桥接(Bridge)"></a>桥接(Bridge)</h3><p>将抽象部分与实现部分分离(多个变化部分就使用多个抽象, 继承或者成员对象), 使它们都可以独立的变化.<br>(有多少处变化就进行多少处抽离)</p>
+<h3 id="组合-Composite"><a href="#组合-Composite" class="headerlink" title="组合(Composite)"></a>组合(Composite)</h3><p>将小对象组合成树形结构.(它们往往都有相似的结构, 例如文件和目录)</p>
+<h3 id="装饰-Decorator"><a href="#装饰-Decorator" class="headerlink" title="装饰(Decorator)"></a>装饰(Decorator)</h3><p>运行时动态地给对象增加功能.</p>
+<h3 id="外观-Facade"><a href="#外观-Facade" class="headerlink" title="外观(Facade)"></a>外观(Facade)</h3><p>为系统中大量对象提供一个一致的对外接口, 简化系统使用.</p>
+<h3 id="享元-Flyweight"><a href="#享元-Flyweight" class="headerlink" title="享元(Flyweight)"></a>享元(Flyweight)</h3><p>使用共享的方式节约内存的使用(如果对象已经存在了, 那么直接重用该对象).</p>
+<h3 id="代理-Proxy"><a href="#代理-Proxy" class="headerlink" title="代理(Proxy)"></a>代理(Proxy)</h3><p>代理与被代理对象往往拥有相同的接口(可能继承同一个抽象类), client如果要调用相关动作, 就要通过代理接口, 而不能直接使用真实的动作类.<br>它的意图不是改变接口插入新系统(适配), 也不是为对象增加职责(装饰), 而是要控制对象.<br>智能指针库, 利用代理模式将原始指针包装，代理原始指针的职能.</p>
+<h2 id="行为模式"><a href="#行为模式" class="headerlink" title="行为模式"></a>行为模式</h2><p>解决对象之间的相互调用, 动态行为等问题, 详细内容可以参考: <a href="https://github.com/WizardMerlin/design_pattern_life/blob/master/行为型.md" target="_blank" rel="noopener">https://github.com/WizardMerlin/design_pattern_life/blob/master/行为型.md</a></p>
+<h3 id="模板-Template-method"><a href="#模板-Template-method" class="headerlink" title="模板(Template method)"></a>模板(Template method)</h3><p>模板方法模式准备一个抽象类, 将部分逻辑以具体方法及具体构造子类的形式实现, 然后声明一些抽象方法来迫使子类实现剩余的逻辑.<br>不同的子类可以以不同的方式实现这些抽象方法, 从而对剩余的逻辑有不同的实现. </p>
+<p>先构建一个顶级逻辑框架, 而将逻辑的细节留给具体的子类去实现.</p>
+<h3 id="命令-Command"><a href="#命令-Command" class="headerlink" title="命令(Command)"></a>命令(Command)</h3><p>将一个请求封装为一个对象, 从而使你可用不同的对象对客户进行参数化.<br>(通常客户端的调用包括:方法+参数)<br>Command 模式通过被称为Command 的类封装了对目标对象的调用行为以及调用参数(命令消息模式)</p>
+<h3 id="职责链-Chain-of-Responsibility"><a href="#职责链-Chain-of-Responsibility" class="headerlink" title="职责链(Chain of Responsibility)"></a>职责链(Chain of Responsibility)</h3><p>把对象连成一条链, 使链上的每个对象都有机会处理请求.<br>(当前处理者会保留一个引用指向下一个处理者)<br>一旦第一个责任处理者引发处理, 之后就开始不同的调用执行(直到停止).</p>
+<h3 id="策略-Strategy"><a href="#策略-Strategy" class="headerlink" title="策略(Strategy)"></a>策略(Strategy)</h3><p>封装不同的“算法”, 使它们可以在运行时相互替换.<br>为所有算法定义一个抽象的算法接口并通过继承该抽象算法接口对所有的算法加以封装和实现具体的算法选择交由客户端决定(策略), Strategy 模式主要用来平滑地处理算法的切换.<br>通常能实现同一接口的算法, 功能类似, 如加密中的AES, DES.</p>
+<h3 id="中介者-Mediator"><a href="#中介者-Mediator" class="headerlink" title="中介者(Mediator)"></a>中介者(Mediator)</h3><p>包装了一系列对象相互作用的方式, 使得这些对象不必相互明显作用, 从而使它们可以松散偶合.(避免了直接交互)<br>当某些对象之间的作用发生改变时, 不会立即影响其他的一些对象之间的作用, 保证这些作用可以彼此独立的变化.<br>(但是中介类必须知道交互双方的信息, 即保留两者的引用)</p>
+<h3 id="观察者-Observer-–订阅发布"><a href="#观察者-Observer-–订阅发布" class="headerlink" title="观察者(Observer)–订阅发布"></a>观察者(Observer)–订阅发布</h3><p>定义对象间一对多的联系, 当一个对象的状态发生变化时，所有与它有联系的观察者对象都会得到通知</p>
+<h3 id="备忘录-Memento"><a href="#备忘录-Memento" class="headerlink" title="备忘录(Memento)"></a>备忘录(Memento)</h3><p>备忘录对象是一个用来存储另外一个对象内部状态的快照的对象.<br>备忘录模式的用意是在不破坏封装的条件下, 将一个对象的状态捉住, 外部化, 存储起来; 从而可以在将来合适的时候把这个对象还原到存储起来的状态.</p>
+<h3 id="访问者-Visitor"><a href="#访问者-Visitor" class="headerlink" title="访问者(Visitor)"></a>访问者(Visitor)</h3><p>分离类的内部元素和访问它们的操作, 可以在不改变内部元素的情况下增加作用于它们的新操作.<br>(简单说, 原来类的成员方法, 全部封装到了一个单独的类Visitor中, 之后依靠accept(Visitor *)方法通过Vistor访问)<br>(因为访问还是在原来的类内部调用visitor对象, 所以可以给visitor传递this指针, 这样visitor就可以访问成员数据了)</p>
+<h3 id="状态-State"><a href="#状态-State" class="headerlink" title="状态(State)"></a>状态(State)</h3><p>允许对象在状态发生变化时, 行为也同时发生改变.(行为随着属性变化, 并且状态间可以内部流转)本质上是 <code>判断然后调用相关犯法</code> 逻辑的抽象.<br>(具体来说, 就是原来的类保留一个抽象State* state, 然后通过state对象进行调用; 由于state对象知道原来的类的内部状态, 所以可以做相关判断)</p>
+<h3 id="解释器-Interpreter"><a href="#解释器-Interpreter" class="headerlink" title="解释器(Interpreter)"></a>解释器(Interpreter)</h3><p>给定一个语言, 定义它的文法的一种表示, 并定义一个解释器, 该解释器使用该表示来解释语言中的句子.<br>(同样的语句, 经过不同解释器的解释, 可能得到的结果就不一样了)</p>
+<h3 id="迭代器-Iterator"><a href="#迭代器-Iterator" class="headerlink" title="迭代器(Iterator)"></a>迭代器(Iterator)</h3><p>提供一种方法顺序访问一个聚合对象中各个元素, 而又不需暴露该对象的内部表示.<br>(外部的iterator保留一个集合对象的引用, 然后内部记录索引, 进行对集合的访问)<br>(集合类只需要能够getIterator对象就可以了)</p>
+<h2 id="Boost库用到的"><a href="#Boost库用到的" class="headerlink" title="Boost库用到的"></a>Boost库用到的</h2><h3 id="空对象"><a href="#空对象" class="headerlink" title="空对象"></a>空对象</h3><p>用于返回无意义的对象时，它可以承担处理null的责任</p>
+<h3 id="包装外观"><a href="#包装外观" class="headerlink" title="包装外观"></a>包装外观</h3><p>通过外观的包装, 使应用程序只能看到外观对象，而不会看到具体的细节对象, 这样无疑会降低应用程序的复杂度, 并且提高了程序的可维护性.<br>不同于外观为大量对象或者说面向对象子系统提供一个统一的接口, 包装模式是为不同平台或者底层API提供一个统一的接口.</p>
+<h3 id="前摄器模式-Proactor-—分角色的模式"><a href="#前摄器模式-Proactor-—分角色的模式" class="headerlink" title="前摄器模式(Proactor)—分角色的模式"></a>前摄器模式(Proactor)—分角色的模式</h3><p>用于为异步事件多路分离和分派处理器的对象行为模式.<br>不使用线程就完成了异步操作(不考虑线程同步).</p>
+<p>组成部分如下：</p>
+<ul>
+<li>前设器： 1.创建完成处理器， 2.调用异步处理器， 3.调用异步多路分离器</li>
+<li>完成处理器： 用于异步任务完成后的回调</li>
+<li>异步操作处理器： 处理异步操作， 把完成的事件放入 完成队列</li>
+<li>异步事件多路分离器：从完成队列中取出事件， 分配“完成处理器”(让它处理相关回调或者后续操作)</li>
+<li>完成队列： 存放已经执行完毕的异步操作事件</li>
+</ul>
+<p>asio就是使用该模式.</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2016-06-10, 17:29:25</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/be09a73/" title="技术: 设计模式 C++ 实现">http://www.merlinblog.site/posts/be09a73/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/be09a73/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/f8283c77/">
+                    技术: C++面向对象部分
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/956ee661/">
+                    技术: mysql-connector-cpp
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建型模式"><span class="toc-number">2.1.</span> <span class="toc-text">创建型模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简单工厂"><span class="toc-number">2.1.1.</span> <span class="toc-text">简单工厂</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工厂方法-Factory-Method"><span class="toc-number">2.1.2.</span> <span class="toc-text">工厂方法(Factory Method)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#抽象工厂-Abstract-Factory"><span class="toc-number">2.1.3.</span> <span class="toc-text">抽象工厂(Abstract Factory)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#建造者-Builder"><span class="toc-number">2.1.4.</span> <span class="toc-text">建造者(Builder)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原型-Prototype"><span class="toc-number">2.1.5.</span> <span class="toc-text">原型(Prototype)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#单例-Singleton"><span class="toc-number">2.1.6.</span> <span class="toc-text">单例(Singleton)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结构型模式"><span class="toc-number">2.2.</span> <span class="toc-text">结构型模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#适配器-Adapter"><span class="toc-number">2.2.1.</span> <span class="toc-text">适配器(Adapter)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#桥接-Bridge"><span class="toc-number">2.2.2.</span> <span class="toc-text">桥接(Bridge)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组合-Composite"><span class="toc-number">2.2.3.</span> <span class="toc-text">组合(Composite)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#装饰-Decorator"><span class="toc-number">2.2.4.</span> <span class="toc-text">装饰(Decorator)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#外观-Facade"><span class="toc-number">2.2.5.</span> <span class="toc-text">外观(Facade)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#享元-Flyweight"><span class="toc-number">2.2.6.</span> <span class="toc-text">享元(Flyweight)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代理-Proxy"><span class="toc-number">2.2.7.</span> <span class="toc-text">代理(Proxy)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#行为模式"><span class="toc-number">2.3.</span> <span class="toc-text">行为模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#模板-Template-method"><span class="toc-number">2.3.1.</span> <span class="toc-text">模板(Template method)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令-Command"><span class="toc-number">2.3.2.</span> <span class="toc-text">命令(Command)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#职责链-Chain-of-Responsibility"><span class="toc-number">2.3.3.</span> <span class="toc-text">职责链(Chain of Responsibility)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#策略-Strategy"><span class="toc-number">2.3.4.</span> <span class="toc-text">策略(Strategy)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#中介者-Mediator"><span class="toc-number">2.3.5.</span> <span class="toc-text">中介者(Mediator)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#观察者-Observer-–订阅发布"><span class="toc-number">2.3.6.</span> <span class="toc-text">观察者(Observer)–订阅发布</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#备忘录-Memento"><span class="toc-number">2.3.7.</span> <span class="toc-text">备忘录(Memento)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#访问者-Visitor"><span class="toc-number">2.3.8.</span> <span class="toc-text">访问者(Visitor)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#状态-State"><span class="toc-number">2.3.9.</span> <span class="toc-text">状态(State)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解释器-Interpreter"><span class="toc-number">2.3.10.</span> <span class="toc-text">解释器(Interpreter)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#迭代器-Iterator"><span class="toc-number">2.3.11.</span> <span class="toc-text">迭代器(Iterator)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Boost库用到的"><span class="toc-number">2.4.</span> <span class="toc-text">Boost库用到的</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#空对象"><span class="toc-number">2.4.1.</span> <span class="toc-text">空对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#包装外观"><span class="toc-number">2.4.2.</span> <span class="toc-text">包装外观</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#前摄器模式-Proactor-—分角色的模式"><span class="toc-number">2.4.3.</span> <span class="toc-text">前摄器模式(Proactor)—分角色的模式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/f8283c77/" title="上一篇: 技术: C++面向对象部分">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/956ee661/" title="下一篇: 技术: mysql-connector-cpp">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

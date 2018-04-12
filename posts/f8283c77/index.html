@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="C++ 面向对象部分总结.">
+<meta name="keywords" content="cpp,面向对象">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: C++面向对象部分">
+<meta property="og:url" content="http://www.merlinblog.site/posts/f8283c77/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="C++ 面向对象部分总结.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.620Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: C++面向对象部分">
+<meta name="twitter:description" content="C++ 面向对象部分总结.">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: C++面向对象部分 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-c-plus-plus-again" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/f8283c77/" class="article-date">
+      <time datetime="2016-06-21T13:04:25.000Z" itemprop="datePublished">2016-06-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: C++面向对象部分
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/">cpp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/面向对象/">面向对象</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>C++ 面向对象部分总结.</p>
+<a id="more"></a>
+<p>几个月前我总结了一下<a href="http://www.merlinblog.site/2017/04/06/c-plus-plus.html">c-plus-plus</a>中涉及到的核心内容, 包括 STL, Boost. 但是并没有 “详细” 去说内容, 现在有时间了, 详细总结一下 <code>面向对象基础</code>.</p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>本篇主要讲 <code>三大特性</code>, 我把它分成了以下7个部分:</p>
+<ul>
+<li>封装部分</li>
+<li>构造析构部分</li>
+<li>静态成员部分</li>
+<li>对象模型部分(重点)</li>
+<li>友元部分</li>
+<li>运算符重载部分(重点)</li>
+<li>多态部分(重点)</li>
+<li>纯虚函数抽象类部分(重点)</li>
+</ul>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>三大特性: 封装, 继承, 多态.</p>
+<h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><p>封装的两层含义:</p>
+<ul>
+<li>把属性和方法进行封装(整合)</li>
+<li>对属性和方法进行访问控制(对外控制)</li>
+</ul>
+<h2 id="构造和析构函数"><a href="#构造和析构函数" class="headerlink" title="构造和析构函数"></a>构造和析构函数</h2><ul>
+<li><p>构造函数和析构函数的作用</p>
+<p>  构造函数处理对象的初始化, 构造函数是一种特殊的成员函数, 与其他成员函数不同, 不需要用户来调用它, 而是在建立对象时自动执行.析构函数销毁的时候, 自动调用, 释放对象占用的资源.(不用显示调用虽好, 但是cpp的设计, 有时候你不知道编译器偷偷在后面干了什么事儿)</p>
+</li>
+<li><p>构造器的分类</p>
+<p>无参, 有参, 拷贝构造(包括后来添加的移动构造之类的)</p>
+</li>
+<li><p>拷贝构造函数调用时机<br>(拿一个已经存在的对象去初始化另外一个对象; 以及函数调用&amp;返回值采用值传递的情况)<br>可能会产生中间变量, 例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Location <span class="title">g</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="function">Location <span class="title">A</span><span class="params">(<span class="number">1</span>, <span class="number">2</span>)</span></span>;</span><br><span class="line">  <span class="keyword">return</span> A;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*调用*/</span></span><br><span class="line"><span class="comment">/*对象初始化操作 和 =等号操作 是两个不同的概念</span></span><br><span class="line"><span class="comment">  匿名对象的去和留, 关键看返回时如何接, 但是匿名对象一定会产生 */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mainobjplay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//若返回的匿名对象, 赋值给另外一个同类型的对象, 那么匿名对象会被析构</span></span><br><span class="line">  Location B;</span><br><span class="line">  B = g(); <span class="comment">//用匿名对象 赋值 给 B 对象, 然后匿名对象析构</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//若返回的匿名对象来初始化另外一个同类型的对象, 那么匿名对象会直接转成新的对象</span></span><br><span class="line">  <span class="comment">//意思是说匿名对象被扶正了, 不会被析构(小三上位了)</span></span><br><span class="line">  Location B = g();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>默认的构造器</p>
+<p>默认无参和默认拷贝构造器, 以及构造器的重载</p>
+</li>
+<li><p>构造函数生成规则</p>
+<p>一旦提供了构造函数, 编译器不再提供默认构造器; 拷贝构造只有在使用到了才会默认生成.</p>
+</li>
+<li><p>深拷贝和浅拷贝</p>
+<p>默认拷贝最怕有指针成员.解决方法: 手动提供拷贝构造函数, operator=()重载(这部分可以自己写一个String类就明白了).</p>
+</li>
+<li><p>初始化列表</p>
+<ul>
+<li>类成员是另外对象(该类没有提供无参构造器)</li>
+<li>类成员中含有一个 const 对象</li>
+<li>类成员存在引用</li>
+</ul>
+<p>补充详细说明:</p>
+<p>如果我们有一个类成员, 它本身是一个类或者是一个结构, 而且这个成员它只有一个带参数的构造函数, 没有默认构造函数. 这时要对这个类成员进行初始化, 就必须调用这个类成员的带参数的构造函数, 如果没有初始化列表, 那么他将无法完成第一步, 就会报错.</p>
+</li>
+<li><p>初始化和赋值的区别</p>
+<p>初始化: 被初始化的对象正在创建<br>赋值: 被赋值的对象已经存在<br>(在构造函数体中是对他们的赋值, 而不是初始化, 所以const和引用必须使用初始化列表)</p>
+</li>
+<li><p>构造和析构顺序</p>
+<ul>
+<li>成员变量的初始化顺序与声明的顺序相关, 与在初始化列表中的顺序无关</li>
+<li>初始化列表先于构造函数的函数体执行</li>
+<li>当类中有成员变量是其它类的对象时, 首先调用成员变量的构造函数, 调用顺序与声明顺序相同, 之后调用自身类的构造函数</li>
+<li>析构函数的调用顺序与对应的构造函数调用顺序相反</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>构造器委托</p>
+<p>构造函数中调用构造函数, 是一个蹩脚的行为(不但达不到目的, 还会产生临时对象)</p>
+</li>
+<li><p>编译器对于new的处理</p>
+<p>在执行 new 运算时, 如果内存量不足, 无法开辟所需的内存空间, 目前大多数 C++编译系统都使 new 返回一个 0 指针值. 只要检测返回值是否为 0, 就可判断分配内存是否成功; ANSI C++标准提出, 在执行 new 出现故障时, 就“抛出”一个“异常”, 用户可根据异常进行有关处理. 但 C++标准仍然允许在出现 new 故障时返回 0 指针值. 当前, 不同的编译系统对 new 故障的处理方法是不同的.(注意new关键字引起系列动作)</p>
+</li>
+<li><p>malloc和new最关键的区别</p>
+<p>new关键字会引起系列动作, 远非一个malloc库函数可比. 简要的说, 区别在于会不会主动调用构造器, 编辑虚表指针等.(当然还有更多, 值得我们单独讨论; 区分以下 <code>new</code> 和 <code>operator new()</code> 就对了)</p>
+</li>
+</ul>
+<h2 id="静态成员部分"><a href="#静态成员部分" class="headerlink" title="静态成员部分"></a>静态成员部分</h2><p>静态数据成员以及静态成员函数</p>
+<ul>
+<li>所有对象共享, 不属于对象成员, 而是类属性.</li>
+<li>放在类外初始化(最好放在cpp文件中)</li>
+<li>非静态能访问静态成分, 但是静态不能访问非静态成分</li>
+<li>静态成员函数提供不依赖于类数据结构(对象)的共同操作, 它没有 this 指针</li>
+<li>静态成员函数有两种调用方式, 但最终都会转换成通过类名限定进行调用</li>
+</ul>
+<p>(静态, 说白了是一种共享机制)</p>
+<h2 id="C-对象模型部分"><a href="#C-对象模型部分" class="headerlink" title="C++对象模型部分"></a>C++对象模型部分</h2><p>这部分主要就是说c++比c多了哪些面向对象的特性, 以及底层是怎么实现的.<br>大致分为两个部分: (但两部分都要涉及编译器对于相关feature的支持)</p>
+<ul>
+<li>语言中直接支持面向对象程序设计的部分<br>主要涉及如构造函数,析构函数,虚函数,继承(单继承,多继承,虚继承),多态等等</li>
+<li>底层实现(例如虚函数, 多态的实现需要借助虚表指针)</li>
+</ul>
+<p>实现部分详细说: (参考一下 “inside the cpp obj model” 这本书)</p>
+<ul>
+<li><p>直接绑定<br>在 c 语言中, “数据” 和“处理数据的操作(函数)” 是分开来声明的, 也就是说, 语言本身并没有支持“数据和函数” 之间的关联性; 在 c++中, 通过抽象数据类型(abstract datatype, ADT), 在类中定义数据和函数, 来实现数据和函数直接的绑定.</p>
+</li>
+<li><p>成分分类<br>两种成员数据: static, nonstatic<br>三种成员函数： static, nonstatic, virtual</p>
+</li>
+<li><p>类, 对象以及其关系的支持<br>c++编译器是如何区分是哪个具体的对象调用这个方法呢?—this指针</p>
+</li>
+</ul>
+<ul>
+<li><p>编译器对属性和方法的处理机制</p>
+<ul>
+<li>C++类对象中的成员变量和成员函数是分开存储的<ul>
+<li>普通成员变量: 存储于对象中(与 struct 变量有相同的内存布局和字节对齐方式)</li>
+<li>静态成员变量: 存储于全局数据区中</li>
+<li>成员函数: 存储于代码段中</li>
+</ul>
+</li>
+<li>C++编译器对普通成员函数的内部处理(编译时增加了一个this参数)<br>隐式包含一个指向当前对象的 this 指针, 类的成员函数可通过 const 修饰, 这个const其实就是修饰的this指针.</li>
+</ul>
+</li>
+<li><p>补充this指针</p>
+<ul>
+<li>把全局函数转化成成员函数, 通过 this 指针隐藏左操作数<br>Test add(Test &amp;t1, Test &amp;t2) ===》 Test add( Test &amp;t2)</li>
+<li>把成员函数转换成全局函数, 多了一个参数<br>void printAB() ===》 void printAB(Test *pthis)</li>
+<li>许多设计模式里面也会用到传递this指针, 比如说状态模式.</li>
+<li>函数返回元素和返回引用<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Test&amp; <span class="title">add</span><span class="params">(Test &amp;t2)</span> <span class="comment">//*this //函数返回引用</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">this</span>-&gt;a = <span class="keyword">this</span>-&gt;a + t2.getA();</span><br><span class="line">  <span class="keyword">this</span>-&gt;b = <span class="keyword">this</span>-&gt;b + t2.getB();</span><br><span class="line">  <span class="keyword">return</span> *<span class="keyword">this</span>; <span class="comment">//*操作让 this 指针回到元素状态</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="友元部分"><a href="#友元部分" class="headerlink" title="友元部分"></a>友元部分</h2><p>访问限制符public或者private或者protected, 根本无法限制friend修饰的友元函数或者友元类.</p>
+<ul>
+<li><p>外部(全局)友元函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point</span></span></span><br><span class="line"><span class="class">&#123;</span>    </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">double</span> X;</span><br><span class="line">    <span class="keyword">double</span> Y;</span><br><span class="line">    <span class="function"><span class="keyword">friend</span> <span class="keyword">double</span> <span class="title">Distance</span><span class="params">(Point &amp;a, Point &amp;b)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">Distance</span><span class="params">(Point &amp;a, Point &amp;b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">double</span> dx = a.X - b.X;</span><br><span class="line">    <span class="keyword">double</span> dy = a.Y - b.Y;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sqrt</span>(dx*dx + dy*dy);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>友元类<br>(若 B 类是 A 类的友员类, 则 B 类的所有成员函数都是 A 类的友员函数–可以直接通过A的外部对象访问私有数据的)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">friend</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span>;</span> <span class="comment">//B是A的友元</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> x;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    A aObj;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Set</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">        aObj.x = i;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  (可以看到友元类中无隐私)</p>
+</li>
+</ul>
+<p>友元类, 一般用做类之间传递消息的辅助类(迪米特法则, 不和陌生人讲话).</p>
+<h2 id="运算符重载部分-重点"><a href="#运算符重载部分-重点" class="headerlink" title="运算符重载部分(重点)"></a>运算符重载部分(重点)</h2><p>(这一部分很强大, 但是不是很好用, 其他有一些编程语言如Java直接隐藏了该功能)</p>
+<p>好在常用的重载运算符符号也不是很多: 自增自减, 算数运算符, &lt;&lt;和&gt;&gt;, 赋值, [], ()</p>
+<ul>
+<li><p>简介<br>现在貌似用的最多的就是仿函数(或者说函数对象)领域用到的 operator()()”一名多用”, 同样的运算符赋予不同的, 新的含义.<br>举例:<br>用户自定义类型编译器无法让变量相加, 此时就要对Complex这个类进行一下重载.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Complex c3 = c1 + c2;</span><br></pre></td></tr></table></figure>
+<p>  (编译器在编译时进行改名, 所以支持重载)</p>
+</li>
+</ul>
+<ul>
+<li><p>不能重载的运算符</p>
+<p>.  和 .* 和 ?: 和 ::  和 sizeof</p>
+</li>
+</ul>
+<ul>
+<li><p>重载方式<br>成员函数和友元函数(主要是参数个数的问题):</p>
+<p>重载运算符函数名: <code>operator+(参数表)</code></p>
+<ul>
+<li>隐式调用形式: <code>obj1+obj2</code></li>
+<li>显式调用形式:<ul>
+<li><code>obj1.operator+(OBJ obj2)</code>—成员函数</li>
+<li><code>operator+(OBJ obj1，OBJ obj2)</code>—友元函数</li>
+</ul>
+</li>
+</ul>
+<p>一般情况下建议`一元运算符使用成员函数, 二元运算符使用外部友元函数, 多个参数的时候尽量使用外部友元函数. 具体规则: </p>
+<ul>
+<li>所有一元运算符采用<code>成员函数</code></li>
+<li>一般二元运算符, 例如: <code>–</code>, <code>+</code>, <code>*</code>, <code>/</code> 应该重载为外部友元函数, 特殊二元如下:<ul>
+<li><code>=</code> <code>( )</code> <code>[ ]</code>  <code>-&gt;</code>  —– 必须重载为成员函数(为啥？因为需要this指针)</li>
+<li><code>+=</code> <code>-=</code> <code>/=</code> <code>*=</code> <code>^=</code> <code>&amp;=</code> <code>!=</code> <code>%=</code> <code>&gt;&gt;=</code> <code>&lt;&lt;=</code>   —- 应该重载为成员函数</li>
+</ul>
+</li>
+<li><code>&lt;&lt;</code>  `&gt;&gt;  —– 必须是友元函数</li>
+</ul>
+</li>
+</ul>
+<p> 更加一般性的规则: (和本类对象有关, this有关的, 都用成员函数的方式; 第一个参数不是本类指针或者引用,对象的, 都要外部函数的方式)</p>
+<pre><code>* 运算符的操作需要修改类对象的状态则使用成员函数(例如需要做左值操作数的运算符(如=,+=,++)), 并且函数返回值充当左值, 一般返回一个引用
+* 运算时, 有数和对象的混合运算时, 必须使用外部友元函数
+* 二元运算符中, 第一个操作数为非对象或者非本类对象时, 必须使用外部友元函数, 如输入输出运算符 `&lt;&lt;` 和 `&gt;&gt;` 
+</code></pre><p> 根据开发的习惯:</p>
+<pre><code>* (), =, [], -&gt;全部重载为成员函数
+* &gt;&gt;和&lt;&lt;重载为外部友元函数
+</code></pre><hr>
+<p>下面介绍一下常用的重载</p>
+<ul>
+<li><p>前缀和后缀</p>
+<ul>
+<li>具体的例子<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point</span>  </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line"><span class="keyword">private</span>:  </span><br><span class="line">    <span class="keyword">int</span> x; </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">   constPoint <span class="keyword">operator</span>++();</span><br><span class="line">   Point <span class="keyword">operator</span>++(<span class="keyword">int</span> x); </span><br><span class="line"></span><br><span class="line">   <span class="keyword">friend</span> <span class="keyword">const</span> Point <span class="keyword">operator</span>--(Point&amp; p);</span><br><span class="line">   <span class="keyword">friend</span>  Point <span class="keyword">operator</span>--(Point&amp; p, <span class="keyword">int</span> x);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>说明:</p>
+<ul>
+<li><p>a++<br>函数返回: temp(临时变量)<br>函数返回是否是const类型: 返回是一个拷贝后的临时变量, 不能出现在等号的左边(临时变量不能做左值), 函数的结果只能做右值, 则要返回一个const类型的值</p>
+</li>
+<li><p>++a<br>函数返回: *this;<br>函数返回是否是const类型: 返回原状态的本身, 返回值可以做左值, 即函数的结果可以做左值, 则要返回一个非const类型的值</p>
+</li>
+<li><p>其他补充: 参数-返回值的const问题</p>
+<ul>
+<li>如果返回值可能出现在=号左边, 则只能作为左值, 返回非const引用</li>
+<li>如果返回值只能出现在=号右边, 则只需作为右值, 返回const型引用或者const型值</li>
+<li>如果返回值既可能出现在=号左边或者右边, 则其返回值须作为左值, 返回非const引用</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p> 其他运算符重载 : <code>[]</code> 运算符, <code>()</code>运算符, <code>&gt;&gt;</code>或者<code>&lt;&lt;</code></p>
+<ul>
+<li>[] 运算符<br>重载下标运算符[ ]的目的 :<ul>
+<li>对象[x]  类似于 数组名[x]，更加符合习惯</li>
+<li>可以对下标越界作出判断<br>语法 :</li>
+<li>重载方式: 只能使用成员函数重载</li>
+<li>函数名: operator<a href="参数表"> </a></li>
+<li>参数表: 一个参数, 有且仅有一个参数, 该参数设定了下标值, 通常为整型, 但是也可以为字符串(看成下标)</li>
+<li>函数调用:<ul>
+<li>显式调用：Obj[arg]-对象[下标]</li>
+<li>隐式调用：obj.operator<a href="arg"> </a><br>*返回类型:</li>
+<li>返回函数引用 或者 返回成员的实际类型（由程序员根据函数体定义）</li>
+<li>因为返回值可以做左值和右值, 应该不使用返回值为const类型</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>() 运算符</p>
+<ul>
+<li><p>重载运算符( )的目的:</p>
+<ul>
+<li>对象( )  类似于 函数名(x)，更加符合习惯</li>
+<li>作为函数对象functor, 用于回调</li>
+</ul>
+</li>
+<li><p>语法:</p>
+<ul>
+<li>重载方式: 只能使用成员函数重载(重载后还可以继续重载)</li>
+<li>函数名: operator( )(参数表)</li>
+<li>参数表: 参数随意，具体根据实际情况而定。</li>
+<li>函数调用: <ul>
+<li>隐式调用: Obj(x)</li>
+<li>显式调用: obj.operator( )(x)  </li>
+</ul>
+</li>
+<li>返回类型:<ul>
+<li>返回成员的实际类型随意(具体由程序员根据函数体定义)</li>
+<li>因为返回值只能做右值,只读,应该使用返回值为const类型</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>&gt;&gt;</code> 或者 &lt;&lt; 运算符</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point</span>  </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line"><span class="keyword">private</span>:  </span><br><span class="line">    <span class="keyword">int</span> x; </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">    Point(<span class="keyword">int</span> x1)&#123; x=x1; &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//可以看到全部使用引用</span></span><br><span class="line">    <span class="keyword">friend</span> ostream&amp; <span class="keyword">operator</span>&lt;&lt;(ostream&amp; <span class="built_in">cout</span>,<span class="keyword">const</span> Point&amp; p);</span><br><span class="line">    <span class="keyword">friend</span> istream&amp; <span class="keyword">operator</span>&gt;&gt;(istream&amp; <span class="built_in">cin</span>,Point&amp; p);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>语法:</p>
+<ul>
+<li>重载方式: 只能使用友元函数重载 且 使用3个引用&amp;(2个参数返回值);</li>
+<li>函数名: <ul>
+<li>输出流: operator&lt;&lt;(参数表)</li>
+<li>输入流: operator&gt;&gt;(参数表)</li>
+</ul>
+</li>
+<li>参数表: 固定(容易出错啊), 两个参数均用引用&amp;</li>
+<li>输出流:  必须是两个参数(对输出流ostream&amp; 和 输出对象)<br>  第一个操作数传入cout, 定义在文件iostream中, 是标准类类型ostream的对象的引用.<br>  如: ostream&amp; cout, const Point&amp; p</li>
+<li>输入流:  必须是两个参数(对输入流ostream&amp; 和 输入对象)<br>  第一个操作数是cin，定义在文件iostream，实际上是标准类类型istream的对象的引用<br>  如: instream&amp; cin, const Point&amp; p</li>
+<li>函数调用:<ul>
+<li>输出流: <ul>
+<li>显式调用 <code>cout&lt;&lt;对象</code></li>
+<li>隐式调用 <code>operator&lt;&lt;(cout, 对象)</code></li>
+</ul>
+</li>
+<li>输入流: <ul>
+<li>显式调用 <code>cin&gt;&gt;对象</code></li>
+<li>隐式调用 <code>operator&gt;&gt;(cin, 对象)</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>返回类型: 返回类型固定 或者 使用返回函数引用(推荐，可以实现链式调用)</p>
+<ul>
+<li>输出流: 返回ostream&amp;<ul>
+<li>如 <code>ostream&amp; operator&lt;&lt;(ostream&amp; cout, const Point&amp; p)</code></li>
+</ul>
+</li>
+<li>输入流: 返回istream&amp;<ul>
+<li>如 <code>istream&amp; operator&gt;&gt;(istream&amp; cin, Point&amp; p)</code></li>
+</ul>
+</li>
+</ul>
+<p>为什么输入输出操作符的重载必须使用友元函数？<br>因为成员函数要求是有对象调用, 则第一个参数必须是本类的对象的引用, 但是 <code>&lt;&lt;</code> 和 <code>&gt;&gt;</code> 第一个参数是流的对象引用. 故不能使用成员函数.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><code>=</code>运算符</p>
+<ul>
+<li><p>大概形式</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="class"><span class="keyword">class</span> <span class="title">Point</span></span></span><br><span class="line"><span class="class"> &#123;</span></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">Point&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Point&amp;);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>一般写法是:</p>
+<ul>
+<li>先释放旧内存, 然后分配新内存</li>
+<li>实现内容的复制</li>
+<li>返回一个引用(实现从右到左的链式调用) <code>*this</code><br>案例是:</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Name&amp; <span class="keyword">operator</span>=(Name &amp;obj1)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//1 先释放obj3旧的内存</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>-&gt;m_p != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">delete</span>[] m_p;</span><br><span class="line">        m_len = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//2 根据obj1分配内存大小</span></span><br><span class="line">    <span class="keyword">this</span>-&gt;m_len = obj1.m_len;</span><br><span class="line">    <span class="keyword">this</span>-&gt;m_p = <span class="keyword">new</span> <span class="keyword">char</span> [m_len+<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//3把obj1赋值给obj3</span></span><br><span class="line">    <span class="built_in">strcpy</span>(m_p, obj1.m_p);</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>不要重载 &amp;&amp; 和 || 以及 , 运算符<br>这一条, 具体可以参考一下《effective c++》</p>
+<ul>
+<li>主要原因:<br>&amp;&amp;和||内置实现操作数的短路规则(即运算顺序), 因为cpp开发者并没有保证函数调用时, 参数校验的顺序, 而&amp;&amp;, ||, 逗号运算符一定是从左到右实行的, 而一旦调用了函数, 实际上两个参数都会校验, 就和原来的短路校验相违背了.</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>重载案例<br>MyString 和 智能指针的(<code>*</code>, <code>-&gt;</code>)运算操作符都是很好的案例.<br>(面试喜欢考察这个, 后面专门写)</li>
+</ul>
+<h2 id="继承和派生部分"><a href="#继承和派生部分" class="headerlink" title="继承和派生部分"></a>继承和派生部分</h2><ul>
+<li><p>简介</p>
+<ul>
+<li>子类拥有父类的所有成员变量和成员函数(除了构造和析构之外的成员方法, (并且这些成员的访问属性, 在派生过程中是可以调整的, 通过不同的继承方式)</li>
+<li>子类可以拥有父类没有的方法和属性</li>
+<li>子类就是一种特殊的父类</li>
+<li>子类对象可以当作父类对象使用</li>
+</ul>
+</li>
+<li><p>权限问题<br>C++中的继承方式(public, private, protected)会影响子类对父类属性(从父类继承而来的属性)的访问(包括类和类外).</p>
+<ul>
+<li>继承中的访问控制<br>从父类继承的成分, 在继承到子类的时候, 是可以通过不同的继承方式修改其访问权限的, 具体如下:</li>
+<li>public 继承: 父类成员在子类中保持原有访问级别</li>
+<li>private 继承: 父类成员在子类中变为 private 成员</li>
+<li>protected 继承: <ul>
+<li>父类中 public 成员会变成 protected</li>
+<li>父类中 protected 成员仍然为 protected</li>
+<li>父类中 private 成员仍然为 private</li>
+</ul>
+</li>
+</ul>
+<p>private 成员在子类中依然存在, 但是却无法访问到. 不论种方式继承基类, 派生类都不能直接使用基类的私有成员.<br>总结就是: 派生类对基类成员的访问由继承方式和成员性质共同决定.</p>
+</li>
+<li><p>protected问题<br>设置protected权限在没有继承的时候, 体现不出来其优良的设计; 但是结合继承方式的后, 就发现protected访问权限是专门针对子类设计的.<br>总结就是: 访问控制上, private和public分别针对了类内和类外, 而protected是专门用来针对于子类的访问的(类内类外包括父类内外和子类内外).</p>
+</li>
+</ul>
+<ul>
+<li><p>兼容性规则<br>多态的基础之一, 限定范围是: 公有继承.</p>
+<p>具体如下:</p>
+<ul>
+<li>子类对象可以当作父类对象使用</li>
+<li>子类对象可以直接赋值给父类对象</li>
+<li>子类对象可以直接初始化父类对象</li>
+<li>父类指针可以直接指向子类对象</li>
+<li>父类引用可以直接引用子类对象</li>
+</ul>
+<p>派生类对象就可以作为基类的对象使用, 但是只能使用从基类继承的成员.</p>
+</li>
+</ul>
+<ul>
+<li><p>继承中的构造和析构</p>
+<ul>
+<li>在子类对象构造时, 需要调用父类构造函数对其继承得来的成员进行初始化</li>
+<li>在子类对象析构时, 需要调用父类析构函数对其继承得来的成员进行清理</li>
+</ul>
+<p>创建派生类对象时, 先调用基类构造函数初始化派生类中的基类成员, 调用析构函数的次序和调用构造函数的次序相反, 具体规则如下:</p>
+<ul>
+<li>子类对象在创建时会首先调用父类的构造函数</li>
+<li>父类构造函数执行结束后, 执行子类的构造函数</li>
+<li>当父类的构造函数有参数时, 需要在子类的初始化列表中显示调用</li>
+<li>析构函数调用的先后顺序与构造函数相反</li>
+</ul>
+<p>继承和组合混搭的时候</p>
+<ul>
+<li>先构造父类, 再构造成员变量, 最后构造自己</li>
+<li>先析构自己, 在析构成员变量, 最后析构父类</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>继承中同名变量<br>子类和父类中存在同名变量的问题.<ul>
+<li>当子类成员变量与父类成员变量同名时, 子类依然从父类继承同名成员(但是父类成员默认被屏蔽shadow)</li>
+<li>在子类中通过作用域分辨符::进行同名成员区分(在派生类中使用基类的同名成员显式地使用类名限定符), 例如 <code>derive.Base::member</code>;</li>
+<li>同名成员存储在内存中的不同位置</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>继承中static<br>如果是基类中定义的static变量, 那么将被所有的派生子类共享; 在派生中的访问规则由父类访问控制和继承方式共同决定.<br>派生类中访问静态成员, 用以下形式显式说明:</p>
+<ul>
+<li><code>类名::成员</code></li>
+<li><code>对象名.成员</code></li>
+</ul>
+<p>怎么初始化呢？<br>谁定义, 谁自己显示初始化.<br>(父类自己定义的, 父类自己在类外显示初始化)</p>
+</li>
+</ul>
+<h3 id="多继承-虚拟继承"><a href="#多继承-虚拟继承" class="headerlink" title="多继承(虚拟继承)"></a>多继承(虚拟继承)</h3><pre><code>这又是个强大而又危险的特性
+</code></pre><ul>
+<li><p>简介<br>大致形式:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> 派生类名 :</span> 访问控制 基类名 <span class="number">1</span> , 访问控制 基类名 <span class="number">2</span> , ... , 访问控制 基类名 n </span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  多继承极大的发挥了重用的特性, 但是也引入了不小的复杂性.</p>
+</li>
+<li><p>派生类构造和访问</p>
+<ul>
+<li>初始化列表调用基类构造函数初始化数据成员</li>
+<li>初始化顺序和定义派生的顺序有关, 和初始化列表顺序无关.</li>
+<li>一个派生类对象拥有多个直接或间接基类的成员, 不同名成员访问不会出现二义性<br>(如果不同的基类有同名成员, 派生类对象访问时应该加以识别)</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>二义性问题<br>如果一个派生类从多个基类派生, 而这些基类又有一个共同的基类, 则在对该基类中声明的变量进行访问时, 可能产生二义性(因为多个直接基类都继承了间接基类的某些特性).具体的说(从子类往上看), 在构造末端子类对象的时候, 间接基类的构造器会被其直接基类调用多次, 导致子类对象会存多个间接基类中的成员.<br>(这个时候, 你要访问末端子类中的某些成分可能要指定是哪个直接基类从间接基类得到的)</p>
+<pre><code>举个列子:
+
+a---&gt; b1, b2---&gt;c
+那么c的对象, 如果要访问a的成员, 直接指定 `c.a::成员` 是不行的, 必须指定直接基类, 例如 `c.b1::成员` , `c.b2::成员`.
+</code></pre><ul>
+<li>总结一下:<ul>
+<li>如果一个派生类从多个基类派生, 而这些基类又有一个共同的基类, 则在对该基类中声明的名字进行访问时, 可能产生二义性</li>
+<li>如果在多条继承路径上有一个公共的基类, 那么在继承路径的某处汇合点, 这个公共基类就会在派生类的对象中产生多个基类子对象 (可以看到a对象的构造器被调用了多次)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>虚继承<br>虚继承就是解决存在公共基类时, 访问的成员的二义性问题的.<br>指定公共基类的继承方式是 <code>虚拟继承</code>, 使这个公共基类在派生类中只产生一个子对象, 使这个公共基类成为虚基类.虚继承声明使用关键字 virtual.(之后可以直接使用<code>c.a::成员</code>进行访问)</p>
+<p>  <code>c.b1::成员</code> 或者 <code>c.b2::成员</code>在末端子类对象c中实际上保留的是一个a对象的指针, 只存在一份公共基类对象, 通过公共基类的构造器被调用的次数就可以知道了.</p>
+</li>
+</ul>
+<h2 id="多态部分-重点"><a href="#多态部分-重点" class="headerlink" title="多态部分(重点)"></a>多态部分(重点)</h2><p>   多态的表现和实现原理.</p>
+<p>   多态: 同样的调用一句有多种不同的表现形态(具体还是要运行时的具体指向).(多态引入的灵活变化, 也是多种设计模式的基础; 模块间要松散, 模块内要内聚)</p>
+<h3 id="virtual"><a href="#virtual" class="headerlink" title="virtual"></a>virtual</h3><p>父类的方法, 如果默认没有virtual方法支持, 那么子类中原型的方法就会隐藏父类的方法(或者重定义父类方法). 父类中被重写的函数依然会继承给子类, 默认情况下子类中重写的函数将隐藏父类中的函数. 通过作用域分辨符 <code>::</code>可以访问到父类中被隐藏的函数, 如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Child child;</span><br><span class="line">Parent *p = <span class="literal">NULL</span>;</span><br><span class="line">p = &amp;child;</span><br><span class="line">p.print(); <span class="comment">//parent metdho</span></span><br><span class="line"></span><br><span class="line">child.print(); <span class="comment">//child method</span></span><br><span class="line">child.Parent::print();</span><br></pre></td></tr></table></figure>
+<p>说明:</p>
+<ul>
+<li>在编译此函数的时, 编译器不可能知道指针 p 究竟指向了什么, 但编译器也没有理由报错, 于是, 编译器认为最安全的做法是编译到父类的 print 函数, 因为父类和子类肯定都有相同的 print 函数. (静态联编) (重载就是采用的这种方式)</li>
+<li>virtual方法的出现引入了虚表, 多了运行时判别<code>父类指针具体指向或者引用</code>的过程: 运行时如果判别指针指向的子类对象, 那么就会调用子类的方法(重写的父类的virtual方法)</li>
+</ul>
+<h3 id="父类指针-引用"><a href="#父类指针-引用" class="headerlink" title="父类指针(引用)"></a>父类指针(引用)</h3><p>指针运算是按照指针所指的类型进行的<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//p++ 等价于 p=p+1 </span></span><br><span class="line">p = (<span class="keyword">unsigned</span> <span class="keyword">int</span>)basep + <span class="keyword">sizeof</span>(*p); <span class="comment">// 注意这里是 *p</span></span><br></pre></td></tr></table></figure></p>
+<p>因为父类和子类的数据成员不一样(虚表指针vptr也是数据成员之一), 所以父类指针 p++ 和子类指针 p++ 的长度是不一样.<br>(当用父类指针操作子类对象数组, 不要使用++, 应该使用index, 和[])</p>
+<h3 id="多态成立条件"><a href="#多态成立条件" class="headerlink" title="多态成立条件"></a>多态成立条件</h3><p>详细探讨:</p>
+<pre><code>1. 有继承
+2. 有(virtual)函数重写
+3. 有父类指针（父类引用） 指向子类对象
+4. 通过父类指针调用重写的父类的virutal方法
+</code></pre><h3 id="联编-绑定"><a href="#联编-绑定" class="headerlink" title="联编(绑定)"></a>联编(绑定)</h3><p>多态中使用的是动态联编, 即延迟绑定.</p>
+<p><code>静态联编</code> 和 <code>动态联编</code> 是两种重要的编译技术</p>
+<ul>
+<li>联编是指一个程序模块、 代码之间互相关联的过程。</li>
+<li>静态联编(static binding), 是程序的匹配, 连接在编译阶段实现, 也称为早期匹配; 重载函数使用静态联编(直接指定了虚拟地址)</li>
+<li>动态联编是指程序联编推迟到运行时进行, 所以又称为晚期联编(迟绑定), 运行时需要寻址; switch 语句和 if 语句是动态联编的例子</li>
+</ul>
+<ul>
+<li>静态联编补充<br>没有virtual限定的时候, 编译器默认认为父类指针就指向父类对象.由于程序没有运行, 所以不可能知道父类指针指向的具体是父类对象还是子类对象, 就是由于 <code>静态联编</code> .<br>从程序安全的角度, 编译器假设父类指针只指向父类对象, 因此编译的结果为调用父类的成员函数. 这种特性就是静态联编. 重载是在编译期间根据参数类型和个数决定函数调用, 又称为静多态; 而动多态是在运行时决定具体的调用.</li>
+</ul>
+<h3 id="多态和构造虚构"><a href="#多态和构造虚构" class="headerlink" title="多态和构造虚构"></a>多态和构造虚构</h3><p>常被问道的问题如下:</p>
+<pre><code>1. 构造和析构能不能是虚函数; 
+2. 构造或者析构中调用虚函数能不能有多态行为.
+3. 虚表指针(VPTR)被编译器初始化的过程(其实只要依据virutal关键字)
+</code></pre><p>回答这些问题就需要了解c++多态实现原理, 具体是指虚表(见下面).</p>
+<p>下面直接说结论(简单解释): </p>
+<ul>
+<li>构造函数不能是虚函数; 析构函数应该是虚函数, 特别是存在virtual方法, 并且有子类继承的时候, 这个时候父类虚构器必须是虚函数, 否则通过父类指针(其指向子类对象)操作的情景下, 父类析构函数可以正常调用, 但是子类析构函数就不会被调用.</li>
+<li>析构函数调用虚函数不会形成多态(一般编译器是这样处理的: new关键字调用operator new()分配内存, 初始化成员, 编辑虚表), 因为对象的构建还没有完成, 主要是指虚表或者虚表指针的编辑工作还没有完成, 不会形成多态.</li>
+<li>析构函数中调用虚函数也不会形成多态, 并且这种行为很危险; 因为对象已经销毁了(内存已经释放了), 再通过该父类指针进行调用很危险.</li>
+</ul>
+<p>构造函数或者析构函数调用虚函数不能形成多态的原因总结为  “有父类指针(父类引用)指向子类对象”, 或者说子类对象没有形成(已经析构, 没有实在的指向), 只有当对象的构造完全结束后 VPTR 的指向才最终确定.</p>
+<h3 id="虚表指针"><a href="#虚表指针" class="headerlink" title="虚表指针"></a>虚表指针</h3><ul>
+<li>虚表<br>如果类中存在虚函数, 那么编译时编译器就为该类生成虚表, 增加数据成员虚表指针(每个对象一个).</li>
+</ul>
+<p>子类的虚表是在父类的基础上改善完成, 特别是子类存在virutal函数重写时, 重写时子类重写的函数排在虚表的前面, 父类的排在后面. 也就是说虚表如果是一个链表(或者数组), 它是头插入法, 并且虚表指针是一般指向虚表的头, 仅仅只有虚函数的函数入口地址会被加入虚表.</p>
+<p>通过虚函数表指针 VPTR 调用重写函数是在程序运行时进行的,  因此需要通过 <code>寻址操作</code> 才能确定真正应该调用的函数(虚表遍历或者查找), 而普通成员函数是在编译时就确定了调用的函数.  在效率上, 虚函数的运行效率要低很多.</p>
+<p>虚表的构建过程, 可以参考一下 “inside cpp obj model” 一书, 其实简单的过程就是一个数组或者链表的头插法, 然后运行时查找正确的函数的问题(首次最佳匹配).</p>
+<ul>
+<li>虚表指针</li>
+</ul>
+<p>编译器如果发觉该类存在virtual函数, 那么会自动生成的对象成员变量.  通过 <code>sizeof()</code> 运算可以佐证其存在, 例如: (注意Linux下对齐问题)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> pack(4)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="built_in">std</span>::<span class="built_in">cout</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">printf</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"aaa"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">int</span> a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">printf</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"bbb"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">int</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">printf</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"sizeof(a):%d, sizeof(b):%d sizeof(c):%d\n"</span>, </span><br><span class="line">	    <span class="keyword">sizeof</span>(A), <span class="keyword">sizeof</span>(B), <span class="keyword">sizeof</span>(C)); <span class="comment">//4, 8+8 align, 8</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="抽象类部分"><a href="#抽象类部分" class="headerlink" title="抽象类部分"></a>抽象类部分</h2><p>借助纯虚函数形成抽象类.</p>
+<ul>
+<li><p>纯虚函数<br>虚函数的一种, 只不过这种函数只提供说明, 不提供实现, 语法上就是 <code>=0;</code><br>  拥有纯虚函数的类就是抽象类, 不过C++这一块儿比较尴尬, 因为他没有纯接口类型的接口界面, 不像java有专门的interface关键字可以定义接口(类), 用来展示一组相关的API接口(公共访问界面), 而是采用了抽象类的机制, 从多继承的层面用 <code>is-a</code> 的关系来表达 <code>has-a</code> function的机制.</p>
+<p>  下面说的接口, 在C++一律指 <code>抽象类</code> .</p>
+<p>  由于接口要小(暴露的要少), 把相关的方法放在一起, 其他相关的放在另外一个接口中, 所以会使用多继承, 从多个接口中引入相关的function或者称为feature; 但是引入多继承的同时会带来相当的复杂度(研发可能还好), 比如说二义性问题, 对于维护也是灾难性的, 所以实际开发中, 一般都建议采用单继承(当然也有特例), 并且但凡是抽象类, 就不提供数据成员, 只提供纯虚函数API.</p>
+</li>
+<li><p>抽象类<br>抽象类是不能用来初始化实例的, 只能是作为 <code>抽象编程</code> 的基础, 也就是说, 抽象类要么声明为指针, 要么是引用. 而让具体的子类提供纯虚函数的不同实现版本.</p>
+<p>  应用的例子, 已经存在的模块提供好接口, 让外面的三方去实现响应的方法或者算法; 就像C语言里面的函数指针, 它定义好了相关的接口的入参出参以及返回值, 具体函数的实现交给外部, 以此达到解耦的目的(面向接口编程). (c语言多态就是通过函数指针来完成相同调用不同表现的)</p>
+<p>  当然由于接口的引入还引入了 DIP, IOC, 注入, 组合, MVC, AOP等等一些列思想, 他们可能不同, 但是都是以面向抽象为基础.</p>
+</li>
+</ul>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>花了很大的力气, 才把 <code>面向对象特征</code> 说完.</p>
+<p>不过c++还在继续的发展, 应该会引入更多的现代语言所拥有的特性. 当然也不排除在特定领域被具体的语言所压制, 蚕食, 然而以此为基础存在的编程思想, 风格, 软件短时间内却不会过时.</p>
+<p>说到底, 本文所说的, 不过是基础. 是的, c++就是一门, 花了很大时间学习, 但用起来不见得能用好的语言.</p>
+<p>笑.</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/f8283c77/">技术: C++面向对象部分</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2016-06-21, 21:04:25</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/f8283c77/" title="技术: C++面向对象部分">http://www.merlinblog.site/posts/f8283c77/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/f8283c77/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/f4144d45/">
+                    技术: C++非面向对象部分
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/be09a73/">
+                    技术: 设计模式 C++ 实现
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#封装"><span class="toc-number">2.1.</span> <span class="toc-text">封装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造和析构函数"><span class="toc-number">2.2.</span> <span class="toc-text">构造和析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#静态成员部分"><span class="toc-number">2.3.</span> <span class="toc-text">静态成员部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C-对象模型部分"><span class="toc-number">2.4.</span> <span class="toc-text">C++对象模型部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#友元部分"><span class="toc-number">2.5.</span> <span class="toc-text">友元部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运算符重载部分-重点"><span class="toc-number">2.6.</span> <span class="toc-text">运算符重载部分(重点)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#继承和派生部分"><span class="toc-number">2.7.</span> <span class="toc-text">继承和派生部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#多继承-虚拟继承"><span class="toc-number">2.7.1.</span> <span class="toc-text">多继承(虚拟继承)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多态部分-重点"><span class="toc-number">2.8.</span> <span class="toc-text">多态部分(重点)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#virtual"><span class="toc-number">2.8.1.</span> <span class="toc-text">virtual</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#父类指针-引用"><span class="toc-number">2.8.2.</span> <span class="toc-text">父类指针(引用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多态成立条件"><span class="toc-number">2.8.3.</span> <span class="toc-text">多态成立条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#联编-绑定"><span class="toc-number">2.8.4.</span> <span class="toc-text">联编(绑定)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多态和构造虚构"><span class="toc-number">2.8.5.</span> <span class="toc-text">多态和构造虚构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#虚表指针"><span class="toc-number">2.8.6.</span> <span class="toc-text">虚表指针</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#抽象类部分"><span class="toc-number">2.9.</span> <span class="toc-text">抽象类部分</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/f4144d45/" title="上一篇: 技术: C++非面向对象部分">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/be09a73/" title="下一篇: 技术: 设计模式 C++ 实现">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

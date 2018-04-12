@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="基本指令探索和实践，主要是 镜像，容器，仓库的操作。">
+<meta name="keywords" content="docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: 深耕 Docker 生态圈(三){Docker 指令}">
+<meta property="og:url" content="http://www.merlinblog.site/posts/e0391b88/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="基本指令探索和实践，主要是 镜像，容器，仓库的操作。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers9.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers8.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers10.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers11.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers12.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers13.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers14.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers15.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers16.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers17.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers18.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers19.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers20.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers21.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers22.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers23.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers24.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers25.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-20-dockers26.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-20-dockers28.jpg">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.644Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: 深耕 Docker 生态圈(三){Docker 指令}">
+<meta name="twitter:description" content="基本指令探索和实践，主要是 镜像，容器，仓库的操作。">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers9.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: 深耕 Docker 生态圈(三){Docker 指令} | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-haste2docker3" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/e0391b88/" class="article-date">
+      <time datetime="2018-02-19T12:35:50.000Z" itemprop="datePublished">2018-02-19</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: 深耕 Docker 生态圈(三){Docker 指令}
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>基本指令探索和实践，主要是 镜像，容器，仓库的操作。<br><a id="more"></a></p>
+<blockquote>
+<p>这里也放2个疑问: 自己构建的镜像为啥这么大? 查看容器时，Names 是啥？</p>
+</blockquote>
+<p>前面也说了，docker 分为5个部分，但是 docker client 和 daemon 我们平常一般不用碰。(或者配置一次整体环境即可)操作基本还是集中在:</p>
+<ul>
+<li>镜像</li>
+<li>容器</li>
+<li>仓库</li>
+</ul>
+<p>整体上都是 <code>docker COMMAND</code>，除了: <code>docker version</code>, <code>docker info</code>, <code>docker --help</code> 这类查看信息的指令。</p>
+<blockquote>
+<p>Run ‘docker COMMAND –help’ for more information on a command</p>
+</blockquote>
+<p>主要指令，如下: (但大都是围绕 镜像，容器，仓库展开的)</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers9.jpg" alt=" "></p>
+<h2 id="命令选项"><a href="#命令选项" class="headerlink" title="命令选项"></a>命令选项</h2><p>也就是 –help 打印的。</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers8.jpg" alt=" "></p>
+<p>主要就是 <code>-l log等级</code>, <code>-D</code>运行时指定为debug模式，<code>-H</code>指定运行在哪个daemon上。</p>
+<h2 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h2><p>前面已经添加了官方的仓库 <code>https://download.docker.com/linux/ubuntu</code>，可以直接从上面拉去内容。</p>
+<p>测试一下，先看一下有哪些版本:(每个仓库会有多个镜像，用tag标示，如果不加tag，默认使用latest镜像)</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers10.jpg" alt=" "></p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers11.jpg" alt=" "></p>
+<p>查看当前系统中已经存在的 images 信息</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers12.jpg" alt=" "></p>
+<p>上面一共使用了3个命令:</p>
+<ul>
+<li>docker search 镜像名字</li>
+<li>docker pull 镜像名字=tag</li>
+<li>docker images</li>
+</ul>
+<p>注意: <code>docker images</code> 等同于 <code>docker image ls -a</code>。</p>
+<p>如果指定查看某类image，可以自己指定 <code>docker image ls 关键字</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ docker image ls ubuntu</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">ubuntu              16.04               f753707788c5        4 weeks ago         127 MB</span><br><span class="line">ubuntu              latest              f753707788c5        4 weeks ago         127 MB</span><br><span class="line">ubuntu              14.04               1e0c3dd64ccd        4 weeks ago         188 MB</span><br><span class="line"></span><br><span class="line">$ docker image ls ubuntu:16.04</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">ubuntu              16.04               f753707788c5        4 weeks ago         127 MB</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用过滤器 since 或者 before</span></span><br><span class="line">$ docker image ls -f since=mongo:3.2</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">redis               latest              5f515359c7f8        5 days ago          183 MB</span><br><span class="line">nginx               latest              05a60462f8ba        5 days ago          181 MB</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 label 过滤</span></span><br><span class="line">$ docker image ls -f label=com.example.version=0.1</span><br></pre></td></tr></table></figure>
+<p>也可以使用 Go 模板语法:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 类似 jsp 语法</span></span><br><span class="line">$ docker image ls --format <span class="string">"&#123;&#123;.ID&#125;&#125;: &#123;&#123;.Repository&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
+<p>或者指定间距: <code>table { }</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ docker image ls --format <span class="string">"table &#123;&#123;.ID&#125;&#125;\t&#123;&#123;.Repository&#125;&#125;\t&#123;&#123;.Tag&#125;&#125;"</span></span><br><span class="line">IMAGE ID            REPOSITORY          TAG</span><br><span class="line">5f515359c7f8        redis               latest</span><br><span class="line">05a60462f8ba        nginx               latest</span><br><span class="line">fe9198c04d62        mongo               3.2</span><br><span class="line">00285df0df87        &lt;none&gt;              &lt;none&gt;</span><br><span class="line">f753707788c5        ubuntu              16.04</span><br><span class="line">f753707788c5        ubuntu              latest</span><br><span class="line">1e0c3dd64ccd        ubuntu              14.04</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如何创建一个自定义的镜像呢？</p>
+</blockquote>
+<ul>
+<li>利用已有的镜像 (运行，修改，提交，更新镜像)—下面演示给 ubuntu 镜像安装 git 再打包镜像</li>
+</ul>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers13.jpg" alt=" "></p>
+<p>安装完成后，退出；并查看当前 docker 引擎中运行的容器:</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers14.jpg" alt=" "></p>
+<p>然后<strong>commit</strong>，即可<strong>生成一个新的镜像</strong>。（使用 container id 提交）</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers15.jpg" alt=" "></p>
+<p>-m 指定了本次提交的信息，-a 指定了用户信息，并且用户信息之后还会用到。（tag信息跟在库名的冒号后面）</p>
+<p>并且可以看到镜像中，已经存在了 <code>merlin/ubuntu</code>，可以运行看看:</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers16.jpg" alt=" "></p>
+<p>上面又设计了3个命令:</p>
+<ul>
+<li>docker run -it 库名:tag信息 命令</li>
+<li>docker ps -a</li>
+<li><code>docker commit -m &quot;提交信息&quot; -a &quot;用户信息&quot; container_id 新库名:tag信息</code></li>
+</ul>
+<p>但是 docker commit 慎用，实际环境中并不会这样使用。(这个操作是黑箱操作，除了制作镜像的人知道执行过什么命令、怎么生成的镜像，别人根本无从得知)</p>
+<blockquote>
+<p>注意: docker commit 命令除了学习之外，还有一些特殊的应用场合，比如被入侵后保存现场等。但是，不要使用 docker commit 定制镜像，定制镜像应该使用 Dockerfile 来完成。<br>用 docker diff 可以查看哪些东西被修改了（很多相关的都被修改了）。 <code>docker diff 容器名称或者容器id</code> 。</p>
+</blockquote>
+<p><strong>利用 dockerfile 配置文件进行构建镜像</strong>:</p>
+<p>实际上和 make 根据 makefile 编译文件没有两样，只不过这里的产物是镜像。</p>
+<p>简单的文法指定了 一些版本信息，构建时需要运行的命令等，例如:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 说明该镜像以哪个镜像为基础</span></span><br><span class="line"><span class="keyword">FROM</span> ubuntu:latest</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建者的基本信息</span></span><br><span class="line"><span class="keyword">MAINTAINER</span> merlin</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在 build 这个镜像时执行的操作</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apt-get update</span></span><br><span class="line"><span class="bash">RUN apt-get install -y git</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 拷贝本地文件到镜像中</span></span></span><br><span class="line"><span class="bash">COPY ./* /usr/share/gitdir/</span></span><br></pre></td></tr></table></figure>
+<p>新建这个 Dockerfile 文件，然后执行 <code>docker build</code>命令即可:</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers17.jpg" alt=" "></p>
+<p>-t 用来指定库和tag信息，然后制定以下 Dockerfile 的目录。</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers18.jpg" alt=" "></p>
+<p>但是明显看到，自己构建的镜像非常大！！！ 还是删除了吧: <code>docker rm</code></p>
+<blockquote>
+<p>删除镜像前，必须删除与之关联的容器(容器已经退出，则不必关心了)</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker rm container_name或者container_id</span><br><span class="line">docker rmi image_name或者image_id</span><br></pre></td></tr></table></figure>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers19.jpg" alt=" "></p>
+<p>为什么要删除？因为即使容器停止运行了，但他还是占用着存储空间(硬盘空间)。</p>
+<p>这里涉及了一下命令: (<code>docker build -t 库名:tag信息</code>也行)</p>
+<ul>
+<li>docker build -t=”库名:tag信息”</li>
+<li>docker rm 库名或者哈希值</li>
+<li>docker rmi 镜像名或者哈希值</li>
+</ul>
+<p>也可以指定摘要信息进行删除: ( <code>库名@sha256:摘要信息</code> )</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ docker image ls --digests</span><br><span class="line">REPOSITORY                  TAG                 DIGEST                                                                    IMAGE ID            CREATED             SIZE</span><br><span class="line">node                        slim                sha256:b4f0e0bdeb578043c1ea6862f0d40cc4afe32a4a582f3be235a3b164422be228   6e0c4c8e3913        3 weeks ago         214 MB</span><br><span class="line"></span><br><span class="line">$ docker image rm node@sha256:b4f0e0bdeb578043c1ea6862f0d40cc4afe32a4a582f3be235a3b164422be228</span><br><span class="line">Untagged: node@sha256:b4f0e0bdeb578043c1ea6862f0d40cc4afe32a4a582f3be235a3b164422be228</span><br></pre></td></tr></table></figure>
+<p>另外，如果运行时就指定了 –rm 那么运行结束后，自动删除容器:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -it merlin/gitdir /bin/bash</span><br></pre></td></tr></table></figure>
+<p><strong>批量删除</strong>: (利用 <code>docker image ls -q</code>)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 列出相关的 repository id, 然后一一删除</span></span><br><span class="line">$ docker image rm $(docker image ls -q redis)</span><br><span class="line"></span><br><span class="line"><span class="comment">## -f 指定过滤器条件的删除</span></span><br><span class="line">$ docker image rm $(docker image ls -q -f before=mongo:3.2)</span><br></pre></td></tr></table></figure>
+<p>镜像也可以保存在 tar 文件，然后加载出来:(因为我本机已经有这个镜像了，所以看不出效果)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker save -o xxx.tar 库名:tag信息</span><br><span class="line">docker load -i xxx.tar</span><br></pre></td></tr></table></figure>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers20.jpg" alt=" "></p>
+<p>tar 文件就可以把该镜像发送给另外的 daemon 进行加载。</p>
+<blockquote>
+<p><code>&lt;none&gt;</code>镜像是啥？</p>
+</blockquote>
+<p>docker pull 或者 docker build 的时候，如果新旧镜像同名，旧镜像名称被取消，从而出现仓库名、标签均为 <code>&lt;none&gt;</code>。<br>类无标签镜像也被称为 虚悬镜像(dangling image) ，可以用 <code>docker image ls -f dangling=true</code> 命令专门显示这类镜像。</p>
+<p>但是这类镜像通常是没有意义的，一般可以用 <code>docker image prune</code> 进行删除。</p>
+<h2 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h2><p>主要是运行，停止相关的命令，还算比较少。</p>
+<ul>
+<li>docker run</li>
+<li>docker start</li>
+<li>docker stop</li>
+<li>docker restart</li>
+<li>docker attatch</li>
+<li>docker rm  这个用于删除容器的，不说了，前面玩够了</li>
+</ul>
+<blockquote>
+<p>run 的话每次都启动一个新的容器(hash值可以标识)；start或者restart则是重用以前启动过得容器</p>
+</blockquote>
+<p>先把简单的玩一下, <code>docker start</code>, <code>docker restart</code>, <code>docker stop</code>，一看就是操作容器的。</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers21.jpg" alt=" "></p>
+<p>运行，停止，重新运行都不成问题。但是为什么 stop 这么慢？想迅速杀死容器可以用 <code>docker kill 容器id</code>。</p>
+<ul>
+<li>docker  kill 相当于向容器里面的主进程发出 SIGKILL 信号 (强行终止，不能忽略)</li>
+<li>docker  stop 相当于向容器里面的主进程发出 SIGTERM 信号 (先扫尾，后终止；信号可以被进程忽略)</li>
+</ul>
+<p>有个问题是，我如何进入这个容器呢？(进去操作)</p>
+<p>使用 <code>docker attach container_id</code>附上去，就好像 gdb 调试进程一样。</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers22.jpg" alt=" "></p>
+<p>但是 attach 还有一个作用，即运行的容器没有和终端绑定的时候，即在后台运行，不受终端控制的时候，例如 <code>docker run 镜像 命令</code> 此时没有用 -i 指定可以接收 stdin，也没有用 -t 指定控制终端(默认输出是stdout)，那么进去是完全不受控制的:</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers23.jpg" alt=" "></p>
+<p>这个时候要终止，只能再打开一个终端，然后 docker stop; <strong>但是关闭当前终端没有任何用</strong>。(还有一个办法，看下面)</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers24.jpg" alt=" "></p>
+<p>如果指定 <code>-d</code> 选项后台运行会如何？</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-19-dockers25.jpg" alt=" "></p>
+<blockquote>
+<p>即使是 <code>docker run -it</code> 指定接收当前 stdin 的控制命令；指定绑定当前终端；也无法停止这种疯狂。</p>
+</blockquote>
+<p>但是进去(不论是 attach 还是 -it指定的)，如果想退出来，并且保持容器运行怎么办？ <code>Ctrl+p, Ctl+q</code>，此时容器还是 up 状态。</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-20-dockers26.jpg" alt=" "></p>
+<p>总结一下就是:</p>
+<ul>
+<li>docker run 可以后台，可以指定 stdin控制，绑定终端</li>
+<li>docker attach 可以后期绑定终端，如果前期运行时没有绑定 -t 参数</li>
+<li>Ctrl+p, Ctrl+q 可以切出容器环境，而不停止容器的运行 (exit直接让容器退出了)</li>
+</ul>
+<p>btw: <code>docker ps -a</code> 相当于 <code>docker container ls -a</code></p>
+<p>还有一个 <code>docker run -p yyyy:xxxx</code> 指定容器的 xxxx 端口映射到本机的 yyyy 端口; 运行时跟着的 <code>/bin/bash</code> 是让容器跑起来之后执行这个命令，即用户有 bash 可以使用。</p>
+<p><strong>下面补充三个容器命令</strong>:</p>
+<ul>
+<li>docker logs container_id</li>
+</ul>
+<p>这个命令用于查看那些没有绑定到当前终端或者没有指定为标准输出的容器的运行信息，查看这些容器的删除。</p>
+<ul>
+<li>docker exec</li>
+</ul>
+<p>一个容器运行时没有指定 -it，如果不用 docker attach，还可以用 docker exec 进入该容器:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 进入正在运行的容器 (同时指定了进去之后运行 shell 命令)</span></span><br><span class="line">$ docker <span class="built_in">exec</span> -it [containerID] /bin/bash</span><br></pre></td></tr></table></figure>
+<p>区别是，如果都指定了 -i 参数，那么从容器内部 exit 时，exec不会导致容器退出，但是 attach 则会。</p>
+<ul>
+<li>docker cp</li>
+</ul>
+<p>在容器和虚拟机之间进行拷贝文件或者目录:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 容器到本地</span></span><br><span class="line">$ docker cp  容器id:SRC_PATH DEST_PATH</span><br><span class="line"></span><br><span class="line"><span class="comment">## 本地到容器</span></span><br><span class="line">$ docker cp SRC_PATH 容器id:DEST_PATH</span><br></pre></td></tr></table></figure>
+<h2 id="仓库命令"><a href="#仓库命令" class="headerlink" title="仓库命令"></a>仓库命令</h2><p>github 也就算了，代码&amp;项目管理；这样好，又来了个 <a href="https://hub.docker.com" target="_blank" rel="noopener">dockerhub</a>: (区分 Repository 和 Registry服务器)</p>
+<ul>
+<li>访问 dockerhub，如果没有账号，需要先注册一个</li>
+<li>利用命令 docker login 登录 DockerHub，输入用户名、密码即可登录成功</li>
+<li>将本地的镜像推送到 DockerHub 上，这里的库名前的 user 信息要和登录时的 username 一致</li>
+</ul>
+<p>docker pull 或者 docker push 的库名都是 <code>username/库名:tag信息</code> 。</p>
+<blockquote>
+<p>仓库名是两段式名称，即 &lt;用户名&gt;/&lt;软件名&gt;。对于 Docker Hub，如果不给出用户名，则默认为 library，也就是官方镜像。</p>
+</blockquote>
+<p>因为登录后默认的远端仓库就是 docker hub，如果是你自己构造的私人远端库(利用 docker registry镜像构建)，那么:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull [选项] [Docker Registry 地址[:端口号]/]仓库名[:标签]</span><br></pre></td></tr></table></figure>
+<p>总体的流程是:</p>
+<blockquote>
+<p>从仓库（一般为DockerHub）下载（pull）一个镜像，Docker执行run方法得到一个容器，用户在容器里执行各种操作。Docker执行commit方法将一个容器转化为镜像。Docker利用login、push等命令将本地镜像推送（push）到仓库。其他机器或服务器上就可以使用该镜像去生成容器，进而运行相应的应用程序了。</p>
+</blockquote>
+<p>下面是我的一个案例:</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/2018-02-20-dockers28.jpg" alt=" "></p>
+<blockquote>
+<p>但是本地的 image 根本不是这个名字怎么办？自己 tag 标注一下</p>
+</blockquote>
+<p>Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 为本地 image 标注用户名及版本信息</span></span><br><span class="line">$ docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]</span><br><span class="line"></span><br><span class="line"><span class="comment">## 一般是这样做的</span></span><br><span class="line">$ docker tag 本地image名字:tag信息 用户名/库名:tag信息</span><br></pre></td></tr></table></figure>
+<p>当然也可以不用重新标注，重新构建一个就好了。</p>
+<p>其实这里也引发一个问题: <code>并非所有的 docker rmi</code>都会真正删除镜像。有可能只是取消了 tag，让某个镜像编程 <code>Untagged</code>。</p>
+<blockquote>
+<p>因为一个镜像可以对应多个标签，因此当我们删除了所指定的标签后，可能还有别的标签指向了这个镜像，如果是这种情况，那么 Delete 行为就不会发生。</p>
+</blockquote>
+<p><strong>当该镜像所有的标签都被取消了，该镜像很可能会失去了存在的意义，因此会触发删除行为。镜像是多层存储结构，因此在删除的时候也是从上层向基础层方向依次进行判断删除。镜像的多层结构让镜像复用变动非常容易，因此很有可能某个其它镜像正依赖于当前镜像的某一层。这种情况，依旧不会触发删除该层的行为。直到没有任何层依赖当前层时，才会真实的删除当前层</strong>。</p>
+<p>(正在运行的容器依赖某个镜像，那么这个镜像也是不能被删除的；应该先删除容器，再删除镜像)</p>
+<p>如果我利用 docker 配置了一个开发环境，每次修改都基于这个版本，岂不是很爽？ 反正 docker 是夸平台的。<br>跨平台那种事儿就交给 docker，我负责处理好镜像就可以了。(笑) — 实际并没有想的这么容易，因为 Golang 最终也是依赖 OS 环境的。</p>
+<hr>
+<p>Merlin 2018.2 docker 用于开发环境应该很赞</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2018-02-19, 20:35:50</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/e0391b88/" title="技术: 深耕 Docker 生态圈(三){Docker 指令}">http://www.merlinblog.site/posts/e0391b88/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/e0391b88/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/cb3fb6f1/">
+                    技术: 深耕 Docker 生态圈(四){镜像存储在哪}
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/8abfca36/">
+                    技术: 深耕 Docker 生态圈(二){配置 Docker }
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#命令选项"><span class="toc-number">1.</span> <span class="toc-text">命令选项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#镜像命令"><span class="toc-number">2.</span> <span class="toc-text">镜像命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容器命令"><span class="toc-number">3.</span> <span class="toc-text">容器命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#仓库命令"><span class="toc-number">4.</span> <span class="toc-text">仓库命令</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/cb3fb6f1/" title="上一篇: 技术: 深耕 Docker 生态圈(四){镜像存储在哪}">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/8abfca36/" title="下一篇: 技术: 深耕 Docker 生态圈(二){配置 Docker }">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

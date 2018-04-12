@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="一棵红黑树, 能玩到这个地步也只有epolll了. deep on epoll model(including extensions in libevent)">
+<meta name="keywords" content="linux,网络,epoll">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: Epoll 模型">
+<meta property="og:url" content="http://www.merlinblog.site/posts/1334152b/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="一棵红黑树, 能玩到这个地步也只有epolll了. deep on epoll model(including extensions in libevent)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.630Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: Epoll 模型">
+<meta name="twitter:description" content="一棵红黑树, 能玩到这个地步也只有epolll了. deep on epoll model(including extensions in libevent)">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: Epoll 模型 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-why-not-epoll" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/1334152b/" class="article-date">
+      <time datetime="2017-06-13T06:42:26.000Z" itemprop="datePublished">2017-06-13</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: Epoll 模型
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/epoll/">epoll</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网络/">网络</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>一棵红黑树, 能玩到这个地步也只有epolll了. deep on epoll model(including extensions in libevent)<br><a id="more"></a></p>
+<p><strong>你现在用 epoll 模型么?</strong> 不用. 我用libevent. (笑)</p>
+<p>多路IO/IO复用中一种比较厉害的模型, 始终拿红黑树去理解就容易了.<br>现在的很多库比如libevent都是在其基础上进行的扩展和封装.</p>
+<p>(文章主要以TCP协议的基础上总结了一下epoll)<br>(由于select, pselect, poll从设计机制上就不如epoll, 说它们就没有太多意思)</p>
+<blockquote>
+<p>注意, 本文一定不会去给你剖析底层源码, 请自己翻看源码.</p>
+</blockquote>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>专门说说 Epoll模型, 包括其扩展:</p>
+<ul>
+<li>相关API, 案例 </li>
+<li>触发模式: ET(边缘)/LT(水平)</li>
+<li>事件扩展: 泛型指针, 回调机制, libevent的核心(封装event data)</li>
+</ul>
+<hr>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>epoll 是 Linux 下多路复用 IO 接口 select/poll 的增强版本，它能显著提高程序在大量并发连接中只有少量活跃的情况下的系统 CPU 利用率(有针对的轮询).<br>(简单说, 特别针对那种连接多, 但是活跃连接数少的情况)</p>
+<p>主要原因: (优于select/poll的技术手段)</p>
+<ol>
+<li>复用文件描述符集合来传递结果而不用迫使开发者每次等待事件之前都必须重新准备要被侦听的文件描述符集合</li>
+<li>获取事件的时候, 它无须遍历整个被侦听的描述符集, 只要遍历那些(被内核 IO 事件异步唤醒而)加入 Ready 队列的描述符集合(专门有一个数组)</li>
+<li>提供了边沿触发(Edge Triggered), 这就使得用户空间程序有可能缓存 IO 状态，减少 epoll_pwait 的调用, 提高应用程序效率</li>
+<li>支持检测更多的socket描述符上限(cat /proc/sys/fs/file-max) (一般是9万多, 取决于硬件条件)</li>
+<li>利用mmap进行内存映射, 减少了用户空间和内核空间来回拷贝数据的开销</li>
+</ol>
+<p>关于修改打开文件描述符的上限:(file-max)<br> <code>sudo emacs /etc/security/limits.conf</code></p>
+<p>在文件尾部写入以下配置: soft 软限制, hard 硬限制,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">* soft nofile 65536</span><br><span class="line">* hard nofile 100000</span><br></pre></td></tr></table></figure>
+<p>这个和 <code>poll</code> 基本类似(但是select不行, 代码实现的时候做了限定, 除非你修改内核代码, 重新编译内核)</p>
+<p>极端的情况: 如果你要监听的文件描述符(连接的), 全部活跃(大部分活跃)(有IO请求), 那么select/poll, 和epoll其实没有太多差别(轮询方面).</p>
+<p>(但是请求量一旦突破软件限制, 就需要靠硬件解决了, 增核心, 加内存, 集群等)</p>
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">  epoll_create (<span class="number">2</span>)     - open an epoll file descriptor</span><br><span class="line">  epoll_ctl (<span class="number">2</span>)        - control interface <span class="keyword">for</span> an epoll descriptor</span><br><span class="line">  epoll_pwait (<span class="number">2</span>)      - wait <span class="keyword">for</span> an I/O event on an epoll file descriptor</span><br><span class="line">  epoll_wait (<span class="number">2</span>)       - wait <span class="keyword">for</span> an I/O event on an epoll file descriptor</span><br></pre></td></tr></table></figure>
+<h3 id="epoll-create"><a href="#epoll-create" class="headerlink" title="epoll_create()"></a>epoll_create()</h3><pre><code>底层实现就是建立一棵RBTree(平衡二叉树的一种), 用于检测.
+</code></pre><p><code>int epoll_create(int size)</code> 其中 size 指监听数目, 但这只是对内核的一个建议, 底层分配多少还是内核自己根据算法判断决定.</p>
+<p>进程的内核地址空间, 3-4G的用户空间pcb指向全局的文件描述符表, 而epoll_create(int)打开的的epoll fd就成了平衡二叉树(rb-tree)的树根, 而你传入的size就是创建该rb-tree的依据.</p>
+<h3 id="epoll-ctl"><a href="#epoll-ctl" class="headerlink" title="epoll_ctl()"></a>epoll_ctl()</h3><p>这个函数就是相当于把一个个fd节点挂到epoll_create创建的rb-tree上.<br>(插入的时候, 会进行一定的旋转, 保证左子树和右子树平衡)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">epoll_ctl</span><span class="params">(<span class="keyword">int</span> epfd, <span class="keyword">int</span> op, <span class="keyword">int</span> fd, struct epoll_event *event<span class="comment">/*结构体指针, 而不是数组*/</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>(后续的框架会对该函数进行封装)</p>
+<p>参数不少, 一个个说.</p>
+<ul>
+<li>epfd:   epoll_create 创建的句柄</li>
+<li>op:     表示动作,用 3 个宏来表示：</li>
+<li>EPOLL_CTL_ADD (注册新的 fd 到 epfd)，</li>
+<li>EPOLL_CTL_MOD (修改已经注册的 fd 的监听事件)</li>
+<li>EPOLL_CTL_DEL (从 epfd 删除一个 fd)</li>
+<li>fd: 需要操作的文件描述符</li>
+<li>event: 告诉内核需要监听的事件数组(相当于poll中POLLIN, POLLOUT, POLLERR等)</li>
+</ul>
+<p>( epoll_event 这里使用结构体, 而不是poll中的整型)</p>
+<p>其中event结构体原型如下:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> &#123;</span></span><br><span class="line">  <span class="keyword">__uint32_t</span> events;  <span class="comment">/* Epoll events */</span></span><br><span class="line">  <span class="keyword">epoll_data_t</span> data;  <span class="comment">/* User data variable */</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">union</span> epoll_data &#123;</span><br><span class="line">  <span class="keyword">void</span> *ptr; <span class="comment">/*注意这个泛型指针*/</span></span><br><span class="line">  <span class="keyword">int</span> fd;    <span class="comment">/*有事件发生的时候, 可以立即返回具体的相应文件描述符; 和epoll_ctl()中的fd一致*/</span></span><br><span class="line">  <span class="keyword">uint32_t</span> u32;</span><br><span class="line">  <span class="keyword">uint64_t</span> u64;</span><br><span class="line">&#125; <span class="keyword">epoll_data_t</span>;</span><br></pre></td></tr></table></figure></p>
+<p>关于 <code>__uint32_t events;  /* Epoll events */</code> 主要还是3个:</p>
+<ul>
+<li>EPOLLIN : 表示对应的文件描述符可以读（包括对端 SOCKET 正常关闭）</li>
+<li>EPOLLOUT: 表示对应的文件描述符可以写</li>
+<li>EPOLLERR: 表示对应的文件描述符发生错误</li>
+</ul>
+<p>其他不太重要的event:</p>
+<ul>
+<li>EPOLLPRI:  表示对应的文件描述符有紧急的数据可读</li>
+<li>EPOLLHUP:  表示对应的文件描述符被挂断;</li>
+<li>EPOLLET:   将 EPOLL 设为边缘触发(Edge Triggered)模式, 这是相对于水平触发(Level Triggered)而言的</li>
+<li>EPOLLONESHOT: 只监听一次事件, 当监听完这次事件之后, 如果还需要继续监听这个 socket 的话, 需要再次把这个socket 加入到 EPOLL 队列里</li>
+</ul>
+<h3 id="epoll-wait"><a href="#epoll-wait" class="headerlink" title="epoll_wait"></a>epoll_wait</h3><p>真正开始监听(轮询), 就相当于poll或者select函数调用了, 阻塞检测.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_wait</span><span class="params">(<span class="keyword">int</span> epfd, struct epoll_event *events<span class="comment">/*数组, 传出参数*/</span>, <span class="keyword">int</span> maxevents, <span class="keyword">int</span> timeout)</span></span></span><br></pre></td></tr></table></figure>
+<p>参数说明:</p>
+<ul>
+<li>events: 用来存内核得到事件的数组(传出参数)</li>
+<li>maxevents: 告诉内核这个 events 有多大，这个 maxevents 的值不能大于创建 epoll_create()时的 size，</li>
+<li>timeout:  是超时时间</li>
+<li>-1： 阻塞</li>
+<li>0 ： 立即返回, 非阻塞</li>
+<li><blockquote>
+<p>0： 指定(毫秒)</p>
+</blockquote>
+</li>
+</ul>
+<p>返回值: 成功返回有多少文件描述符就绪(返回个数), 时间到时返回0, 出错返回-1.<br>(返回的同时, 也会把红黑树上有对应事件发生的节点的数据epoll_event节点数据拷贝到events数组中)</p>
+<p>总体而言:</p>
+<p>创建了一个需要监听的红黑树, 然后真正监听后, 活跃的返回到一个指定的数组, 然后遍历该数组即可.<br>(遍历的次数就是epoll_wait()返回的个数, 注意一下因为遍历的是事件数组, 从该数组的元素中再去取的具体的fd, 而不是select/poll那种直接找fd, 其中心在event而不再fd)</p>
+<p>之后的工作?</p>
+<p>判断数组中的fd, 如果是listenfd, 就创建新的连接啊; 如果是已经连接的fd那就要看是什么事件(一般是read).<br>(很显然, 这种固定的模式, 就可以做成回调函数; 网络框架中也是这么封装的)</p>
+<h3 id="简单的示例"><a href="#简单的示例" class="headerlink" title="简单的示例"></a>简单的示例</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> size = <span class="number">1000</span>;</span><br><span class="line"><span class="keyword">int</span> epfd = epoll_create(size);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">event</span>;</span></span><br><span class="line">event.event = EPOLLIN;</span><br><span class="line">event.data.fd = listenfd;</span><br><span class="line"><span class="comment">/*给红黑树增加了一个带结构体数据的节点*/</span></span><br><span class="line">epoll_ctl(epfd, EPOLL_CTL_ADD, listenfd, &amp;event);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">events</span>[<span class="title">size</span>];</span> <span class="comment">/*传出参数*/</span></span><br><span class="line">epoll_wait(epfd, events, size, <span class="number">-1</span>); <span class="comment">/*-1表示永久等待*/</span></span><br></pre></td></tr></table></figure>
+<p>(后面省略创建连接或者IO的过程)</p>
+<h3 id="完整的案例"><a href="#完整的案例" class="headerlink" title="完整的案例"></a>完整的案例</h3><p>请直接参考: (代码太长了, 占版面)<br><a href="https://github.com/WizardMerlin/network_life/tree/master/code/epoll" target="_blank" rel="noopener">https://github.com/WizardMerlin/network_life/tree/master/code/epoll</a></p>
+<h2 id="触发模式"><a href="#触发模式" class="headerlink" title="触发模式"></a>触发模式</h2><p>LT 模式即 Level Triggered 工作模式, 与 ET 模式不同的是，以 LT 方式调用 epoll 接口的时候，它就相当于一个速度比较快的 poll, 无论后面的数据是否被使用.</p>
+<h3 id="简单描述"><a href="#简单描述" class="headerlink" title="简单描述"></a>简单描述</h3><ul>
+<li>Edge Triggered (ET)  边缘触发只有数据到来才触发, 不管缓存区中是否还有数据.</li>
+<li>Level Triggered (LT) 水平触发只要有数据都会触发(epoll_wait)</li>
+</ul>
+<p>(客户端发来1024字节数据, 服务器端读了512字节, 剩下512字节在缓冲区里面, 如果是ET模式 epoll_wait就不会触发(除非客户端再写一次数据, 才会引发), 如果是LT就立马触发epoll_wait以期下一次读操作)</p>
+<h3 id="详细解释"><a href="#详细解释" class="headerlink" title="详细解释"></a>详细解释</h3><ul>
+<li>LT(level triggered): LT 是缺省的工作方式, 并且同时支持 <code>block</code> 和 <code>non-block</code> socket. 在这种做法中, 内核告诉你一个文件描述符是否就绪了,然后你可以对这个就绪的 fd 进行 IO 操作. 如果你不作任何操作, 内核还是会继续通知你的, 所以这种模式编程出错误可能性要小一点. 传统的 select/poll 都是这种模型的代表.</li>
+<li>ET(edge-triggered): ET 是高速工作方式, 只支持 no-block socket. 在这种模式下, 当描述符从未就绪变为就绪时, 内核通过 epoll 告诉你. 然后它会假设你知道文件描述符已经就绪, 并且不会再为那个文件描述符发送更多的就绪通知. 请注意, 如果一直不对这个 fd 作 IO 操作(从而导致它再次变成未就绪), 内核不会发送更多的通知(only once).</li>
+</ul>
+<p>(LT是默认的模式)为什么引入ET模式?<br>(LT相当于持续触发, 如果用户空间缓冲区里面有数据, 那么就会不停的调用epoll检测以触发后续读操作. 如果是同步IO, 如果读操作没有完成, 就一直阻塞直到完成(读完为止), 特别是客户端写了太多数据的时候, 它可能会带一个消息头, 通过消息头判断有没有必要读取剩余的数据, 此时采用异步IO+ET触发模式就很有用(先读指定字节的消息头, 以此判断是否继续读); 另一种最常见的情况是, read函数指定要读1024个字节, 但是缓冲区里面不够, 那么LT模式此时也会等待, 直到读满才返回; 如果客户端后面没有写, 就会一直等待而不去触发epoll_wait(), 不触发则不能再读, 死锁了, 此时ET模式就很有用了)</p>
+<p>简单一句话: 配合异步IO, 减少epoll_wait的调用次数, 降低cpu负担.</p>
+<h3 id="使用注意"><a href="#使用注意" class="headerlink" title="使用注意"></a>使用注意</h3><p>LT模式比较简单(也是默认的方式), 并且支持阻塞和非阻塞两种方式.</p>
+<p>ET模式, 使用要非常注意:</p>
+<ul>
+<li>epoll 工作在 ET 模式的时候, 必须使用非阻塞套接口, 以避免由于一个文件句柄的阻塞读/阻塞写操作把处理多个文件描述符的任务饿死</li>
+<li>read或者write的结果&gt;0但是小于指定的size, 就可以认为缓冲区已经没有数据了(读完毕了), 而不是非要等到返回EAGAIN.</li>
+</ul>
+<p>总结一下就是, 把原来需要多次调用epoll_wait的代价转嫁到了异步IO上了(减少了epoll_wait调用).</p>
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><p>(异步IO + ET触发模式)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* server.c */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXLINE 10</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SERV_PORT 6666</span></span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">servaddr</span>, <span class="title">cliaddr</span>;</span></span><br><span class="line">  <span class="keyword">socklen_t</span> cliaddr_len;</span><br><span class="line">  <span class="keyword">int</span> listenfd, connfd;</span><br><span class="line">  <span class="keyword">char</span> buf[MAXLINE];</span><br><span class="line">  <span class="keyword">char</span> str[INET_ADDRSTRLEN];</span><br><span class="line">  <span class="keyword">int</span> i, efd, flag;</span><br><span class="line">  listenfd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">  bzero(&amp;servaddr, <span class="keyword">sizeof</span>(servaddr));</span><br><span class="line">  servaddr.sin_family = AF_INET;</span><br><span class="line">  servaddr.sin_addr.s_addr = htonl(INADDR_ANY);</span><br><span class="line">  servaddr.sin_port = htons(SERV_PORT);</span><br><span class="line">  bind(listenfd, (struct sockaddr *)&amp;servaddr, <span class="keyword">sizeof</span>(servaddr));</span><br><span class="line">  listen(listenfd, <span class="number">20</span>);</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">event</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">resevent</span>[10];</span></span><br><span class="line">  <span class="keyword">int</span> res, len;</span><br><span class="line">  efd = epoll_create(<span class="number">10</span>);</span><br><span class="line">  <span class="comment">/* event.events = EPOLLIN; */</span></span><br><span class="line">  event.events = EPOLLIN | EPOLLET; <span class="comment">/* ET 边沿触发 ，默认是水平触发 */</span></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Accepting connections ...\n"</span>);</span><br><span class="line">  cliaddr_len = <span class="keyword">sizeof</span>(cliaddr);</span><br><span class="line">  connfd = accept(listenfd, (struct sockaddr *)&amp;cliaddr, &amp;cliaddr_len);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"received from %s at PORT %d\n"</span>,</span><br><span class="line">	 inet_ntop(AF_INET, &amp;cliaddr.sin_addr, str, <span class="keyword">sizeof</span>(str)),</span><br><span class="line">	 ntohs(cliaddr.sin_port));</span><br><span class="line">  flag = fcntl(connfd, F_GETFL);</span><br><span class="line">  flag |= O_NONBLOCK;</span><br><span class="line">  fcntl(connfd, F_SETFL, flag);</span><br><span class="line">  event.data.fd = connfd;</span><br><span class="line">  epoll_ctl(efd, EPOLL_CTL_ADD, connfd, &amp;event);</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"epoll_wait begin\n"</span>);</span><br><span class="line">    res = epoll_wait(efd, resevent, <span class="number">10</span>, <span class="number">-1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"epoll_wait end res %d\n"</span>, res);</span><br><span class="line">    <span class="keyword">if</span> (resevent[<span class="number">0</span>].data.fd == connfd) &#123;</span><br><span class="line">      <span class="keyword">while</span> ((len = read(connfd, buf, MAXLINE/<span class="number">2</span>)) &gt; <span class="number">0</span>)</span><br><span class="line">	write(STDOUT_FILENO, buf, len);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>client.c</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* client.c */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXLINE 10</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SERV_PORT 8080</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">servaddr</span>;</span></span><br><span class="line">  <span class="keyword">char</span> buf[MAXLINE];</span><br><span class="line">  <span class="keyword">int</span> sockfd, i;</span><br><span class="line">  <span class="keyword">char</span> ch = <span class="string">'a'</span>;</span><br><span class="line">  sockfd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">  bzero(&amp;servaddr, <span class="keyword">sizeof</span>(servaddr));</span><br><span class="line">  servaddr.sin_family = AF_INET;</span><br><span class="line">  inet_pton(AF_INET, <span class="string">"127.0.0.1"</span>, &amp;servaddr.sin_addr);</span><br><span class="line">  servaddr.sin_port = htons(SERV_PORT);</span><br><span class="line">  connect(sockfd, (struct sockaddr *)&amp;servaddr, <span class="keyword">sizeof</span>(servaddr));</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; MAXLINE/<span class="number">2</span>; i++)</span><br><span class="line">      buf[i] = ch;</span><br><span class="line">    buf[i<span class="number">-1</span>] = <span class="string">'\n'</span>;</span><br><span class="line">    ch++;</span><br><span class="line">    <span class="keyword">for</span> (; i &lt; MAXLINE; i++)</span><br><span class="line">      buf[i] = ch;</span><br><span class="line">    buf[i<span class="number">-1</span>] = <span class="string">'\n'</span>;</span><br><span class="line">    ch++;</span><br><span class="line">    write(sockfd, buf, <span class="keyword">sizeof</span>(buf));</span><br><span class="line">    sleep(<span class="number">10</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  Close(sockfd);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="事件的扩展"><a href="#事件的扩展" class="headerlink" title="事件的扩展"></a>事件的扩展</h2><h3 id="简述思想"><a href="#简述思想" class="headerlink" title="简述思想"></a>简述思想</h3><p>epoll事件结构体的第二个参数, 可以从 <code>void *ptr</code> 这个泛型指针做扩展(这也是很多网络库的核心思想, 比如libevent)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">union</span> epoll_data &#123;</span><br><span class="line">  <span class="keyword">void</span> *ptr; <span class="comment">/*注意这个泛型指针*/</span></span><br><span class="line">  <span class="keyword">int</span> fd;    <span class="comment">/*有事件发生的时候, 可以立即返回具体的相应文件描述符; 和epoll_ctl()中的fd一致*/</span></span><br><span class="line">  <span class="keyword">uint32_t</span> u32;</span><br><span class="line">  <span class="keyword">uint64_t</span> u64;</span><br><span class="line">&#125; <span class="keyword">epoll_data_t</span>;</span><br></pre></td></tr></table></figure>
+<p>相关扩展你就可以理解成(libevent的核心思想): 服务器写回之前要判断一下是否可以写回去, 之后再检测客户端请求.<br>(中间对于事件读写, 即检测的红黑树节点有多次IO状态的变化)</p>
+<p>具体:<br>epoll的原始使用方式是客户端发送请求过来, epoll_wait()返回, 这个时候connfd是可读的, 一般epoll的处理逻辑就是马上进行process一些列服务器处理, 处理完毕之后写回给客户端, 但是如果写端忙(写端IO阻塞)那么就需要等待.而扩展的事件模型是, connfd可读的时候, 先把它从红黑树上摘下来, 即 <code>epoll_ctl()</code> 选择EPOLL_CTL_DEL选项, 重新设置connfd监听, 监听它的写事件; 设置完毕之后, 在进行服务器端相关业务操作也不迟, 业务操作完毕之后, 等待epoll_wait()的写事件返回, 返回后再进行回写给客户端, 写事件完毕之后, 再设置相关的读事件(等待客户端的数据). 每次读写前, 由于上一次已经重置了, 所以当真正读写之后才再次重置EPOLLIN或者EPOLLOUT.</p>
+<p>中间工序划分更加细致了(epoll_wait()一返回之后, 在服务器真正业务操作之前, 先设置connfd的写操作, 在让epoll_wait()监听), 或者换句话说, 服务器再写回之前, 还要判断是否可以写(并且写完之后, 还要还原检测读事件)<br>因为服务器端处理完毕业务, 不一定能回写客户端(缓冲区大小限制了, 或者说滑动窗口已满)</p>
+<h3 id="简要代码"><a href="#简要代码" class="headerlink" title="简要代码"></a>简要代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">events[i].events = EPOLLIN;</span><br><span class="line"><span class="comment">//events[i].data.fd = connfd;</span></span><br><span class="line">envents[i].data.ptr = 结构体指针;</span><br></pre></td></tr></table></figure>
+<p>反正是ptr一个void*泛型指针, 想传入哪种结构体指针可以自定义, 但是至少应该包含这样几个字段</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">  <span class="keyword">int</span> fd;</span><br><span class="line">  <span class="keyword">void</span> (*func)(<span class="keyword">void</span> *arg);</span><br><span class="line">  <span class="keyword">void</span> *arg</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>详细的参考可以这样定义:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">event_data</span> &#123;</span></span><br><span class="line">  <span class="comment">/*前3个都是回调函数的参数*/</span></span><br><span class="line">  <span class="keyword">int</span> fd;  <span class="comment">//要监听的文件描述符</span></span><br><span class="line">  <span class="keyword">int</span> events;  <span class="comment">//具体的监听事件EPOLLIN还是EPOLLOUT</span></span><br><span class="line">  <span class="keyword">void</span> *arg;  <span class="comment">//泛型参数(给函数指针使用)</span></span><br><span class="line">  <span class="keyword">void</span> (*call_back)(<span class="keyword">int</span> fd, <span class="keyword">int</span> events, <span class="keyword">void</span> *arg); <span class="comment">//回调函数(和fd相关)</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> status;  <span class="comment">//1表示在红黑树上, 0表示不在</span></span><br><span class="line">  <span class="keyword">char</span> buf[BUFLEN];   <span class="comment">//封装的静态数组</span></span><br><span class="line">  <span class="keyword">int</span> len;</span><br><span class="line">  <span class="keyword">long</span> last_active; <span class="comment">//每次加入红黑树的时间值 (用于踢掉那些保持连接但是不干事儿的连接)</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>关于回调, 例如listenfd的回调, 可能就是accept函数;<br>并且传递给回调函数的指针 <code>void* arg</code> 指向该结构体本身, 例如是 <code>&amp;event_data[i]</code>.<br>(因为后续要拿到ready数组元素的具体状态, 或者成员数据)</p>
+<h3 id="详细代码"><a href="#详细代码" class="headerlink" title="详细代码"></a>详细代码</h3><p>(大概就是libevent的核心代码了 <code>epoll_loop.c</code> )</p>
+<p>请参考: (又是大片代码)<br> <a href="https://github.com/WizardMerlin/network_life/blob/master/code/epoll_extend/epoll_loop.c" target="_blank" rel="noopener">https://github.com/WizardMerlin/network_life/blob/master/code/epoll_extend/epoll_loop.c</a></p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>现在有的公司在使用现成的框架, 但是还有的公司是在自己封装epoll代码.<br>epoll模型在网络, 服务器开发中非常重要.</p>
+<p>就这么多吧, 后续专门说说 <code>libevent</code>, 看到这个 <code>event</code> 就感觉有意思.(大致加上了错误处理, 异常检测等, 但核心应该差不多)</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/1334152b/">技术: Epoll 模型</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2017-06-13, 14:42:26</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/1334152b/" title="技术: Epoll 模型">http://www.merlinblog.site/posts/1334152b/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/1334152b/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/df7a2188/">
+                    技术: TCP流解析(粘包和拆包问题)
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/8967f437/">
+                    技术: Linux 基础套接字模型
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简述"><span class="toc-number">2.1.</span> <span class="toc-text">简述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API"><span class="toc-number">2.2.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#epoll-create"><span class="toc-number">2.2.1.</span> <span class="toc-text">epoll_create()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#epoll-ctl"><span class="toc-number">2.2.2.</span> <span class="toc-text">epoll_ctl()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#epoll-wait"><span class="toc-number">2.2.3.</span> <span class="toc-text">epoll_wait</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简单的示例"><span class="toc-number">2.2.4.</span> <span class="toc-text">简单的示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#完整的案例"><span class="toc-number">2.2.5.</span> <span class="toc-text">完整的案例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#触发模式"><span class="toc-number">2.3.</span> <span class="toc-text">触发模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简单描述"><span class="toc-number">2.3.1.</span> <span class="toc-text">简单描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#详细解释"><span class="toc-number">2.3.2.</span> <span class="toc-text">详细解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用注意"><span class="toc-number">2.3.3.</span> <span class="toc-text">使用注意</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#案例"><span class="toc-number">2.3.4.</span> <span class="toc-text">案例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事件的扩展"><span class="toc-number">2.4.</span> <span class="toc-text">事件的扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简述思想"><span class="toc-number">2.4.1.</span> <span class="toc-text">简述思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简要代码"><span class="toc-number">2.4.2.</span> <span class="toc-text">简要代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#详细代码"><span class="toc-number">2.4.3.</span> <span class="toc-text">详细代码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/df7a2188/" title="上一篇: 技术: TCP流解析(粘包和拆包问题)">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/8967f437/" title="下一篇: 技术: Linux 基础套接字模型">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="从音频原理，音频架构谈到播放录制，音量调节，通道切换，蓝牙相关等代码解析。(超级长文预警)">
+<meta name="keywords" content="android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android: 音频框架&amp;驱动解析">
+<meta property="og:url" content="http://www.merlinblog.site/posts/bd0987da/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="从音频原理，音频架构谈到播放录制，音量调节，通道切换，蓝牙相关等代码解析。(超级长文预警)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio1.jpeg">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio2.jpeg">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio3.jpeg">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio4.jpeg">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio5.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio6.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio7.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio8.jpg">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio9.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio10.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio11.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio12.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio13.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio14.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio15.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio16.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio17.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio18.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio19.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio20.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio21.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio22.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio23.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio24.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio25.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio26.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio27.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio28.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio29.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio30.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio31.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio32.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio33.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio34.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio35.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio36.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio37.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio38.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio39.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio40.jpg">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio41.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio42.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio43.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio44.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio45.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio46.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio47.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio48.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio49.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio50.jpg">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio51.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio52.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio53.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio54.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio55.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio56.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio57.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio58.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio59.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio60.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio61.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio62.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio63.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio64.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio65.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio66.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio67.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio68.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio69.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio70.jpg">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.653Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android: 音频框架&amp;驱动解析">
+<meta name="twitter:description" content="从音频原理，音频架构谈到播放录制，音量调节，通道切换，蓝牙相关等代码解析。(超级长文预警)">
+<meta name="twitter:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio1.jpeg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Android: 音频框架&amp;驱动解析 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-android-audio" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/bd0987da/" class="article-date">
+      <time datetime="2018-03-15T12:32:57.000Z" itemprop="datePublished">2018-03-15</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android: 音频框架&amp;驱动解析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android框架和驱动开发/">Android框架和驱动开发</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">android</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>从<code>音频原理</code>，<code>音频架构</code>谈到播放录制，音量调节，通道切换，蓝牙相关等代码解析。(<strong>超级长文</strong>预警)<br><a id="more"></a></p>
+<blockquote>
+<p>专栏相关的介绍，可以查看这篇文章<a href="http://www.merlinblog.site/posts/590c21ce/#%E5%AE%89%E5%8D%93%E6%A1%86%E6%9E%B6%E5%92%8C%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91">《专栏介绍》</a></p>
+</blockquote>
+<p>下面是全文，权作记录了，如果能额外帮到您，那算是额外的收获 😄</p>
+<p>本文参考多本书籍以及互联网资料,只在内部交流使用,所以不注明相关参考资料.<br>All right reserved by wizard merlin, viewers’ discretion is advised.</p>
+<hr>
+<p>目录:<br>1.基本原理:(数字化过程/采样过程/录制过程/播放过程/)<br>2.音频架构: (顶级抽象图/次级抽象图/分层模型/终极抽象图/究极分析图)<br>———–看热闹的外行可以退场了, 下面要讲的东西及其冗长,枯燥,无聊——<br>3.音频代码: (音频代码全解析/究极分析图real )<br>4.AudioPolicyService————–讲代码全解析的时候发现策略太复杂了<br>5.播放过程:(AudioTrack)—构造构成,启动过程,数据写入过程,停止过程<br>6.录制过程:(AudioRecord)<br>7.音量调节过程 (故障貌似主要发生在上层)<br>8.通道切换过程  (在4的基础上强调bug solving)<br>9.蓝牙相关音频 (What the hell is this?)</p>
+<hr>
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>音乐的基本属性: 响度, 音调, 音色. </p>
+<h3 id="数字化的过程"><a href="#数字化的过程" class="headerlink" title="数字化的过程"></a>数字化的过程</h3><p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio1.jpeg" alt=" "></p>
+<p>(基本就是: 模拟信号,电信号,数字信号,机械振动—–推荐书籍&lt;果壳中的宇宙&gt; &lt;超弦理论&gt;, 推荐理由: 振动!)</p>
+<h3 id="采样过程"><a href="#采样过程" class="headerlink" title="采样过程"></a>采样过程</h3><p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio2.jpeg" alt=" "></p>
+<p>将声波波形信号通过ADC转换成计算机支持的二进制的过程叫做音频采样(Audio Sampling)。<br>采样(Sampling)的核心是把连续的模拟信号转换成离散的数字信号。</p>
+<p><strong>样本(Sample)</strong><br>这是我们进行采样的初始资料，比如一段连续的声音波形。<br><strong>_采样器(Sampler)</strong><br>采样器是将样本转换成终态信号的关键。它可以是一个子系统，也可以指一个操作过程，甚至是一个算法，取决于不同的信号处理场景。理想的采样器要求尽可能不产生信号失真。<br><strong>量化(Quantization)</strong><br>采样后的值还需要通过量化，也就是将连续值近似为某个范围内有限多个离散值的处理过程。因为原始数据是模拟的连续信号，而数字信号则是离散的，它的表达范围是有限的，所以量化是必不可少的一个步骤。<br><strong>编码(Coding)</strong><br>计算机的世界里，所有数值都是用二进制表示的，因而我们还需要把量化值进行二进制编码。这一步通常与量化同时进行。(有时候会进行压缩)</p>
+<p>补充:<br><strong>奈奎斯特采样理论</strong>:<br>“当对被采样的模拟信号进行还原时，其最高频率只有采样频率的一半”<br>换句话说，如果我们要完整重构原始的模拟信号，则采样频率就必须是它的两倍以上。<br>比如人的声音范围是2~ 20kHZ,那么选择的采样频率就应该在40kHZ左右，数值太小则声音将产生失真现象，而数值太大也无法明显提升人耳所能感知的音质。</p>
+<h3 id="录制过程"><a href="#录制过程" class="headerlink" title="录制过程"></a>录制过程</h3><ol>
+<li>音频采集设备(比如Microphone)捕获声音信息。</li>
+<li>模拟信号通过模数转换器(ADC)处理成计算机能接受的二进制数据。</li>
+<li>根据需求进行必要的渲染处理，比如音效调整、过滤等等。</li>
+<li>处理后的音频数据理论上已经可以存储到计算机设备中,比如硬盘、USB设备等等。<ul>
+<li>不过由于这时的音频数据体积相对庞大，不利于保存和传输，通常还会对其进行压缩处理。</li>
+<li>比如我们常见的mp3音乐，实际上就是对原始数据采用相应的压缩算法后得到的。</li>
+<li>压缩过程根据采样率、位深等因素的不同，最终得到的音频文件可能会有一定程度的失真</li>
+</ul>
+</li>
+</ol>
+<p>另外，音视频的编解码既可以由纯软件完成，也同样可以借助于专门的硬件芯片来完成</p>
+<h3 id="播放过程"><a href="#播放过程" class="headerlink" title="播放过程"></a>播放过程</h3><ol>
+<li>从存储设备中取出相关文件，并根据录制过程采用的编码方式进行相应的解码</li>
+<li>音频系统为这一播放实例选定最终匹配的音频回放设备</li>
+<li>解码后的数据经过音频系统设计的路径传输</li>
+<li>音频数据信号通过数模转换器(DAC)变换成模拟信号</li>
+<li>模拟信号经过回放设备,还原出原始声音</li>
+</ol>
+<p>请注意上面的 2 &amp; 3  经过音频系统的那个俩关键步骤:  一个是音频系统, 一个是播放设备(工作中还有一个要关心的是录制设备)</p>
+<h2 id="音频架构-Android"><a href="#音频架构-Android" class="headerlink" title="音频架构(Android)"></a>音频架构(Android)</h2><h3 id="顶层抽象"><a href="#顶层抽象" class="headerlink" title="顶层抽象"></a>顶层抽象</h3><p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio3.jpeg" alt=" "></p>
+<p>从硬件往上看:</p>
+<blockquote>
+<p>硬件—&gt;寄存器—&gt; C接口(可能是内核)—-&gt;Linux/Windows/Android驱动—&gt;国际标准(协议之类的,音视频的标准)—&gt;服务系统/信息系统—-&gt;App</p>
+</blockquote>
+<h3 id="次级抽象"><a href="#次级抽象" class="headerlink" title="次级抽象"></a>次级抽象</h3><p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio4.jpeg" alt=" "></p>
+<p>(个人认为,之所以在Audio Lib上在进行一次抽象的原因是, Lib的API对于快速开发效率不够,为了照顾相当一部分上层开发人员,<br>才架构了上层系统; 第二个原因是, 直接调用Lib API的风险,以及出bug的可能性会更高,因为原始的API要求调用者的品质&amp;素质非常好)</p>
+<p>分层模型:<br>软件工程学思想–<br>     一般分层的好处就是利于抽象,解耦和;其实最终目的就是降低复杂度,把原来杂乱,功能复杂,操作步骤繁多的内容细化;利于人员分工.<br>计算机科学思想—-<br>     凡是原来难以解决的问题,都可以通过增加中间层,使得问题的规模得以讲解.(这话是计算机科学家说的,那个做编译器的)<br>架构师思想—-<br>     多搞出点儿事儿,好骗老板的钱: 看,这个项目还是挺复杂的…….经费什么的…</p>
+<hr>
+<p><strong>App层</strong>:  上层开发人员调用封装好的API, 做个播放器啥的.(更多的关注业务,设计,产品; 代码并不是其核心关注点)<br><strong>Framework层</strong>:  相当于c-s模型的服务端,App层作为client层,中间衔接服务(转发)由Framework层解决..就相当于一座桥</p>
+<ul>
+<li>AudioTrack和AudioRecorder(MediaPlayer/MediaRecorder提供了更强大的控制功能，相比前者也更易于使用)</li>
+<li>Android系统还为我们控制音频系统提供了AudioManager、AudioService及AudioSystem类, 但相关的类,都可以在库中找到.</li>
+</ul>
+<p><strong>Libraries层</strong>:  主要的库不多,从上到下, 核心的 libmedia.so, libaudiofinger.so, libmediaplayer.so,<br>( libstagefright.so, libeffects.so, libvisualizer.so ….),以及HAL层的libaudio.so   ——-代码路径我不写了,做的驱动的人都知道; 非相关人员, 我说了也不白说.<br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio5.png" alt=" "><br>(忘了说了, 这一层的AudioFlinger是 “侠之大者,为国为民国” , 不过我称之为: 避震器  (说HAL层的时候就能够看到它的功能))</p>
+<p><strong>HAL层</strong>:   (这个最烦人了,和高通的恩恩怨怨都在这———一句话,代码不是我写的,我哪知道问题出在哪?别找我,我不说—下面细细的说一下)<br>从设计上来看,硬件抽象层是AudioFlinger直接访问的对象(个人认为AudioFlinger属于HAL的Client, Libs的Server)<br>这说明了两个问题:</p>
+<ol>
+<li>AudioFlinger并不直接调用底层的驱动程序</li>
+<li>AudioFlinger上层模块只需要与它进行交互就可以实现音频相关的功能了</li>
+</ol>
+<p>可以认为AudioFlinger是Android音频系统中真正的“避震器”,无论下面如何变化,上层的实现都可以保持兼容. 音频方面的硬件抽象层主要分为两部分,即AudioFlinger和AudioPolicyService.  (HAL层抓audio_module以及audio_policy_module就可以了)<br>        实际上AudioPolicyService并不是一个真实的设备,只是采用虚拟设备的方式来让厂商可以方便地定制出自己的策略.<br>        Android系统本身就很复杂,复杂性不同于上世纪或者本世纪IBM啊,Windows啊提供的信息系统,他的复杂性在于要兼容许多硬件厂家的设备(以此耍流氓,扰乱市场,破坏大盘安定,借机占个地盘儿), 那AudioFlinger/AudioPolicy本身不能直接操作硬件,所以就加了一层,HAL层,来解决兼容性问题.  换句简单的话说: 抽象层的任务是将AudioFlinger/AudioPolicyService真正地与硬件设备关联起来,但又必须提供灵活的结构来应对变化.(HAL就是接口层, 厂商去实现接口或者称为和AudioFlinger/AudioPolicyService通信的接口—–经验丰富的码农都知道,我不解释了)<br>          那我还是解释一下, 接口是啥?….<br>          就是audio_hw_device、audio_stream_in及audio_stream_out等等(这些结构体大多是函数指针.<br>          当AudioFlinger/AudioPolicyService初始化时,它们会去寻找系统中最匹配的实现(就是audio.primary.<em>,audio.a2dp.</em>)来填充这些“函数指针”.——-面向接口编程,就是面向抽象; 而面向抽象,就是解决现实中复杂的问题.<br>         根据产品的不同，音频设备存在很大差异，在Android的音频架构中，这些问题都是由HAL层的audio.primary等等库来解决的，而不需要大规模地修改上层实现。换句话说，厂商在定制时的重点就是如何提供这部分库的高效实现了.<br>也就是说,一个码农的软硬件修养, 大部分得以在HAL层体现.<br>下面我们说一说,  audio.primary.*为名字的核心库—————不说了,上游厂商实现的.<br>上面讲的是不是很简单, audio部分本身是不复杂的;  但是一旦涉及到多种参差不齐的硬件厂商,问题就多了.</p>
+<h3 id="终极抽象图"><a href="#终极抽象图" class="headerlink" title="终极抽象图"></a>终极抽象图</h3><p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio6.png" alt=" "></p>
+<p>Framework  &lt;——JNI——–&gt;  Libs  (.cpp文件不是I开头)<br>Lib: Client  &lt;——Binder——&gt;  Lib: Server  (.cpp文件以I开头)</p>
+<p>代码的核心内容是这样的:<br><strong>AudioRcorder</strong>和<strong>AudioTrack</strong>是Audio系统对外提供API类，AudioRcorder主要用于完成音频数据的采集，而AudioTrack则是负责音频数据的输出<br><strong>AudioFlinger</strong>管理着系统中的输入输出音频流，并承担着音频数据的混合，通过读写Audio硬件实现音频数据的输入输出功能;<br><strong>AudioPolicyService</strong>是Audio系统的策略控制中心，掌管系统中声音设备的选择和切换、音量控制等.<br><strong>AudioSystem</strong>是AudioFlinger和AudioPolicyService对外的接口  (可以观察下AudioSystem.cpp保留IAudioFlinger对象以及IAudioPolicyManager对象看出来)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio7.png" alt=" "></p>
+<p>(上面图的audio libs层server端,看最新的代码已经调整了libaudiopolicy*.so—划分的更加详细<br>————-总体上不影响(下面代码部分会详细说明))</p>
+<p>如果上面都明白了, 就会立马知道AudioTrack是怎么和AudioTrack有一腿的?  答案: IPC</p>
+<h2 id="音频代码"><a href="#音频代码" class="headerlink" title="音频代码"></a>音频代码</h2><p>(给我五毛钱,  我认真讲;  不然我一笔带过)</p>
+<h3 id="音频代码全解析"><a href="#音频代码全解析" class="headerlink" title="音频代码全解析"></a>音频代码全解析</h3><p>大致的样子就是:   JAVA–JNI–(NATIVE–LIB)–HAL<br>(我大致把nitive—lib的关系解释为client-server—-按照binder的调用来看)</p>
+<p>一笔带过的讲法:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio8.jpg" alt=" "></p>
+<p>好吧,还是详细的说:<br><strong>Java层</strong>:  尽管android.media.*存在Java层的Binder IPC,但是总体来说业务逻辑都是很清晰的,略.<br>  (主要看AudioSystem.java, AudioTrack.java, AudioManager.java等)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio9.png" alt=" "></p>
+<p><strong>JNI层</strong>:  (JNI或许都不能叫做一层, 只能叫做一个机制)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio10.png" alt=" "></p>
+<p>查看同级的makefile文件,发现: JNI编译到libandroid_runtime.so里面.——也就是说通常不会有问题.</p>
+<p><code>LOCAL_MODULE:= libandroid_runtime</code></p>
+<p><strong>NATIVE层</strong> <code>client</code> :  (专指libmedia.so)—–  server是audioflinger.so</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio11.png" alt=" "></p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio12.png" alt=" "></p>
+<p>(之前的版本代码路径在framework/base/media/libmedia)<br>现在改到framework/av/include/media  以及framework/av/media/libmedia下面.<br>这部分,不用看,肯定编译到 libmedia.so,  我用脚趾头想都知道.</p>
+<p>这里代码大致功能:(其实完全可以不看, 代码就是手册, 有问题来查看一下就可以了)</p>
+<ul>
+<li>有I接口的,如IAudioTrack, IAudioRecorder这个不用看, 一看就知道是通过接口调用Binder服务端.<ul>
+<li>谁啊?  —–AudioFlinger啊,  它是Audio系统的本地服务端, 就是server.</li>
+<li>例如:IAudioFlinger.h、IAudioTrack.h 和IAudioRecorder.h 这三个接口就是通过下层来实现, libaudioflinger.so</li>
+</ul>
+</li>
+<li>没有I接口的,如 AudioTrack, AudioRecorder, 这些一看就是JNI调用的(实际是Java层调用), 完事儿再利用这些类中调用”带有I”的接口.<ul>
+<li>实际上AudioSystem.h、AudioTrack.h 和AudioRecorder.h 中的接口既供本地程序调用，也可以通过JNI 向Java 层提供接口。</li>
+<li>AudioPolicy就不说了,控制路由策略.</li>
+<li>AudioSystem 负责的是Audio 系统的综合管理功能(什么具体音量等级啊乱七八糟的)</li>
+<li>AudioTrack 和AudioRecorder 分别负责音频数据的输出和输入，即播放和录制</li>
+</ul>
+</li>
+</ul>
+<p><strong>注意</strong>:   有一个”奇怪的”   “IAudioFlingerClient”—-看名字,根据编码经验,应该是当IAudioFlinger被调用的时候, 实现回调client端某个实例,达到返回服务端即audioflinger相关状态的意图(intent)————–来当场,查一下代码手册,一看究竟.</p>
+<p><strong>总结</strong>一下:   <code>android.media.*</code>———&gt; JNI ——–&gt;  AudioTrack(当然本地也可以调用) ——&gt; IAudioTrack ——–&gt;libaudioflinger.so</p>
+<p><strong>NATIVE</strong>  <code>server端</code>: (libaudioflinger.so,  libaudiopolicyservice.so, libaudiopolicymanager.so)<br>原来的目录:    frameworks/base/libs/audioflinger<br>后来调整到了 frameworks/av/services下面   (越来越规范,  services目录嘛,一看就知道是服务端)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio13.png" alt=" "></p>
+<p>audiofinger.so承担的作用还是蛮多的:   (看我圈起来的)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio14.png" alt=" "></p>
+<p>功能虽然多,但概括起来就两句:<br>1.AudioFlinger继承libmeida中的 “带I” 接口，提供实现库libaudiofilnger.so<br>  (这部分内容没有自己的对外头文件，上层调用的只是libmedia本部分的接口(“不带I”)，但实际调用的内容是libaudioflinger.so)<br>2.通过在线程中读写audio硬件,实现audio的输入输出<br>  (AudioFilinger中的实现, 调用HAL层提供的硬件接口————–HAL层的接口是标准定义的,但是实现却是平台差异的)</p>
+<p>HAL层:<br>终于到了跨世纪, 超越黑洞速度的HAL层<br>———————从阿尔法世界线, 跳跃到贝塔世界线,可能只是时间轴上的一次平行跳跃,但是你确实进入了不同的世界.</p>
+<p>上面已经说了audioflinger肯定会调用这边儿hal层的接口————-这只是说了一个方面 (HAL 层libaudio.so),还有一个重要方面是audiopolicy.<br>HAL 层hardware/</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio15.png" alt=" "></p>
+<p>Audio的硬件抽象层实际上是各个平台开发过程中需要主要关注和独立完成的部分,(你看到qcom_audio/下面就会根据平台不同, 具体的目录根据平台不同而不同):</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio16.png" alt=" "></p>
+<p>先说标准接口:   libhardware_legacy.so     这个是直接被libaudiofilinger.so, libaudiopolicyservice.so等调用的接口的默认实现<br>实际上接口都放在hardware\libhardware\include\hardware  (这个里面定义了所有hardware的接口,只需要看audio.h就行)<br>这里看默认实现就行(它提供了一种厂商默认的样例或者模板代码)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio17.png" alt=" "></p>
+<p>HAL:<br>头文件里面:  libhardware_legacy/include/AudioHardwareInterface.h:   class AudioStreamOut,   class AudioStreamIn.</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio18.png" alt=" "></p>
+<p>也就是说, 上面类的实例要在厂商的库里面实现, 至少提供上面三个类的实例.<br>———再接着看默认实现:<br>实现文件: libhardware_legacy\libhardware_legacy\audio\audio_hw_hal.cpp</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio19.png" alt=" "></p>
+<p>现在更清楚了, 给的默认实现做了封装, 也就是说, 厂商现在要提供3个东西(结构体):<br>1.<strong>legacy_audio_device</strong><br>2.<strong>legacy_stream_out</strong><br>3.<strong>legacy_stream_in</strong><br>解开封装体, 实际上实现两类实例对象就可以了:<br>1.AudioHardwareInterface的实现类,   以提供AudioHardInterface &amp; AudioStreamOut &amp; AudioStreamIn的实例—cpp文件使用<br>2.stream  (类型分别为 <code>audio_hw_device</code>,   <code>audio_stream_out</code>,  <code>audio_stream_in</code>)</p>
+<p>仔细查找hardware目录:  <code>audio_hw_device</code>,   <code>audio_stream_out</code>,   <code>audio_stream_in</code>,  应该在这两个头文件中:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio20.png" alt=" "></p>
+<p>在audio.h中</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio21.png" alt=" "></p>
+<p>(audio_stream_out以及audio_stream_in中又引用了同一文件的另一个结构体audio_stream———-相当于把公共部分提取出来了)</p>
+<p>一般定义struct 和 class做声明,其实意义是一样的  (一个是c语言中的常用伎俩, 另外一个是cpp面向的手段)<br>感觉有些冗余?  —–相关人员说, 为了兼容以前的版本?</p>
+<p>我其实是不知道的, 但是我想验证一下,  从默认的实现中找点儿线索?<br>————理一下思路,看看别人是不是在胡说八道:<br>先去看下AudioFlinger.cpp怎么调用的:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio22.png" alt=" "></p>
+<p>先记住AudioFlinger.cpp这里调用的是set_mode(…):</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio23.png" alt=" "></p>
+<p>追下去: AudioHwDevice.h:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio24.png" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio25.png" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio26.png" alt=" "></p>
+<p>在这个audio.h中该结构体中还定义了相关的函数指针: (也就是取得了一个结构体的函数指针)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio27.png" alt=" "></p>
+<p>(其中发现 set_mode正是在AudioFlinger中调用的, 往上看)</p>
+<p>那么可以知道, 在audio_hw.c一定会有相关实现 函数(很可能就是把另外一个函数的首地址,赋值给该函数指针)<br>利用函数指针, 很容易进行函数调用,  以及指针赋值(从而给予不同的实现体)<br>(下面的情况就是,  把一个具体的实现)</p>
+<p>看个例子就知道了: (注意看 audio_hw.c里面的实现)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio28.png" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio29.png" alt=" "></p>
+<p>这个时候, 只需要看 adev_open_input_stream()这个函数就可以了:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio30.png" alt=" "></p>
+<p>发现是个空实现, 那, 看一下legacy是怎么实现的:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio31.png" alt=" "></p>
+<p>你看到啦, 别人AudioFlinger调用下来, 传入的参数明明是audio_hw_device *dev,<br>到了这里, 硬是封装成了这样:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio32.png" alt=" "></p>
+<p>也就搞成了这个鬼样子: (实际使用的却是 legay的封装体)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio33.png" alt=" "></p>
+<p>其实结论已经出来了:</p>
+<ol>
+<li>为了兼容以前的版本?     真的是欺负小朋友,傻啊?</li>
+<li>封装了一层结构体,硬是从c的函数指针,变成了cpp的对象调用.—-终于面向对象了<br> (也就是说,原来用c函数指针就能实现的东西,现在硬是给转成了cpp的对象,面向对象的方式)</li>
+</ol>
+<p>为什么这么做?<br>查看audio.h, 我发现,可能是为了扩展(方便扩展) audio hardware module, 我有证据.<br>先说为什么方便扩展, 你想啊, 原来的函数指针,它能对多少了对象?(同一平台不同的硬件a2dp , primary).<br>说到底只有一个函数指针是不够的  (当然你可以通过预编译的宏,但是这样没法动态判断,编译时就写死了),\<br>所以啊,在原来的结构体, 和cpp的AudioHardwareInterface对象做了一个包装, \<br>C语言的不能扩展就算了, cpp的对象,想多少个,我就定义多少个实现类.</p>
+<p>证据:</p>
+<ol>
+<li>audio.h中明确注释了:</li>
+</ol>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio34.png" alt=" "></p>
+<ol>
+<li>你去看legacy的实现, 它实现的多种硬件模组的结构:(还是在hardware_legacy那个目录)</li>
+</ol>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio35.png" alt=" "></p>
+<p>当然他们每一种都有特殊的用途(包括代表一种Hw module)</p>
+<ol>
+<li>AudioHardwareGeneric.cpp：实现基于特定驱动的通用Audio硬件抽象层，这是一个真正能够使用的Audio硬件抽象层</li>
+<li>AudioHardwareStub.cpp：实现Audio硬件抽象层的一个桩，这个实现不操作实际的硬件和文件，它所进行的是空操作</li>
+<li>AudioDumpInterface.cpp：实现输出到文件的Audio硬件抽象层，支持Audio的信息输出功能，不支持输入功能</li>
+<li>A2dpAudioInterface.cpp：实现蓝牙音频的Audio硬件抽象层</li>
+</ol>
+<p>(google还怕你搞不出来, 特意给你做了一个架构, 以及样例实现…..好尴尬啊)</p>
+<h3 id="究极分析图"><a href="#究极分析图" class="headerlink" title="究极分析图"></a>究极分析图</h3><p>不说话,直接上图</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio36.png" alt=" "></p>
+<h2 id="播放过程-AudioTrack"><a href="#播放过程-AudioTrack" class="headerlink" title="播放过程(AudioTrack)"></a>播放过程(AudioTrack)</h2><p>Android中用于播放的大概两类:</p>
+<ol>
+<li>MediaPlayer</li>
+<li>AudioTrack</li>
+</ol>
+<p>用脚趾头想都知道, MediaPlayer显然与我无关.</p>
+<p>MediaPlayer在Java框架层创建音频解码器,所以可以播放wav, ogg, mp3等格式的音频文件.<br>AudioTrack只能播放wav文件或者PCM, 为什么? 因为简单啊. (实际上你去看看源码, 就发现MediaPlayer也会创建AudioTrack)</p>
+<p>关于MediaPlayer 怎么和AudioTrack扯上关系的也是值得一说, 不过因为太复杂, 所以我还是说一说:<br>(真担心自己一不小心就抢了多媒体科室的饭碗)</p>
+<p>1.MediaPlayer并不是直接创建了AudioTrack, 毕竟一个是管理层,一个是研发人员.<br>2.MediaPayer不仅仅间接创建了AudioTrack,  还创建了VideoTrack   (音视频分开)—-用脚趾头想也知道呀</p>
+<p>大概是这样的:<br>media player service控制媒体播放器,  并且在media player service中创建了 media player实例<br>然后呢, media player通过jni调用android_media_player.cpp中的方法, 大家知道, 其实是调用mediaplayer.cpp中的方法.<br>然后和音频一样, mediaplayer 由来了一套client-server策略, 通过Binder进行了ipc调用,<br>   从native 的mediaplayer调用到了native的mediaplayer  (实际上是 libmedia.so调用到libmediaplayerservice.so)<br>    (但注意, 相对于下面的so库,  libmediaplayerservice.so也只能算是client, 毕竟它也提供了MediaPlayerService::Client)<br>还没完, libmediaplayerservice.so中的media player service也不真正干事儿,它就选适当的播放器, 如midi隔世的选sonivox,<br>    ogg格式的选vorbris, 其他的根据配置文件, 或者默认就使用stagefright来播放<br>ok, 说到 stagefright这里, 就说到正题了,   libstagefright.so提供了 StagefrightPlayer 以及 StagefrightRecorder这两个类.<br>代码路径: frameworks/av/media/libstagefright</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio37.png" alt=" "></p>
+<p>(AudioEffects也对playbackThread产生作用, 一会儿说)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio38.png" alt=" "></p>
+<p>(留意一下,我圈出来的 AudioPlayer.cpp, AudioSource.cpp)</p>
+<p>提供stagefright干什么呢?<br>一目了然啊, 提供一个播放器当然是,   播放 “视频”<br>这里播放的是视频啊, 可不单单是音频啊!<br>也就是说, 中间增加的这一层, libstagefright.so其实是为了进行音视频分离, 解码, 播放的.</p>
+<p>我怕你不信, 给你截个图:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio39.png" alt=" "></p>
+<p>服不服?<br>先别,  先说完—只说音频部分好了:   (这个过程非常细)<br>stagefright调用setDataSource()加载音频文件, 根据音频文件的格式(应该是协议或者文件的头字段)不同,<br>选择不同的解析器, 分离出audioTrack  (视频部分是不是交给VideoTrack?),——-音视频分离了.<br>AudioTrack只是一种实体Bean,根据其mineType不同,  之后由AudioPlayer控制,调用<br>AuidoSouce进行不同的解码(它是omxCodec的封装, 所以可以解码), 交给AudioTrack.<br>具体的过程是,   audio player调用fillBuffer() 讲解码完毕的数据流传递给AUdioTrack.</p>
+<p>因为这个过程实在实在是”太简单”了, 所以, 我还是上个图吧:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio40.jpg" alt=" "></p>
+<p>AudioTrack拿到的PCM数据, 交给AudioFlinger,  怎么交的?<br>其实是通过带I的cpp接口方法,  AudioTrack通过调用createAudioTrack_得到AudioFlinger返回的IAudioTrack实现,<br>然后拿到这个对象之后(这个对象并不是AudioTrack的,而是AudioFlinger返回回来的AudioFlinger::createTrack()),<br>之后AudioTrack就可以把数据写入共享内存,<br>再之后就是AudioFlinger读出缓存中的数据, 创建 PlayBackThread,  这个时候或者交给Mixer或者AudioEffect处理,<br>或者直接输出缓存给AudioOutputStream ,  哪个AudioOutputStream ?  就是HAL层libaudio.so中实现的那个cpp对象<br>(在之后就是kernel里面的driver)</p>
+<p>其实到这里过程也就是完了,  但是为了辟谣, 网友说,<br>“MediaPalyer在framework层, 而不是在native层创建的AudioTrack”<br>是不是这样呢? 我自己验证一下 (结论是, 网友又在胡说八道, 写博客害人.)</p>
+<p>—有时间我就代码, 没有时间,我就自己看看得了.</p>
+<p>但是从库的角度看是这么个样子的:</p>
+<p>framework.jar —-&gt; service.jar —&gt; jni (libandroid_runtime.so, libandroid_jni.so)—&gt; <strong>libmedia.so</strong>(MediaPlayer.cpp)<br>——-&gt; libmediaplayerservice.so (MediaPlayerService::Client)—–&gt; libstagefright.so (stagefirght.cpp, stagerecord.cpp)——-&gt; libmedia.so (AudioTrack.cpp)—–Binder—-&gt; libaudioflinger.so (AudioMixer(AudioResampler),  PlayBackThread)   + libeffects.so<br>—–&gt;libaudio.so + audio.primary.default.so(HAL: AudioStreamOut)—-&gt;AudioDevice</p>
+<p>如果只是AuioTrack播放部分,简单的可以理解成这样:   (后面构造部分, 解析代码就基本是这个顺序&amp;模式)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio41.png" alt=" "></p>
+<p>上面在说明MediaPlayer以及AudioTrack区别的时候,大致把Audio播放过程说了一下.(总体上的过了一遍)<br>感觉好简单?————可能是个错觉.</p>
+<p>我举个例子大家就知道了,  有一次, 军哥说, buffer的大小, 会对播放延迟产生影响,  可是为什么会产生音响?<br>没有看代码之前, 正常人大概都能想到:</p>
+<p>1.音速(350)远小于光速,  所以对于传播过程中的由于距离, 衍射, 人脑&amp;人体滤波等产生的影响更大.<br>2.数据大的音频对于实时播放的硬件要求解码能力更多, 所以缓存区的大小可能产生影响<br>     于是,衍生除了两个模型(都是实时播放的):   a.  编解码边播放(io不相关)   b.解码阻塞播放(时间非常短),播放阻塞解码(io相关)</p>
+<p>那么实际上呢?  构造AudioTrack时候所用的 Buffer会不会影响呢?</p>
+<p>基本的播放流程:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio42.png" alt=" "></p>
+<p>从上面的代码可以发现, 每一个音频流对应着一个AudioTrack实例.<br>(但是, 看上面的过程,看不出来具体的播放实现, 必须从构造AudioTrack音频流开始看起)<br>(buffer size应该是frame字节(大小)的非零整数倍,  getMiniBufferSize())</p>
+<p>构造过程<br>frameworks/base/media/java/android/media/AudioTrack.java</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio43.png" alt=" "></p>
+<p>AudioTrack有两种数据加载模式：<br>MODE_STREAM<br>在这种模式下，应用程序持续地write音频数据流到AudioTrack中，并且write动作将阻塞直到数据流从Java层传输到native层，<br>同时加入到播放队列中(这种模式适用于播放大音频数据，但该模式也造成了一定的延时)<br>MODE_STATIC<br>在播放之前，先把所有数据一次性write到AudioTrack的内部缓冲区中。适用于播放内存占用小、延时要求较高的音频数据<br>(其内部缓冲区不同于上面Java代码, 读取音频文件时候用到的buffer, AudioTrack内部缓冲区实际上是一块儿共享内存)</p>
+<p>这两种模式也和buffer size要求有关,  具体是: ..<br>(一般不设置的话,就会自己去计算最小值, 特别是MODE_STREAM的时候)</p>
+<p>再来看看jni怎么连接的: (JNI做传递的时候, 加入了很多代码技巧, 比如整体封装, 不必在意)<br>frameworks/base/core/jni/android_media_AudioTrack.cpp<br>(代码真的是太长了, 我先说大体的流程, 再一起看下代码:<br>1.检查音频参数<br>2.创建一个AudioTrackJniStorage对象(AudioTrackJniStorage是音频数据存储的容器，是对匿名共享内存的封装)<br>3.创建一个AudioTrack(native)对象<br>4.调用set函数初始化AudioTrack (status = lpTrack-&gt;set(…) )<br>buffersize = frameCount <em> 每帧数据量 = frameCount </em> (Channel数 * 每个Channel数据量)</p>
+<p>看代码主要看该函数: android_media_AudioTrack_setup<br><a href="https://android.googlesource.com/platform/frameworks/base.git/+/master/core/jni/android_media_AudioTrack.cpp" target="_blank" rel="noopener">https://android.googlesource.com/platform/frameworks/base.git/+/master/core/jni/android_media_AudioTrack.cpp</a></p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio44.png" alt=" "></p>
+<p>其中最后一部分: (下面马上就仔细看下这个set方法, 如何初始化一个native AudioTrack对象)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio45.png" alt=" "></p>
+<p>(从上面的static模式, 也可以看出来 JniStorage其实是封装了共享内存的)</p>
+<p>创建native AudioTrack<br>frameworks/av/media/libmedia/AudioTrack.cpp</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio46.png" alt=" "></p>
+<p>注意上面有一个 transfer_type, 表示音频数据传输给AudioTrack的方式:<br>framework/av/include/media/AudioTrack.h</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio47.png" alt=" "></p>
+<p>(shared mem方式, pull方式(callback方式), push方式(obtain),同步方式)<br>初始化AudioTrack时，如果cbf为Null，就会创建AudioTrackThread线程。<br>AudioTrack支持两种数据输入方式：<br>1）  Push方式：用户主动write，MediaPlayerService通常采用此方式<br>2）  Pull方式： AudioTrackThread线程通过cbf回调函数主动从用户那里获取数据<br>(下面的set方法里面有讲到)</p>
+<p>创建AudioTrackJniStorage</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio48.png" alt=" "></p>
+<p>这里创建共享内存的过程其实就是映射到当前进程地址空间:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio49.png" alt=" "></p>
+<p>现在仔细看看set方法 (AudioTrack.cpp)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio50.jpg" alt=" "></p>
+<p>之后再去看那个 createTrack_l(), 代码太多, 直接说结论:<br>AudioPolicyService启动时加载了系统支持的所有音频接口，并且打开了默认的音频输出，打开音频输出时，<br>调用AudioFlinger::openOutput()函数为当前打开的音频输出接口创建一个PlaybackThread线程(但是线程也有不同的种类)<br>同时为该线程分配一个全局唯一的audio_io_handle_t值，并以键值对的形式保存在AudioFlinger的成员变量<br>mPlaybackThreads中。  结论就是: <strong>AudioTrack在AudioFlinger</strong>中是以Track来管理的。</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio51.png" alt=" "></p>
+<p>output为AudioFlinger中播放线程的id号<br>并且注意, 创建Track的是audioFlinger, 当stream模式的时候, buffer为空(看下图)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio52.png" alt=" "></p>
+<p>因为stream模式下,匿名共享内存却是在AudioFlinger这边创建<br>在static模式下，用于存放音频数据的匿名共享内存在AudioTrack这边创建.</p>
+<p>并且stream模式下的匿名共享内存头部会创建一个audio_track_cblk_t对象,<br>用于协调 AudioTrack (生产者) 和 AudioFlinger(消费者) 之间的步调.</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio53.png" alt=" "></p>
+<p>Output和AudioTrackThread<br>获取音频输出就是根据音频参数如采样率、声道、格式等从已经打开的音频输出描述符列表中查找合适的音频输出描述文件descriptor，<br>并返回该音频输出在AudioFlinger中创建的播放线程id号，如果没有合适当前音频输出参数的AudioOutputDescriptor，<br>则请求AudioFlinger打开一个新的音频输出通道，并为当前音频输出创建对应的播放线程，返回该播放线程的id号。<br>(总结就一句话, output始终和thread是绑定的, 不管是AudioTrack这个client还是后面的server AudioFlinger)</p>
+<p>关于callback</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio54.png" alt=" "></p>
+<p>当采用Pull方式传输数据的时候,AudioTrackThread线程通过audioCallback回调主动从用户那里获取数据<br>处理则是processAudioBuffer()</p>
+<p>关于PlaybackThread,其他的还有音效, 以及共享内存的映射.(AudioTrack和AudioFlinger通信再说)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio55.png" alt=" "></p>
+<p>AudioTrack  (client) ————- binder————— AudioFlinger (server)<br>不过因为它们之间是跨进程的关系，binder只能解决数据传输的途径, 但是具体的还需要一个实体对象<br>需要一个媒介载体，这个沟通的媒介是IAudioTrack。(就是之前说的client—&gt;server,  亦即libmedia—&gt;libaudioflinger)<br>函数createTrack_l除了为AudioTrack在AudioFlinger中申请一个Track外，还会建立两者间IAudioTrack桥梁。<br>简单说就是:</p>
+<ol>
+<li>//得到AudioFlinger的代理对象</li>
+<li>const sp<iaudioflinger>&amp; audioFlinger = AudioSystem::get_audio_flinger();</iaudioflinger></li>
+<li>audioFlinger.createTrack()</li>
+</ol>
+<p>这个时候可以看看刚刚的AudioFlinger::createTrack<br>(代码也很简单, 但是冗余的检查也比较多, 这里只截取关键的)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio56.png" alt=" "></p>
+<p>为什么最后还要返回一个trackHandler ? (给AudioTrack)<br>Track对象只负责音频相关业务，对外并没有提供夸进程的Binder调用接口，<br>因此需要将通信业务委托给另外一个对象来完成，这就是TrackHandle存在的意义，T<br>rackHandle负责代理Track的通信业务，它是Track与AudioTrack之间的跨进程通道。</p>
+<p>AudioTrack作为client拿到IAudioTrack对象之后,就可以跨进程访问AudioFlinger中PlaybackThread创建的Track了.<br>(上面已经说了很多遍, Track是在AudioFlinger中进行管理的, 一个Track就绑定在一个PlaybackThread中)</p>
+<p>怎么访问?  (标准的binder方式)<br>BpAudioTrack –&gt; BnAudioTrack –&gt; TrackHandle –&gt; Track</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio57.png" alt=" "></p>
+<p>AudioFlinger::registerPid_l(pid_t pid)<br>AudioFlinger的成员变量mClients以键值对的形式保存pid和Client对象，这里首先取出pid对应的Client对象，<br>如果该对象为空，则为客户端进程创建一个新的Client对象。</p>
+<p>AudioFlinger::Client::Client()</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio58.png" alt=" "></p>
+<p>构造Client对象时，创建了一个MemoryDealer对象，该对象用于分配共享内存。<br>(具体参考:  frameworks/native/libs/binder/MemoryDealer.cpp)<br>MemoryDealer是个工具类，用于分配共享内存，每一个Client都拥有一个MemoryDealer对象，<br>这就意味着每个客户端进程都是在自己独有的内存空间中分配共享内存。<br>MemoryDealer构造时创建了一个大小为2<em>1024</em>1024的匿名共享内存，<br>该客户进程所有的AudioFlinger中创建的Track都是在这块共享内存中分配buffer。</p>
+<p>由此可知，当应用程序进程中的AudioTrack请求AudioFlinger,<br>在某个PlaybackThread中创建Track对象时，<br>AudioFlinger首先会为应用程序进程创建一个Client对象，同时创建一块大小为2M的共享内存。<br>在创建Track时，Track将在2M共享内存中分配buffer用于音频播放。</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio59.png" alt=" "></p>
+<p>AudioFlinger中创建Track对象<br><code>sp&lt;AudioFlinger::PlaybackThread::Track&gt; AudioFlinger::PlaybackThread::createTrack_l()</code><br>重要信息一般在其父类中声明:————所属线程, 所属client</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio60.png" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio61.png" alt=" "></p>
+<p>(这个创建Track的函数比较重要,  因为里面会根据client来判别, 在哪里创建共享内存)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio62.png" alt=" "></p>
+<p>TrackBase构造过程主要是为音频播放分配共享内存，在static模式下，共享内存由应用进程自身分配，但在stream模式，<br>共享内存由AudioFlinger分配，static和stream模式下，都会创建audio_track_cblk_t对象，唯一的区别在于，<br>在stream模式下，audio_track_cblk_t对象创建在共享内存的头部(即物理上的紧邻)。</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio63.png" alt=" "></p>
+<p>创建Track的过程, 也会依据stream或者static为client创建不同的代理:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio64.png" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio65.png" alt=" "></p>
+<p>在createTrack时由AudioFlinger申请相应的内存，然后通过IMemory接口返回AudioTrack，这样AudioTrack和AudioFlinger管理着同一个audio_track_cblk_t，通过它实现了环形FIFO，AudioTrack向FIFO中写入音频数据，AudioFlinger从FIFO中读取音频数据，经Mixer后送给AudioHardware进行播放:<br>1.AudioTrack是FIFO的数据生产者；</p>
+<ol>
+<li>AudioFlinger是FIFO的数据消费者；</li>
+</ol>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio66.png" alt=" "></p>
+<p>但是AudioFlinger中的工作线程, 每个线程可能绑定多个Track:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio67.png" alt=" "></p>
+<p>Thread的threadLoop()中，会把该线程中的各个Track进行混合，必要时还要进行ReSample(重采样)的动作，<br>转换为统一的采样率（44.1K），然后通过音频系统的AudioHardware层输出音频数据</p>
+<p>上面的过程总结一下,大概就是:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio68.png" alt=" "></p>
+<p>文字描述一下:</p>
+<ul>
+<li>Framework或者Java层通过JNI创建AudioTrack对象</li>
+<li>根据StreamType等参数，查找已打开的音频输出设备，如果查找不到匹配的音频输出设备，则请求AudioFlinger打开新的音频输出设备</li>
+<li>AudioFlinger为该输出设备创建混音线程MixerThread，并把该线程的id作为getOutput()的返回值返回给AudioTrack</li>
+<li>AudioTrack通过binder机制调用AudioFlinger的createTrack()创建Track，并且创建TrackHandle Binder本地对象，同时返回IAudioTrack的代理对象</li>
+<li>AudioFlinger注册该Track到MixerThread中</li>
+<li>AudioTrack通过IAudioTrack接口，得到在AudioFlinger中创建的FIFO(audio_track_cblk_t)–stream模式</li>
+</ul>
+<p>在回顾一下, 粗略的过程, 大概就是这样的:  (因为音频输出设备也是AudioFlinger作用, 所以画在AudioFilinger里面)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio69.png" alt=" "></p>
+<p>最后的最后, 大概是这样的:</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/03/audio70.jpg" alt=" "></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><blockquote>
+<p>其他还有内容有没有写完，不过到此为止吧。后面太长了。🙂</p>
+</blockquote>
+<hr>
+<p>Merlin 2018.3 这是当初在科室培训时写的，PPT 水平一塌糊涂(但那时还是很有趣的) – 花了2个小时整理此篇</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/bd0987da/">Android: 音频框架&amp;驱动解析</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2018-03-15, 20:32:57</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/bd0987da/" title="Android: 音频框架&amp;驱动解析">http://www.merlinblog.site/posts/bd0987da/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/bd0987da/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/ede42ab6/">
+                    Golang: 注意空接口运行时类型 (0)
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/6c3c68b0/">
+                    Gcc: Gcc优化指南(5. 功成身退-总结)
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本原理"><span class="toc-number">1.</span> <span class="toc-text">基本原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数字化的过程"><span class="toc-number">1.1.</span> <span class="toc-text">数字化的过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#采样过程"><span class="toc-number">1.2.</span> <span class="toc-text">采样过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#录制过程"><span class="toc-number">1.3.</span> <span class="toc-text">录制过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#播放过程"><span class="toc-number">1.4.</span> <span class="toc-text">播放过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#音频架构-Android"><span class="toc-number">2.</span> <span class="toc-text">音频架构(Android)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#顶层抽象"><span class="toc-number">2.1.</span> <span class="toc-text">顶层抽象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#次级抽象"><span class="toc-number">2.2.</span> <span class="toc-text">次级抽象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#终极抽象图"><span class="toc-number">2.3.</span> <span class="toc-text">终极抽象图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#音频代码"><span class="toc-number">3.</span> <span class="toc-text">音频代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#音频代码全解析"><span class="toc-number">3.1.</span> <span class="toc-text">音频代码全解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#究极分析图"><span class="toc-number">3.2.</span> <span class="toc-text">究极分析图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#播放过程-AudioTrack"><span class="toc-number">4.</span> <span class="toc-text">播放过程(AudioTrack)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">5.</span> <span class="toc-text">其他</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/ede42ab6/" title="上一篇: Golang: 注意空接口运行时类型 (0)">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/6c3c68b0/" title="下一篇: Gcc: Gcc优化指南(5. 功成身退-总结)">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

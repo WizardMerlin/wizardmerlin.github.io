@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="当稳定性和可维护性开始成为一个优先考虑的事情后，清理提交、坚持分支策略和提交信息的规范性就变得很重要。分支管理, 项目管理, 仓库管理一直是一个大问题, 本文尝试从最基本的使用开始, 分享一些心得体会, 比如库大了可以使用子模块等.">
+<meta name="keywords" content="开发管理,git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: 高质量Git工作">
+<meta property="og:url" content="http://www.merlinblog.site/posts/cc8315f3/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="当稳定性和可维护性开始成为一个优先考虑的事情后，清理提交、坚持分支策略和提交信息的规范性就变得很重要。分支管理, 项目管理, 仓库管理一直是一个大问题, 本文尝试从最基本的使用开始, 分享一些心得体会, 比如库大了可以使用子模块等.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git11.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git1.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git2.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git3.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git7.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git4.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git5.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git6.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git17.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git16.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git14.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git8.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git9.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git10.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git12.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git13.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/git15.jpg">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.628Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: 高质量Git工作">
+<meta name="twitter:description" content="当稳定性和可维护性开始成为一个优先考虑的事情后，清理提交、坚持分支策略和提交信息的规范性就变得很重要。分支管理, 项目管理, 仓库管理一直是一个大问题, 本文尝试从最基本的使用开始, 分享一些心得体会, 比如库大了可以使用子模块等.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/git11.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: 高质量Git工作 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-high-quality-git" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/cc8315f3/" class="article-date">
+      <time datetime="2017-04-12T02:59:44.000Z" itemprop="datePublished">2017-04-12</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: 高质量Git工作
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发管理/">开发管理</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>当稳定性和可维护性开始成为一个优先考虑的事情后，清理提交、坚持分支策略和提交信息的规范性就变得很重要。<br>分支管理, 项目管理, 仓库管理一直是一个大问题, 本文尝试从最基本的使用开始, 分享一些心得体会, 比如库大了可以使用子模块等.</p>
+<a id="more"></a>
+<h1 id="新手的Git"><a href="#新手的Git" class="headerlink" title="新手的Git"></a>新手的Git</h1><p>我是从新手走过来的, 我知道新手最喜欢用什么, 如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add --all</span><br><span class="line">git commit -am "&lt;message&gt;"</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
+<p>工作流, 本地一般是这样:<br><img src="http://omotkhw3y.bkt.clouddn.com/git11.jpg" alt=""></p>
+<p>一个人玩, 足够了(因为库的维护, 分支的管理, 都不用你操心). 之后进阶就需要了解更多的常用命令. 是的, <code>不用学, 只管用就对了</code>.<br>(当然看看前辈们分享的经验更好)</p>
+<p>忘了说了, 可能你需要先配置你的环境, 比如ssh keys, 然后上传到服务器的列表之类的:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">"youremail@example.com"</span></span><br></pre></td></tr></table></figure>
+<p>一直回车，将自动生成id_rsa和id_rsa.pub文件。使用以下命令验证连接是否成功.<br>或者你验证github:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+<p>不过, 我一般都是用 HTTPS 去拉去或者上传的(怕长久不输密码, 忘记了)</p>
+<p>当然一般不会出现让你去为某个项目配置用户信息的, 所以你配置<code>user.name</code>, <code>user.email</code>的时候, 放心<code>--global</code>.<br>但是如果要为当前项目<code>.git/config</code>配置, 可以这样:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config user.name <span class="string">"Your Name"</span></span><br><span class="line">git config user.email <span class="string">"your@email.com"</span></span><br></pre></td></tr></table></figure>
+<h1 id="工作中的Git"><a href="#工作中的Git" class="headerlink" title="工作中的Git"></a>工作中的Git</h1><h2 id="简单的工作流"><a href="#简单的工作流" class="headerlink" title="简单的工作流"></a>简单的工作流</h2><p>大概是这样的, 见下图<br><img src="http://omotkhw3y.bkt.clouddn.com/git1.jpg" alt=""></p>
+<h3 id="本地端"><a href="#本地端" class="headerlink" title="本地端"></a>本地端</h3><p>相比远程端, 本地端更容易玩的很6, 而远程端涉及到 teamwork, 所以冲突会有一些, 先说本地端.</p>
+<ul>
+<li>Workspace：工作区</li>
+<li>Index / Stage：暂存区</li>
+<li>Repository：仓库区(或本地仓库) 又称为history</li>
+<li>Remote：远程仓库</li>
+</ul>
+<p>其实很长一段时间, 我也没有弄清楚<code>暂存区</code>和<code>本地仓库</code>是怎么回事儿.</p>
+<blockquote>
+<p>暂存区和本地仓库是怎么回事儿呢?</p>
+</blockquote>
+<p>既然git是版本管理工具, 那么看看它怎么管理和追踪记录文件的就知道两者的区别了(stupid way tracing file).<br>去查看一下<code>git init</code>出来的work库(注意不是<code>--bare</code>的裸库, 裸库你是提交不了内容的, 没有工作区, 它仅仅是追踪作用), 即<code>.git</code>目录:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$&gt;tree -L 1</span><br><span class="line">.</span><br><span class="line">|-- HEAD 			# git项目当前处在哪个分支里的提交点</span><br><span class="line">|-- config 			# 项目的配置信息,git config命令会改动它</span><br><span class="line">|-- description  	# 项目的描述信息</span><br><span class="line">|-- hooks/ 			# 系统默认钩子脚本目录</span><br><span class="line">|-- index 			# 索引文件</span><br><span class="line">|-- logs/ 			# 各个refs的历史信息</span><br><span class="line">|-- objects/ 		# Git本地仓库的所有对象 (commits, trees, blobs, tags) </span><br><span class="line">|-- refs/ 			# 标识你项目里的每个分支指向了哪个提交(commit)。</span><br></pre></td></tr></table></figure></p>
+<p>看到<code>index</code>文件, .git目录下的index文件, 暂存区会记录 git add 添加文件的相关信息(文件名、大小、timestamp…)，不保存文件实体, 通过id指向每个文件实体。<br>也就是说, 暂存区其实只是在标记你工作区, 也就是工作目录的文件, 但是并没有保存文件实体.(可以使用 git status 查看暂存区的状态, 暂存区标记了你当前工作区中，哪些内容是被git管理的)</p>
+<p>但是本地残酷就不一样了, git commit 后同步index的目录树到本地仓库, 此时<code>objects</code>子目录会记录当前文件实体, 怎么记录? 一种压缩格式拷贝记录(stupid way), 并且refs保留索引标志(相当于指向).</p>
+<p>总结起来, 就一句话:</p>
+<blockquote>
+<p>任何对象都是在工作区中诞生和被修改, 任何修改都是从进入index区才开始被版本控制, 只有把修改提交到本地仓库，该修改才能在仓库中留下痕迹.</p>
+</blockquote>
+<h3 id="HEAD"><a href="#HEAD" class="headerlink" title="HEAD"></a>HEAD</h3><p>但是本地端, 还没有完, 我还没有说 <code>HEAD</code>, 一般<code>reset</code>, <code>revert</code>等, 都喜欢用 <code>HEAD</code> 操作, 有时候用commit id和用 HEAD效果一样.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/git2.jpg" alt=""><br>HEAD，它始终指向当前所处分支的最新的提交点。你所处的分支变化了，或者产生了新的提交点，HEAD就会跟着改变。<br>好吧, 我还是强调一下:(因为它后面出现频率稍高)</p>
+<blockquote>
+<p>HEAD指向的是本地仓库的最新提交点</p>
+<blockquote>
+<p>上一次提交是HEAD^,或者写成 HEAD~1; 上上次是HEAD^^,也可以写成HEAD～2 ,依次类推</p>
+</blockquote>
+</blockquote>
+<h3 id="远程端"><a href="#远程端" class="headerlink" title="远程端"></a>远程端</h3><p>与协作者分享本地的修改，可以把它们push到远程仓库来共享. 但实际上就只是多了一个<code>git push</code>, 命令, 如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git push &lt;remote&gt; &lt;branch&gt;    上传某个分支上去</span><br><span class="line">git push &lt;remote&gt; --force     本地分支比远端新, 或者与远端同一个妈, 但当前分支的最新提交点不一致; 强行推</span><br><span class="line">git push &lt;remote&gt; --all      上传所有分支</span><br></pre></td></tr></table></figure></p>
+<p>但是值得提醒的是, 远端就会涉及到权限, 也就是说, <code>可能需要review</code>.</p>
+<blockquote>
+<p>如果只是这么简单的工作流, 那么你基本只能在小公司了, 大公司, 项目数&amp;分支数, 非常多, 这些命令不用想太多, 肯定不够.</p>
+</blockquote>
+<h2 id="正常的工作流"><a href="#正常的工作流" class="headerlink" title="正常的工作流"></a>正常的工作流</h2><p>正常工作流, 就是日常工作中, 最常用的, 再上面的基础上, 还要加上很多命令:</p>
+<ul>
+<li>branch/checkout</li>
+<li>rebase/merge</li>
+<li>cherry-pick</li>
+<li>reset/revert</li>
+<li>log/reflog/blame</li>
+<li>diff</li>
+<li>push/fetch/pull</li>
+<li>remote</li>
+</ul>
+<blockquote>
+<p>当然创建分支, 发布release, 打标签, 可能还轮不到你(会有专门的人负责, 他们一般还负责追踪软件进度)</p>
+</blockquote>
+<p>但是即便就这些命令, 也是会有选择和偏好的(甚至, 一般项目组或者上面都是有规定的, 哪些命令哪些时候是禁止使用的).<br>不管怎么说, 现在的工作流也是可控的&amp;不复杂的, 见下图:<br><img src="http://omotkhw3y.bkt.clouddn.com/git3.jpg" alt=""></p>
+<p>当然也会有人口味不同, 喜欢用不同的命令, 比如<code>git log</code>:(我不喜欢用git blame, 感觉像是摊上事儿了)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span>             从最新提交开始显示所有提交历史</span><br><span class="line"></span><br><span class="line">git <span class="built_in">log</span> -p &lt;file&gt;   显示指定文件的所有修改</span><br><span class="line">git blame &lt;file&gt;    谁，在什么时间，修改了文件的那些内容</span><br></pre></td></tr></table></figure>
+<p>根据我的经验, 把常用命令滤一遍.</p>
+<h3 id="常用命令详解"><a href="#常用命令详解" class="headerlink" title="常用命令详解"></a>常用命令详解</h3><p>给你一个笼统的图(具体的命令不是很详细)<br><img src="http://omotkhw3y.bkt.clouddn.com/git7.jpg" alt=""></p>
+<p>详细说说:</p>
+<hr>
+<p>git add</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git add &lt;dir&gt;</span><br><span class="line">git add &lt;file1&gt; [&lt;file2&gt;] ...</span><br></pre></td></tr></table></figure>
+<p>提交目录时, 会主动检查子目录的(包括子目录).</p>
+<p>下面是<code>commit</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git commit -m &lt;message&gt;</span><br><span class="line">git commit &lt;file1&gt; -m &lt;message&gt;</span><br><span class="line">git commit --amend -m &lt;message&gt;  使用一次新的commit代替上一次提交.</span><br></pre></td></tr></table></figure>
+<p>通常 <code>--amend</code> 代替上一次提交的时候, 不用再<code>-m</code>, 直接使用上次的 commit message 即可.</p>
+<blockquote>
+<p>实际上, 只要是review才能入库的代码, 最好不要-m选项, 而是认真按照规范写commit message.</p>
+</blockquote>
+<p>branch 和 checkout<br><img src="http://omotkhw3y.bkt.clouddn.com/git4.jpg" alt=""></p>
+<p>其实你不指定, 追踪的远程分支, 也会在push的时候自动要求你指定.</p>
+<p>再就是<code>merge</code>, 即 merge from: <code>git merge &lt;branch&gt;</code>; 但是merge不好的一点在于, 会产生新的节点(例如下图master分支的M节点):</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/git5.jpg" alt=""></p>
+<p>这还不是最惨的, 最惨的是, <code>merge一般都会冲突</code>, 即merge前的俩commitx修改了同一文件的同一区域, 需要你手动解决冲突文件后再提交.<br>所以一般公司都会推荐使用<code>rebase</code>.</p>
+<p>rebase<br><img src="http://omotkhw3y.bkt.clouddn.com/git6.jpg" alt=""></p>
+<blockquote>
+<p>这个 <code>rebase</code> 还可以整理提交信息, 以交互的方式.</p>
+</blockquote>
+<p>假设你在本地历史记录上有 4 个提交（没有推送到 GitHub），你要回退这是个提交。你的提交记录看起来很乱很拖拉。这时你可以使用 rebase 将所有这些提交合并到一个简单的提交中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rebase -i HEAD~4</span><br></pre></td></tr></table></figure>
+<p>得到信息如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pick 130deo9 oldest commit message</span><br><span class="line">pick 4209fei second oldest commit message</span><br><span class="line">pick 4390gne third oldest commit message</span><br><span class="line">pick bmo0dne newest commit message</span><br></pre></td></tr></table></figure>
+<p>一般只保留修改(提交), 而舍弃 commit message</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pick 130deo9 oldest commit message</span><br><span class="line">fixup 4209fei second oldest commit message</span><br><span class="line">fixup 4390gne third oldest commit message</span><br><span class="line">fixup bmo0dne newest commit message</span><br></pre></td></tr></table></figure>
+<p>之后还要使用<code>git commit --amend</code>进行提交信息commit message的重新改写, 例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">feat: add stripe checkout button to payments page</span><br><span class="line">- add stripe checkout button</span><br><span class="line">- write tests for checkout</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>关于 commit 的规范, 可以参考我的另一篇文章.</p>
+</blockquote>
+<p>checkout<br>这个命令也比较好理解, 我修改了工作区文件, MD改坏了, 不要了, 回到最初拿到库的状态.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- &lt;filename&gt; 用 HEAD 中的最新内容替换掉你的工作目录中的文件</span><br><span class="line">git checkout HEAD          当前所有修改的都不要了, 直接抛弃工作区的所有修改</span><br></pre></td></tr></table></figure>
+<p>但是, 已经add到暂存区的, 则不受影响; 但是我暂存区也不想要了怎么办? 也就是说<code>暂存区</code>, 工作目录都不要了, 我指向恢复到上一次提交.<br>那, 你就用 <code>git reset --hard HEAD</code>吧, 或者你知道commit id, <code>git reset --hard &lt;commit id&gt;</code> , 之后你弄乱的东西全没有了.</p>
+<p>当然你也可以使用checkout切换到某个branch的commit ID, 这样你没有暂存的修改可能会丢失(暂存了不怕, checkout动不了暂存区)如下图:<br><img src="http://omotkhw3y.bkt.clouddn.com/git17.jpg" alt=""></p>
+<blockquote>
+<p>总结就是, <code>checkout</code>可以恢复你的工作区, 但是暂存区它动不了; 要想暂存区也清空, 那么就<code>git reset --hard</code>吧.</p>
+</blockquote>
+<p>稍微注意下, <code>git reset HEAD -- &lt;file&gt;</code> 是把暂存区的内容放回(注意参数是HEAD), 但它不能清空工作区.</p>
+<p>revert<br>撤销之前提交的一个commit， revert 命令会创建一个新的 commit id, 具体你可以通过<code>git reflog</code>查看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git revert HEAD  撤销当前提交(不是回退到暂存区)</span><br><span class="line">git revert &lt;commitid&gt; 回到commit id之前的那个提交点</span><br></pre></td></tr></table></figure>
+<p>reset<br>这个是救命稻草, 分为软和硬(功能和revert类似, 个人觉得更加强大)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git reset --soft HEAD~1      撤销本地提交(但是不会影响你当前的缓存区和工作目录)</span><br><span class="line"></span><br><span class="line">git reset --hard HEAD~1      撤销一个提交(会清空当前的缓存区和工作区, 和上次提交点保持一致, 即干净的)</span><br><span class="line">git reset --hard &lt;commit-id&gt; 撤销提交, commit-id 之后的提交都会被抛弃, 强制回到某个点</span><br></pre></td></tr></table></figure>
+<p>使用reset, 最好指名是soft还是hard, 即不要这样用<code>git reset HEAD~1</code>或者<code>git reset HEAD^</code>, 不指定时操作的是暂存区(其实是mixed选项, 它会让你的缓存区同步于某一个提交, 通常都是传入HEAD, 但工作区的修改还在, 然后HEAD指向你的提供的commit点), 见上面的<code>checkout</code>和下面的<code>aliases</code>.<br>即相当于:<br><img src="http://omotkhw3y.bkt.clouddn.com/git16.jpg" alt=""></p>
+<p>只是当你传入<code>HEAD</code>的时候, 即<code>git reset HEAD &lt;filename&gt;</code>, 从库里退回到暂存区的内容为空(当前没有最新的commit, 回退到上一次, 自然为空), 看上去效果就是, <code>清空了暂存区</code>. 实际上, 如果不指定soft, 或者hard, 一般都是这种用途, 相当于 <code>unstage</code>.</p>
+<blockquote>
+<p>git reset –mixed HEAD 将你当前的改动从缓存区中移除，但是这些改动还留在工作目录中。 见下面的 aliases.</p>
+</blockquote>
+<p>响应范围总结如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/git14.jpg" alt=""><br>记住这个图即可.</p>
+<p>特别注意一下 reset 会会写历史记录, 而不像revert, 让历史记录继续向前变化一次(中和反应), 保留历史追踪.</p>
+<p>diff<br>其中注意区分一下不同:</p>
+<ul>
+<li><code>git diff --cached</code> 查看暂存区和commit库的不同(不暂存, 什么都看不到)</li>
+<li><code>git diff &lt;commit id&gt;</code> 比较当前所在的工作区文件和指定commit id有何不同 </li>
+</ul>
+<p>特殊的, <code>git diff HEAD</code> 查看工作区和commit库的不同(新建文件貌似不行, 一定是修改已经在追踪的文件), 一般都是和没有提交前进行比较.</p>
+<p>哦, 还有一个<code>cherry-pick</code>, 即把某一个commit摘取到当前分支:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git cherry-pick &lt;commit-id&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="非常用命令"><a href="#非常用命令" class="headerlink" title="非常用命令"></a>非常用命令</h3><p>这些命令, 一般你是用不到, 可能是你没有权限, 或者有专门的人负责了.</p>
+<p>比如 <code>init</code> , <code>remote</code>, <code>tag</code>等, 但总有一天你会用到的:</p>
+<p>init</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br><span class="line">git init --bare</span><br></pre></td></tr></table></figure>
+<p>使用裸库建立的仓库的, 一般是在远端服务器上, 只给大家共享(你不能在此目录进行修改文件,或者提交文件啥的).</p>
+<p>remote远端管理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">显示远端信息(默认会显示origin)</span><br><span class="line">git remote show &lt;remote_name&gt;</span><br><span class="line"></span><br><span class="line">显示远端仓库的地址url</span><br><span class="line">git remote -v</span><br><span class="line"></span><br><span class="line">设置远端仓库的url(一般用于更改)/或者添加url (如果远端仓库存在多个url的话)</span><br><span class="line">git remote set-url origin git@github.com:einverne/repo.git</span><br><span class="line">git remote set-url --add origin https://github.com/einverne/dotfiles.git</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">删除远端仓库, 例如origin</span><br><span class="line">git remote rm origin</span><br><span class="line"></span><br><span class="line">删除远端仓库某分支, 例如orgin的某个分支(本地仓库, 直接 git branch -d即可)</span><br><span class="line">git push origin --delete &lt;branchname&gt;</span><br><span class="line">git push origin :&lt;branch name&gt;</span><br><span class="line"></span><br><span class="line">将本地分支推送到远端仓库(可以只推送一个)</span><br><span class="line">git push &lt;remote name&gt; &lt;local-branch-name&gt;</span><br></pre></td></tr></table></figure>
+<p>当然删除分支, 一般你也没有权限; 重命名也是<code>git branch -m &lt;old-name&gt; &lt;new-name&gt;</code>.</p>
+<p>如果我有一个库了, 让后想和远端建立关联, 之后这个库就相当于远端库的本地版本?</p>
+<blockquote>
+<p>如果你初始化了自己的 Git 仓库，并希望将其与 GitHub 仓库相关联，则必须在 GitHub 上创建一个，复制新仓库提供的 URL，并使用 <code>git remote add origin &lt;URL&gt;</code> 命令，这里使用 GitHub 提供的 URL 替换 URL。这样，你就可以添加、提交和推送更改到你的远程仓库了。</p>
+</blockquote>
+<p>打标签<br>一般打标签, 也是项目管理人员在做:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">创建标签</span><br><span class="line">git tag -a &lt;tagname&gt; &lt;commit id&gt;</span><br><span class="line"></span><br><span class="line">显示标签</span><br><span class="line">git show &lt;tagname&gt;</span><br><span class="line"></span><br><span class="line">推送特定tag</span><br><span class="line">git push origin &lt;tagname&gt;</span><br><span class="line"></span><br><span class="line">推送所有tags</span><br><span class="line">git push origin --tags</span><br></pre></td></tr></table></figure>
+<p>此外还有一些, 例如 <code>git rm</code>, <code>git rm</code> 之类的是针对你已经放入暂存区, 然后又想操作的, 例如干净的工作区, 我创建了一个新文件, 然后add加入了暂存区,<br>之后, 我直接 rm 删除了, 结果变成了, 我还要取消跟踪才可以, 这个时候就必须要用<code>git rm</code> 否则, 我还是相当于修改了没有提交, 见下图</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/git8.jpg" alt=""></p>
+<p>这些用不多.</p>
+<h1 id="技巧"><a href="#技巧" class="headerlink" title="技巧"></a>技巧</h1><p>我个人有一点<code>偷懒</code>和选择的技巧:</p>
+<h2 id="aliases"><a href="#aliases" class="headerlink" title="aliases"></a>aliases</h2><p>比如, 放到缓存区, 移出缓存区:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.unstage &apos;reset HEAD --&apos;</span><br></pre></td></tr></table></figure></p>
+<p>以后直接用<code>git add &lt;file&gt;</code>来将文件加入暂存区，使用<code>git unstage &lt;file&gt;</code>来将文件移出.<br>其他还有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.co checkout  </span><br><span class="line">git config --global alias.br branch</span><br><span class="line">git config --global alias.ci commit</span><br><span class="line">git config --global alias.st status</span><br></pre></td></tr></table></figure></p>
+<h2 id="合并之选"><a href="#合并之选" class="headerlink" title="合并之选"></a>合并之选</h2><p>其实只有<code>rebase</code>和<code>merge</code>之争(当然你也可以选择revert自己, 先pull别人, 再进行修改; 如果你不嫌麻烦的话).</p>
+<p>rebase虽然线性, 并且提供整洁的提交; 但是它不如 merge 那样可以知道从别的分支引入了哪些提交(带有commit message), 让你可以追溯; 并且如果rebase的分支是公共分支, 那么它又会带来不小的安全性影响.<br>试想, 如果你的master分支, 要去rebase一个feature分支的某些修改, 那么rebase之后, 可能出现的结果就是, 其他基于master的分支, 之后就要强行合并了(改变一大波内容, 不仅不安全, 而且不能追踪以前的提交了). 因为别人原来是基于旧的master, 你现在整个master已经不是原来的master了, 或者说你在强行让master分支线性话. 如下图:<br><img src="http://omotkhw3y.bkt.clouddn.com/git9.jpg" alt=""></p>
+<blockquote>
+<p>绝不要在公共的分支上使用它(除非不和别人共享master)</p>
+</blockquote>
+<p>如果你想把 rebase 之后的 master 分支推送到远程仓库，Git 会阻止你这么做，因为两个分支包含冲突。但你可以传入 –force 标记来强行推送。 但这也势必造成基于这个master开发人员的重新合并.</p>
+<p>如果是自己的提交, 好比在 feature 分支上提交了三个修改, 实际上想整合成一个, 那么可以使用交互式的rebase, 即<code>git rebase -i HEAD~数字</code>.<br>如果你想用这个方法重写整个 feature 分支，<code>git merge-base</code> 命令非常方便地找出 feature 分支开始分叉的基。下面这段命令返回基提交的 ID，你可以接下来将它传给 git rebase：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge-base feature master</span><br></pre></td></tr></table></figure></p>
+<p>这样你的feature不仅线性化, 而且整洁. 通常只是移动你的提交的话, 你想怎么改就怎么改, 甚至可以合并别人的feature, 只要保证和大家共享的master基于同一个分支即可, 见下图:(其中红色框标注了与主分支的分叉点)<br><img src="http://omotkhw3y.bkt.clouddn.com/git10.jpg" alt=""></p>
+<p>如果你去merge, 那么就会出现这样的情况, merge会保留很多信息<br><img src="http://omotkhw3y.bkt.clouddn.com/git12.jpg" alt=""><br>相对于主分支来说, 它更希望看到你最好一个功能提交一个commit, 然后你内部的什么合并什么的, 它不关心;</p>
+<p>所以使用rebase, 或者 rebase -i稍微整理一下, 才是上策.<br><img src="http://omotkhw3y.bkt.clouddn.com/git13.jpg" alt=""></p>
+<blockquote>
+<p>总之: 来自其他开发者的任何更改都应该用 git merge 而不是 git rebase 来并入。</p>
+</blockquote>
+<p>(其实你看看 github 针对 pull request 都是用的啥就知道了)</p>
+<h2 id="回滚之选"><a href="#回滚之选" class="headerlink" title="回滚之选"></a>回滚之选</h2><p>关于回滚或者重置, 其实上面说 <code>reset</code> , <code>checkout</code>, <code>revert</code> 的时候, 就比较过了. 这里再集中说一下. 其实主要是reset, checkout; 因为没有谁会让你随便去回滚某个commit的, 我们更多的是针对某个文件的恢复. 但是注意, reset用于修改提交时, 它会修改历史, 而revert会重新产生一个新提交来中和以前的提交, 即它会保留历史记录, 因而主分支这种公共共享分支, 一般会用revert的. 对个人而言, reset修改提交反而会比较多.</p>
+<p>值得补充的是<code>git checkout &lt;branchname&gt;</code>的时候, 如果你当前工作区有内容, Git会强制你暂存或者提交, 不然就会丢失. 也就是说, git checkout会改变仓库分支和当前工作目录, 至于暂存区, 它影响不了.</p>
+<p>并且当你在分离HEAD之后, 例如<code>git checkout HEAD~2</code>之后所做的任何修改, 都会在匿名分支上, 所以当你要在分离的HEAD上进行开发之前, 请先建立分支(不然你一旦切换到其他分支, 该部分开发内容将丢失), 下面是<code>分离的HEAD</code>.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/git15.jpg" alt=""></p>
+<p>但是如果你是<code>git checkout HEAD~2 foo.py</code>那么HEAD引用是不会改变的, 只是 foo.py 同步到了倒数第二个提交中的 foo.py.</p>
+<p>总结起来就是, <code>git checkout -- &lt;file&gt;</code> 或者 <code>git chekcout HEAD &lt;file&gt;</code> 放弃当前工作区某个文件没有缓存的修改, 只是某个文件.</p>
+<p>所有文件的话, 请用 <code>git checkout HEAD &lt;file&gt;</code> 或者 <code>git reset HEAD --hard</code>.</p>
+<h2 id="Log-or-Blame"><a href="#Log-or-Blame" class="headerlink" title="Log or Blame"></a>Log or Blame</h2><p>这里要说的是, 如果有图形化工具, 如<code>gitk</code>, 请用图形化工具, 然后本条略过.</p>
+<p>git log常用的参数如下:</p>
+<ul>
+<li><code>-p</code>          提交所有的删改都会被输出</li>
+<li><code>--stat</code>      显示每次提交的文件增删数量</li>
+<li><code>--oneline</code> 或者 <code>--oneline=pretty</code></li>
+<li><code>--decorate</code> 显示指向这个提交的所有引用（比如说分支、标签等）, 即查看响应范围</li>
+<li><code>git shortlog</code> 它把每个提交按作者分类，显示提交信息的第一行。这样可以容易地看到谁做了什么。</li>
+<li><code>--graph --graph --oneline --decorate</code> 显示一个图形化界面</li>
+<li><code>-&lt;num&gt;</code> 显示最近N此提交.</li>
+<li><code>--after=&quot;2014-7-1&quot; --before=&quot;2014-7-4&quot;</code>, 还有<code>--since</code>, <code>--until</code><br><code>&lt;since&gt;..&lt;until&gt;</code></li>
+<li><code>--author=&quot;John&quot;</code></li>
+<li><code>--grep=&quot;JRA-224:&quot;</code></li>
+<li><code>master..feature</code> 查取分支差异</li>
+<li><code>--merges</code> 返回合并的两个父节点</li>
+<li><code>--no-merges</code> 过滤merge节点</li>
+</ul>
+<h2 id="清除未跟踪的文件"><a href="#清除未跟踪的文件" class="headerlink" title="清除未跟踪的文件"></a>清除未跟踪的文件</h2><p>例如emacs产生的备份文件, <code>git clean -dxf</code>可以清除这些文件(前提是.gitignore要求忽略他们), 通常使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clean -df</span><br></pre></td></tr></table></figure>
+<p>表示保留ignore文件</p>
+<h1 id="大仓库"><a href="#大仓库" class="headerlink" title="大仓库"></a>大仓库</h1><p>有些库非常大, 但是它又是一个逻辑主体, 不能使用repo, 例如:</p>
+<ul>
+<li>项目累积了非常长的历史 (git log你就知道了)</li>
+<li>项目包括了巨大的二进制资产，需要与代码一起跟踪配对</li>
+</ul>
+<p>我工作中, 没必要拉取所有的分支, 所有的记录或者文件, 这个时候一般需要特殊处理一下.</p>
+<h2 id="大量历史记录的库"><a href="#大量历史记录的库" class="headerlink" title="大量历史记录的库"></a>大量历史记录的库</h2><h3 id="浅克隆"><a href="#浅克隆" class="headerlink" title="浅克隆"></a>浅克隆</h3><p>这是简单的的解决办法, 克隆所有的分支的近depth次提交</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth depth remote-url</span><br></pre></td></tr></table></figure>
+<p>当然, 也支持只克隆一个分支:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone URL --branch branch_name --single-branch [folder]</span><br></pre></td></tr></table></figure>
+<h3 id="过滤分支"><a href="#过滤分支" class="headerlink" title="过滤分支"></a>过滤分支</h3><p>filter-branch (过滤分支)这个命令可以根据预先定义的模式对项目历史进行过滤、 整理 、修改，甚至跳过一些文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git filter-branch --tree-filter &apos;rm -rf /path/to/spurious/asset/folder&apos; HEAD</span><br></pre></td></tr></table></figure>
+<p>但是, 这么做就已经重新写了整个项目的历史记录, 不再是原库了. 如果原库更新, 你还得重新更新.</p>
+<blockquote>
+<p>这个操作危险系数大, 建议还是浅克隆吧</p>
+</blockquote>
+<h2 id="有巨大二进制资产的库"><a href="#有巨大二进制资产的库" class="headerlink" title="有巨大二进制资产的库"></a>有巨大二进制资产的库</h2><p>简单来说, 这种库资源size太大了, 而Git又是采用stupid拷贝的方式记录.</p>
+<p>git 在处理二进制资产的时候并不是特别差劲，但它也不会干得特别好。默认情况下，git 会完整压缩存储二进制资产的所有后续版本，如果你有很多二进制资产的情况下，这显然不是最佳方案。 处理的时候, 要进行调整分类:</p>
+<blockquote>
+<p>对于变化显著的二进制文件 - 这是指不仅只有元数据头变化 - 这时增量压缩可能没什么作用，建议对这些文件关闭 delta 选项，以避免不必要的增量压缩并重新打包</p>
+<p>对于上述情形，就像某些文件通过 zlib 压缩并不会有多好的效果，你使用 core.compression 0 或 core.loosecompression 0 来关闭压缩功能一样；这是一个全局设置，它会对其它压缩效果不错的非二进制文件带来负面影响。因此建议你把二进制资产放在单独的库中。</p>
+<p>一定要记住 git gc 将“重复的”松散的对象变成一个单独的包文件，除非以任何方式压缩文件都不会使生成的包文件有显著差异。</p>
+<p>探索调整 core.bigFileThreshold 带来的效果。任何大于 512 MiB 都不会采用 delta 压缩 - 如果没有设置 .gitattributes 的话 - 所以这样的调整值得一试。</p>
+</blockquote>
+<h3 id="子模块"><a href="#子模块" class="headerlink" title="子模块"></a>子模块</h3><p>这里其实是借用了<code>repo</code>工具的思想.</p>
+<blockquote>
+<p>把它们拆分到一个单独的库，然后在主项目是通过把它拉取为 子模块 。使用这种方法你可以控制资产的更新。需要了解子模块，可以看看： 核心概念与技巧 和 另一个选择 。如果你想继续使用子模块的方法，你可能需要检查 项目依赖 的复杂性。我提到的方法对解决大型二进制文件问题会有所帮助。</p>
+</blockquote>
+<p>关于子模块的参考如下:</p>
+<p>在已有库中, 添加子模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git submodule add [url] [path]</span><br></pre></td></tr></table></figure>
+<p>例如: <code>git submodule add git://github.com/wizardmerlin/xxx.git src/main/proj/xxxx</code></p>
+<p>初始化子模块：<code>git submodule init</code>    只在首次检出仓库时运行一次就行<br>更新子模块：<code>git submodule update</code>   每次更新或切换分支后都需要运行一下</p>
+<p>删除子模块</p>
+<ul>
+<li>git rm –cached [path]</li>
+<li>编辑“.gitmodules”文件，将子模块的相关配置节点删除掉</li>
+<li>编辑“ .git/config”文件，将子模块的相关配置节点删除掉</li>
+<li>手动删除子模块残留的目录(就是你 add 的 path)</li>
+</ul>
+<h3 id="git三方扩展"><a href="#git三方扩展" class="headerlink" title="git三方扩展"></a>git三方扩展</h3><p>git 中处理二进制可以依靠第三方扩展, 比如<code>git-annex</code>. 它可以使用 git 管理二进制文件，但不需要把文件内容检入库中。git-annex 使用一个特殊的键值库来保存文件，然后将符号链接像普通文件一样检入 git 库中进行版本管理。 <a href="https://git-annex.branchable.com/git-annex/" target="_blank" rel="noopener">参考</a></p>
+<p>第二个扩展是 git-bigfiles ，一个 git 分支， 适合于使用 git 分享项目大文件的人 。</p>
+<h1 id="其他参考"><a href="#其他参考" class="headerlink" title="其他参考"></a>其他参考</h1><p>给你一个写的更加啰嗦(详细)的参考: <a href="http://www.cnblogs.com/kenshinobiy/p/4543976.html" target="_blank" rel="noopener">http://www.cnblogs.com/kenshinobiy/p/4543976.html</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/cc8315f3/">技术: 高质量Git工作</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2017-04-12, 10:59:44</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/cc8315f3/" title="技术: 高质量Git工作">http://www.merlinblog.site/posts/cc8315f3/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/cc8315f3/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/1a10be5a/">
+                    技术: Python代码规范
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/3a357315/">
+                    技术: Python语言
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#新手的Git"><span class="toc-number">1.</span> <span class="toc-text">新手的Git</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#工作中的Git"><span class="toc-number">2.</span> <span class="toc-text">工作中的Git</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单的工作流"><span class="toc-number">2.1.</span> <span class="toc-text">简单的工作流</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#本地端"><span class="toc-number">2.1.1.</span> <span class="toc-text">本地端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HEAD"><span class="toc-number">2.1.2.</span> <span class="toc-text">HEAD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#远程端"><span class="toc-number">2.1.3.</span> <span class="toc-text">远程端</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正常的工作流"><span class="toc-number">2.2.</span> <span class="toc-text">正常的工作流</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用命令详解"><span class="toc-number">2.2.1.</span> <span class="toc-text">常用命令详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非常用命令"><span class="toc-number">2.2.2.</span> <span class="toc-text">非常用命令</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#技巧"><span class="toc-number">3.</span> <span class="toc-text">技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#aliases"><span class="toc-number">3.1.</span> <span class="toc-text">aliases</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合并之选"><span class="toc-number">3.2.</span> <span class="toc-text">合并之选</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#回滚之选"><span class="toc-number">3.3.</span> <span class="toc-text">回滚之选</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Log-or-Blame"><span class="toc-number">3.4.</span> <span class="toc-text">Log or Blame</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#清除未跟踪的文件"><span class="toc-number">3.5.</span> <span class="toc-text">清除未跟踪的文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#大仓库"><span class="toc-number">4.</span> <span class="toc-text">大仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#大量历史记录的库"><span class="toc-number">4.1.</span> <span class="toc-text">大量历史记录的库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#浅克隆"><span class="toc-number">4.1.1.</span> <span class="toc-text">浅克隆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤分支"><span class="toc-number">4.1.2.</span> <span class="toc-text">过滤分支</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有巨大二进制资产的库"><span class="toc-number">4.2.</span> <span class="toc-text">有巨大二进制资产的库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#子模块"><span class="toc-number">4.2.1.</span> <span class="toc-text">子模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#git三方扩展"><span class="toc-number">4.2.2.</span> <span class="toc-text">git三方扩展</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他参考"><span class="toc-number">5.</span> <span class="toc-text">其他参考</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/1a10be5a/" title="上一篇: 技术: Python代码规范">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/3a357315/" title="下一篇: 技术: Python语言">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="说linux下开发需要使用到的工具链 binutils.">
+<meta name="keywords" content="linux,binutils">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: Linux Bin Utils">
+<meta property="og:url" content="http://www.merlinblog.site/posts/4b19001a/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="说linux下开发需要使用到的工具链 binutils.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/linuxbinutils2.jpg">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.623Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: Linux Bin Utils">
+<meta name="twitter:description" content="说linux下开发需要使用到的工具链 binutils.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/linuxbinutils2.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: Linux Bin Utils | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-binutils-in-linux" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/4b19001a/" class="article-date">
+      <time datetime="2016-07-01T06:17:13.000Z" itemprop="datePublished">2016-07-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: Linux Bin Utils
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/binutils/">binutils</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>说linux下开发需要使用到的工具链 binutils.<br><a id="more"></a></p>
+<blockquote>
+<p>大致上有: ar, as, ld, nm, objcopy, objdump, ranlib, readelf, size, strings, strip</p>
+</blockquote>
+<p>注意这里说的是 <code>bin utils</code> 而不是 <code>core utils</code>, 所以只包含开发相关, 不包括运维相关.</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/linuxbinutils2.jpg" alt="post-cover"></p>
+<!--more -->
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>binutils工具链: </p>
+<ul>
+<li>ar 静态库生成(打包)</li>
+<li>as 汇编器(略)</li>
+<li>ld 链接器和ldd配置器</li>
+<li>nm 查看目标文件中的符号</li>
+<li>objcopy 复制目标文件 (例如去除某些ELF目标文件)</li>
+<li>ranlib 为静态库创建索引, 相当于ar的s选项</li>
+<li>readelf 解读ELF文件头</li>
+<li>size 列出目标文件每一个断的大小和总的大小</li>
+<li>strings 列出目标文件中的字符串</li>
+<li>strip 去除目标文件中的所有符号(使目标文件尺寸减小)</li>
+</ul>
+<p>(比较常用的, ar, nm, objdump, ld, strip)<br>glibc linux下标准c库(包括linux系统库), 库就不说了.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="ar"><a href="#ar" class="headerlink" title="ar"></a>ar</h2><p>当你使用rapidjson, rapidxml, gtest等这类只有头文件的库时, 链接时直接指定库文件本身, 实际上就是在使用<code>.o</code>文件.</p>
+<p>ar静态链接器, 或者说一个<code>.o</code>文件的打包器, 就相当于把一些列.o追加到.a的末尾, 然后链接时写入可执行文件, 或者最终的object对象文件. </p>
+<p>总结一句话, 打包生成<code>.a</code>文件, 例如生成静态库的libmytest.a :<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ar cqs libmytest.a myfun.o</span><br></pre></td></tr></table></figure></p>
+<p>具体解释:</p>
+<ul>
+<li>c 表示无提示模式创建文件包</li>
+<li>q 表示在文件包尾加入 myfun.o</li>
+<li>s 强制重新生成文件包的符号表</li>
+</ul>
+<p>其实代替 q 选项, 常用<code>r</code>选项, r表示在文件包中代替文件, 特别是你更新了.o文件时. 最常用的是<code>ar crs</code> 生成.a. </p>
+<p>注意区别一下 <code>gcc -static</code> 命令: 这个命令在链接的时候,不管你给的是静态库还是动态库, 统统的按照静态库的方式链接, 即把所有代码都编到可执行文件中.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc test_main.c -static -o test_main -lpthread</span><br></pre></td></tr></table></figure></p>
+<p>然后你nm一下可执行文件<code>test_main</code>, 发现超级大:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">0000000000404fb0 T __pthread_cleanup_push</span><br><span class="line">0000000000404fb0 T _pthread_cleanup_push</span><br><span class="line">                 w _pthread_cleanup_push_defer</span><br><span class="line">                 w __pthread_cleanup_upto</span><br><span class="line">0000000000402fb0 W pthread_create</span><br><span class="line">0000000000402fb0 T __pthread_create_2_1</span><br><span class="line">0000000000405870 T __pthread_current_priority</span><br><span class="line">00000000006d6dd8 B __pthread_debug</span><br><span class="line">0000000000405060 T __pthread_disable_asynccancel</span><br><span class="line">0000000000405000 T __pthread_enable_asynccancel</span><br><span class="line">00000000006d6df0 B __pthread_force_elision</span><br><span class="line">0000000000405fe0 T __pthread_get_minstack</span><br><span class="line">0000000000404cf0 T __pthread_getspecific</span><br><span class="line">0000000000404cf0 T pthread_getspecific</span><br><span class="line">00000000006ceec0 D __pthread_init_array</span><br><span class="line">0000000000405cc0 T __pthread_initialize_minimal</span><br><span class="line">0000000000405cc0 T __pthread_initialize_minimal_internal</span><br><span class="line">0000000000402790 T __pthread_init_static_tls</span><br><span class="line">0000000000404070 T pthread_join</span><br><span class="line">0000000000404c50 T __pthread_key_create</span><br><span class="line">0000000000404c50 T pthread_key_create</span><br></pre></td></tr></table></figure></p>
+<p>(gcc -shared请看下面的ld)</p>
+<h2 id="ld"><a href="#ld" class="headerlink" title="ld"></a>ld</h2><p>首先把ldd和ld区分以下:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">which</span> ldd</span><br><span class="line">/usr/bin/ldd</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">which</span> ld</span><br><span class="line">/usr/bin/ld</span><br><span class="line"></span><br><span class="line">$ file /usr/bin/ldd</span><br><span class="line">/usr/bin/ldd: Bourne-Again shell script, ASCII text executable</span><br><span class="line"></span><br><span class="line">$ file /usr/bin/ld</span><br><span class="line">/usr/bin/ld: symbolic link to `ld.bfd<span class="string">'</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$ file /usr/bin/ld.bfd</span></span><br><span class="line"><span class="string">/usr/bin/ld.bfd: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), </span></span><br><span class="line"><span class="string">dynamically linked (uses shared libs), for GNU/Linux 2.6.24, </span></span><br><span class="line"><span class="string">BuildID[sha1]=0xc81e82fe3f0377d917c3fc91c24771ea786911f9, stripped</span></span><br></pre></td></tr></table></figure></p>
+<p><code>ld</code>是链接器(动态装入器), 一个可执行程序; 用gcc或者g++链接的时候自动调用, 链接语句比较复杂, 交给gcc处理吧:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#编译的时候还是要使用-fPIC, 链接的时候指定-shared, 不加shared的话, gcc也是优先链接动态库的</span></span><br><span class="line">$ gcc -shared –o libmyjob.so myjob.o</span><br></pre></td></tr></table></figure></p>
+<p>(当然还有一个工具, 用来专门生成库 libtool)</p>
+<p><code>ldd</code> 命令其实是依靠设置一些环境变量而实现的, 是一个shell脚本主要设置ld链接器的so库目录, 也就是说ldd的作用只是设置一些环境变量的值. 当然你也可以拿ldd看一个库是不是动态库: <code>ldd filename</code> , 例如:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ldd /bin/ln</span><br><span class="line">libc.so.6 =&gt; /lib/libc.so.6 (0x40021000)</span><br><span class="line">/lib/ld-linux.so.2 =&gt; /lib/ld-linux.so.2 (0x40000000)</span><br></pre></td></tr></table></figure></p>
+<p>或者查看它的版本:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ldd --version</span><br><span class="line">ldd (Ubuntu EGLIBC 2.15-0ubuntu10.18) 2.15</span><br><span class="line">Copyright (C) 2012 Free Software Foundation, Inc.</span><br><span class="line">This is free software; see the <span class="built_in">source</span> <span class="keyword">for</span> copying conditions.  There is NO</span><br><span class="line">warranty; not even <span class="keyword">for</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span><br><span class="line">Written by Roland McGrath and Ulrich Drepper.</span><br></pre></td></tr></table></figure></p>
+<p>ldd通过 <code>/etc/ld.so.conf</code> 文件指示链接时, ld需要链接的库:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cat /etc/ld.so.conf</span><br><span class="line">include /etc/ld.so.conf.d/*.conf</span><br><span class="line"></span><br><span class="line">/usr/<span class="built_in">local</span>/ssl/lib</span><br></pre></td></tr></table></figure></p>
+<p>也就是是说 <code>/etc/ld.so.conf.d/*.conf</code> 里面的所有 <code>.conf</code>文件指示了目录:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ cat /etc/ld.so.conf.d/*.conf</span><br><span class="line"><span class="comment"># libc default configuration</span></span><br><span class="line">/usr/<span class="built_in">local</span>/lib</span><br><span class="line">/usr/<span class="built_in">local</span>/lib</span><br><span class="line"><span class="comment"># Multiarch support</span></span><br><span class="line">/lib/x86_64-linux-gnu</span><br><span class="line">/usr/lib/x86_64-linux-gnu</span><br></pre></td></tr></table></figure>
+<p>这下全明白了. 当你更新 <code>/etc/ld.so.conf</code>相关的配置文件, 并不一定能引入新的链接路径, 因为还要依靠<code>ldconfig</code>命令把相关内容更新到<code>/etc/ld.so.cache</code>, 这时链接器ld才能在链接的时候进行装入.</p>
+<p>当然ldconfig不仅仅可以更新库路径, 还可以查看具体会链接到的库(当前在/etc/ld.so.cache中指定的), 例如:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ldconfig -p | less</span><br><span class="line">$ ldconfig -p | grep <span class="string">"pthread"</span></span><br></pre></td></tr></table></figure></p>
+<p>即便是链接的时候, 使用了 “gcc -L”以及”-l”选项, 运行的时候, 也不一定能运行(运行的时候会在指定的库地址找到相应代码实现), 除非你的库一直都在被相关的conf文件记录了, 也就是说运行的时候也要指定库路径. 此时可以使用”LD_LIBRARY_PATH”来添加临时的路径.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># export LD_LIBRARY_PATH="/usr/lib/old:/opt/lib"</span></span><br></pre></td></tr></table></figure></p>
+<p>(当然, 您可以把这句写入您的<code>.bashrc</code>里面, 每次运行shell都会导入)而且<code>LD_LIBRARY_PATH</code>指定的路径优先查找;(这样可以在您本机的某些库比较旧, 不满足要求时, 优先链接比较新的, 您指定的库).</p>
+<p>下面nm, objdump, readelf 三个功能有重合, 我推荐的是用好简单的nm和最强大的readelf, 了解objdump.</p>
+<hr>
+<h2 id="nm"><a href="#nm" class="headerlink" title="nm"></a>nm</h2><p>nm 查看目标文件中的符号(display symbol table from an object file), 这个常和 <code>readelf</code> , <code>objdump</code>纠缠不清, 可以肯定的是, nm对于解读目标文件中的符号更专业, 而readelf则通用于解读elf头信息(Displays information about ELF format object files.), 而<code>objdump</code>这个相当于nm的超集.</p>
+<p>目标文件可以是是最终的可执行文件, 当然也可以是’.o’文件, 甚至是<code>.so</code>文件( 通常是库文件和可执行文件).<br><code>man nm</code>得到如下信息:<br>(man手册是写给懂的人看的)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">nm [-a|--debug-syms]</span><br><span class="line">  [-g|--extern-only][--plugin name]</span><br><span class="line">  [-B] [-C|--demangle[=style]] [-D|--dynamic]</span><br><span class="line">  [-S|--print-size] [-s|--print-armap]</span><br><span class="line">  [-A|-o|--print-file-name][--special-syms]</span><br><span class="line">  [-n|-v|--numeric-sort] [-p|--no-sort]</span><br><span class="line">  [-r|--reverse-sort] [--size-sort] [-u|--undefined-only]</span><br><span class="line">  [-t radix|--radix=radix] [-P|--portability]</span><br><span class="line">  [--target=bfdname] [-fformat|--format=format]</span><br><span class="line">  [--defined-only] [-l|--line-numbers] [--no-demangle]</span><br><span class="line">  [-V|--version] [-X 32_64] [--help]  [objfile...]</span><br></pre></td></tr></table></figure></p>
+<p>常用的选项如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-A: 每个符号前显示文件名</span><br><span class="line">-s: --print-armap</span><br><span class="line">-D: 显示动态符号 </span><br><span class="line">-g: 仅显示外部符号</span><br><span class="line">-r: 反序显示符号表</span><br></pre></td></tr></table></figure></p>
+<p>-s和-D是相对的, 一个用于查看静态库, 一个用于查看动态库:</p>
+<ul>
+<li><code>[-s|--print-armap]</code>, When listing symbols from archive members, include the index: a mapping (stored in the archive by ar or ranlib) of which modules contain definitions for which names (当列出库中成员的符号时, 包含索引, 索引的内容包含:哪些模块包含哪些名字的映射)</li>
+<li><code>[-D|--dynamic]</code>显示动态符号, 该任选项仅对于动态目标(例如特定类型的共享库)有意义.</li>
+</ul>
+<p>无论如何 nm 都会列出其值(the symbol value), 类型(the symbol type)和其名字(the symbol name), 例如 <code>nm -s main</code> 得到:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">00000000004060e0 T __libc_csu_fini</span><br><span class="line">0000000000406050 T __libc_csu_init</span><br><span class="line">                 U __libc_start_main@@GLIBC_2.2.5</span><br><span class="line">                 U __stack_chk_fail@@GLIBC_2.4</span><br><span class="line">00000000006090b0 A _edata</span><br><span class="line">00000000006091d8 A _end</span><br><span class="line">00000000004060e4 T _fini</span><br><span class="line">0000000000400b00 T _init</span><br><span class="line">0000000000400c60 T _start</span><br><span class="line">0000000000400c8c t call_gmon_start</span><br><span class="line">00000000006091d0 b completed.7516</span><br><span class="line">00000000006090a0 W data_start</span><br><span class="line">0000000000400cb0 t deregister_tm_clones</span><br><span class="line">0000000000400d50 t frame_dummy</span><br><span class="line">0000000000400d78 T main</span><br></pre></td></tr></table></figure></p>
+<p>上面的值, 都是16进制的, 每个符号的值的具体含义依其类型而异, 并且其类型, 其值以及它们所属的section是密切相关的(可能是编译地址, 也可能是绝对值).</p>
+<p>下面列举了其类型的含义:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">A </span><br><span class="line">该符号的值是绝对的，在以后的链接过程中，不允许进行改变。</span><br><span class="line">这样的符号值，常常出现在中断向量表中，例如用符号来表示各个中断向量函数在中断向量表中的位置。</span><br><span class="line"></span><br><span class="line">B </span><br><span class="line">该符号的值出现在非初始化数据段(bss)中</span><br><span class="line">例如，在一个文件中定义全局static int test。</span><br><span class="line">则该符号test的类型为B，位于bss section中</span><br><span class="line">其值表示该符号在bss段中的偏移.</span><br><span class="line">一般而言，bss段分配于RAM中</span><br><span class="line"></span><br><span class="line">C </span><br><span class="line">该符号为common symbol, 未初始话数据段.</span><br><span class="line">只有在链接过程中才进行分配, 符号的值表示该符号需要的字节数。</span><br><span class="line">例如在一个c文件中，定义int test，并且该符号在别的地方会被引用，</span><br><span class="line">则该符号类型即为C, 否则其类型为B。</span><br><span class="line"></span><br><span class="line">D </span><br><span class="line">该符号位于初始话数据段中。</span><br><span class="line">一般来说，分配到data section中。</span><br><span class="line">例如定义全局int baud_table[5] = &#123;9600, 19200, 38400&#125;，</span><br><span class="line">则会分配于初始化数据段中</span><br><span class="line"></span><br><span class="line">G </span><br><span class="line">该符号也位于初始化数据段中</span><br><span class="line">主要用于small object提高访问small data object的一种方式</span><br><span class="line"></span><br><span class="line">I </span><br><span class="line">该符号是对另一个符号的间接引用</span><br><span class="line"></span><br><span class="line">N </span><br><span class="line">该符号是一个debugging符号</span><br><span class="line"></span><br><span class="line">R </span><br><span class="line">该符号位于只读数据区。</span><br><span class="line">例如定义全局const int test[] = &#123;123, 123&#125;;</span><br><span class="line">则test就是一个只读数据区的符号。</span><br><span class="line"></span><br><span class="line">一般而言，位于rodata section。</span><br><span class="line">值得注意的是，如果在一个函数中定义</span><br><span class="line">const char *test = “abc”, </span><br><span class="line">const char test_int = 3。</span><br><span class="line">使用nm都不会得到符号信息，</span><br><span class="line">但是字符串“abc”分配于只读存储器中，</span><br><span class="line">test在rodata section中，大小为4。</span><br><span class="line"></span><br><span class="line">S </span><br><span class="line">符号位于非初始化数据区，用于small object</span><br><span class="line"></span><br><span class="line">T </span><br><span class="line">该符号位于代码区text section</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">U </span><br><span class="line">该符号在当前文件中是未定义的，即该符号的定义在别的文件中。</span><br><span class="line">例如，当前文件调用另一个文件中定义的函数，</span><br><span class="line">在这个被调用的函数在当前就是未定义的；</span><br><span class="line">但是在定义它的文件中类型是T, 但是对于全局变量来说，</span><br><span class="line">在定义它的文件中，其符号类型为C.</span><br><span class="line"></span><br><span class="line">V </span><br><span class="line">该符号是一个weak object。</span><br><span class="line"></span><br><span class="line">W </span><br><span class="line">The symbol is a weak symbol that has not been </span><br><span class="line">specifically tagged as a weak object symbol.</span><br><span class="line"></span><br><span class="line">- </span><br><span class="line">该符号是a.out格式文件中的stabs symbol</span><br><span class="line"></span><br><span class="line">? </span><br><span class="line">该符号类型没有定义</span><br></pre></td></tr></table></figure></p>
+<p>符号定义常用的也就是 U和T, 用来查看具体的定义或者调用关系.(这也就是你可能需要看符号表的原因吧, 我看看代码到底是调用到了哪里, 然后利用符号的值去相应的动态库或者其他obj中找到这些符号, 弄清楚调用关系; 或者查看某个值—这个的话一般用gdb调试), 简单总结如下:<br>(小写的, 表示对应的Local; 大写global)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">A    Global absolute 绝对符号(a则表示 Local absolute 符号)</span><br><span class="line">     其他都是偏移符号</span><br><span class="line">B    bss 符号 (b表示局部)--未初始化</span><br><span class="line">C    动态分配的符号</span><br><span class="line">D    Global data 符号(d表示局部) --初始化</span><br><span class="line">f    源文件名称符号</span><br><span class="line">T    Global text 符号</span><br><span class="line">t    Local text 符号</span><br><span class="line">U    未定义符号(定期在别处, 此处只是使用)</span><br><span class="line">W    表示如果其他函数库中也有对这个符号的定义</span><br><span class="line">     则其他符号的定义可以覆盖这个定义</span><br></pre></td></tr></table></figure></p>
+<p>(上面的符号表示, 在 objdump 和 readelf 命名里也适用)<br>使用nm前, 最好先用<code>file</code>查看对象文件所属处理器架构, 然后再用相应交叉版本的nm工具. 当然编译<code>.o</code>文件的时候一定要使用 <code>-g</code>参数, 否则没有符号信息.</p>
+<p>(个人认为: 论功能的强大上, readelf &gt; objdump &gt; nm)</p>
+<p>主推2个选项:</p>
+<ul>
+<li>-s: –print-armap</li>
+<li>-D: 显示动态符号(用-D的时候-g没啥用,反正都是外部链接的)</li>
+<li>-r: 反向详细调用关系</li>
+</ul>
+<h2 id="objdump"><a href="#objdump" class="headerlink" title="objdump"></a>objdump</h2><p>这个命令不要太强大啊, 能实现上述命令(ar,nm, readelf)的很多功能. 它主要是查看对象文件的内容信息(包括各个section段). 上面说 <code>nm -s</code>的时候, 提到了<code>objdump -t</code>, 查看符号表的入口信息, 通俗说也就是显示目标文件的符号信息(symbol table), 值, 类型, 名称等(比nm -s稍微详细一点; 但不包括显示动态库的内容, 即<code>nm -D</code>的内容).</p>
+<p>查看所有段的头部内容可以使用<code>objdump -h</code>.</p>
+<p>当然这个命令还可以用于反汇编查看, 不过最主要的记住<code>-t</code>和<code>-h</code>选项.</p>
+<h2 id="readelf"><a href="#readelf" class="headerlink" title="readelf"></a>readelf</h2><p>这个可以作为nm, objdump的升级版; 一般用好这个另外的可以不用.</p>
+<blockquote>
+<p>这个程序和objdump提供的功能类似，但是它显示的信息更为具体，并且它不依赖BFD库(BFD库是一个GNU项目，它的目标就是希望通过一种统一的接口来处理不同的目标文件)，所以即使BFD库有什么bug存在的话也不会影响到readelf程序。</p>
+</blockquote>
+<p>readelf命令用来显示一个或者多个elf格式的目标文件的信息. 可以支持32位, 64位的elf格式文件, 也支持包含elf文件的文档(这里一般指的是使用ar命令将一些elf文件打包之后生成的例如lib*.a之类的“静态库”文件)</p>
+<p>readelf包含3类文件:(通过elf头文件可以查看文件类型, readelf -h)</p>
+<ul>
+<li>.a文件或者其他中间文件.o (可重定relocatable文件)</li>
+<li>编译好的可以直接载入内存的可执行文件(最终可执行文件)</li>
+<li>共享目标文件(动态库DYN relocatable文件)</li>
+</ul>
+<p>可以看出来平常使用编译链接的文件都称为可执行文件, 它们的区别在于:</p>
+<ul>
+<li>如果用于编译和链接(可重定位文件)，则编译器和链接器将把elf文件看作是节头表描述的节的集合,程序头表可选</li>
+<li>如果用于加载执行(可执行文件)，则加载器则将把elf文件看作是程序头表描述的段的集合，一个段可能包含多个节，节头表可选(但一般都有, 多数程序运行还是需要定义变量数据等)</li>
+<li>如果是共享文件，则两者都含有</li>
+</ul>
+<p>区别<code>程序头表(program)</code>和<code>节(section, segment)头表</code>解释:</p>
+<ul>
+<li>程序头(也就是program)和程序运行, 载入内存映像相关, 所以一般用于可执行文件和动态库.<br>使用命令 <code>readelf -l</code></li>
+<li>节头(也就是各个section, segment; 一个section可能包含多个segment)和编译, 链接, 执行都相关相关, 所以一般用于.o文件和静态库, 动态库,以及可执行文件<br>使用命令 <code>readelf -S</code>, 注意区别于-s</li>
+</ul>
+<p>(program程序, section节, segment段)</p>
+<p>当然为了交叉编译(增加可移植性), 也会引入<code>elf</code>文件头, 声明文件类型信息, 硬件&amp;平台信息. </p>
+<p>用错类型也没有关系, 因为该命令会告诉你相关内容不存在. 你可以参考一下常用命令总结:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示所有信息</span></span><br><span class="line">$ readelf -a file_name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取ELF文件头(elf文件的格式说明, 保证可移植性)</span></span><br><span class="line">$ readelf -h file_name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取程序头program头信息(目标文件没有该表, 仅用于可执行文件和动态库文件)</span></span><br><span class="line">$ readelf -l file_name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取section头信息, 几乎用于所有文件(可执行文件和so库文件不是必须)</span></span><br><span class="line">$ readelf -S file_name.o</span><br><span class="line"></span><br><span class="line"><span class="comment"># 详细显示符号表(包括全局变量和函数; 即程序头里的详细内容和段节中的详细内容), 作为-S和-l的详细补充.</span></span><br><span class="line">$ readelf -s file_name  (相当于nm -s 和 objdump -t)</span><br></pre></td></tr></table></figure></p>
+<p>(用一用就知道, readelf -s显示最详细了; 根据实际经验一般是动态库调用问题,-l和-s用的比较多, 尤其-s比较清晰)</p>
+<p>详细的可以看看下面的参考:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">$ readelf -h</span><br><span class="line">readelf: Warning: Nothing to do.</span><br><span class="line">Usage: readelf &lt;option(s)&gt; elf-file(s)</span><br><span class="line"> Display information about the contents of ELF format files</span><br><span class="line"> Options are:</span><br><span class="line">  -a --all               Equivalent to: -h -l -S -s -r -d -V -A -I</span><br><span class="line">  -h --file-header       Display the ELF file header</span><br><span class="line">  -l --program-headers   Display the program headers</span><br><span class="line">     --segments          An alias for --program-headers</span><br><span class="line">  -S --section-headers   Display the sections&apos; header</span><br><span class="line">     --sections          An alias for --section-headers</span><br><span class="line">  -g --section-groups    Display the section groups</span><br><span class="line">  -t --section-details   Display the section details</span><br><span class="line">  -e --headers           Equivalent to: -h -l -S</span><br><span class="line">  -s --syms              Display the symbol table</span><br><span class="line">     --symbols           An alias for --syms</span><br><span class="line">  --dyn-syms             Display the dynamic symbol table</span><br><span class="line">  -n --notes             Display the core notes (if present)</span><br><span class="line">  -r --relocs            Display the relocations (if present)</span><br><span class="line">  -u --unwind            Display the unwind info (if present)</span><br><span class="line">  -d --dynamic           Display the dynamic section (if present)</span><br><span class="line">  -V --version-info      Display the version sections (if present)</span><br><span class="line">  -A --arch-specific     Display architecture specific information (if any).</span><br><span class="line">  -c --archive-index     Display the symbol/file index in an archive</span><br><span class="line">  -D --use-dynamic       Use the dynamic section info when displaying symbols</span><br><span class="line">  -x --hex-dump=&lt;number|name&gt;</span><br><span class="line">                         Dump the contents of section &lt;number|name&gt; as bytes</span><br><span class="line">  -p --string-dump=&lt;number|name&gt;</span><br><span class="line">                         Dump the contents of section &lt;number|name&gt; as strings</span><br><span class="line">  -R --relocated-dump=&lt;number|name&gt;</span><br><span class="line">                         Dump the contents of section &lt;number|name&gt; as relocated bytes</span><br><span class="line">  -w[lLiaprmfFsoRt] or</span><br><span class="line">  --debug-dump[=rawline,=decodedline,=info,=abbrev,=pubnames,=aranges,=macro,=frames,</span><br><span class="line">               =frames-interp,=str,=loc,=Ranges,=pubtypes,</span><br><span class="line">               =gdb_index,=trace_info,=trace_abbrev,=trace_aranges]</span><br><span class="line">                         Display the contents of DWARF2 debug sections</span><br><span class="line">  --dwarf-depth=N        Do not display DIEs at depth N or greater</span><br><span class="line">  --dwarf-start=N        Display DIEs starting with N, at the same depth</span><br><span class="line">                         or deeper</span><br><span class="line">  -I --histogram         Display histogram of bucket list lengths</span><br><span class="line">  -W --wide              Allow output width to exceed 80 characters</span><br><span class="line">  @&lt;file&gt;                Read options from &lt;file&gt;</span><br><span class="line">  -H --help              Display this information</span><br><span class="line">  -v --version           Display the version number of readelf</span><br></pre></td></tr></table></figure></p>
+<p>分清楚上面关系, 直接 -a 选项重定向到一个外部文件也是可以的, 不然就使用-l和-S选项. 下面有一个案例:(直接使用-a输出的)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> global_init = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> global_uninit;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"merlin.\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> local_int;</span><br><span class="line">  print();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码很简单, 编译, 然后把内容导入log<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ readelf -a &gt; log</span><br></pre></td></tr></table></figure></p>
+<p>生成的log文件如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br></pre></td><td class="code"><pre><span class="line">ELF Header:</span><br><span class="line">  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 </span><br><span class="line">  Class:                             ELF64</span><br><span class="line">  Data:                              2&apos;s complement, little endian</span><br><span class="line">  Version:                           1 (current)</span><br><span class="line">  OS/ABI:                            UNIX - System V</span><br><span class="line">  ABI Version:                       0</span><br><span class="line">  Type:                              EXEC (Executable file)</span><br><span class="line">  Machine:                           Advanced Micro Devices X86-64</span><br><span class="line">  Version:                           0x1</span><br><span class="line">  Entry point address:               0x400410</span><br><span class="line">  Start of program headers:          64 (bytes into file)</span><br><span class="line">  Start of section headers:          6712 (bytes into file)</span><br><span class="line">  Flags:                             0x0</span><br><span class="line">  Size of this header:               64 (bytes)</span><br><span class="line">  Size of program headers:           56 (bytes)</span><br><span class="line">  Number of program headers:         9</span><br><span class="line">  Size of section headers:           64 (bytes)</span><br><span class="line">  Number of section headers:         35</span><br><span class="line">  Section header string table index: 32</span><br><span class="line"></span><br><span class="line">Section Headers:</span><br><span class="line">  [Nr] Name              Type             Address           Offset</span><br><span class="line">       Size              EntSize          Flags  Link  Info  Align</span><br><span class="line">  [ 0]                   NULL             0000000000000000  00000000</span><br><span class="line">       0000000000000000  0000000000000000           0     0     0</span><br><span class="line">  [ 1] .interp           PROGBITS         0000000000400238  00000238</span><br><span class="line">       000000000000001c  0000000000000000   A       0     0     1</span><br><span class="line">  [ 2] .note.ABI-tag     NOTE             0000000000400254  00000254</span><br><span class="line">       0000000000000020  0000000000000000   A       0     0     4</span><br><span class="line">  [ 3] .note.gnu.build-i NOTE             0000000000400274  00000274</span><br><span class="line">       0000000000000024  0000000000000000   A       0     0     4</span><br><span class="line">  [ 4] .gnu.hash         GNU_HASH         0000000000400298  00000298</span><br><span class="line">       000000000000001c  0000000000000000   A       5     0     8</span><br><span class="line">  [ 5] .dynsym           DYNSYM           00000000004002b8  000002b8</span><br><span class="line">       0000000000000060  0000000000000018   A       6     1     8</span><br><span class="line">  [ 6] .dynstr           STRTAB           0000000000400318  00000318</span><br><span class="line">       000000000000003d  0000000000000000   A       0     0     1</span><br><span class="line">  [ 7] .gnu.version      VERSYM           0000000000400356  00000356</span><br><span class="line">       0000000000000008  0000000000000002   A       5     0     2</span><br><span class="line">  [ 8] .gnu.version_r    VERNEED          0000000000400360  00000360</span><br><span class="line">       0000000000000020  0000000000000000   A       6     1     8</span><br><span class="line">  [ 9] .rela.dyn         RELA             0000000000400380  00000380</span><br><span class="line">       0000000000000018  0000000000000018   A       5     0     8</span><br><span class="line">  [10] .rela.plt         RELA             0000000000400398  00000398</span><br><span class="line">       0000000000000030  0000000000000018   A       5    12     8</span><br><span class="line">  [11] .init             PROGBITS         00000000004003c8  000003c8</span><br><span class="line">       000000000000000e  0000000000000000  AX       0     0     4</span><br><span class="line">  [12] .plt              PROGBITS         00000000004003e0  000003e0</span><br><span class="line">       0000000000000030  0000000000000010  AX       0     0     16</span><br><span class="line">  [13] .text             PROGBITS         0000000000400410  00000410</span><br><span class="line">       00000000000001d4  0000000000000000  AX       0     0     16</span><br><span class="line">  [14] .fini             PROGBITS         00000000004005e4  000005e4</span><br><span class="line">       0000000000000009  0000000000000000  AX       0     0     4</span><br><span class="line">  [15] .rodata           PROGBITS         00000000004005f0  000005f0</span><br><span class="line">       000000000000000c  0000000000000000   A       0     0     4</span><br><span class="line">  [16] .eh_frame_hdr     PROGBITS         00000000004005fc  000005fc</span><br><span class="line">       0000000000000034  0000000000000000   A       0     0     4</span><br><span class="line">  [17] .eh_frame         PROGBITS         0000000000400630  00000630</span><br><span class="line">       00000000000000c4  0000000000000000   A       0     0     8</span><br><span class="line">  [18] .init_array       INIT_ARRAY       0000000000600df8  00000df8</span><br><span class="line">       0000000000000008  0000000000000000  WA       0     0     8</span><br><span class="line">  [19] .fini_array       FINI_ARRAY       0000000000600e00  00000e00</span><br><span class="line">       0000000000000008  0000000000000000  WA       0     0     8</span><br><span class="line">  [20] .jcr              PROGBITS         0000000000600e08  00000e08</span><br><span class="line">       0000000000000008  0000000000000000  WA       0     0     8</span><br><span class="line">  [21] .dynamic          DYNAMIC          0000000000600e10  00000e10</span><br><span class="line">       00000000000001d0  0000000000000010  WA       6     0     8</span><br><span class="line">  [22] .got              PROGBITS         0000000000600fe0  00000fe0</span><br><span class="line">       0000000000000008  0000000000000008  WA       0     0     8</span><br><span class="line">  [23] .got.plt          PROGBITS         0000000000600fe8  00000fe8</span><br><span class="line">       0000000000000028  0000000000000008  WA       0     0     8</span><br><span class="line">  [24] .data             PROGBITS         0000000000601010  00001010</span><br><span class="line">       0000000000000014  0000000000000000  WA       0     0     8</span><br><span class="line">  [25] .bss              NOBITS           0000000000601024  00001024</span><br><span class="line">       000000000000000c  0000000000000000  WA       0     0     4</span><br><span class="line">  [26] .comment          PROGBITS         0000000000000000  00001024</span><br><span class="line">       000000000000005d  0000000000000001  MS       0     0     1</span><br><span class="line">  [27] .debug_aranges    PROGBITS         0000000000000000  00001081</span><br><span class="line">       0000000000000030  0000000000000000           0     0     1</span><br><span class="line">  [28] .debug_info       PROGBITS         0000000000000000  000010b1</span><br><span class="line">       000000000000037e  0000000000000000           0     0     1</span><br><span class="line">  [29] .debug_abbrev     PROGBITS         0000000000000000  0000142f</span><br><span class="line">       0000000000000127  0000000000000000           0     0     1</span><br><span class="line">  [30] .debug_line       PROGBITS         0000000000000000  00001556</span><br><span class="line">       00000000000000d4  0000000000000000           0     0     1</span><br><span class="line">  [31] .debug_str        PROGBITS         0000000000000000  0000162a</span><br><span class="line">       00000000000002c3  0000000000000001  MS       0     0     1</span><br><span class="line">  [32] .shstrtab         STRTAB           0000000000000000  000018ed</span><br><span class="line">       0000000000000148  0000000000000000           0     0     1</span><br><span class="line">  [33] .symtab           SYMTAB           0000000000000000  000022f8</span><br><span class="line">       00000000000006d8  0000000000000018          34    50     8</span><br><span class="line">  [34] .strtab           STRTAB           0000000000000000  000029d0</span><br><span class="line">       0000000000000266  0000000000000000           0     0     1</span><br><span class="line">Key to Flags:</span><br><span class="line">  W (write), A (alloc), X (execute), M (merge), S (strings), l (large)</span><br><span class="line">  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)</span><br><span class="line">  O (extra OS processing required) o (OS specific), p (processor specific)</span><br><span class="line"></span><br><span class="line">There are no section groups in this file.</span><br><span class="line"></span><br><span class="line">Program Headers:</span><br><span class="line">  Type           Offset             VirtAddr           PhysAddr</span><br><span class="line">                 FileSiz            MemSiz              Flags  Align</span><br><span class="line">  PHDR           0x0000000000000040 0x0000000000400040 0x0000000000400040</span><br><span class="line">                 0x00000000000001f8 0x00000000000001f8  R E    8</span><br><span class="line">  INTERP         0x0000000000000238 0x0000000000400238 0x0000000000400238</span><br><span class="line">                 0x000000000000001c 0x000000000000001c  R      1</span><br><span class="line">      [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]</span><br><span class="line">  LOAD           0x0000000000000000 0x0000000000400000 0x0000000000400000</span><br><span class="line">                 0x00000000000006f4 0x00000000000006f4  R E    200000</span><br><span class="line">  LOAD           0x0000000000000df8 0x0000000000600df8 0x0000000000600df8</span><br><span class="line">                 0x000000000000022c 0x0000000000000238  RW     200000</span><br><span class="line">  DYNAMIC        0x0000000000000e10 0x0000000000600e10 0x0000000000600e10</span><br><span class="line">                 0x00000000000001d0 0x00000000000001d0  RW     8</span><br><span class="line">  NOTE           0x0000000000000254 0x0000000000400254 0x0000000000400254</span><br><span class="line">                 0x0000000000000044 0x0000000000000044  R      4</span><br><span class="line">  GNU_EH_FRAME   0x00000000000005fc 0x00000000004005fc 0x00000000004005fc</span><br><span class="line">                 0x0000000000000034 0x0000000000000034  R      4</span><br><span class="line">  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000</span><br><span class="line">                 0x0000000000000000 0x0000000000000000  RW     8</span><br><span class="line">  GNU_RELRO      0x0000000000000df8 0x0000000000600df8 0x0000000000600df8</span><br><span class="line">                 0x0000000000000208 0x0000000000000208  R      1</span><br><span class="line"></span><br><span class="line"> Section to Segment mapping:</span><br><span class="line">  Segment Sections...</span><br><span class="line">   00     </span><br><span class="line">   01     .interp </span><br><span class="line">   02     .interp .note.ABI-tag .note.gnu.build-id .gnu.hash .dynsym .dynstr </span><br><span class="line">          .gnu.version .gnu.version_r .rela.dyn .rela.plt .init .plt .text </span><br><span class="line">          .fini .rodata .eh_frame_hdr .eh_frame </span><br><span class="line">   03     .init_array .fini_array .jcr .dynamic .got .got.plt .data .bss </span><br><span class="line">   04     .dynamic </span><br><span class="line">   05     .note.ABI-tag .note.gnu.build-id </span><br><span class="line">   06     .eh_frame_hdr </span><br><span class="line">   07     </span><br><span class="line">   08     .init_array .fini_array .jcr .dynamic .got </span><br><span class="line"></span><br><span class="line">Dynamic section at offset 0xe10 contains 24 entries:</span><br><span class="line">  Tag        Type                         Name/Value</span><br><span class="line"> 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]</span><br><span class="line"> 0x000000000000000c (INIT)               0x4003c8</span><br><span class="line"> 0x000000000000000d (FINI)               0x4005e4</span><br><span class="line"> 0x0000000000000019 (INIT_ARRAY)         0x600df8</span><br><span class="line"> 0x000000000000001b (INIT_ARRAYSZ)       8 (bytes)</span><br><span class="line"> 0x000000000000001a (FINI_ARRAY)         0x600e00</span><br><span class="line"> 0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)</span><br><span class="line"> 0x000000006ffffef5 (GNU_HASH)           0x400298</span><br><span class="line"> 0x0000000000000005 (STRTAB)             0x400318</span><br><span class="line"> 0x0000000000000006 (SYMTAB)             0x4002b8</span><br><span class="line"> 0x000000000000000a (STRSZ)              61 (bytes)</span><br><span class="line"> 0x000000000000000b (SYMENT)             24 (bytes)</span><br><span class="line"> 0x0000000000000015 (DEBUG)              0x0</span><br><span class="line"> 0x0000000000000003 (PLTGOT)             0x600fe8</span><br><span class="line"> 0x0000000000000002 (PLTRELSZ)           48 (bytes)</span><br><span class="line"> 0x0000000000000014 (PLTREL)             RELA</span><br><span class="line"> 0x0000000000000017 (JMPREL)             0x400398</span><br><span class="line"> 0x0000000000000007 (RELA)               0x400380</span><br><span class="line"> 0x0000000000000008 (RELASZ)             24 (bytes)</span><br><span class="line"> 0x0000000000000009 (RELAENT)            24 (bytes)</span><br><span class="line"> 0x000000006ffffffe (VERNEED)            0x400360</span><br><span class="line"> 0x000000006fffffff (VERNEEDNUM)         1</span><br><span class="line"> 0x000000006ffffff0 (VERSYM)             0x400356</span><br><span class="line"> 0x0000000000000000 (NULL)               0x0</span><br><span class="line"></span><br><span class="line">Relocation section &apos;.rela.dyn&apos; at offset 0x380 contains 1 entries:</span><br><span class="line">  Offset          Info           Type           Sym. Value    Sym. Name + Addend</span><br><span class="line">000000600fe0  000300000006 R_X86_64_GLOB_DAT 0000000000000000 __gmon_start__ + 0</span><br><span class="line"></span><br><span class="line">Relocation section &apos;.rela.plt&apos; at offset 0x398 contains 2 entries:</span><br><span class="line">  Offset          Info           Type           Sym. Value    Sym. Name + Addend</span><br><span class="line">000000601000  000100000007 R_X86_64_JUMP_SLO 0000000000000000 puts + 0</span><br><span class="line">000000601008  000200000007 R_X86_64_JUMP_SLO 0000000000000000 __libc_start_main + 0</span><br><span class="line"></span><br><span class="line">There are no unwind sections in this file.</span><br><span class="line"></span><br><span class="line">Symbol table &apos;.dynsym&apos; contains 4 entries:</span><br><span class="line">   Num:    Value          Size Type    Bind   Vis      Ndx Name</span><br><span class="line">     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND </span><br><span class="line">     1: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND puts@GLIBC_2.2.5 (2)</span><br><span class="line">     2: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@GLIBC_2.2.5 (2)</span><br><span class="line">     3: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__</span><br><span class="line"></span><br><span class="line">Symbol table &apos;.symtab&apos; contains 73 entries:</span><br><span class="line">   Num:    Value          Size Type    Bind   Vis      Ndx Name</span><br><span class="line">     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND </span><br><span class="line">     1: 0000000000400238     0 SECTION LOCAL  DEFAULT    1 </span><br><span class="line">     2: 0000000000400254     0 SECTION LOCAL  DEFAULT    2 </span><br><span class="line">     3: 0000000000400274     0 SECTION LOCAL  DEFAULT    3 </span><br><span class="line">     4: 0000000000400298     0 SECTION LOCAL  DEFAULT    4 </span><br><span class="line">     5: 00000000004002b8     0 SECTION LOCAL  DEFAULT    5 </span><br><span class="line">     6: 0000000000400318     0 SECTION LOCAL  DEFAULT    6 </span><br><span class="line">     7: 0000000000400356     0 SECTION LOCAL  DEFAULT    7 </span><br><span class="line">     8: 0000000000400360     0 SECTION LOCAL  DEFAULT    8 </span><br><span class="line">     9: 0000000000400380     0 SECTION LOCAL  DEFAULT    9 </span><br><span class="line">    10: 0000000000400398     0 SECTION LOCAL  DEFAULT   10 </span><br><span class="line">    11: 00000000004003c8     0 SECTION LOCAL  DEFAULT   11 </span><br><span class="line">    12: 00000000004003e0     0 SECTION LOCAL  DEFAULT   12 </span><br><span class="line">    13: 0000000000400410     0 SECTION LOCAL  DEFAULT   13 </span><br><span class="line">    14: 00000000004005e4     0 SECTION LOCAL  DEFAULT   14 </span><br><span class="line">    15: 00000000004005f0     0 SECTION LOCAL  DEFAULT   15 </span><br><span class="line">    16: 00000000004005fc     0 SECTION LOCAL  DEFAULT   16 </span><br><span class="line">    17: 0000000000400630     0 SECTION LOCAL  DEFAULT   17 </span><br><span class="line">    18: 0000000000600df8     0 SECTION LOCAL  DEFAULT   18 </span><br><span class="line">    19: 0000000000600e00     0 SECTION LOCAL  DEFAULT   19 </span><br><span class="line">    20: 0000000000600e08     0 SECTION LOCAL  DEFAULT   20 </span><br><span class="line">    21: 0000000000600e10     0 SECTION LOCAL  DEFAULT   21 </span><br><span class="line">    22: 0000000000600fe0     0 SECTION LOCAL  DEFAULT   22 </span><br><span class="line">    23: 0000000000600fe8     0 SECTION LOCAL  DEFAULT   23 </span><br><span class="line">    24: 0000000000601010     0 SECTION LOCAL  DEFAULT   24 </span><br><span class="line">    25: 0000000000601024     0 SECTION LOCAL  DEFAULT   25 </span><br><span class="line">    26: 0000000000000000     0 SECTION LOCAL  DEFAULT   26 </span><br><span class="line">    27: 0000000000000000     0 SECTION LOCAL  DEFAULT   27 </span><br><span class="line">    28: 0000000000000000     0 SECTION LOCAL  DEFAULT   28 </span><br><span class="line">    29: 0000000000000000     0 SECTION LOCAL  DEFAULT   29 </span><br><span class="line">    30: 0000000000000000     0 SECTION LOCAL  DEFAULT   30 </span><br><span class="line">    31: 0000000000000000     0 SECTION LOCAL  DEFAULT   31 </span><br><span class="line">    32: 000000000040043c     0 FUNC    LOCAL  DEFAULT   13 call_gmon_start</span><br><span class="line">    33: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS crtstuff.c</span><br><span class="line">    34: 0000000000600e08     0 OBJECT  LOCAL  DEFAULT   20 __JCR_LIST__</span><br><span class="line">    35: 0000000000400460     0 FUNC    LOCAL  DEFAULT   13 deregister_tm_clones</span><br><span class="line">    36: 00000000004004a0     0 FUNC    LOCAL  DEFAULT   13 register_tm_clones</span><br><span class="line">    37: 00000000004004e0     0 FUNC    LOCAL  DEFAULT   13 __do_global_dtors_aux</span><br><span class="line">    38: 0000000000601024     1 OBJECT  LOCAL  DEFAULT   25 completed.7516</span><br><span class="line">    39: 0000000000600e00     0 OBJECT  LOCAL  DEFAULT   19 __do_global_dtors_aux_fin</span><br><span class="line">    40: 0000000000400500     0 FUNC    LOCAL  DEFAULT   13 frame_dummy</span><br><span class="line">    41: 0000000000600df8     0 OBJECT  LOCAL  DEFAULT   18 __frame_dummy_init_array_</span><br><span class="line">    42: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS main.c</span><br><span class="line">    43: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS crtstuff.c</span><br><span class="line">    44: 00000000004006f0     0 OBJECT  LOCAL  DEFAULT   17 __FRAME_END__</span><br><span class="line">    45: 0000000000600e08     0 OBJECT  LOCAL  DEFAULT   20 __JCR_END__</span><br><span class="line">    46: 0000000000600e00     0 NOTYPE  LOCAL  DEFAULT   18 __init_array_end</span><br><span class="line">    47: 0000000000600e10     0 OBJECT  LOCAL  DEFAULT   21 _DYNAMIC</span><br><span class="line">    48: 0000000000600df8     0 NOTYPE  LOCAL  DEFAULT   18 __init_array_start</span><br><span class="line">    49: 0000000000600fe8     0 OBJECT  LOCAL  DEFAULT   23 _GLOBAL_OFFSET_TABLE_</span><br><span class="line">    50: 00000000004005e0     2 FUNC    GLOBAL DEFAULT   13 __libc_csu_fini</span><br><span class="line">    51: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_deregisterTMCloneTab</span><br><span class="line">    52: 0000000000601010     0 NOTYPE  WEAK   DEFAULT   24 data_start</span><br><span class="line">    53: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND puts@@GLIBC_2.2.5</span><br><span class="line">    54: 0000000000601028     4 OBJECT  GLOBAL DEFAULT   25 global_uninit</span><br><span class="line">    55: 0000000000601024     0 NOTYPE  GLOBAL DEFAULT  ABS _edata</span><br><span class="line">    56: 00000000004005e4     0 FUNC    GLOBAL DEFAULT   14 _fini</span><br><span class="line">    57: 0000000000601020     4 OBJECT  GLOBAL DEFAULT   24 global_init</span><br><span class="line">    58: 0000000000400528    17 FUNC    GLOBAL DEFAULT   13 print</span><br><span class="line">    59: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@@GLIBC_</span><br><span class="line">    60: 0000000000601010     0 NOTYPE  GLOBAL DEFAULT   24 __data_start</span><br><span class="line">    61: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__</span><br><span class="line">    62: 0000000000601018     0 OBJECT  GLOBAL HIDDEN    24 __dso_handle</span><br><span class="line">    63: 00000000004005f0     4 OBJECT  GLOBAL DEFAULT   15 _IO_stdin_used</span><br><span class="line">    64: 0000000000400550   137 FUNC    GLOBAL DEFAULT   13 __libc_csu_init</span><br><span class="line">    65: 0000000000601030     0 NOTYPE  GLOBAL DEFAULT  ABS _end</span><br><span class="line">    66: 0000000000400410     0 FUNC    GLOBAL DEFAULT   13 _start</span><br><span class="line">    67: 0000000000601024     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_start</span><br><span class="line">    68: 0000000000400539    21 FUNC    GLOBAL DEFAULT   13 main</span><br><span class="line">    69: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _Jv_RegisterClasses</span><br><span class="line">    70: 0000000000601028     0 OBJECT  GLOBAL HIDDEN    24 __TMC_END__</span><br><span class="line">    71: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_registerTMCloneTable</span><br><span class="line">    72: 00000000004003c8     0 FUNC    GLOBAL DEFAULT   11 _init</span><br><span class="line"></span><br><span class="line">Version symbols section &apos;.gnu.version&apos; contains 4 entries:</span><br><span class="line"> Addr: 0000000000400356  Offset: 0x000356  Link: 5 (.dynsym)</span><br><span class="line">  000:   0 (*local*)       2 (GLIBC_2.2.5)   2 (GLIBC_2.2.5)   0 (*local*)    </span><br><span class="line"></span><br><span class="line">Version needs section &apos;.gnu.version_r&apos; contains 1 entries:</span><br><span class="line"> Addr: 0x0000000000400360  Offset: 0x000360  Link: 6 (.dynstr)</span><br><span class="line">  000000: Version: 1  File: libc.so.6  Cnt: 1</span><br><span class="line">  0x0010:   Name: GLIBC_2.2.5  Flags: none  Version: 2</span><br><span class="line"></span><br><span class="line">Notes at offset 0x00000254 with length 0x00000020:</span><br><span class="line">  Owner                 Data size      Description</span><br><span class="line">  GNU                  0x00000010      NT_GNU_ABI_TAG (ABI version tag)</span><br><span class="line">    OS: Linux, ABI: 2.6.24</span><br><span class="line"></span><br><span class="line">Notes at offset 0x00000274 with length 0x00000024:</span><br><span class="line">  Owner                 Data size      Description</span><br><span class="line">  GNU                  0x00000014      NT_GNU_BUILD_ID (unique build ID bitstring)</span><br><span class="line">    Build ID: 5109749eee8bf3101f1f0cb4be9432d7385ce1bf</span><br></pre></td></tr></table></figure></p>
+<p>其实还是比较详细的, 例如寻找全局变量, 可以查看<code>.symtab</code>的data部分<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">52: 0000000000601010     0 NOTYPE  WEAK   DEFAULT   24 data_start</span><br><span class="line">53: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND puts@@GLIBC_2.2.5</span><br><span class="line">54: 0000000000601028     4 OBJECT  GLOBAL DEFAULT   25 global_uninit</span><br><span class="line">55: 0000000000601024     0 NOTYPE  GLOBAL DEFAULT  ABS _edata</span><br><span class="line">56: 00000000004005e4     0 FUNC    GLOBAL DEFAULT   14 _fini</span><br><span class="line">57: 0000000000601020     4 OBJECT  GLOBAL DEFAULT   24 global_init</span><br><span class="line">58: 0000000000400528    17 FUNC    GLOBAL DEFAULT   13 print</span><br></pre></td></tr></table></figure></p>
+<p>解释一下 <code>-S</code>的段头信息:</p>
+<ul>
+<li>.text：已编译程序的机器代码</li>
+<li>.rodata：只读数据，比如printf语句中的格式串和开关（switch）语句的跳转表。</li>
+<li>.data：已初始化的全局C变量。局部C变量在运行时被保存在栈中，既不出现在.data中，也不出现在.bss节中。</li>
+<li>.bss：未初始化的全局变量. 在目标文件中这个节不占据实际的空间，它仅仅是一个占位符。目标文件格式区分初始化和未初始化变量是为了空间效率在：在目标文件中，未初始化变量不需要占据任何实际的磁盘空间。</li>
+<li>.symtab：一个符号表（symbol table），它存放在程序中被定义和引用的函数和<code>全局变量的信息</code>。一些程序员错误地认为必须通过-g选项来编译一个程序，得到符号表信息。实际上，每个可重定位目标文件在.symtab中都有一张符号表。然而，和编译器中的符号表不同，.symtab符号表不包含局部变量的表目</li>
+<li>.rel.text：rel代表relocate, 需要重定向. 当链接噐把这个目标文件和其他文件结合时，.text节中的许多位置都需要修改。一般而言，任何调用外部函数或者引用全局变量的指令都需要修改另一方面调用本地函数的指令则不需要修改. 注意可执行目标文件中并不需要重定位信息, 通常省略(不太显示这些信息), 除非使用者显式地指示链接器包含这些信息.</li>
+<li>.rel.data：被模块定义或引用的任何全局变量的信息。一般而言，任何已初始化全局变量的初始值是全局变量或者外部定义函数的地址都需要被修改</li>
+<li>.debug：一个调试符号表，其有些表目是程序中定义的局部变量和类型定义，有些表目是程序中定义和引用的全局变量, 有些是原始的C源文件. 只有以-g选项调用编译驱动程序时，才会得到这张表</li>
+<li>.line:原始C源程序中的行号和.text节中机器指令之间的映射。只有以-g选项调用编译驱动程序时，才会得到这张表</li>
+<li>.strtab: 一个字符串表，其内容包括.symtab和.debug节中的符号表以及节头部中的节名字, 字符串表就是以null结尾的字符串序列</li>
+</ul>
+<h2 id="ranlib"><a href="#ranlib" class="headerlink" title="ranlib"></a>ranlib</h2><p>参考上面的 <code>ar s</code>命令, 略.</p>
+<h2 id="size"><a href="#size" class="headerlink" title="size"></a>size</h2><p>列出目标文件每一个段(segment)的大小和总的大小, 例如:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ size main</span><br><span class="line">   text	   data	    bss	    dec	    hex	filename</span><br><span class="line">   1192	       556       12    1760     6e0	main</span><br></pre></td></tr></table></figure></p>
+<p>当然也可以指定格式 <code>--format=Berkeley</code>(默认) 或者 <code>--format=SysV</code> :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">$ size --format=SysV main</span><br><span class="line">main  :</span><br><span class="line">section              size      addr</span><br><span class="line">.interp                28   4194872</span><br><span class="line">.note.ABI-tag          32   4194900</span><br><span class="line">.note.gnu.build-id     36   4194932</span><br><span class="line">.gnu.hash              28   4194968</span><br><span class="line">.dynsym                96   4195000</span><br><span class="line">.dynstr                61   4195096</span><br><span class="line">.gnu.version            8   4195158</span><br><span class="line">.gnu.version_r         32   4195168</span><br><span class="line">.rela.dyn              24   4195200</span><br><span class="line">.rela.plt              48   4195224</span><br><span class="line">.init                  14   4195272</span><br><span class="line">.plt                   48   4195296</span><br><span class="line">.text                 468   4195344</span><br><span class="line">.fini                   9   4195812</span><br><span class="line">.rodata                12   4195824</span><br><span class="line">.eh_frame_hdr          52   4195836</span><br><span class="line">.eh_frame             196   4195888</span><br><span class="line">.init_array             8   6295032</span><br><span class="line">.fini_array             8   6295040</span><br><span class="line">.jcr                    8   6295048</span><br><span class="line">.dynamic              464   6295056</span><br><span class="line">.got                    8   6295520</span><br><span class="line">.got.plt               40   6295528</span><br><span class="line">.data                  20   6295568</span><br><span class="line">.bss                   12   6295588</span><br><span class="line">.comment               93         0</span><br><span class="line">.debug_aranges         48         0</span><br><span class="line">.debug_info           894         0</span><br><span class="line">.debug_abbrev         295         0</span><br><span class="line">.debug_line           212         0</span><br><span class="line">.debug_str            707         0</span><br><span class="line">Total                4009</span><br></pre></td></tr></table></figure>
+<h2 id="strings"><a href="#strings" class="headerlink" title="strings"></a>strings</h2><p>列出目标文件中的字符串或者可打印的内容, strings is mainly useful for determining the contents of non-text files.</p>
+<p>也就是说, 如果一个文件不是文本文件, 你想查看它的内容, 怎么搞? 那你就用strings大致看一下内容吧:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ strings main.o</span><br><span class="line">$ strings main</span><br><span class="line"></span><br><span class="line"><span class="comment">#### 例如 ####</span></span><br><span class="line">$ strings main.c</span><br><span class="line"><span class="comment">#include &lt;stdio.h&gt;</span></span><br><span class="line">int global_init = 1;</span><br><span class="line">int global_uninit;</span><br><span class="line">void <span class="built_in">print</span>()</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"merlin.\n"</span>);</span><br><span class="line">int main(void)</span><br><span class="line">  int local_int;</span><br><span class="line">  <span class="built_in">print</span>();</span><br><span class="line">  <span class="built_in">return</span> 0;</span><br></pre></td></tr></table></figure></p>
+<p>个人一般不用这个命令.</p>
+<h2 id="strip"><a href="#strip" class="headerlink" title="strip"></a>strip</h2><p>去除目标文件中的所有符号(使目标文件尺寸减小), 但是你调试的时候最好别去除符号信息(你排错的时候, 调试信息和源码的行数很难知道对应关系了).</p>
+<p>例如你在调试线程文件的时候, 使用的是strip过的pthread库, 那么gdb在加载的时候, pthread.c内部就会报错, 如果你换一个没有strip的pthread库文件, 那么gdb加载该可执行文件才不会报错.</p>
+<p>举个案例吧:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ls -l main</span><br><span class="line">-rwxrwxr-x 1 merlin merlin 11318 Aug 30 20:56 main</span><br><span class="line">$ strip main</span><br><span class="line">$ ls -l main</span><br><span class="line">-rwxrwxr-x 1 merlin merlin 6272 Aug 30 21:12 main</span><br></pre></td></tr></table></figure>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>虽然binutils里的工具, 不如三大件儿 make, gcc, gdb那么强大, 但是日常用到的也不少, 特别是debug定位位置的时候.</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/4b19001a/">技术: Linux Bin Utils</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2016-07-01, 14:17:13</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/4b19001a/" title="技术: Linux Bin Utils">http://www.merlinblog.site/posts/4b19001a/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/4b19001a/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/bb36bf0d/">
+                    技术: C++11 Lambda 探究
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/31dce1ea/">
+                    技术: C++ 智能指针
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ar"><span class="toc-number">2.1.</span> <span class="toc-text">ar</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ld"><span class="toc-number">2.2.</span> <span class="toc-text">ld</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nm"><span class="toc-number">2.3.</span> <span class="toc-text">nm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#objdump"><span class="toc-number">2.4.</span> <span class="toc-text">objdump</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#readelf"><span class="toc-number">2.5.</span> <span class="toc-text">readelf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ranlib"><span class="toc-number">2.6.</span> <span class="toc-text">ranlib</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#size"><span class="toc-number">2.7.</span> <span class="toc-text">size</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#strings"><span class="toc-number">2.8.</span> <span class="toc-text">strings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#strip"><span class="toc-number">2.9.</span> <span class="toc-text">strip</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/bb36bf0d/" title="上一篇: 技术: C++11 Lambda 探究">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/31dce1ea/" title="下一篇: 技术: C++ 智能指针">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

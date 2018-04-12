@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
+<meta name="keywords" content="cpp,boost,网络,asio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: Asio 异步IO库">
+<meta property="og:url" content="http://www.merlinblog.site/posts/9d5b3554/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/overview.gif">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/aync.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/io-all.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/linux-aio.png">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.632Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: Asio 异步IO库">
+<meta name="twitter:description" content="异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/overview.gif">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: Asio 异步IO库 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-asio" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/9d5b3554/" class="article-date">
+      <time datetime="2017-06-22T14:46:03.000Z" itemprop="datePublished">2017-06-22</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: Asio 异步IO库
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asio/">asio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/boost/">boost</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/">cpp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网络/">网络</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>异步网络编程asio库, 不过效率上可能还不如libevent, 还是说一说<br><a id="more"></a></p>
+<p>以前在说epoll和libevent的时候, 就谈到了异步IO的封装, 现在专门说说异步网络编程, 主要结合ASIO来说.</p>
+<blockquote>
+<p>Boost的ASIO是一个异步IO库，封装了对Socket的常用操作，简化了基于socket程序的开发。支持跨平台。</p>
+</blockquote>
+<p>实际上, 根据老外所说:(比较奇怪, 明明是异步IO库…)</p>
+<blockquote>
+<p>Library also allows to use different strategies — synchronous and asynchronous to work with sockets.</p>
+<blockquote>
+<p>Asio provides the basic building blocks for C++ networking, concurrency and other kinds of I/O.</p>
+</blockquote>
+</blockquote>
+<p>补充一句: <strong>ASIO库效率上可能赶不上Libevent, 有大佬测试过; 但是! 这货 跨平台 &amp;&amp; 兼容 std::iostream.</strong></p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>异步 IO  (Async)</p>
+<p>上面事件驱动的 select,poll,epoll 机制已经很大的提升了性能，但是在数据的读写操作上还是同步的。而异步 IO 的出现进一步提升了 Server 的处理能力(全称无阻塞)，应用程序发起一个异步读写操作，并提供相关参数（如用于存放数据的缓冲区、读写数据的大小、以及请求完成后的回调函数等），操作系统在自身的内核线程中执行实际的读或者写操作，并将结果存入程序制定的缓冲区中，然后把事件和缓冲区回调给应用程序。<br><strong>2.6内核提出了epoll, 这个时候正好也提出了异步IO的实现<code>aio_read</code>, <code>aio_write</code>, 但是Linux实际上用的很少.</strong></p>
+<blockquote>
+<p>在当前 C10XXK 问题的主流背景下，epoll 和异步 IO 这种事件驱动模型正逐渐变为人们的首选方案，这也是 Nginx 能不断从 Apache 中抢占市场的一个重要原因。然而从 Linux 社区来看对填平 aio（异步 IO）这个大坑并没有太大兴趣(内核2.6后支持aio_read, write)，那么为了异步 IO 的统一只能从应用层进行兼容，免不了多次内核态与用户态的交互，这对程序性能自然会有损失。当然随着时间的发展单机并发性能的解决办法越来越高效，但是对应的程序开发复杂度也越来越高，我们要做的就是在这两者之间做出最优权衡。<br>比如 epoll + ThreadPool 就是 muduo 这个高效 C++ 网络库采取的方案。</p>
+</blockquote>
+<p>当然也有语言&amp;库已经封装了各自的异步 IO 库，如 <code>boost 的 asio</code>, C++11的async, promise, future等一系列机制(这已经说过了, 见我的文章<code>&lt;C++11并发库&gt;</code>).</p>
+<p>实际上, asio是独立的库, 但渐渐作为 boost 的一部分, 大概就这个样子:<br><img src="http://omotkhw3y.bkt.clouddn.com/overview.gif" alt=""></p>
+<blockquote>
+<p>这个库, 说大也大, 说小也小; 如果你项目中实际用到了, 那么可以好好研究一下, 否则抓住<code>核心机制</code>探讨一下.</p>
+</blockquote>
+<p>(btw: 在没有接触过这个库以前, 腾讯后端的同学告诉我, 这个库就是简化了socket的操作; 而接触之后, 我觉得, 这个库带来了一次革新, 全新的开发模式)</p>
+<p>先来一个<strong>直观的例子</strong>, 以下代码实现一个简单的tcp服务，访问<a href="http://localhost:6688可得到字符" target="_blank" rel="noopener">http://localhost:6688可得到字符</a>.<br>(如果浏览器说响应的字符无效, 可以直接用nc命令代替<code>nc localhost 6688</code>)<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;boost/assign.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;boost/typeof/typeof.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;boost/assign.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;boost/thread.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;boost/thread/mutex.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;boost/asio.hpp&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> boost;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span> </span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> boost::asio;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        io_service ios;</span><br><span class="line">        <span class="comment">//endpoint 涵盖了所有的监听地址信息, 它要绑定到io_service上</span></span><br><span class="line">        ip::tcp::acceptor acceptor(ios, ip::tcp::endpoint(ip::tcp::v4(), 6688));</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; acceptor.local_endpoint().address() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="comment">//socket代表响应远端接收对象(accept后新创建的实例)</span></span><br><span class="line">            ip::tcp::<span class="function">socket <span class="title">sock</span><span class="params">(ios)</span></span>;</span><br><span class="line">            acceptor.accept(sock);</span><br><span class="line"></span><br><span class="line">            <span class="built_in">cout</span> &lt;&lt; <span class="string">"client:"</span> ;</span><br><span class="line">            <span class="built_in">cout</span> &lt;&lt; sock.remote_endpoint().address() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">            sock.write_some(buffer(<span class="string">"hello asio\n"</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="built_in">std</span>::exception&amp; e) &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; e.what() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译的时候需要<code>-lboost_system</code>.</p>
+<h1 id="区分对比"><a href="#区分对比" class="headerlink" title="区分对比"></a>区分对比</h1><h2 id="对比同步IO"><a href="#对比同步IO" class="headerlink" title="对比同步IO"></a>对比同步IO</h2><blockquote>
+<p>异步的代码难于编写&amp;调试还是同步的代码? 这个很难说, 一定要说的话, 那应该是<code>异步</code>.</p>
+</blockquote>
+<p>在同步编程中，所有的操作都是顺序执行的，比如从socket中读取（ 请求） ，然后写入（ 回应） 到socket中。<br>每一个操作都是阻塞的。因为操作是阻塞的，所以为了不影响主程序，当在socket上读写时，通常会创建一个或多个线程来处理socket的输入/输出。<br>因此，同步的服务端/客户端通常是多线程的。</p>
+<p><strong>同步代码中, 往往要自己处理线程同步共享;</strong></p>
+<p>异步编程是事件驱动的。虽然启动了一个操作，但是你不知道它何时会结束；它只是提供一个回调给你，当操作结束时，它会调用这个API，并返回操作结果。</p>
+<p><strong>异步中线程不是必须的, 但是一般也需要, 只是需要更少的线程; 但是需要提供事件响应 handler.</strong></p>
+<p>简单说, 就是<code>阻塞</code>与否的问题, posix给出了这样的定义:</p>
+<ul>
+<li>A synchronous I/O operation causes the requesting process to be blocked until that I/O operation completes;</li>
+<li>An asynchronous I/O operation does not cause the requesting process to be blocked;</li>
+</ul>
+<blockquote>
+<p>阻塞IO和非阻塞IO的区别就在于：应用程序的调用是否立即返回！</p>
+</blockquote>
+<p>区分同步和异步, 一个很重要的维度, 就是<code>阻塞</code>, 而且是<code>全程阻塞</code>: 内核准备数据的过程, 数据从内核态到用户态内存的过程.<br>同步IO和异步IO的区别就在于：数据拷贝的时候进程是否阻塞！</p>
+<blockquote>
+<p>通常所说的阻塞IO, 非阻塞IO, 包括事件IO(即多路IO), 全部都是同步IO.</p>
+</blockquote>
+<p>他们总有一个过程是被阻塞的, 要么是在kernel准备数据的时候(例如从网络缓存数据), 比如阻塞IO; 要么是从内核拷贝数据到应用程序buffer的过程, 比如non-blocking IO.</p>
+<p>异步IO就很纯粹:<br><strong>当进程发起IO 操作之后，就直接返回再也不理睬了，直到kernel发送一个信号，告诉进程说IO完成。</strong>在这整个过程中，进程完全没有被block。</p>
+<p>下面给个图, 你就知道了(大概了解), 干说没用, 要自己去体会:(把阻塞IO拿出来当做同步IO的代表)<br><img src="http://omotkhw3y.bkt.clouddn.com/aync.png" alt=""></p>
+<p>或者还有一个图更加完整的说明了问题:(图片源自百度)<br><img src="http://omotkhw3y.bkt.clouddn.com/io-all.png" alt=""></p>
+<h2 id="对比事件IO"><a href="#对比事件IO" class="headerlink" title="对比事件IO"></a>对比事件IO</h2><p>也就是和 select/poll/epoll对比一下(抱歉,我只熟悉linux平台), 虽然都是事件驱动(functor, functional handler), 但是同步IO和异步IO还是有着本质的区别.</p>
+<p>这其中 epoll 比较特殊, 因为2.6内核提出了epoll, 这个时候正好也提出了异步IO的实现<code>aio_read</code>, <code>aio_write</code>, 如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/linux-aio.png" alt=""></p>
+<p>但是怎么说呢, 我看到的现象, Linux下大家对<code>epoll + 非阻塞IO</code>乐此不疲.</p>
+<p>我还是把相关的事件IO, 在重复啰嗦一下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">select：是最初解决IO阻塞问题的方法。用结构体fd_set来告诉内核监听多个文件描述符，该结构体被称为描述符集。由数组来维持哪些描述符被置位了。对结构体的操作封装在三个宏定义中。通过轮寻来查找是否有描述符要被处理，如果没有则返回. </span><br><span class="line">存在的问题： </span><br><span class="line">1. 内置数组的形式使得select的最大文件数受限与FD_SIZE； </span><br><span class="line">2. 每次调用select前都要重新初始化描述符集(以及来回拷贝)，将fd从用户态拷贝到内核态，每次调用select后，都需要将fd从内核态拷贝到用户态； </span><br><span class="line">3. 轮寻排查当文件描述符个数很多时，效率很低；</span><br><span class="line"></span><br><span class="line">poll：通过一个可变长度的数组解决了select文件描述符受限的问题。数组中元素是结构体，该结构体保存描述符的信息，每增加一个文件描述符就向数组中加入一个结构体，结构体只需要拷贝一次到内核态。poll解决了select重复初始化的问题。轮寻排查的问题未解决。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">epoll：轮寻排查所有文件描述符的效率不高，使服务器并发能力受限。因此，epoll采用只返回状态发生变化的文件描述符，便解决了轮寻的瓶颈。(文件描述符受限, 来回拷贝等问题也解决了)</span><br></pre></td></tr></table></figure></p>
+<p><strong>轮训问题, 拷贝问题(重复初始化), 最大fd问题等</strong>, 可以参考我的文章 <a href="http://www.merlinblog.site/2017/06/04/network-io.html">Linux网络IO模型</a></p>
+<h2 id="对比libevent"><a href="#对比libevent" class="headerlink" title="对比libevent"></a>对比libevent</h2><p>下面是业内人士的总结, 我摘录如下:</p>
+<p>ASIO只涉及到Socket，提供简单的线程操作。<br>libevent只提供了简单的网络API的封装， 线程池， 内存池， 递归锁等均需要自己实现。</p>
+<p>ASIO主要应用了Proactor。<br>libevent为Reactor模式</p>
+<p>ASIO支持单线程与多线程调度。<br>libevent的线程调度需要自己来注册不同的事件句柄。</p>
+<p>ASIO是基于函数对象的hanlder事件分派。<br>libevent基于注册的事件回调函数来实现事件分发。</p>
+<p>ASIO支持多种平台，可移植性不存在问题。<br>libevent主要支持linux平台，freebsd平台， 其他平台下通过select模型进行支持， 效率不是太高。</p>
+<p>基于ASIO开发应用，要求程序员熟悉函数对象，函数指针，熟悉boost库中的boost::bind。内存管理控制方面。<br>基于libevent开发应用，相对容易， 具体大家可以参考memcached这个开源的应用，里面使用了libevent这个库。</p>
+<p>具体可参考我另外一篇文章 <a href="http://www.merlinblog.site/2017/07/29/libevent.html">libevnet</a></p>
+<h2 id="boost-asio-Vs-asio"><a href="#boost-asio-Vs-asio" class="headerlink" title="boost asio Vs asio"></a>boost asio Vs asio</h2><p>下面是从它官网摘抄的一些区别:</p>
+<ul>
+<li>Asio is in a namespace called asio::, whereas Boost.Asio puts everything under boost::asio::.</li>
+<li>The main Asio header file is called asio.hpp. The corresponding header in Boost.Asio is boost/asio.hpp. All other headers are similarly changed.</li>
+<li>Any macros used by or defined in Asio are prefixed with ASIO_. In Boost.Asio they are prefixed with BOOST<em>ASIO</em>.</li>
+<li>Asio includes a class for launching threads: asio::thread. Boost.Asio does not include this class, to avoid overlap with the Boost.Thread library</li>
+<li>Boost.Asio uses the Boost.System library to provide support for error codes ( boost::system::error_code and boost::system::system_error). Asio includes these under its own namespace ( asio::error_code and asio::system_error). For C++11, Asio uses the std::error_code and std::system_error classes shipped with the compiler. When not using C++11, the Boost.System version of these classes currently supports better extensibility for user-defined error codes.</li>
+<li>Asio is header-file-only and for most uses does not require linking against any Boost library. When using C++11 with recent versions of gcc, clang or MSVC, Asio can be used independently of Boost by defining ASIO_STANDALONE when you compile. Boost.Asio always requires that you link against the Boost.System library, and also against Boost.Thread if you want to launch threads using boost::thread.</li>
+</ul>
+<p>(如非必要, 可以单独使用 asio库, 而非boost.asio库)</p>
+<h1 id="核心概述"><a href="#核心概述" class="headerlink" title="核心概述"></a>核心概述</h1><h2 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h2><p><strong>io_service</strong> : 每个 Asio 程序都至少有一个 io_service 对象，它代表了操作系统的 I/O 服务，并把你的程序和这些服务链接起来。Boost.Asio使用io_service同操作系<br>统的输入/输出服务进行交互。<br>有了 io_service 还不足以完成 I/O 操作，用户一般也不跟 io_service 直接交互。根据 I/O 操作的不同，Asio 提供了不同的 I/O 对象，比如 timer（定时器），socket，等等。</p>
+<p><strong>timer</strong> : Timer 可以用来实现 watcher，是最简单的一种 I/O 对象。<br><strong>socket</strong> : 支持网络编程的IO对象.</p>
+<p>下面是一个简单的例子(同步服务端模型), 一个io_service, 建立socket, 把socket连接到目标地址和端口.<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> boost::asio;</span><br><span class="line"><span class="comment">//线程执行体 </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">client_session</span><span class="params">(socket_ptr sock)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">while</span> ( <span class="literal">true</span>) &#123;</span><br><span class="line">		<span class="keyword">char</span> data[<span class="number">512</span>];</span><br><span class="line">		<span class="keyword">size_t</span> len = sock-&gt;read_some(buffer(data));</span><br><span class="line">		<span class="keyword">if</span> ( len &gt; <span class="number">0</span>)</span><br><span class="line">		write(*sock, buffer(<span class="string">"ok"</span>, <span class="number">2</span>)); <span class="comment">//同步IO</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="keyword">typedef</span> boost::<span class="built_in">shared_ptr</span>&lt;ip::tcp::socket&gt; socket_ptr;</span><br><span class="line">io_service service;</span><br><span class="line">ip::tcp::endpoint ep( ip::tcp::v4(), 2001)); // listen on 2001</span><br><span class="line">ip::tcp::<span class="function">acceptor <span class="title">acc</span><span class="params">(service, ep)</span></span>; </span><br><span class="line"><span class="keyword">while</span> ( <span class="literal">true</span>) &#123;</span><br><span class="line">	socket_ptr sock(new ip::tcp::socket(service));</span><br><span class="line">	acc.accept(*sock); <span class="comment">//接受请求</span></span><br><span class="line">	boost::thread( boost::bind(client_session, sock)); <span class="comment">//建立新线程处理请求</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的<code>write</code>是同步IO, 异步的话应该是<code>异步的话async_write(stream, buffer [, extra options], handler)</code>.<br>并且使用的是<code>ip::tcp::acceptor</code>的<strong>accept方法</strong>, 异步一般使用<strong>async_accept方法</strong>.</p>
+<p>异步服务端典型的, 如下:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> boost::asio;</span><br><span class="line"><span class="keyword">typedef</span> boost::<span class="built_in">shared_ptr</span>&lt;ip::tcp::socket&gt; socket_ptr;</span><br><span class="line">io_service service;</span><br><span class="line">ip::tcp::endpoint ep( ip::tcp::v4(), 2001)); // 监听端口2001</span><br><span class="line">ip::tcp::<span class="function">acceptor <span class="title">acc</span><span class="params">(service, ep)</span></span>;</span><br><span class="line"></span><br><span class="line">socket_ptr sock(new ip::tcp::socket(service));</span><br><span class="line">start_accept(sock);</span><br><span class="line">service.run(); <span class="comment">//只有调用了io_service::run()方法的线程才会调用回调函数</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">start_accept</span><span class="params">(socket_ptr sock)</span> </span>&#123;</span><br><span class="line">	acc.async_accept(*sock, boost::bind( handle_accept, sock, _1) );</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">handle_accept</span><span class="params">(socket_ptr sock, <span class="keyword">const</span> boost::system::error_code &amp;err)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> ( err) <span class="keyword">return</span>;</span><br><span class="line">	<span class="comment">// 从这里开始IO操作, 你可以从socket读取或者写入</span></span><br><span class="line">	socket_ptr sock(new ip::tcp::socket(service));</span><br><span class="line">	start_accept(sock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码 <code>async_accept</code> 内部handler的IO读写逻辑是, 再创建了一个新的socket, 然后再次调用start_accept().<br>用来创建另外一个“等待客户端连接”的异步操作，从而使service.run()循环一直保持忙碌状态.</p>
+<h2 id="库依赖"><a href="#库依赖" class="headerlink" title="库依赖"></a>库依赖</h2><p>Boost.asio库依赖于下面这些库:</p>
+<ul>
+<li>Boost.System：这个库(<strong>必须</strong>)为Boost库提供操作系统支持</li>
+<li>Boost.Regex：使用这个库（ 可选的） 以便你重载read_until()或者async_read_until()时使用boost::regex参数。</li>
+<li>Boost.DateTime：使用这个库（ 可选的） 以便你使用Boost.Asio中的计时器</li>
+<li>OpenSSL：使用这个库（ 可选的） 以便你使用Boost.Asio提供的SSL支持。</li>
+</ul>
+<h2 id="编译库"><a href="#编译库" class="headerlink" title="编译库"></a>编译库</h2><p>一般需要预先编译boost, 即使你是使用 boost.asio 的头文件.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bjam –with-system –with-regex stage</span><br></pre></td></tr></table></figure></p>
+<p>上面的<code>-with</code>部分就是依赖部分, 可以根据需要进行编译, 具体的编译参数参考:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">--build-dir=&lt;builddir&gt;	编译的临时文件会放在builddir里(这样比较好管理，编译完就可以把它删除了)</span><br><span class="line">--stagedir=&lt;stagedir&gt;	存放编译后库文件的路径，默认是stage</span><br><span class="line">--build-type=complete	</span><br><span class="line">编译所有版本，不然只会编译一小部分版本，确切地说是相当于:</span><br><span class="line">variant=release, threading=multi;link=shared|static;runtime-link=shared</span><br><span class="line">variant=debug|release	决定编译什么版本(Debug or Release?)</span><br><span class="line">link=static|shared	决定使用静态库还是动态库</span><br><span class="line">threading=single|multi	决定使用单线程还是多线程库</span><br><span class="line">runtime-link=static|shared	决定是静态还是动态链接C/C++标准库</span><br><span class="line">--with-&lt;library&gt;	只编译指定的库，如输入--with-regex就只编译regex库了</span><br><span class="line">--show-libraries	显示需要编译的库名称</span><br></pre></td></tr></table></figure></p>
+<p>(运行时, 少补了<code>-I</code>和<code>-L</code>选项)</p>
+<h2 id="异常问题"><a href="#异常问题" class="headerlink" title="异常问题"></a>异常问题</h2><p>异步函数出错, 既可以返回error code, 也可以抛出异常(<code>boost::system::system_error</code>); 两种方式任选(最好保持一致).</p>
+<p>例如下面的代码:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	sock.connect(ep);</span><br><span class="line">&#125; <span class="keyword">catch</span>(boost::system::system_error e) &#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; e.code() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//或者</span></span><br><span class="line">boost::system::error_code err;</span><br><span class="line">sock.connect(ep, err);</span><br><span class="line"><span class="keyword">if</span> (err) &#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; err &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>具体使用哪种方式没有太多要求, 但是没有太多折中选择给你:</p>
+<ul>
+<li>如果你的代码复杂, 则可以使用异常机制(试想每个异步函数都检查返回值, 很累的), 但是这样做势必会在编译时产生很多监视代码, 降低运行效率</li>
+<li>如果使用error code, 则可能存在大量的返回值检查代码逻辑.</li>
+</ul>
+<p>我个人一般使用<code>error code</code>, 可以具体的检查原因, 比如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">char data[512];</span><br><span class="line">boost::system::error_code error;</span><br><span class="line">size_t length = sock.read_some(buffer(data), error);</span><br><span class="line">if (error == error::eof) &#123;</span><br><span class="line">	return; // 连接关闭</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(也会在一些场合使用异常处理机制, 毕竟有时候要书写简单)</p>
+<h2 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h2><p>异步编程中, 也会使用线程(boost::thread), 但不会像同步代码中那么多.<br>异步代码往往最关心的不是是否使用线程问题, 而是<code>线程安全问题</code>:</p>
+<ul>
+<li>io_service 线程安全</li>
+<li>socket 非线程安全</li>
+<li>utility 非线程安全</li>
+</ul>
+<p>主要注意事项也很简单, 非要线程安全的类实例, 最好不要在多个线程中使用; 如果要用, 自己注意加锁控制.</p>
+<h2 id="超时处理"><a href="#超时处理" class="headerlink" title="超时处理"></a>超时处理</h2><p>一些I/O操作需要一个超时时间, 这只能应用在异步操作上(同步意味着阻塞, 因此没有超时时间), 这就好像一个事件来了一样(实际上是时间事件), 可以开始回调了. 超时处理, 通常是用<code>计时器</code>, 即<code>deadline_timer</code>, 通常用法如下:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">deadline_timer t(service, boost::posix_time::milliseconds(500));</span><br><span class="line">t.wait(); <span class="comment">// 同步等待(阻塞)</span></span><br><span class="line">t.async_wait(&amp;deadline_handler_func); <span class="comment">//异步等待(不阻塞)</span></span><br></pre></td></tr></table></figure></p>
+<p>当同步等待的时候, 其实和<code>boost::this_thread::sleep(500);</code> 没有区别.</p>
+<p>下面有一个示例代码:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> read = <span class="literal">false</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">deadline_handler</span><span class="params">(<span class="keyword">const</span> boost::system::error_code &amp;)</span> </span>&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; (read ? <span class="string">"read successfully"</span> : <span class="string">"read failed"</span>) &lt;&lt;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">read_handler</span><span class="params">(<span class="keyword">const</span> boost::system::error_code &amp;)</span> </span>&#123;</span><br><span class="line">	read = <span class="literal">true</span>;</span><br><span class="line">&#125; </span><br><span class="line">ip::tcp::<span class="function">socket <span class="title">sock</span><span class="params">(service)</span></span>;</span><br><span class="line"><span class="comment">//… </span></span><br><span class="line">read = <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">char</span> data[<span class="number">512</span>];</span><br><span class="line">sock.async_read_some(buffer(data, <span class="number">512</span>), read_handler);<span class="comment">//异步读取buffer内容</span></span><br><span class="line">deadline_timer t(service, boost::posix_time::milliseconds(100)); //设置等待时间100毫秒</span><br><span class="line">t.async_wait(&amp;deadline_handler); <span class="comment">//设置异步等待(异步操作同时可以干其他的)</span></span><br><span class="line">service.run(); <span class="comment">//进行异步操作</span></span><br></pre></td></tr></table></figure></p>
+<p>在上述代码片段中，如果你在超时之前读完了数据，read则被设置成true，这样我们的伙伴就及时地通知了我们。<br>否则，当deadline_handler被调用时，read还是false，也就意味着我们的操作超时了。</p>
+<p>计时器的使用, 在TCP编程中, 再常见不过了, 可以参考我的其他文章<a href="">TCP中的计时器</a>, 主要有:</p>
+<ul>
+<li>建立连接定时器(connection-establishment timer)</li>
+<li>重传定时器(retransmission timer)</li>
+<li>延迟应答定时器(delayed ACK timer)</li>
+<li>坚持定时器(persist timer)</li>
+<li>保活定时器(keepalive timer)</li>
+<li>FIN_WAIT_2定时器(FIN_WAIT_2 timer)</li>
+<li>TIME_WAIT定时器 (TIME_WAIT timer, 也叫2MSL timer)</li>
+</ul>
+<h2 id="信号处理"><a href="#信号处理" class="headerlink" title="信号处理"></a>信号处理</h2><p>可以创建一个<code>signal_set</code>实例，指定异步等待的信号量，然后当这些信号量产生时，就会调用你的异步处理程序.<br>例如下面的代码, 处理软终止和中断信号:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">signal_handler</span><span class="params">(<span class="keyword">const</span> boost::system::error_code &amp; err, <span class="keyword">int</span> s</span></span></span><br><span class="line"><span class="function"><span class="params">ignal)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// 纪录日志，然后退出应用</span></span><br><span class="line">&#125; </span><br><span class="line">boost::asio::<span class="function">signal_set <span class="title">sig</span><span class="params">(service, SIGINT, SIGTERM)</span></span>;</span><br><span class="line">sig.async_wait(signal_handler);</span><br></pre></td></tr></table></figure>
+<h2 id="io-service"><a href="#io-service" class="headerlink" title="io_service"></a>io_service</h2><p>如果要使用异步操作, 一般都会用到<code>ioservice</code>的<code>run</code>方法, 它处理异步操作, 和操作系统打交道, 并且调用回调函数.</p>
+<p>没有异步操作的话, <code>service.run()</code>直接返回(先还是会调用相关的回调函数).</p>
+<p>这个类中有很多成员方法, 下面再细说. </p>
+<p><strong>在整个boost.asio中该类占有很重要地位.</strong></p>
+<h2 id="普通文件IO"><a href="#普通文件IO" class="headerlink" title="普通文件IO"></a>普通文件IO</h2><p>也可以连接到普通文件IO, 比如linux下可以这么做:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">posix::stream_descriptor sd_in(service, ::dup(STDIN_FILENO));</span><br><span class="line"><span class="keyword">char</span> data[<span class="number">512</span>];</span><br><span class="line">read(sd_in, buffer(data, <span class="number">512</span>));</span><br></pre></td></tr></table></figure>
+<p>windows可以这么做:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HANDLE h = ::OpenFile(...);</span><br><span class="line">windows::<span class="function">stream_handle <span class="title">sh</span><span class="params">(service, h)</span></span>;</span><br><span class="line"><span class="keyword">char</span> data[<span class="number">512</span>];</span><br><span class="line">read(h, buffer(data, <span class="number">512</span>));</span><br></pre></td></tr></table></figure>
+<h1 id="实用性探究"><a href="#实用性探究" class="headerlink" title="实用性探究"></a>实用性探究</h1><p>看到 Boost.Asio 的文档有 1000 多页, 所以根本没有必要全文谈, 也谈不完.</p>
+<p>下面的所有探究和注解, 全部都是以<strong>实用</strong>为主, 去理解这个库, 使用这个库, 而不是谈论API都有哪些重载.</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><code>&lt;Boost.Asio C++ Network Programming-2013&gt;</code> 这本书在<strong>git-book</strong>上有翻译版本(谢谢群里的小伙伴)</li>
+<li><a href="http://alexott.net/en/cpp/BoostAsioNotes.html" target="_blank" rel="noopener">What is Boost.Asio, and why we should use it</a></li>
+<li><a href="http://think-async.com/Asio" target="_blank" rel="noopener">http://think-async.com/Asio</a></li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/9d5b3554/">技术: Asio 异步IO库</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2017-06-22, 22:46:03</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/9d5b3554/" title="技术: Asio 异步IO库">http://www.merlinblog.site/posts/9d5b3554/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/9d5b3554/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/c62cfa29/">
+                    技术: C++网络库(轮子)大杂烩
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/e5af6e18/">
+                    技术: Boost库
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#区分对比"><span class="toc-number">2.</span> <span class="toc-text">区分对比</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#对比同步IO"><span class="toc-number">2.1.</span> <span class="toc-text">对比同步IO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对比事件IO"><span class="toc-number">2.2.</span> <span class="toc-text">对比事件IO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对比libevent"><span class="toc-number">2.3.</span> <span class="toc-text">对比libevent</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#boost-asio-Vs-asio"><span class="toc-number">2.4.</span> <span class="toc-text">boost asio Vs asio</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心概述"><span class="toc-number">3.</span> <span class="toc-text">核心概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述-1"><span class="toc-number">3.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#库依赖"><span class="toc-number">3.2.</span> <span class="toc-text">库依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编译库"><span class="toc-number">3.3.</span> <span class="toc-text">编译库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常问题"><span class="toc-number">3.4.</span> <span class="toc-text">异常问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程安全"><span class="toc-number">3.5.</span> <span class="toc-text">线程安全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#超时处理"><span class="toc-number">3.6.</span> <span class="toc-text">超时处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#信号处理"><span class="toc-number">3.7.</span> <span class="toc-text">信号处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#io-service"><span class="toc-number">3.8.</span> <span class="toc-text">io_service</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#普通文件IO"><span class="toc-number">3.9.</span> <span class="toc-text">普通文件IO</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实用性探究"><span class="toc-number">4.</span> <span class="toc-text">实用性探究</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/c62cfa29/" title="上一篇: 技术: C++网络库(轮子)大杂烩">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/e5af6e18/" title="下一篇: 技术: Boost库">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

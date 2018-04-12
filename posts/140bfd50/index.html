@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="推荐自动化测试框架GoogleTest">
+<meta name="keywords" content="cpp,框架,开发管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: Gtest测试框架">
+<meta property="og:url" content="http://www.merlinblog.site/posts/140bfd50/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="推荐自动化测试框架GoogleTest">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/test_case.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/gtest_windows.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/gtest_include.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/gtest_lib.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/gtest_linker_input.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/gtest_run.jpg">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.634Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: Gtest测试框架">
+<meta name="twitter:description" content="推荐自动化测试框架GoogleTest">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/test_case.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: Gtest测试框架 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-gtest" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/140bfd50/" class="article-date">
+      <time datetime="2017-08-20T08:58:35.000Z" itemprop="datePublished">2017-08-20</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: Gtest测试框架
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/">cpp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发管理/">开发管理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/框架/">框架</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>推荐自动化测试框架GoogleTest<br><a id="more"></a></p>
+<p>以前写过一个 <a href="http://www.merlinblog.site/2017/07/06/tdd.html">TDD</a>, 当你的用例全部通过了测试, 你的代码写就写完了.</p>
+<p>如果你只是一个人编码或者只有少数的测试用例, 那么就不会觉得一个个测试去维护的痛苦; 而一个小组的人, 所有人提交上来的代码, 都要先跑一下相关的测试用例, 才能上传, 此时就需要一个自动化的测试框架.</p>
+<p>这方面有CppUnit, Gtest, 不过Gest优势明显. 本文主要总结Gtest(gooel mock暂时不涉及, 文本也不会教你如何去写测试用例). (尽管gtest-runner这种带有GUI的框架, 但是Gtest是其根本)</p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>Google test:</p>
+<p>下面简称 gtest, 比较老牌的用于自动化继承测试的框架, 全平台支持.<br>采用成熟框架的好处是不用维护测试框架.</p>
+<p>测试框架, 可以结合CLog系统一起使用吗.</p>
+<p>使用gtest的成熟项目有:</p>
+<ul>
+<li>Chromium</li>
+<li>LLVM</li>
+<li>Protocol Buffers</li>
+<li>Open CV</li>
+</ul>
+<p>使用gtest应该不少于使用cmake的.</p>
+<p>repo地址: <a href="https://github.com/google/googletest" target="_blank" rel="noopener">https://github.com/google/googletest</a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h3><p>测试框架帮我们提供了 case 的管理，执行，断言集，运行参数，全局事件工作，所有的这些使得我们只需关注：于对于特定的输入，被测对象的返回是否正常. (但是编写测试用例还是我们自己做). 当然结合单元测试, 还有一些开发方法(Approach to Unit Testing):</p>
+<ul>
+<li>Test-driven development</li>
+<li>Extreme programming</li>
+</ul>
+<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>该部分参考wiki.<br>一般的测试框架的基本架构:(下图中先忽略TestSuite, 下图并不太完整)<br><img src="http://omotkhw3y.bkt.clouddn.com/test_case.jpg" alt=""></p>
+<p>如上图所示，单测框架中通常包括TestRunner, Test, TestResult, TestCase, TestSuite, TestFixture六个组件。</p>
+<ul>
+<li>TestRuner：负责驱动单元测试用例的执行，汇报测试执行的结果, 从而简化测试(主调程序)</li>
+<li>TestFixture：以测试套件的形式提供setUp()和tearDown()方法, 保证两个test case之间的执行是相互独立, 互不影响的.(前置条件)</li>
+<li>TestResult：这个组件用于收集每个test case的执行结果</li>
+<li>Test：作为TestSuite和TestCase的父类暴露run()方法为TestRunner调用</li>
+<li>TestCase：暴露给用户的一个类，用户通过继承TestCase，编写自己的测试用例逻辑</li>
+<li>TestSuite：提供suite功能管理testCase</li>
+<li>Assertions: 断言预测.(预言正确,继续执行; 语言错误,抛出异常,终止执行)</li>
+<li>Test Execution: 独立测试子程序或者套件程序</li>
+<li>Test Result Formatter: 产生人可读的规整日志还是XML.</li>
+</ul>
+<p>正因为相似的体系结构，所以大多数单元测试框架都提供了类似的功能和使用方法。</p>
+<p>那么在单测中引入单元测试框架会带来什么好处，在现有单元测试框架下还会存在什么样不能解决的问题呢？</p>
+<h3 id="优劣势"><a href="#优劣势" class="headerlink" title="优劣势"></a>优劣势</h3><p>优势</p>
+<p>降低编写单元测试的难度:<br>在单元测试中引入单测框架使得编写单测用例时，不需要再关注于如何驱动case的执行，如何收集结果，如何管理case集，只需要关注于如何写好单个测试用例即可；同时，在一些测试框架中通过提供丰富的断言集，公用方法，以及运行参数使得编写单个testcase的过程得到了最大的简化。</p>
+<p>gtest在xUnit架构的基础上增加了很多特性:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1. Test discovery</span><br><span class="line">2. A rich set of assertions (including User-defined)</span><br><span class="line">3. Death tests</span><br><span class="line">4. Fatal and non-fatal failures</span><br><span class="line">5. value/type parameterized tests</span><br><span class="line">6. various options for running the tests</span><br><span class="line">7. XML test report generation</span><br></pre></td></tr></table></figure></p>
+<p>当我没有用过的时候, 我也不知道它到底在说啥, 不过用多了就好了.<br>(你可以参考一下docs目录下的相关文档)</p>
+<p>劣势</p>
+<p>单元测试本身不能解决如何编写的问题: (反而增加了系统复杂度)<br>我在单元测试框架中写一个TestCase，与我单独写一个cpp文件在main()方法里写测试代码有什么本质却别吗？用了单元测试框架，并没有解决我在对复杂系统做单测时遇到的问题。<br>没错，对于单个case这两者从本质上说是没有区别的。单元测试框架本身并没有告诉你如何去写TestCase，在这一点上他是没有提供任何帮助的。所以对于一些复杂的场景，只用单元测试框架是有点多少显得无能为力的。</p>
+<p>适用场景有限:<br>使用单元测试框架往往适用于以下场景的测试：单个函数，一个class，或者几个功能相关class的测试，对于纯函数测试，接口级别的测试尤其适用。但是，对于一些复杂场景, 如:</p>
+<ul>
+<li>被测对象依赖复杂，甚至无法简单new出这个对象</li>
+<li>对于一些failure场景的测试</li>
+<li>被测对象中涉及多线程合作</li>
+<li>被测对象通过消息与外界交互的场景<br>(gtest只是一定程度上解决了)<br>单纯依赖单测框架是无法实现单元测试的，而从某种意义上来说，这些场景反而是测试中的重点。以分布式系统的测试为例，class 与 function级别的单元测试对整个系统的帮助不大，当然，这种单元测试对单个程序的质量有帮助；分布式系统测试的要点是测试进程间的交互：一个进程收到客户请求，该如何处理，然后转发给其他进程；收到响应之后，又修改并应答客户；同时分布式系统测试中通常更关注一些异常路径的测试，这些场景才是测试中的重点，也是难点所在。(Mock方法的引入通常能帮助我们解决以上场景中遇到的难题)</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="Linux平台"><a href="#Linux平台" class="headerlink" title="Linux平台"></a>Linux平台</h3><p>下载源码, 编译安装:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/google/googletest</span><br><span class="line">$ cmake .</span><br><span class="line">$ make </span><br><span class="line">$ sudo make install</span><br></pre></td></tr></table></figure></p>
+<p>当你下载完源码, 进入 <code>googletest目录</code>, 在linux平台下, 只有4个目录是需要的:</p>
+<ul>
+<li>include</li>
+<li>make</li>
+<li>samples</li>
+<li>src</li>
+</ul>
+<p>安装日志大致如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">Install the project...</span><br><span class="line">-- Install configuration: &quot;&quot;</span><br><span class="line">-- Installing: /usr/local/lib/libgtest.a</span><br><span class="line">-- Installing: /usr/local/lib/libgtest_main.a</span><br><span class="line">-- Installing: /usr/local/include/gtest</span><br><span class="line">-- Installing: /usr/local/include/gtest/gtest-typed-test.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/gtest-death-test.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/gtest-message.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/gtest-param-test.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/gtest-test-part.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/gtest-printers.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/gtest_pred_impl.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/gtest.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/gtest-param-test.h.pump</span><br><span class="line">-- Installing: /usr/local/include/gtest/gtest_prod.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-param-util-generated.h.pump</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-tuple.h.pump</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-internal.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-filepath.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/custom</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/custom/gtest-printers.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/custom/gtest.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/custom/gtest-port.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-type-util.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-linked_ptr.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-death-test-internal.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-param-util-generated.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-tuple.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-string.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-port-arch.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-param-util.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-type-util.h.pump</span><br><span class="line">-- Installing: /usr/local/include/gtest/internal/gtest-port.h</span><br><span class="line">-- Installing: /usr/local/include/gtest/gtest-spi.h</span><br></pre></td></tr></table></figure></p>
+<p>主要是安装:<br><code>/usr/local/lib/</code> 库文件 libgtest.a 和 <code>/usr/local/include/gtest</code> 相关头文件.</p>
+<h3 id="window平台"><a href="#window平台" class="headerlink" title="window平台"></a>window平台</h3><p>window平台更加简单, 而且不用你编写makefile文件, 你需要关心两件事儿:</p>
+<ul>
+<li>如果把gtest编译成静态库</li>
+<li>如果在你的单元测试项目中引用</li>
+</ul>
+<p>请去下载　release 版本: <a href="https://github.com/google/googletest/releases" target="_blank" rel="noopener">https://github.com/google/googletest/releases</a></p>
+<p>下面给出两种方法(都是编译静态库), 它们针对性不同.</p>
+<p>一、 直接利用源码目录中的 msvc 工程<br>首先把源码加压到一个合适的位置, 因为里面的源文件要被引用到的, 打开 <code>D:\googletest-release-1.7.0\msvc\gtest.sln</code> solution文件.<br><img src="http://omotkhw3y.bkt.clouddn.com/gtest_windows.jpg" alt="静态库"></p>
+<p>可以看到, 当你打开这个工程的时候, 里面的4个项目全局是静态库, 话不多说, 编译吧, debug&amp;release版本各一份(用于项目工程的时候, 两份lib都要拷贝). 很幸运, 没有报错.</p>
+<p>(如果报错 <code>error C2977 &quot;std::tuple&quot; too many template arguments</code> 解决方法就是在每隔工程（project）的属性中的C++  –&gt; Preprocessor （预处理）–&gt; preprocessor defination （预处理定义）中增加 <code>_VARIADIC_MAX=10</code>)</p>
+<p>把编译出的release版本的gtest.lib, gtest_main.lib和debug版本的gtestd.lib, gtest_maind.lib 都放到gtest根目录的lib文件夹下(lib和include位于同一级)</p>
+<p>为了方便使用, 配置环境变量 <code>GTEST = D:\Program Files\gtest-1.6.0</code> ; 当然你不配置, 一会儿引用的时候, 选择正确的路径就可以了. 也就是说, 这个工程, 完全就是为了创建这个库的. 后面你再创建项目, 然后引用gtest的头文件和库即可.<br>(这一种也是比较推荐的)</p>
+<p>二、把gtest作为静态库子项目包含进入你的正式项目</p>
+<p>这么做, 可以在unit test项目里面直接引用gtest静态库项目, 和你的主项目, 并且编译release或者debug版本都很方便, 灵活.</p>
+<hr>
+<p>下面我以第一种方式的基础, 测试一下, 是否安装成功.</p>
+<ul>
+<li>新建一个win32控制台项目(解决方案), 选择空项目(不要预编译头), 例如叫”MainProject”, 这个项目里的源码是要被测试的</li>
+<li><p>然后在”MainProject”中添加相关的自己的源码, 下面我给很简单的例子:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//sample.h</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> once  </span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fun</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>;  </span><br><span class="line"></span><br><span class="line"><span class="comment">/*--------------------*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//sample.cpp</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"sample.h"</span>  </span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fun</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span>    </span></span><br><span class="line"><span class="function"></span>&#123;    </span><br><span class="line">   <span class="keyword">return</span> (a-b);    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>很简单的俩文件.</p>
+</li>
+<li>修改你的MainProject, 不管它原来是哪种类型的项目;测试的时候修改为静态库,并且运行库设置为MTd<br><code>项目属性 -&gt; 配置属性 -&gt; C/C++ -&gt; 代码生成 -&gt; 运行库</code> 为静态库<code>多线程调试(/MTd)</code></li>
+<li>然后在该解决方案里, 再添加一个项目”GTest”,也是win32控制台项目(不要预编译头), 空项目;</li>
+<li>配置项目”Gtest”的相关头文件和库文件路径, 并引用项目”MainProject”(在添加-&gt;引用里面可以引用).<br><img src="http://omotkhw3y.bkt.clouddn.com/gtest_include.jpg" alt="include"><br><img src="http://omotkhw3y.bkt.clouddn.com/gtest_lib.jpg" alt="lib"><br><img src="http://omotkhw3y.bkt.clouddn.com/gtest_linker_input.jpg" alt="linker_input"><br>当然如果你配置了Gtest环境变量, 可以直接使用 <code>$(Gtest)</code> 进行目录引用</li>
+<li>配置GTest运行库<code>项目属性 -&gt; 配置属性 -&gt; C/C++ -&gt; 代码生成 -&gt; 运行库</code> 为静态库<code>多线程调试(/MTd)</code></li>
+<li>在Gtest中添加相关的测试用例文件吧<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;gtest/gtest.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"../MainProject/sample.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//包含头文件的时候, 一定注意, 当前是在Gtest的目录下</span></span><br><span class="line"></span><br><span class="line">TEST(fun, case1)</span><br><span class="line">&#123;</span><br><span class="line">	EXPECT_LT(<span class="number">-2</span>, fun(<span class="number">1</span>, <span class="number">2</span>));</span><br><span class="line">	EXPECT_EQ(<span class="number">-1</span>, fun(<span class="number">1</span>, <span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">	ASSERT_LT(<span class="number">-2</span>, fun(<span class="number">1</span>, <span class="number">2</span>));</span><br><span class="line">	ASSERT_EQ(<span class="number">-1</span>, fun(<span class="number">1</span>, <span class="number">2</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	::testing::InitGoogleTest(&amp;argc, argv);</span><br><span class="line">	<span class="keyword">return</span> RUN_ALL_TESTS();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>运行一下:<br><img src="http://omotkhw3y.bkt.clouddn.com/gtest_run.jpg" alt="run"></p>
+<p>补充VStudio的坑:</p>
+<blockquote>
+<p>在一个vs解决方案中，一个可执行项目依赖多个lib项目的情况下，经常出现此类问题，原因在默认运行时库的引用上。一般情况下，我会首先打开各个项目的属性查看如下选项：项目–属性–配置属性–C/C++–代码生成–运行时库（有/MT，/MTd，/MD，/MDd四个选项, M代表Multi-thead, T代表static, D代表Dynamic）必须查看所有项目使用的库都是相同的，不同的话就修改成相同的吧</p>
+</blockquote>
+<p>下面的讲解, 都是基于Linux平台了.</p>
+<h2 id="Linux下配置"><a href="#Linux下配置" class="headerlink" title="Linux下配置"></a>Linux下配置</h2><p>跑一下原生的sample, 然后配置自己的环境.</p>
+<h3 id="原生sample"><a href="#原生sample" class="headerlink" title="原生sample"></a>原生sample</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> make</span><br><span class="line">$ cat Makefile</span><br></pre></td></tr></table></figure>
+<p>发现这个Makefile是用来编译sample目录下 <code>TESTS = sample1_unittest</code> 的, 所以可以跑一下这个demo:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ make</span><br><span class="line">g++ -isystem ../include -g -Wall -Wextra -pthread -c ../samples/sample1.cc</span><br><span class="line">g++ -isystem ../include -g -Wall -Wextra -pthread -c ../samples/sample1_unittest.cc</span><br><span class="line">g++ -isystem ../include -I.. -g -Wall -Wextra -pthread -c \</span><br><span class="line">            ../src/gtest-all.cc</span><br><span class="line">g++ -isystem ../include -I.. -g -Wall -Wextra -pthread -c \</span><br><span class="line">            ../src/gtest_main.cc</span><br><span class="line">ar rv gtest_main.a gtest-all.o gtest_main.o</span><br><span class="line">ar: creating gtest_main.a</span><br><span class="line">a - gtest-all.o</span><br><span class="line">a - gtest_main.o</span><br><span class="line">g++ -isystem ../include -g -Wall -Wextra -pthread -lpthread sample1.o sample1_unittest.o gtest_main.a -o sample1_unittest</span><br><span class="line">$ ls</span><br><span class="line">gtest-all.o  gtest_main.a  gtest_main.o  Makefile  sample1.o  sample1_unittest  sample1_unittest.o</span><br></pre></td></tr></table></figure>
+<p>运行一下可执行文件即可 <code>./sample1_unittest</code> :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">$ ./sample1_unittest</span><br><span class="line">Running main() from gtest_main.cc</span><br><span class="line">[==========] Running 6 tests from 2 test cases.</span><br><span class="line">[----------] Global test environment set-up.</span><br><span class="line">[----------] 3 tests from FactorialTest</span><br><span class="line">[ RUN      ] FactorialTest.Negative</span><br><span class="line">[       OK ] FactorialTest.Negative (0 ms)</span><br><span class="line">[ RUN      ] FactorialTest.Zero</span><br><span class="line">[       OK ] FactorialTest.Zero (0 ms)</span><br><span class="line">[ RUN      ] FactorialTest.Positive</span><br><span class="line">[       OK ] FactorialTest.Positive (0 ms)</span><br><span class="line">[----------] 3 tests from FactorialTest (0 ms total)</span><br><span class="line"></span><br><span class="line">[----------] 3 tests from IsPrimeTest</span><br><span class="line">[ RUN      ] IsPrimeTest.Negative</span><br><span class="line">[       OK ] IsPrimeTest.Negative (0 ms)</span><br><span class="line">[ RUN      ] IsPrimeTest.Trivial</span><br><span class="line">[       OK ] IsPrimeTest.Trivial (0 ms)</span><br><span class="line">[ RUN      ] IsPrimeTest.Positive</span><br><span class="line">[       OK ] IsPrimeTest.Positive (0 ms)</span><br><span class="line">[----------] 3 tests from IsPrimeTest (1 ms total)</span><br><span class="line"></span><br><span class="line">[----------] Global test environment tear-down</span><br><span class="line">[==========] 6 tests from 2 test cases ran. (1 ms total)</span><br><span class="line">[  PASSED  ] 6 tests.</span><br></pre></td></tr></table></figure></p>
+<h3 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h3><p>下面配置自己的开发环境, 以便跑自己的用例, 操作步骤如下:</p>
+<ul>
+<li>创建自己的测试目录</li>
+<li>书写自己的makefile文件</li>
+<li>书写自己的测试用例</li>
+</ul>
+<p>创建自己的测试工程目录:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p <span class="built_in">test</span>/gtest_test</span><br><span class="line">$ <span class="built_in">cd</span> <span class="built_in">test</span>/gtest_test</span><br><span class="line">$ mkdir src out</span><br></pre></td></tr></table></figure></p>
+<p>其中src目录是书写测试用例的目录, out目录是中间产物编译输出目录; 其中当前目录的 <code>run_test</code> 是唯一的(执行所有测试的)可执行文件.</p>
+<p>创建并编写makefile:<br>(比源码中的makefile精简很多, 因为没有必要重新编译 libgtest_main.a)<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> <span class="built_in">test</span>/gtest_test</span><br><span class="line">$ touch makefile</span><br></pre></td></tr></table></figure></p>
+<p>makefile 源码如下:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">USER_DIR = .</span><br><span class="line">OUT_DIR = <span class="variable">$(USER_DIR)</span>/out</span><br><span class="line">GTEST_DIR_INCLUDE = /usr/local/<span class="keyword">include</span></span><br><span class="line"></span><br><span class="line">CPPFLAGS += -isystem -I<span class="variable">$(GTEST_DIR_INCLUDE)</span></span><br><span class="line">CXXFLAGS += -g -Wall -Wextra -pthread</span><br><span class="line"></span><br><span class="line">TESTS = run_test</span><br><span class="line"></span><br><span class="line"><span class="comment">#gtest lib: libgtest_main.a</span></span><br><span class="line">GTEST_LIB = /usr/local/lib/libgtest.a</span><br><span class="line"></span><br><span class="line"><span class="comment">## our src file ./src/</span></span><br><span class="line">USER_SRCS =<span class="variable">$(<span class="built_in">foreach</span> d,<span class="variable">$(USER_DIR)</span>/src,$(<span class="built_in">wildcard</span> <span class="variable">$(d)</span>/*.cpp)</span>)</span><br><span class="line">OBJS =<span class="variable">$(<span class="built_in">patsubst</span> %.cpp,%.o,<span class="variable">$(USER_SRCS)</span>)</span> <span class="comment"># %.o</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#$(warning $(USER_SRCS))</span></span><br><span class="line"><span class="comment">#$(warning $(OBJS))</span></span><br><span class="line"></span><br><span class="line"><span class="comment">###################################################</span></span><br><span class="line"></span><br><span class="line">all : <span class="variable">$(TESTS)</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$(TESTS)</span> : <span class="variable">$(OBJS)</span></span><br><span class="line">	 <span class="variable">$(CXX)</span> <span class="variable">$(CPPFLAGS)</span> <span class="variable">$(CXXFLAGS)</span> <span class="variable">$^</span> -lpthread <span class="variable">$(GTEST_LIB)</span> -o <span class="variable">$@</span></span><br><span class="line">	 mv <span class="variable">$^</span> <span class="variable">$(OUT_DIR)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># OBJS</span></span><br><span class="line"><span class="comment">#$(OBJS) : $(USER_SRCS)</span></span><br><span class="line">./src/%.o : ./src/%.cpp</span><br><span class="line">	  <span class="variable">$(CXX)</span> <span class="variable">$(CPPFLAGS)</span> <span class="variable">$(CXXFLAGS)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">.PHONY : clean</span><br><span class="line">clean :</span><br><span class="line">      rm -f <span class="variable">$(TESTS)</span> <span class="variable">$(OUT_DIR)</span>/*.o <span class="variable">$(OBJS)</span></span><br></pre></td></tr></table></figure></p>
+<p>在 src 目录下建立自己的测试用例:</p>
+<p>建立相关的文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> src</span><br><span class="line">$ touch sqrt.h sqrt.cpp  sqrt_unittest.cpp</span><br></pre></td></tr></table></figure></p>
+<p>下面依次编写相关代码:<br>sqrt.h<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sqrt</span><span class="params">(<span class="keyword">int</span> x)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>sqrt.cpp<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"sqrt.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//不借助库函数</span></span><br><span class="line"><span class="comment">//利用 x*y, 仅当x=y是最大.</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sqrt</span><span class="params">(<span class="keyword">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(x&lt;=<span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span>(x==<span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> small = <span class="number">0</span>, large = x, tmp = x/<span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* small----(samll+large)/2----large*/</span></span><br><span class="line">  <span class="keyword">while</span>(small &lt; large) &#123;</span><br><span class="line">    <span class="keyword">int</span> a = x/tmp;</span><br><span class="line">    <span class="keyword">int</span> b = x/(tmp+<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(a==tmp) <span class="keyword">return</span> a;</span><br><span class="line">    <span class="keyword">if</span>(b==temp+<span class="number">1</span>) <span class="keyword">return</span> b;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(tmp&lt;a &amp;&amp; tmp+<span class="number">1</span>&gt;b) &#123;</span><br><span class="line">      <span class="keyword">return</span> tmp;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(tmp&lt;a &amp;&amp; tmp+<span class="number">1</span>&lt;b) &#123;</span><br><span class="line">      small = tmp + <span class="number">1</span>;</span><br><span class="line">      tmp = (small + large)/<span class="number">2</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      large = tmp;</span><br><span class="line">      tmp = (small + large)/<span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>sqrt_unittest.cpp<br>(注意文件名, <code>xxx_unittest.cpp</code> 这个文件名并不是固定, 取成别的也无所谓, 只是这样更容易辨认哪一个文件是在测哪个函数而已)<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"sqrt.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;gtest/gtest.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">TEST(SQRTTest, Zero)</span><br><span class="line">&#123;</span><br><span class="line">  EXPECT_EQ(<span class="number">0</span>, <span class="built_in">sqrt</span>(<span class="number">0</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TEST(SQRTTest, Positive)</span><br><span class="line">&#123;</span><br><span class="line">  EXPECT_EQ(<span class="number">100</span>, <span class="built_in">sqrt</span>(<span class="number">10000</span>));</span><br><span class="line">  EXPECT_EQ(<span class="number">1000</span>, <span class="built_in">sqrt</span>(<span class="number">1000008</span>));</span><br><span class="line">  EXPECT_EQ(<span class="number">99</span>, <span class="built_in">sqrt</span>(<span class="number">9810</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">TEST(SQRTTest, Negative)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">-1</span>;</span><br><span class="line">  EXPECT_EQ(<span class="number">0</span>, <span class="built_in">sqrt</span>(i));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ::testing::InitGoogleTest(&amp;argc, argv);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> RUN_ALL_TESTS();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译运行一下:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ make</span><br><span class="line">g++ -isystem -I/usr/<span class="built_in">local</span>/include -g -Wall -Wextra -pthread -c src/sqrt.cpp -o src/sqrt.o</span><br><span class="line">g++ -isystem -I/usr/<span class="built_in">local</span>/include -g -Wall -Wextra -pthread -c src/sqrt_unittest.cpp -o src/sqrt_unittest.o</span><br><span class="line">g++ -isystem -I/usr/<span class="built_in">local</span>/include -g -Wall -Wextra -pthread src/sqrt.o src/sqrt_unittest.o -lpthread /usr/<span class="built_in">local</span>/lib/libgtest.a -o run_test</span><br><span class="line">mv src/sqrt.o src/sqrt_unittest.o ./out</span><br><span class="line"></span><br><span class="line">$ ./run_test </span><br><span class="line">[==========] Running 3 tests from 1 <span class="built_in">test</span> <span class="keyword">case</span>.</span><br><span class="line">[----------] Global <span class="built_in">test</span> environment <span class="built_in">set</span>-up.</span><br><span class="line">[----------] 3 tests from SQRTTest</span><br><span class="line">[ RUN      ] SQRTTest.Zero</span><br><span class="line">[       OK ] SQRTTest.Zero (0 ms)</span><br><span class="line">[ RUN      ] SQRTTest.Positive</span><br><span class="line">[       OK ] SQRTTest.Positive (0 ms)</span><br><span class="line">[ RUN      ] SQRTTest.Negative</span><br><span class="line">[       OK ] SQRTTest.Negative (0 ms)</span><br><span class="line">[----------] 3 tests from SQRTTest (0 ms total)</span><br><span class="line"></span><br><span class="line">[----------] Global <span class="built_in">test</span> environment tear-down</span><br><span class="line">[==========] 3 tests from 1 <span class="built_in">test</span> <span class="keyword">case</span> ran. (0 ms total)</span><br><span class="line">[  PASSED  ] 3 tests.</span><br></pre></td></tr></table></figure></p>
+<p>下面开始进行主要内容介绍.</p>
+<hr>
+<h2 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h2><h3 id="主函数"><a href="#主函数" class="headerlink" title="主函数"></a>主函数</h3><p>在包含<code>gtest/gtest.h</code>的源文件中, 要想让Runner运行测试用例, 一般都是这样的套路:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;gtest/gtest.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//若干测试</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//主函数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ::testing::InitGoogleTest(&amp;argc, argv);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> RUN_ALL_TESTS();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>“::testing::InitGoogleTest(&amp;argc, argv)” : 初始化命令行参数(gtest的测试案例允许接收一系列的命令行参数).<br>“RUN_ALL_TESTS()” : 运行所有测试案例.</p>
+<p>关键是要调用 宏函数 <code>RUN_ALL_TEST()</code>.</p>
+<h3 id="断言宏"><a href="#断言宏" class="headerlink" title="断言宏"></a>断言宏</h3><p>断言的宏可以理解为分为两类:</p>
+<ul>
+<li>ASSERT_* 系列的断言，当检查点失败时，退出当前函数(注意:并非退出当前案例)</li>
+<li>EXPECT_* 系列的断言，当检查点失败时，继续往下执行</li>
+</ul>
+<p>例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// int型比较，预期值：3，实际值：Add(1, 2)</span><br><span class="line">EXPECT_EQ(3, Add(1, 2));</span><br></pre></td></tr></table></figure></p>
+<p>假如你的Add(1, 2) 结果为4的话，会在结果中输出:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">error: Value of: Add(1, 2)</span><br><span class="line">  Actual: 4</span><br><span class="line">Expected:3</span><br></pre></td></tr></table></figure></p>
+<p>如果想输出更具体的信息, 可以在断言宏的调用后面, 直接输出.<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; x.size(); ++i)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//出错是, 可以知道x[i], y[i] 但是无法知道 i, 所以添加 &lt;&lt; 输出信息</span></span><br><span class="line">    EXPECT_EQ(x[i], y[i]) &lt;&lt; <span class="string">"Vectors x and y differ at index "</span> &lt;&lt; i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>输出<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">error: Value of: y[i]</span><br><span class="line">  Actual: 4</span><br><span class="line">Expected: x[i]</span><br><span class="line">Which is: 3</span><br><span class="line">Vectors x and y differ at index 2</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>下面详细介绍各种宏:</p>
+<p>布尔值检查<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Fatal assertion	              Nonfatal assertion	Verifies</span><br><span class="line">ASSERT_TRUE(condition);	      EXPECT_TRUE(condition);	condition is true</span><br><span class="line">ASSERT_FALSE(condition);      EXPECT_FALSE(condition);	condition is false</span><br></pre></td></tr></table></figure></p>
+<p>我通常用true的这一组.</p>
+<p>带参数的谓词断言宏:<br>在布尔检查的时候, 没有传入参数, 下面这一组可以传入参数.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//pred1(val1) returns true</span><br><span class="line">ASSERT_PRED1(pred1, val1);	EXPECT_PRED1(pred1, val1);</span><br><span class="line"></span><br><span class="line">//pred2(val1, val2) returns true</span><br><span class="line">ASSERT_PRED2(pred2, val1, val2);  EXPECT_PRED2(pred2, val1, val2);</span><br></pre></td></tr></table></figure></p>
+<p>(一般最多能传入5个参数)<br>可以看到, 传入参数时, 这里的输出信息也会比较丰富了.</p>
+<p>使用案例:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">MutuallyPrime</span><span class="params">(<span class="keyword">int</span> m, <span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Foo(m , n) &gt; <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">TEST(PredicateAssertionTest, Demo)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> m = <span class="number">5</span>, n = <span class="number">6</span>;</span><br><span class="line">    EXPECT_PRED2(MutuallyPrime, m, n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当失败时，返回错误信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">error: MutuallyPrime(m, n) evaluates to false, where</span><br><span class="line">m evaluates to 5</span><br><span class="line">n evaluates to 6</span><br></pre></td></tr></table></figure></p>
+<p>对于这样的宏, 输出信息仍不满意可以使用 <code>XXX_PRED_FORMAT1</code>, 例如:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">testing::AssertionResult </span><br><span class="line">AssertFoo(<span class="keyword">const</span> <span class="keyword">char</span>* m_expr, <span class="keyword">const</span> <span class="keyword">char</span>* n_expr, <span class="keyword">const</span> <span class="keyword">char</span>* k_expr, </span><br><span class="line">                  <span class="keyword">int</span> m,              <span class="keyword">int</span> n,              <span class="keyword">int</span> k) </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (Foo(m, n) == k)</span><br><span class="line">        <span class="keyword">return</span> testing::AssertionSuccess();</span><br><span class="line">    testing::Message msg;</span><br><span class="line">    msg &lt;&lt; m_expr &lt;&lt; <span class="string">" 和 "</span> &lt;&lt; n_expr &lt;&lt; <span class="string">" 的最大公约数应该是："</span> &lt;&lt; Foo(m, n) &lt;&lt; <span class="string">" 而不是："</span> &lt;&lt; k_expr;</span><br><span class="line">    <span class="keyword">return</span> testing::AssertionFailure(msg);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TEST(AssertFooTest, HandleFail)</span><br><span class="line">&#123;</span><br><span class="line">    EXPECT_PRED_FORMAT3(AssertFoo, <span class="number">3</span>, <span class="number">6</span>, <span class="number">2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行失败时:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error: 3 和 6 的最大公约数应该是：3 而不是：2</span><br></pre></td></tr></table></figure></p>
+<p>数值型数据检查:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Fatal assertion	                        Nonfatal assertion	        Verifies</span><br><span class="line">ASSERT_EQ(expected, actual);		EXPECT_EQ(expected, actual);	expected == actual</span><br><span class="line">ASSERT_NE(val1, val2);			EXPECT_NE(val1, val2);		val1 != val2</span><br><span class="line">ASSERT_LT(val1, val2);			EXPECT_LT(val1, val2);		val1 &lt; val2</span><br><span class="line">ASSERT_LE(val1, val2);			EXPECT_LE(val1, val2);		val1 &lt;= val2</span><br><span class="line">ASSERT_GT(val1, val2);			EXPECT_GT(val1, val2);		val1 &gt; val2</span><br><span class="line">ASSERT_GE(val1, val2);			EXPECT_GE(val1, val2);		val1 &gt;= val2</span><br></pre></td></tr></table></figure></p>
+<p>就是通常所说的比较值.</p>
+<p>更加进阶的是 浮点数检查:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//the two float values are almost equal</span><br><span class="line">ASSERT_FLOAT_EQ(expected, actual);	EXPECT_FLOAT_EQ(expected, actual);</span><br><span class="line"></span><br><span class="line">//the two double values are almost equal</span><br><span class="line">ASSERT_DOUBLE_EQ(expected, actual);	EXPECT_DOUBLE_EQ(expected, actual);</span><br></pre></td></tr></table></figure></p>
+<p>字符串检查:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">the two C strings have the same content:</span><br><span class="line">    ASSERT_STREQ(expected_str, actual_str);	</span><br><span class="line">    EXPECT_STREQ(expected_str, actual_str);</span><br><span class="line"></span><br><span class="line">the two C strings have different content:</span><br><span class="line">    ASSERT_STRNE(str1, str2);</span><br><span class="line">    EXPECT_STRNE(str1, str2);</span><br><span class="line"></span><br><span class="line">//忽略大小写的一般不常用.</span><br><span class="line"></span><br><span class="line">the two C strings have different content, ignoring case:</span><br><span class="line">    ASSERT_STRCASENE(str1, str2);</span><br><span class="line">    EXPECT_STRCASENE(str1, str2);</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">the two C strings have the same content, ignoring case:</span><br><span class="line">    ASSERT_STRCASEEQ(expected_str, actual_str);</span><br><span class="line">    EXPECT_STRCASEEQ(expected_str, actual_str);</span><br></pre></td></tr></table></figure></p>
+<p><em>STREQ</em>和<em>STRNE</em>同时支持char<em>和wchar_t</em>类型的:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">TEST(StringTest, StringCmpTest)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">char</span>* pszCoderZh = <span class="string">"CoderZh"</span>;</span><br><span class="line">    <span class="keyword">wchar_t</span>* wszCoderZh = <span class="string">L"CoderZh"</span>;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> strCoderZh = <span class="string">"CoderZh"</span>;</span><br><span class="line">    <span class="built_in">std</span>::wstring wstrCoderZh = <span class="string">L"CoderZh"</span>;</span><br><span class="line"></span><br><span class="line">    EXPECT_STREQ(<span class="string">"CoderZh"</span>, pszCoderZh);</span><br><span class="line">    EXPECT_STREQ(<span class="string">L"CoderZh"</span>, wszCoderZh);</span><br><span class="line"></span><br><span class="line">    EXPECT_STRNE(<span class="string">"CnBlogs"</span>, pszCoderZh);</span><br><span class="line">    EXPECT_STRNE(<span class="string">L"CnBlogs"</span>, wszCoderZh);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//忽略大小写的</span></span><br><span class="line">    EXPECT_STRCASEEQ(<span class="string">"coderzh"</span>, pszCoderZh);</span><br><span class="line">    <span class="comment">//EXPECT_STRCASEEQ(L"coderzh", wszCoderZh);    不支持</span></span><br><span class="line"></span><br><span class="line">    EXPECT_STREQ(<span class="string">"CoderZh"</span>, strCoderZh.c_str());</span><br><span class="line">    EXPECT_STREQ(<span class="string">L"CoderZh"</span>, wstrCoderZh.c_str());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>直接返回的宏:</p>
+<ul>
+<li>直接返回成功：SUCCEED();</li>
+<li>FAIL(); //assert 返回失败</li>
+<li>ADD<em>FAILURE(); //expect 返回失败 (EXPECT</em>*即使返回失败, 也继续执行)</li>
+</ul>
+<p>异常检查:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//抛出指定异常:</span><br><span class="line">ASSERT_THROW(statement, exception_type);	EXPECT_THROW(statement, exception_type);</span><br><span class="line"></span><br><span class="line">//抛出任何异常:</span><br><span class="line">ASSERT_ANY_THROW(statement);	EXPECT_ANY_THROW(statement);</span><br><span class="line"></span><br><span class="line">//不抛出异常:</span><br><span class="line">ASSERT_NO_THROW(statement);	EXPECT_NO_THROW(statement);</span><br></pre></td></tr></table></figure></p>
+<p>例如:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Foo</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (a == <span class="number">0</span> || b == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="string">"don't do that"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> c = a % b;</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> b;</span><br><span class="line">    <span class="keyword">return</span> Foo(b, c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">TEST(FooTest, HandleZeroInput)</span><br><span class="line">&#123;</span><br><span class="line">    EXPECT_ANY_THROW(Foo(<span class="number">10</span>, <span class="number">0</span>));</span><br><span class="line">    EXPECT_THROW(Foo(<span class="number">0</span>, <span class="number">5</span>), <span class="keyword">char</span>*);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当然还有其他宏, 不过没有必要一个个列举, 具体可以参考文末的参考资料.</p>
+<h3 id="事件化机制"><a href="#事件化机制" class="headerlink" title="事件化机制"></a>事件化机制</h3><p>事件化机制, 一般就是在 Test Case 之前, 或者之后做一些操作.</p>
+<p>总结一下gtest的事件一共有3种:</p>
+<ul>
+<li>全局的, 所有案例执行前后</li>
+<li>TestSuite级别的, 在某一批案例中第一个案例前, 最后一个案例执行后</li>
+<li>TestCase级别的, 每个TestCase前后</li>
+</ul>
+<p>(TestSuite和TestCase都是用TEST_F宏)</p>
+<p>下面一个个讲解一下:</p>
+<p>全局事件.</p>
+<p>要实现全局事件, 必须写一个类, 继承 <code>testing::Environment</code> 类, 实现里面的SetUp和TearDown方法.</p>
+<ul>
+<li>SetUp()方法在所有案例执行前执行</li>
+<li>TearDown()方法在所有案例执行后执行</li>
+</ul>
+<p>但是, 我们还需要告诉gtest添加这个全局事件, 我们需要在main函数中通过 <code>testing::AddGlobalTestEnvironment</code> 方法将事件注册进来(当然可以多个).</p>
+<p>案例:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;gtest/gtest.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FooEnvironment</span> :</span> <span class="keyword">public</span> testing::Environment</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">SetUp</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Foo FooEnvironment SetUP"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">TearDown</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Foo FooEnvironment TearDown"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">returnTest</span><span class="params">(<span class="keyword">int</span> a)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> a==<span class="number">1</span>?<span class="literal">true</span>:<span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">TEST(TestSuite, True)</span><br><span class="line">&#123;</span><br><span class="line">  EXPECT_TRUE(returnTest(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">TEST(TestSuite, False)</span><br><span class="line">&#123;</span><br><span class="line">  ASSERT_TRUE(returnTest(<span class="number">0</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  testing::AddGlobalTestEnvironment(<span class="keyword">new</span> FooEnvironment);</span><br><span class="line"></span><br><span class="line">  testing::InitGoogleTest(&amp;argc, argv);</span><br><span class="line">  <span class="keyword">return</span> RUN_ALL_TESTS();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[==========] Running 2 tests from 1 test case.</span><br><span class="line">[----------] Global test environment set-up.</span><br><span class="line">Foo FooEnvironment SetUP</span><br><span class="line">[----------] 2 tests from TestSuite</span><br><span class="line">[ RUN      ] TestSuite.True</span><br><span class="line">[       OK ] TestSuite.True (1 ms)</span><br><span class="line">[ RUN      ] TestSuite.False</span><br><span class="line">src/globalpara_unittest.cpp:33: Failure</span><br><span class="line">Value of: returnTest(0)</span><br><span class="line">  Actual: false</span><br><span class="line">Expected: true</span><br><span class="line">[  FAILED  ] TestSuite.False (0 ms)</span><br><span class="line">[----------] 2 tests from TestSuite (1 ms total)</span><br><span class="line">[----------] Global test environment tear-down</span><br><span class="line">Foo FooEnvironment TearDown</span><br><span class="line"></span><br><span class="line">[==========] 2 tests from 1 test case ran. (1 ms total)</span><br><span class="line">[  PASSED  ] 1 test.</span><br><span class="line">[  FAILED  ] 1 test, listed below:</span><br><span class="line">[  FAILED  ] TestSuite.False</span><br><span class="line"></span><br><span class="line"> 1 FAILED TEST</span><br></pre></td></tr></table></figure></p>
+<p>特别注意, 继承的是 <code>testing::Environment</code> , 实现 <code>SetUp()</code> 和 <code>TearDown()</code> .</p>
+<p>TestSuite事件</p>
+<p>这种事件是针对特定的TestSuit里面的TestCase的. 需要写一个类，继承testing::Test，然后实现两个 <code>静态</code> 方法:</p>
+<ul>
+<li>static void SetUpTestCase() 方法在第一个TestCase之前执行</li>
+<li>static void TearDownTestCase() 方法在最后一个TestCase之后执行</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//类的名字就是TestSuite的名字</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FooTest</span> :</span> <span class="keyword">public</span> testing::Test &#123;</span><br><span class="line"> <span class="keyword">protected</span>:</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SetUpTestCase</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    shared_resource_ = <span class="keyword">new</span> ;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">TearDownTestCase</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">delete</span> shared_resource_;</span><br><span class="line">    shared_resource_ = <span class="literal">NULL</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Some expensive resource shared by all tests.</span></span><br><span class="line">  <span class="keyword">static</span> T* shared_resource_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//注意这里使用的是TEST_F宏</span></span><br><span class="line">TEST_F(FooTest, Test1)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// you can refer to shared_resource here </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TEST_F(FooTest, Test2)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// you can refer to shared_resource here </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为是针对一个TestSuite里面的所有用例, 所以不用具体的宏, 而是使用的 <code>TEST_F</code> 宏, 但是你可以在<code>TEST_F</code>里面, 再使用具体的宏.</p>
+<p>最后一个 TestCase事件.<br>TestCase事件是挂在每个案例执行前后的, 实现方式和上面的几乎一样, 不过需要实现的是SetUp方法和TearDown方法:</p>
+<ul>
+<li>SetUp()方法在每个TestCase之前执行</li>
+<li>TearDown()方法在每个TestCase之后执行</li>
+</ul>
+<p>也就是说, 其实它还是绑定在 TestSuite 类里面, 即 TestSuite 的那个类要继承 <code>testing::Test</code> , 只不过执行时机是每一个用例跑起来的时候, 执行的不再是相关的静态方法了, 而是<code>Setup</code>和<code>TearDown</code> .</p>
+<p>因为具体的执行还是和TestSuite类有关, 所以当你写测试用例的时候, 还是要写 <code>TEST_F</code> 宏:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FooCalcTest</span>:</span><span class="keyword">public</span> testing::Test</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">SetUp</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        m_foo.Init();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">TearDown</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        m_foo.Finalize();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    FooCalc m_foo;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">TEST_F(FooCalcTest, HandleNoneZeroInput)</span><br><span class="line">&#123;</span><br><span class="line">    EXPECT_EQ(<span class="number">4</span>, m_foo.Calc(<span class="number">12</span>, <span class="number">16</span>)); </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TEST_F(FooCalcTest, HandleNoneZeroInput_Error)</span><br><span class="line">&#123;</span><br><span class="line">    EXPECT_EQ(<span class="number">5</span>, m_foo.Calc(<span class="number">12</span>, <span class="number">16</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意, 上面demo中 <code>TEST_F</code> 里面的测试并没有太多实在的意义.</p>
+<p>所有的事件, 一般都是做一些资源的分配, 共享, 释放等工作的, 或者共享执行的某一个方法; 只不过它们针对的测试对象, 时间不太一样. (关于事件的使用技巧, 见下文)</p>
+<p>补充:</p>
+<p>TEST与TEST_F之间的区别:</p>
+<p>首先注意, TestSuite事件和TestCase事件都会使用TEST_F宏, 但是需要重写的virtual方法不同:</p>
+<ul>
+<li>SetUp(), TearDown() 适用于TestCase事件(也就是需要在个TestCase执行之前以及之后做事情, 才需要实现这两个方法)</li>
+<li>SetUpTestCase()和TearDownTestCase()针对TestSuite, 也就是只在第一个TestCase之前和最后一个TestCase之后才执行.</li>
+</ul>
+<p>TEST_F比TEST强一些的地方在于TEST_F实际上会生成一个新类(类名用于TEST_F的第一个参数), 该类有SetUp和TearDown函数, SetUpTestCase和TearDownTestCase函数; 根据需求不同, 实现不同的函数.</p>
+<p>同一个TestCase文件中不能混合使用TEST与TEST_F, 也就是说排他.<br>For each TestCase defined with TEST_F(), Google Test will:</p>
+<ul>
+<li>Create a fresh test fixture at runtime (test fixture针对TestSuite中每一个独立的TestCase)</li>
+<li>Immediately initialize it via SetUp()</li>
+<li>Run the test</li>
+<li>Clean up by calling TearDown()</li>
+<li>Delete the test fixture. Note that different tests in the same test case have different test fixture objects, and Google Test always deletes a test fixture before it creates the next one. Google Test does not reuse the same test fixture for multiple tests. Any changes one test makes to the fixture do not affect other tests.</li>
+</ul>
+<h3 id="参数化"><a href="#参数化" class="headerlink" title="参数化"></a>参数化</h3><p>同一个函数, 多个不同的参数进行调用, 如果没有参数化测试机制, 你的调用可能是这样的.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">TEST(IsPrimeTest, HandleTrueReturn)</span><br><span class="line">&#123;</span><br><span class="line">    EXPECT_TRUE(IsPrime(<span class="number">3</span>));</span><br><span class="line">    EXPECT_TRUE(IsPrime(<span class="number">5</span>));</span><br><span class="line">    EXPECT_TRUE(IsPrime(<span class="number">11</span>));</span><br><span class="line">    EXPECT_TRUE(IsPrime(<span class="number">23</span>));</span><br><span class="line">    EXPECT_TRUE(IsPrime(<span class="number">17</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>即同一个函数 <code>IsPrime</code> 多次进行调用, 就必须写相应的语句, 但是一旦需要测试的参数范围太大, 那么这么做显然不是了.</p>
+<p>gtest就提供了参数化调用机制, 有了参数化机制, 你的调用可以用一个语句, 完成上面的多次调用.</p>
+<p>首先添加一个类, 继承 <code>testing::TestWithParam&lt;T&gt;</code>, 其中T就是你需要参数化的参数类型, 比如上面的例子, 我需要参数化一个int型的参数:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//继承的时候, 要实例化模板参数</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IsPrimeParamTest</span> :</span> <span class="keyword">public</span>::testing::TestWithParam&lt;<span class="keyword">int</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>然后, 再用宏 <code>TEST_P</code> 进行测试: (p代表parameterized)<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">TEST_P(IsPrimeParamTest, HandleTrueReturn)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//拿到具体的参数</span></span><br><span class="line">    <span class="keyword">int</span> n =  GetParam();</span><br><span class="line">    <span class="comment">//进行具体的测试</span></span><br><span class="line">    EXPECT_TRUE(IsPrime(n));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后在主函数初始化的时候, 传入参数列表(范围):<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//testing::Values()生成参数</span></span><br><span class="line">INSTANTIATE_TEST_CASE_P(TrueReturn, IsPrimeParamTest, </span><br><span class="line">			testing::Values(<span class="number">3</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">23</span>, <span class="number">17</span>));</span><br></pre></td></tr></table></figure></p>
+<p>其中第一个参数 <code>TrueReturn</code> 可以任取, 代表参数化测试的名称, 或称之为prefix(实际名称是:prefix/test_case_name.test.name/index, 其中index是参数的编号, 从0开始); 但是第二个必须是参数化的类名; 第三个参数是参数生成器.</p>
+<p>参数生成函数还有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">//注意名字空间 testing::</span><br><span class="line"></span><br><span class="line">Range(begin, end[, step]): 范围在begin~end之间, 步长为step, 不包括end</span><br><span class="line"></span><br><span class="line">Values(v1, v2, ..., vN): v1,v2到vN的值</span><br><span class="line"></span><br><span class="line">ValuesIn(container) 或 ValuesIn(begin, end) : 从一个C类型的数组或是STL容器或是迭代器中取值</span><br><span class="line"></span><br><span class="line">Bool() : 取false 和 true 两个值</span><br><span class="line"></span><br><span class="line">Combine(g1, g2, ..., gN) : </span><br><span class="line">它将g1,g2,...gN进行排列组合.</span><br><span class="line">g1,g2,...gN本身是一个参数生成器, 每次分别从g1,g2,..gN中各取出一个值, </span><br><span class="line">组合成一个元组(Tuple)作为一个参数.</span><br><span class="line">说明：这个功能只在提供了&lt;tr1/tuple&gt;头的系统中有效.</span><br><span class="line">gtest会自动去判断是否支持tr/tuple, 如果你的系统确实支持;</span><br><span class="line">而gtest判断错误的话, 你可以重新定义宏GTEST_HAS_TR1_TUPLE=1.</span><br></pre></td></tr></table></figure></p>
+<p>类型参数<br>不过对于不同数据类型的, 同一调用. (相对同类型不同值的测试, 这个类型化参数复杂一点儿).</p>
+<p>首先定义一个模版类，继承testing::Test,<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FooTest</span> :</span> <span class="keyword">public</span> testing::Test &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">  <span class="keyword">typedef</span> <span class="built_in">std</span>::<span class="built_in">list</span>&lt;T&gt; List;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> T shared_;</span><br><span class="line">  T value_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>接着我们定义需要测试到的具体数据类型, 比如下面定义了需要测试 char, int 和 unsigned int :</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> testing::Types&lt;<span class="keyword">char</span>, <span class="keyword">int</span>, <span class="keyword">unsigned</span> <span class="keyword">int</span>&gt; MyTypes;</span><br><span class="line"></span><br><span class="line">TYPED_TEST_CASE(FooTest, MyTypes);</span><br></pre></td></tr></table></figure>
+<p>然后使用 <code>TYPED_TEST</code> 宏进行测试案例:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">TYPED_TEST(FooTest, DoesBlah) &#123;</span><br><span class="line">  <span class="comment">// Inside a test, refer to the special name TypeParam to get the type</span></span><br><span class="line">  <span class="comment">// parameter.  Since we are inside a derived class template, C++ requires</span></span><br><span class="line">  <span class="comment">// us to visit the members of FooTest via 'this'.</span></span><br><span class="line">  TypeParam n = <span class="keyword">this</span>-&gt;value_;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// To visit static members of the fixture, add the 'TestFixture::'</span></span><br><span class="line">  <span class="comment">// prefix.</span></span><br><span class="line">  n += TestFixture::shared_;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// To refer to typedefs in the fixture, add the 'typename TestFixture::'</span></span><br><span class="line">  <span class="comment">// prefix.  The 'typename' is required to satisfy the compiler.</span></span><br><span class="line">  <span class="keyword">typename</span> TestFixture::List values;</span><br><span class="line">  values.push_back(n);</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的例子看上去也像是类型的参数化，但是还不够灵活，因为需要事先知道类型的列表。gtest还提供一种更加灵活的类型参数化的方式，允许你在完成测试的逻辑代码之后再去考虑需要参数化的类型列表，并且还可以重复的使用这个类型列表. 下面也是官方的例子:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FooTest</span> :</span> <span class="keyword">public</span> testing::Test &#123;</span><br><span class="line">  </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">TYPED_TEST_CASE_P(FooTest);</span><br></pre></td></tr></table></figure>
+<p>然后使用的是 <code>TYPED_TEST_P</code> 完成具体的测试用例:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">TYPED_TEST_P(FooTest, DoesBlah) &#123;</span><br><span class="line">  <span class="comment">// Inside a test, refer to TypeParam to get the type parameter.</span></span><br><span class="line">  TypeParam n = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TYPED_TEST_P(FooTest, HasPropertyA) </span><br><span class="line">&#123; </span><br><span class="line">  <span class="comment">//...  </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接着使用REGISTER_TYPED_TEST_CASE_P宏注册:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 第一个参数是TestSuite的名称, 也是相关类的名称, 后面的参数是TestCase</span><br><span class="line">REGISTER_TYPED_TEST_CASE_P(FooTest, DoesBlah, HasPropertyA);</span><br></pre></td></tr></table></figure></p>
+<p>接着指定需要的类型列表: (相当于参数生成器)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">typedef testing::Types&lt;char, int, unsigned int&gt; MyTypes;</span><br><span class="line">//第一个参数是类型参数化测试的名称, 相当于Prefix, 第二个是参数化类的名称;</span><br><span class="line">//第三个参数是自定义的参数生成器</span><br><span class="line">INSTANTIATE_TYPED_TEST_CASE_P(My, FooTest, MyTypes);</span><br></pre></td></tr></table></figure></p>
+<p>总结起来, 这个类型参数化测试是结合的在testing::Test的子类中, 指定的具体的模板参数的特化, 从而在宏 <code>TYPED_TEST_P</code> 完成具体的类型参数测试.</p>
+<p>(相比类型化参数测试, 不同值的参数化测试更加重要一些)</p>
+<h3 id="死亡测试"><a href="#死亡测试" class="headerlink" title="死亡测试"></a>死亡测试</h3><p>某些情况下, 程序会执行奔溃, 但是即使死亡(奔溃), 也应该按照我们预定的方式, 走相应的流程, 这个测试就是看能够在奔溃的时候能否按照预期执行.</p>
+<p>相关的宏:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">statement crashes with the given error:</span><br><span class="line">ASSERT_DEATH(statement, regex); </span><br><span class="line">EXPECT_DEATH(statement, regex);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">statement exits with the given error and its exit code matches predicate:</span><br><span class="line">ASSERT_EXIT(statement, predicate, regex);</span><br><span class="line">EXPECT_EXIT(statement, predicate, regex);</span><br></pre></td></tr></table></figure>
+<p>上面的宏涉及到的正则表达式, 在Linux平台下, 都是POSIX风格的; 而在window下, 则是gtest自己实现的简单正则(意思是少了很多功能). gtest定义两个宏, 用来表示当前系统支持哪套正则表达式风格: </p>
+<ol>
+<li>POSIX风格：GTEST_USES_POSIX_RE = 1 </li>
+<li>Simple风格：GTEST_USES_SIMPLE_RE=1</li>
+</ol>
+<p>下面分别说明一下:<br><code>XXX_DEATH(statement, regex)</code> statement是被测试的代码语句, regex是一个正则表达式, 用来匹配异常时在stderr中输出的内容; 例如下面的例子:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Foo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> *pInt = <span class="number">0</span>; <span class="comment">//野指针</span></span><br><span class="line">     *pInt    = <span class="number">42</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TEST(FooDeathTest, Demo)</span><br><span class="line">&#123;</span><br><span class="line">    EXPECT_DEATH(Foo(), <span class="string">""</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意, 凡是涉及到死亡测试的, 名字后缀都要带上 “DeathTest”, 就像本例中的 <code>FooDeathTest</code> . 并且gtest会优先运行死亡测试案例.<br>( XXX_DEATH 其实是对 XXX_EXIT 进行的一次包装，XXX_DEATH的 predicate 判断进程是否以非0退出码退出或被一个信号杀死)</p>
+<p><code>XXX_EXIT(statement, predicate, regex)</code>  statement是被测试的代码语句, predicate 在这里必须是一个委托接, 收int型参数并返回bool, 并且只有当返回值为true时, 死亡测试案例才算通过. regex是一个正则表达式，用来匹配异常时在stderr中输出的内容.<br>gtest提供了一些常用的 predicate :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//如果程序正常退出并且退出码与exit_code相同则返回 true</span><br><span class="line">testing::ExitedWithCode(exit_code)</span><br><span class="line"></span><br><span class="line">//如果程序被signal_number信号kill的话就返回true</span><br><span class="line">testing::KilledBySignal(signal_number)  // Windows下不支持</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TEST(ExitDeathTest, Demo)</span><br><span class="line">&#123;</span><br><span class="line">    EXPECT_EXIT(_exit(1),  testing::ExitedWithCode(1),  &quot;&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>XXX_DEBUG_DEATH</code>, debug版本下的死亡测试:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> NDEBUG</span></span><br><span class="line"><span class="comment">//release</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> EXPECT_DEBUG_DEATH(statement, regex) \</span></span><br><span class="line">  <span class="keyword">do</span> &#123; statement; &#125; <span class="keyword">while</span> (<span class="literal">false</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ASSERT_DEBUG_DEATH(statement, regex) \</span></span><br><span class="line">  <span class="keyword">do</span> &#123; statement; &#125; <span class="keyword">while</span> (<span class="literal">false</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//debug  </span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> EXPECT_DEBUG_DEATH(statement, regex) \</span></span><br><span class="line">  EXPECT_DEATH(statement, regex)</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ASSERT_DEBUG_DEATH(statement, regex) \</span></span><br><span class="line">  ASSERT_DEATH(statement, regex)</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span>  <span class="comment">// NDEBUG for EXPECT_DEBUG_DEATH</span></span></span><br></pre></td></tr></table></figure>
+<p>可以看到, 在Debug版和Release版本下, XXX_DEBUG_DEATH的定义不一样. 因为很多异常只会在Debug版本下抛出, 而在Realease版本下不会抛出, 所以针对Debug和Release分别做了不同的处理. 例如:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">DieInDebugElse12</span><span class="params">(<span class="keyword">int</span>* sideeffect)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (sideeffect) *sideeffect = <span class="number">12</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> NDEBUG</span></span><br><span class="line">    GTEST_LOG_(FATAL, <span class="string">"debug death inside DieInDebugElse12()"</span>);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span>  <span class="comment">// NDEBUG</span></span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">12</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TEST(TestCase, TestDieOr12WorksInDgbAndOpt)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> sideeffect = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// Only asserts in dbg.</span></span><br><span class="line">    EXPECT_DEBUG_DEATH(DieInDebugElse12(&amp;sideeffect), <span class="string">"death"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">ifdef</span> NDEBUG</span></span><br><span class="line">    <span class="comment">// opt-mode has sideeffect visible.</span></span><br><span class="line">    EXPECT_EQ(<span class="number">12</span>, sideeffect);</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">    <span class="comment">// dbg-mode no visible sideeffect.</span></span><br><span class="line">    EXPECT_EQ(<span class="number">0</span>, sideeffect);</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>死亡测试的运行方式:</p>
+<ul>
+<li>testing::FLAGS_gtest_death_test_style = “fast”; (默认方式)</li>
+<li>testing::FLAGS_gtest_death_test_style = “threadsafe”;</li>
+</ul>
+<p>(可以为单个测试设置, 或者main函数中为所有的死亡测试设置) 例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">TEST(MyDeathTest, TestOne) &#123;</span><br><span class="line">  testing::FLAGS_gtest_death_test_style = <span class="string">"threadsafe"</span>;</span><br><span class="line">  <span class="comment">// This test is run in the "threadsafe" style:</span></span><br><span class="line">  ASSERT_DEATH(ThisShouldDie(), <span class="string">""</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TEST(MyDeathTest, TestTwo) &#123;</span><br><span class="line">  <span class="comment">// This test is run in the "fast" style:</span></span><br><span class="line">  ASSERT_DEATH(ThisShouldDie(), <span class="string">""</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span> </span>&#123;</span><br><span class="line">  testing::InitGoogleTest(&amp;argc, argv);</span><br><span class="line">  testing::FLAGS_gtest_death_test_style = <span class="string">"fast"</span>;</span><br><span class="line">  <span class="keyword">return</span> RUN_ALL_TESTS();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>总的来说, 死亡测试主要是对奔溃结果进行检查; 借助<code>XXX_DEATH(statement, regex)</code>, <code>XXX_EXIT(statement, predicate, regex)</code> 可以很简单的编写相关的死亡测试.</p>
+<h3 id="运行参数"><a href="#运行参数" class="headerlink" title="运行参数"></a>运行参数</h3><p>通过, 命令行给相关测试传递运行参数(毕竟最后生成的就是一个可行性文件), 或者运行测试的时候给定命令行选项(例如以XML形式输出测试结果)等. gtest为我们提供了一系列的运行参数(环境变量、命令行参数或代码里指定), 使得我们可以对案例的执行进行一些有效的控制.</p>
+<p>前面提到，对于运行参数，gtest提供了三种设置的途径：</p>
+<ul>
+<li>系统环境变量</li>
+<li>命令行参数</li>
+<li>代码中指定FLAG</li>
+</ul>
+<p>优先级原则是:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">命令行参数 &gt; 代码中指定FLAG &gt; 系统环境变量</span><br></pre></td></tr></table></figure></p>
+<p>(其实是由于后设置的会覆盖最开始的; 所以产生了上面的优先级顺序)</p>
+<p>测试程序的入口, 都会处理这些命令行参数.<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    testing::InitGoogleTest(&amp;argc, argv);</span><br><span class="line">    <span class="keyword">return</span> RUN_ALL_TESTS();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>也可以使用 <code>可以使用testing::GTEST_FLAG</code> 这个宏来设置相关的FLAG, 比如相对于命令行参数 <code>--gtest_output</code>, 可以使用 <code>testing::GTEST_FLAG(output) = &quot;xml:&quot;</code> 来设置. </p>
+<p>同时推荐将这句放置 InitGoogleTest 之前, 这样就可以使得对于同样的参数, 命令行参数优先级高于代码中指定, 即:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    testing::GTEST_FLAG(output) = <span class="string">"xml:"</span>;</span><br><span class="line">    testing::InitGoogleTest(&amp;argc, argv);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> RUN_ALL_TESTS();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>指定系统环境变量的方式.</p>
+<p>如果设置系统环境变量给gtest参数, 必须注意的是:</p>
+<ul>
+<li>系统环境变量全大写, 比如对于–gtest_output，响应的系统环境变量为: GTEST_OUTPUT</li>
+<li>有一个命令行参数例外, 那就是–gtest_list_tests, 它是不接受系统环境变量的.(只是用来罗列测试案例名称)</li>
+</ul>
+<p>(个人不建议, 使用环境变量的方式; 这样会扰乱开发环境)</p>
+<p>三种方式中, 最推荐运行时指定, 其他方式总会有这样或者那样的问题(比如代码中设置FLAG, 有些异常就是捕获不到).</p>
+<p>参数列表<br>好比我现在已经编译了一个google test的测试执行文件, 那么给定相关的参数会得到不同的效果, 其中可以使用的参数如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">./run_test --help</span><br><span class="line">This program contains tests written using Google Test. You can use the</span><br><span class="line">following command line flags to control its behavior:</span><br><span class="line"></span><br><span class="line">Test Selection:</span><br><span class="line">  --gtest_list_tests 将不会执行里面的测试案例，而是输出一个案例的列表</span><br><span class="line">      List the names of all tests instead of running them. The name of</span><br><span class="line">      TEST(Foo, Bar) is &quot;Foo.Bar&quot;.</span><br><span class="line">      </span><br><span class="line">  --gtest_filter=POSTIVE_PATTERNS[-NEGATIVE_PATTERNS] 根据给定的表达式,选择运行的案例</span><br><span class="line">      Run only the tests whose name matches one of the positive patterns but</span><br><span class="line">      none of the negative patterns. &apos;?&apos; matches any single character; &apos;*&apos;</span><br><span class="line">      matches any substring; &apos;:&apos; separates two patterns.</span><br><span class="line">      </span><br><span class="line">  --gtest_also_run_disabled_tests 禁止的测试是指, 名称中添加DISABLED前缀</span><br><span class="line">      Run all disabled tests too. 例如:</span><br><span class="line">    // Tests that Foo does Abc.</span><br><span class="line">    TEST(FooTest, DISABLED_DoesAbc) &#123;  &#125;</span><br><span class="line"></span><br><span class="line">    class DISABLED_BarTest : public testing::Test &#123;  &#125;;</span><br><span class="line"></span><br><span class="line">    // Tests that Bar does Xyz.</span><br><span class="line">    TEST_F(DISABLED_BarTest, DoesXyz) &#123;  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Test Execution:</span><br><span class="line">  --gtest_repeat=[COUNT] 设置案例重复运行次数</span><br><span class="line">      Run the tests repeatedly; use a negative count to repeat forever.</span><br><span class="line"></span><br><span class="line">  --gtest_shuffle</span><br><span class="line">      Randomize tests&apos; orders on every iteration.</span><br><span class="line"></span><br><span class="line">  --gtest_random_seed=[NUMBER]</span><br><span class="line">      Random number seed to use for shuffling test orders (between 1 and</span><br><span class="line">      99999, or 0 to use a seed based on the current time).</span><br><span class="line"></span><br><span class="line">Test Output:</span><br><span class="line">  --gtest_color=(yes|no|auto) 默认是彩色输出</span><br><span class="line">      Enable/disable colored output. The default is auto.</span><br><span class="line">  --gtest_print_time=0 输出命令行时是否打印每个测试案例的执行时间, 默认是不打印的</span><br><span class="line">      Don&apos;t print the elapsed time of each test.</span><br><span class="line"></span><br><span class="line">  --gtest_output=xml[:DIRECTORY_PATH/|:FILE_PATH]</span><br><span class="line">      Generate an XML report in the given directory or with the given file</span><br><span class="line">      name. FILE_PATH defaults to test_details.xml.</span><br><span class="line"></span><br><span class="line">  --gtest_stream_result_to=HOST:PORT</span><br><span class="line">      Stream test results to the given server.</span><br><span class="line"></span><br><span class="line">Assertion Behavior:</span><br><span class="line">  --gtest_death_test_style=(fast|threadsafe)</span><br><span class="line">      Set the default death test style.</span><br><span class="line"></span><br><span class="line">  --gtest_break_on_failure 调试模式下，当案例失败时停止，方便调试</span><br><span class="line">      Turn assertion failures into debugger break-points.</span><br><span class="line"></span><br><span class="line">  --gtest_throw_on_failure 当案例失败时以C++异常的方式抛出</span><br><span class="line">      Turn assertion failures into C++ exceptions.</span><br><span class="line"></span><br><span class="line">  --gtest_catch_exceptions=0 是否捕捉异常(默认是不捕捉异常的)</span><br><span class="line">      不捕捉的话, 可能会弹出一个对话框(阻碍测试); </span><br><span class="line">      所以有时候还是要捕捉一下, 就设置一个非0值.</span><br><span class="line">      Do not report exceptions as test failures. Instead, allow them</span><br><span class="line">      to crash the program or throw a pop-up (on Windows).</span><br><span class="line"></span><br><span class="line">Except for --gtest_list_tests, you can alternatively set the corresponding</span><br><span class="line">environment variable of a flag (all letters in upper-case). For example, to</span><br><span class="line">disable colored text output, you can either specify --gtest_color=no or set</span><br><span class="line">the GTEST_COLOR environment variable to no.</span><br><span class="line"></span><br><span class="line">For more information, please read the Google Test documentation at</span><br><span class="line">https://github.com/google/googletest/. If you find a bug in Google Test</span><br><span class="line">(not one in your own code or tests), please report it to</span><br><span class="line">&lt;googletestframework@googlegroups.com&gt;.</span><br></pre></td></tr></table></figure></p>
+<p>XML 报告的输出格式如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;testsuites tests=&quot;3&quot; failures=&quot;1&quot; errors=&quot;0&quot; time=&quot;35&quot; name=&quot;AllTests&quot;&gt;</span><br><span class="line">  &lt;testsuite name=&quot;MathTest&quot; tests=&quot;2&quot; failures=&quot;1&quot;* errors=&quot;0&quot; time=&quot;15&quot;&gt;</span><br><span class="line">    &lt;testcase name=&quot;Addition&quot; status=&quot;run&quot; time=&quot;7&quot; classname=&quot;&quot;&gt;</span><br><span class="line">      &lt;failure message=&quot;Value of: add(1, 1)  Actual: 3 Expected: 2&quot; type=&quot;&quot;/&gt;</span><br><span class="line">      &lt;failure message=&quot;Value of: add(1, -1)  Actual: 1 Expected: 0&quot; type=&quot;&quot;/&gt;</span><br><span class="line">    &lt;/testcase&gt;</span><br><span class="line">    &lt;testcase name=&quot;Subtraction&quot; status=&quot;run&quot; time=&quot;5&quot; classname=&quot;&quot;&gt;</span><br><span class="line">    &lt;/testcase&gt;</span><br><span class="line">  &lt;/testsuite&gt;</span><br><span class="line">  &lt;testsuite name=&quot;LogicTest&quot; tests=&quot;1&quot; failures=&quot;0&quot; errors=&quot;0&quot; time=&quot;5&quot;&gt;</span><br><span class="line">    &lt;testcase name=&quot;NonContradiction&quot; status=&quot;run&quot; time=&quot;5&quot; classname=&quot;&quot;&gt;</span><br><span class="line">    &lt;/testcase&gt;</span><br><span class="line">  &lt;/testsuite&gt;</span><br><span class="line">&lt;/testsuites&gt;</span><br></pre></td></tr></table></figure></p>
+<p>即使使用<code>--gtest_filter</code> 参数过滤时, 输出的xml报告中还是会包含所有测试案例的信息, 只不过那些不被执行的测试案例的status值为“notrun”.</p>
+<h2 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a>内部实现</h2><p>内部的关键技术是什么?<br>主要宏注册.一个没有反射(reflection)的测试框架, 必须多做一些工作, 让框架知道相关测试类&amp;用例的存在.那就是宏注册, 以往的CppUnit, CxxTest要么是人工写(每添加一个测试, 就要进行相应的宏注册), 要么是写专门的(Python,Perl)脚本, 通过这个脚本扫描自己编写的文件, 生成一些新的文件. 但是boost::test和gtest则是通过展开宏进行宏注册, 也就是放在预处理阶段.</p>
+<p>主要是宏注册, 然后继承testing::Test类, 之后通过工厂方法创建TestInfo, 并注册给框架gtest.cc里的<code>MakeAndRegisterTestInfo()</code>有一句 <code>GetUnitTestImpl()-&gt;AddTestInfo（xx）</code> , 之后让TestRunner进行调用.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//namespace internal:</span></span><br><span class="line"><span class="function">TestInfo* <span class="title">MakeAndRegisterTestInfo</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> <span class="keyword">char</span>* test_case_name,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> <span class="keyword">char</span>* name,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> <span class="keyword">char</span>* type_param,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> <span class="keyword">char</span>* value_param,</span></span></span><br><span class="line"><span class="function"><span class="params">    TypeId fixture_class_id,</span></span></span><br><span class="line"><span class="function"><span class="params">    SetUpTestCaseFunc set_up_tc,</span></span></span><br><span class="line"><span class="function"><span class="params">    TearDownTestCaseFunc tear_down_tc,</span></span></span><br><span class="line"><span class="function"><span class="params">    TestFactoryBase* factory)</span> </span>&#123;</span><br><span class="line">  TestInfo* <span class="keyword">const</span> test_info =</span><br><span class="line">      <span class="keyword">new</span> TestInfo(test_case_name, name, type_param, value_param,</span><br><span class="line">                   fixture_class_id, factory);</span><br><span class="line">  GetUnitTestImpl()-&gt;AddTestInfo(set_up_tc, tear_down_tc, test_info); <span class="comment">//关键</span></span><br><span class="line">  <span class="keyword">return</span> test_info;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>简单说一下.</p>
+<p>先写一个简单的测试文件:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;gtest/gtest.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">TEST(TestSuite, Negative)</span><br><span class="line">&#123;</span><br><span class="line">    EXPECT_EQ(<span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后用g++展开一下,<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -E main.cpp -o main.i -I/usr/local/include</span><br></pre></td></tr></table></figure></p>
+<p>得到结果如下(展开的代码非常多, 6万多行, 找到TestSuite_Negative_Test; 最好过滤掉带井号的行)<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"># <span class="number">2</span> <span class="string">"main.cpp"</span> <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span></span></span><br><span class="line"><span class="class"># 3 "<span class="title">main</span>.<span class="title">cpp</span>"</span></span><br><span class="line"><span class="class"><span class="title">TestSuite_Negative_Test</span></span></span><br><span class="line"><span class="class"># 3 "<span class="title">main</span>.<span class="title">cpp</span>" 3</span></span><br><span class="line"><span class="class">:</span> <span class="keyword">public</span> ::testing::Test &#123; <span class="keyword">public</span>:</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span></span><br><span class="line">TestSuite_Negative_Test</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span> <span class="number">3</span></span><br><span class="line">() &#123;&#125; <span class="keyword">private</span>: <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">TestBody</span><span class="params">()</span></span>; <span class="keyword">static</span> ::testing::TestInfo* <span class="keyword">const</span> test_info_ __attribute__ ((unused));</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span></span><br><span class="line">TestSuite_Negative_Test</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span> <span class="number">3</span></span><br><span class="line">(</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span></span><br><span class="line">TestSuite_Negative_Test</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">const</span> &amp;); <span class="keyword">void</span> <span class="keyword">operator</span>=(</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span></span><br><span class="line">TestSuite_Negative_Test</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">const</span> &amp;);&#125;;::testing::TestInfo* <span class="keyword">const</span></span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span></span><br><span class="line">TestSuite_Negative_Test</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span> <span class="number">3</span></span><br><span class="line">::test_info_ = ::testing::internal::MakeAndRegisterTestInfo(</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span></span><br><span class="line"><span class="string">"TestSuite"</span></span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span> <span class="number">3</span></span><br><span class="line">,</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span></span><br><span class="line"><span class="string">"Negative"</span></span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span> <span class="number">3</span></span><br><span class="line">, __null, __null, ::testing::internal::CodeLocation(<span class="string">"main.cpp"</span>, <span class="number">3</span>), (::testing::internal::GetTestTypeId()), ::testing::Test::SetUpTestCase, ::testing::Test::TearDownTestCa\</span><br><span class="line">se, <span class="keyword">new</span> ::testing::internal::TestFactoryImpl&lt;</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span></span><br><span class="line">TestSuite_Negative_Test</span><br><span class="line"># <span class="number">3</span> <span class="string">"main.cpp"</span> <span class="number">3</span></span><br></pre></td></tr></table></figure></p>
+<p>差不多已经看到我说的那个样子了(当然你也可以尝试定义自己的宏函数, 宏类; 个人觉得意义不大, 还不如直接去看别人的源码写分析).</p>
+<p>关于gtest源码内容一览:</p>
+<ul>
+<li>预处理技术分析(我已经简单分析了)</li>
+<li>自动调度机制</li>
+<li>结果统计机制</li>
+<li>监听机制</li>
+<li>断言使用方法和解析</li>
+<li>自定义输出技术</li>
+<li>死亡测试技术</li>
+<li>私有属性-方法测试</li>
+<li>参数填充技术</li>
+<li>模板类测试技术</li>
+</ul>
+<p>以后有时间, 单独开贴再写(主要是在预处理部分, <code>.i</code>文件), <a href="">Gtest源码剖析</a></p>
+<p>搞懂了Gtest内部实现, 其实自己也可以尝试着写相关的测试框架(这部分纯属扩展).</p>
+<h2 id="研发测试"><a href="#研发测试" class="headerlink" title="研发测试"></a>研发测试</h2><p>在Google, 质量并不等于测试. “质量不是被测试出来的” 这句老话是再正确不过了. 虽然质量并不是测试出来的, 但我们有同样的证据表明, 没有测试, 你不可能开发出任何有质量的东西. 一个人怎么可能在没有测试的情况下认定你的工程具有高质量?</p>
+<p>对于这种难题，最简单的解决办法就是: 禁止对开发工作开方便之门，以独立自由之精神进行测试。<code>测试和开发工作需要同步进行</code>. 编写一点, 测试一点. 再编写一点, 再测试一点. 更好的方法是制定测试计划或者你开发之前先把计划做好.  (<code>但是这对开发人员的要求很高</code>)</p>
+<p>测试并不是一个独立的工作, 它是开发工作的一部分, 伴随着整个开发过程. 质量不等于测试, 为了质量, 需要你把开发工作和测试结合到一起, 搅拌它们, 直到分不清你我为止.</p>
+<blockquote>
+<p>在Google，这是我们明确的目标：把开发和测试融合，你不能单独进行任何一项工作。做一点，测试一点。再做一点，再测试一点。关键就是看谁在做测试。因为在Google，专职测试人员是出奇的少，所以唯一可行的方法就是使用开发人员。还有比这些实际开发了这些程序的人员更合适做测试的吗? 还有比程序的作者更适合去发现bug的吗? 是谁具有更多的愿望在程序第一次写出时避免bug? Google之所以安排这么少的专职测试人员的原因就是，开发者负责质量。事实上，坚持使用大型测试机构的团队通常会开发出有问题的东西。测试机构庞大，这是一个信号表明编码/测试工作的融和有问题。增加测试人员并不能解决任何问题。这就是说，质量措施更多的应该是一种预防行为，而不是一种发现过程。<code>质量属于开发问题，而不是测试问题</code>。通过把测试工作一定程度的融合到开发过程中，我们极大的降低了一些本来被认为会写很多有问题的代码的人的出错机会。我们不仅避免了大量的客户方的问题，我们还非常有效的降低了测试人员提出的、其实不是bug的bug。在Google，测试工作的目标就是检查这些预防工作是否在有效的运行。测试工程部一直在寻找这种作为bug创造者的软件工程师和作为bug预防者的测试软件工程师之间的联合能达到的效果的证据，一旦这个方法出现问题，他们就会拉响警笛。</p>
+<p>　这种开发和测试的结合随处可见，从代码审查注释上写的“你的测试呢?”到厕所里的给开发者的最好的测试实践方法的宣传画——这是我们臭名昭著的厕所测试指导方针。测试是开发工作中是必不可少的，开发和测试的联姻是孕育质量的过程。软工就是测试者，测试软工就是测试者，测试工程师就是测试者。</p>
+</blockquote>
+<p>个人点评: 关于作者所说的, “这是我们明确的目标：把开发和测试融合，你不能单独进行任何一项工作。做一点，测试一点。再做一点，再测试一点。关键就是看谁在做测试”, 我想这是一个非常理想的情况, 实际上当前的许多大公司也没有做到, 其实也很难做到. 但是有理想总是好的, 慢慢靠近也不错.</p>
+<p>其实可以参考一下TDD和XP或者敏捷等开发方法, 里面也有涉及到相关内容.</p>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>当初玩gtest也是因为tdd的原因, 毕竟一个认真负责的开发者, 就应该保证自己代码的质量, 编码和测试是分不开的.</p>
+<p>本文又花了很大的篇幅,  记录了整个Gtest的探索过程(当然还有源码剖析一部分没有写后续补上), 希望这些时间没有白费.</p>
+<p>当然最后也强烈推荐一下 <code>测试驱动开发方法</code>, 即 <a href="http://www.merlinblog.site/2017/07/06/tdd.html">tdd</a> .</p>
+<p>(btw: gtest中有很重要的一部分, 是和google mock相关的, 这里没有谈到; 以后专门再说)</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li>玩转Google开源C++单元测试框架Google Test系列  (不过它是window平台, 我选用的是linux平台)</li>
+<li>官方文档(docs目录): Primer.md , AdvancedGuide.md , FAQ.md</li>
+<li><a href="http://baidutech.blog.51cto.com/4114344/743740/" target="_blank" rel="noopener">http://baidutech.blog.51cto.com/4114344/743740/</a></li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/140bfd50/">技术: Gtest测试框架</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2017-08-20, 16:58:35</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/140bfd50/" title="技术: Gtest测试框架">http://www.merlinblog.site/posts/140bfd50/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/140bfd50/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/7d13442/">
+                    技术: Protocol buffer
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/247b42a4/">
+                    技术: 多线程调试问题
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#介绍"><span class="toc-number">2.1.</span> <span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#框架"><span class="toc-number">2.1.1.</span> <span class="toc-text">框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#架构"><span class="toc-number">2.1.2.</span> <span class="toc-text">架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优劣势"><span class="toc-number">2.1.3.</span> <span class="toc-text">优劣势</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.2.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux平台"><span class="toc-number">2.2.1.</span> <span class="toc-text">Linux平台</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#window平台"><span class="toc-number">2.2.2.</span> <span class="toc-text">window平台</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux下配置"><span class="toc-number">2.3.</span> <span class="toc-text">Linux下配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原生sample"><span class="toc-number">2.3.1.</span> <span class="toc-text">原生sample</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置环境"><span class="toc-number">2.3.2.</span> <span class="toc-text">配置环境</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主要内容"><span class="toc-number">2.4.</span> <span class="toc-text">主要内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#主函数"><span class="toc-number">2.4.1.</span> <span class="toc-text">主函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#断言宏"><span class="toc-number">2.4.2.</span> <span class="toc-text">断言宏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#事件化机制"><span class="toc-number">2.4.3.</span> <span class="toc-text">事件化机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参数化"><span class="toc-number">2.4.4.</span> <span class="toc-text">参数化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#死亡测试"><span class="toc-number">2.4.5.</span> <span class="toc-text">死亡测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行参数"><span class="toc-number">2.4.6.</span> <span class="toc-text">运行参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内部实现"><span class="toc-number">2.5.</span> <span class="toc-text">内部实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#研发测试"><span class="toc-number">2.6.</span> <span class="toc-text">研发测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/7d13442/" title="上一篇: 技术: Protocol buffer">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/247b42a4/" title="下一篇: 技术: 多线程调试问题">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

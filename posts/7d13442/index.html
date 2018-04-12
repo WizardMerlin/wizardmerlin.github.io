@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="google protocolbuffer使用心得">
+<meta name="keywords" content="框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: Protocol buffer">
+<meta property="og:url" content="http://www.merlinblog.site/posts/7d13442/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="google protocolbuffer使用心得">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/pb_function.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/pb_types.jpg">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/pb_wiretype.jpg">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.634Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: Protocol buffer">
+<meta name="twitter:description" content="google protocolbuffer使用心得">
+<meta name="twitter:image" content="http://omotkhw3y.bkt.clouddn.com/pb_function.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: Protocol buffer | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-protocol-buffer" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/7d13442/" class="article-date">
+      <time datetime="2017-08-21T05:50:41.000Z" itemprop="datePublished">2017-08-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: Protocol buffer
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/框架/">框架</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>google protocolbuffer使用心得<br><a id="more"></a></p>
+<p>最初是在 “序列化” 问题时接触到这个库的(作为XML的替代方案), 之后慢慢熟悉, 发现其在数据存储和RPC数据交换领域有大作为, 好比说客户端Java, 服务器端Cpp; 服务器端通信直接一字节对齐, char<em>来char</em>去, 但是Java就复杂很多(ByteBuffer中根据预定的报文格式, 然后逐字节的解析字段), 并且容易出现拼接错误; 而使用SOAP协议(WebService)作为消息报文的格式载体, 由该方式生成的报文是基于文本格式的, 同时还存在大量的XML描述信息，因此将会大大增加网络IO的负担, 解析速度也不快.</p>
+<p>于是, 来了protocol buffer, 简称protobuffer或者pb.</p>
+<p>本文详细地介绍一下我的一些实践和心得.</p>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>快速说一下它的某个简单使用, 引入话题.</p>
+<p>比如有个电子商务的系统（假设用C++实现），其中的模块A需要发送大量的订单信息给模块B，通讯的方式使用socket.</p>
+<p>假设订单包括如下属性：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">　　时间：time（用整数表示）</span><br><span class="line">　　客户id：userid（用整数表示）</span><br><span class="line">　　交易金额：price（用浮点数表示）</span><br><span class="line">　　交易的描述：desc（用字符串表示）</span><br></pre></td></tr></table></figure>
+<p>如果使用protobuf实现，首先要写一个proto文件（不妨叫Order.proto），在该文件中添加一个名为”Order”的message结构，用来描述通讯协议中的结构化数据。该文件的内容大致如下：<br>(解释一下: .proto文件确定数据协议，数据结构中存在哪些数据，数据类型是怎么样; 该文件就是一个接口规范)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">message Order</span><br><span class="line">&#123;</span><br><span class="line">  required int32 time = <span class="number">1</span>;</span><br><span class="line">  required int32 userid = <span class="number">2</span>;</span><br><span class="line">  required <span class="keyword">float</span> price = <span class="number">3</span>;</span><br><span class="line">  optional <span class="built_in">string</span> desc = <span class="number">4</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关于modifiers的说明:</p>
+<ul>
+<li>required 不可以增加或删除的字段，必须初始化</li>
+<li>optional 可选字段，可删除，可以不初始化</li>
+<li>repeated 可重复字段， 对应到java文件里，生成的是List</li>
+</ul>
+<p>(在protoBuf 3中，optional和required都不需要的了，如果配了两个，protoBuf 编译器还会报错，但是repeated的还是保留的，用来说明该字段是一个list)</p>
+<p>然后，使用protobuf内置的编译器编译 该proto。由于本例子的模块是C++，你可以通过protobuf编译器的命令行参数，让它生成C++语言的“订单包装类”。（一般来说，一个message结构会生成一个包装类）然后你使用类似下面的代码来序列化/解析该订单包装类：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 发送方</span></span><br><span class="line">Order order;</span><br><span class="line">order.set_time(XXXX);</span><br><span class="line">order.set_userid(<span class="number">123</span>);</span><br><span class="line">order.set_price(<span class="number">100.0f</span>);</span><br><span class="line">order.set_desc(<span class="string">"a test order"</span>);</span><br><span class="line"><span class="built_in">string</span> sOrder;</span><br><span class="line">order.SerailzeToString(&amp;sOrder);</span><br><span class="line"><span class="comment">// 然后调用某种socket的通讯库把序列化之后的字符串发送出去</span></span><br><span class="line"><span class="comment">// ......</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 接收方</span></span><br><span class="line"><span class="built_in">string</span> sOrder;</span><br><span class="line"><span class="comment">// 先通过网络通讯库接收到数据，存放到某字符串sOrder</span></span><br><span class="line"><span class="comment">// ......</span></span><br><span class="line">Order order;</span><br><span class="line"><span class="keyword">if</span>(order.ParseFromString(sOrder))  <span class="comment">// 解析该字符串</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">cout</span> &lt;&lt; <span class="string">"userid:"</span> &lt;&lt; order.userid() &lt;&lt; <span class="built_in">endl</span></span><br><span class="line">          &lt;&lt; <span class="string">"desc:"</span> &lt;&lt; order.desc() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">cerr</span> &lt;&lt; <span class="string">"parse error!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注: 生成的类中还有其他的序列化API, 比如 <code>ParseFromIstream(&amp;input)</code> 以及 <code>SerializeToOstream(&amp;output)</code> 等.</p>
+<p>有了这种代码生成机制，开发人员再也不用吭哧吭哧地编写那些协议解析的代码了.</p>
+<p>万一将来需求发生变更，要求给订单再增加一个“状态”的属性，那只需要在Order.proto文件中增加一行代码。对于发送方（模块A），只要增加一行设置状态的代码；对于接收方（模块B）只要增加一行读取状态的代码。哇塞，简直太轻松了！</p>
+<p>不说了, 太激动, 请看详情.</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>性能好, 效率高(XML解析速度慢, XML冗余信息多空间占用多)</li>
+<li>代码生成机制, 数据解析类自动生成(这个最赞, 你不需要自己去写解析代码了)</li>
+<li>支持向后兼容和向前兼容(得益于约定好的协议, 即使增加字段, 先前的代码也不必改变)</li>
+<li>多语言支持(主流语言Cpp,Java,Python; 前后端语言不一样也没有关系, 协议的处理一致)</li>
+<li>平台无关</li>
+<li>不必学习DOM模型</li>
+</ul>
+<p>性能上和 JSON 拼也是不怕的 <a href="http://cxshun.iteye.com/blog/1974498" target="_blank" rel="noopener">参考</a></p>
+<p>和 XML，JSON，Thrift相比，Protobuf 有什么不同呢？简单说来 Protobuf 的主要优点就是：简单，快。</p>
+<p>你可以定义自己的数据结构，然后使用代码生成器生成的代码来读写这个数据结构。只需使用 Protobuf 对数据结构进行一次描述，即可利用各种不同语言或从各种不同数据流中对你的结构化数据轻松读写。</p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>应用不够广</li>
+<li>为了提高性能, 导致可读性差(二进制格式)</li>
+</ul>
+<p>正是由于可读性, Protocol Buffer还取代不了XML.</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>Linux平台 和 Window(VS2015)<br>源码安装: </p>
+<ul>
+<li><a href="http://code.google.com/p/protobuf/downloads/list" target="_blank" rel="noopener">http://code.google.com/p/protobuf/downloads/list</a></li>
+<li><a href="https://github.com/google/protobuf/releases" target="_blank" rel="noopener">https://github.com/google/protobuf/releases</a></li>
+</ul>
+<h3 id="Linux平台"><a href="#Linux平台" class="headerlink" title="Linux平台"></a>Linux平台</h3><p>Ubuntu 14, 64bit<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/google/protobuf.git</span><br></pre></td></tr></table></figure></p>
+<p>当然你也可以去release网页下找到相关的包, 在进行编译.</p>
+<p>先确保你及其上有相关的工具集合:</p>
+<ul>
+<li>autoconf</li>
+<li>automake</li>
+<li>libtool</li>
+<li>curl</li>
+<li>make</li>
+<li>g++</li>
+<li>unzip</li>
+</ul>
+<p>然后确保有<code>configure</code>文件, 没有话 <code>./autogen.sh</code> 生成相关脚本(并下载gmock).<br>然后编译安装(可以自己制定位置, 我就默认了)<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ./configure</span><br><span class="line">$ make</span><br><span class="line">$ make check</span><br><span class="line">$ sudo make install</span><br><span class="line">$ sudo ldconfig <span class="comment"># refresh shared library cache.</span></span><br></pre></td></tr></table></figure></p>
+<p>此时 <code>/usr/local/include/google/protobuf</code> 以及 <code>/usr/local/lib</code> 下就有了相应的头文件和库文件, 并且增加了<code>/usr/local/bin/protoc</code>编译器, 此时安装成功.</p>
+<h3 id="windows平台"><a href="#windows平台" class="headerlink" title="windows平台"></a>windows平台</h3><p>这里采用的是VS2015, 操作系统win10 64位.</p>
+<p>在这个<a href="https://github.com/google/protobuf/releases" target="_blank" rel="noopener">网站</a>找到 <code>protoc-$VERSION-win32.zip</code><br>It contains the protoc binary as well as public proto files of protobuf library.</p>
+<p>这个<a href="https://github.com/google/protobuf/blob/master/cmake/README.md" target="_blank" rel="noopener">文档</a>记录了相关过程, 这一篇<a href="http://blog.csdn.net/majianfei1023/article/details/45371743" target="_blank" rel="noopener">文档</a>也可以供您参考</p>
+<h2 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h2><p>主要的使用步骤就是:</p>
+<ol>
+<li>定义你自己的数据结构格式(.pro)源文件</li>
+<li>利用 ProtoBuf 提供的编译器编译源文件</li>
+<li>使用 ProtoBuf C++的 API 读写消息</li>
+</ol>
+<h3 id="简单Demo"><a href="#简单Demo" class="headerlink" title="简单Demo"></a>简单Demo</h3><p>以linux平台为例, 先实践一个简单的:</p>
+<p>定义一个person.pro<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">syntax = &quot;proto2&quot;;</span><br><span class="line">package lm;</span><br><span class="line"></span><br><span class="line">message helloworld</span><br><span class="line">&#123;</span><br><span class="line">   required int32     id = 1;  // ID</span><br><span class="line">   required string    str = 2;  // str</span><br><span class="line">   optional int32     opt = 3;  //optional field</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译:(/usr/local/bin/protoc)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protoc -I. --cpp_out=. lm.helloworld.proto</span><br></pre></td></tr></table></figure></p>
+<p>生成了一个头文件和一个源文件:</p>
+<ul>
+<li>lm.helloworld.pb.cc</li>
+<li>lm.helloworld.pb.h</li>
+</ul>
+<p>相当于POJO类或者domain类已经有(并且序列化API也已经有了), 类名 <code>lm::helloworld</code>, 现在可以进行序列化了.</p>
+<p>简单的操作代码如下:<br>(Writer和Reader来对消息进行操作, 序列化和反序列化)<br>writer.cpp<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"lm.helloworld.pb.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//主要逻辑如下</span></span><br><span class="line">  lm::helloworld msg1;</span><br><span class="line">  </span><br><span class="line">  msg1.set_id(<span class="number">101</span>); </span><br><span class="line">  msg1.set_str(<span class="string">"hello"</span>); </span><br><span class="line">    </span><br><span class="line">  <span class="comment">// Write the new address book back to disk. </span></span><br><span class="line">  <span class="function">fstream <span class="title">output</span><span class="params">(<span class="string">"./log"</span>, ios::out | ios::trunc | ios::binary)</span></span>; </span><br><span class="line">        </span><br><span class="line">  <span class="keyword">if</span> (!msg1.SerializeToOstream(&amp;output)) &#123; </span><br><span class="line">    <span class="built_in">cerr</span> &lt;&lt; <span class="string">"Failed to write msg."</span> &lt;&lt; <span class="built_in">endl</span>; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>; </span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>reader.cpp<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"lm.helloworld.pb.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ListMsg</span><span class="params">(<span class="keyword">const</span> lm::helloworld &amp; msg)</span> </span>&#123; </span><br><span class="line">  <span class="built_in">cout</span> &lt;&lt; msg.id() &lt;&lt; <span class="built_in">endl</span>; </span><br><span class="line">  <span class="built_in">cout</span> &lt;&lt; msg.str() &lt;&lt; <span class="built_in">endl</span>; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span> </span>&#123; </span><br><span class="line"></span><br><span class="line">  lm::helloworld msg1; </span><br><span class="line"> </span><br><span class="line">  &#123; </span><br><span class="line">    <span class="function">fstream <span class="title">input</span><span class="params">(<span class="string">"./log"</span>, ios::in | ios::binary)</span></span>; </span><br><span class="line">    <span class="keyword">if</span> (!msg1.ParseFromIstream(&amp;input)) &#123; </span><br><span class="line">      <span class="built_in">cerr</span> &lt;&lt; <span class="string">"Failed to parse address book."</span> &lt;&lt; <span class="built_in">endl</span>; </span><br><span class="line">      <span class="keyword">return</span> <span class="number">-1</span>; </span><br><span class="line">    &#125; </span><br><span class="line">  &#125; </span><br><span class="line"> </span><br><span class="line">  ListMsg(msg1);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(上面的代码主要用到了 <code>SerializeToOstream</code> 和 <code>ParseFromIstream</code> 两个成员方法)<br>然后编译一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">main:write read</span><br><span class="line"></span><br><span class="line">write:writer.cpp lm.helloworld.pb.cc</span><br><span class="line">		 g++ -g -Wall -O0 writer.cpp lm.helloworld.pb.cc \</span><br><span class="line">-o write -I. -L/usr/local/lib -lprotobuf</span><br><span class="line"></span><br><span class="line">read:reader.cpp lm.helloworld.pb.cc</span><br><span class="line">		g++ -g -Wall -O0 reader.cpp lm.helloworld.pb.cc \</span><br><span class="line">-o read -I. -L/usr/local/lib -lprotobuf</span><br><span class="line"></span><br><span class="line">clean:</span><br><span class="line">	rm -f read write</span><br></pre></td></tr></table></figure></p>
+<p>如果你不知道库的具体位置, 那么可以使用<code>pkg-config --cflags --libs protobuf</code>代替后面的 <code>-I</code>等(该工具通过PKG_CONFIG_PATH环境变量指定的地址去找.pc文件, 该文件记录了ProtoBuf安装时头文件和库文件所在的目录, 但是注意, 把<code>PKG_CONFIG_PATH</code>环境变量设置正确, 例如<code>$export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/</code>)</p>
+<p>运行结果:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">merlin@remote~/test/pb_test$ ./write</span><br><span class="line">merlin@remote~/test/pb_test$ ./read</span><br><span class="line">101</span><br><span class="line">hello</span><br></pre></td></tr></table></figure></p>
+<p>总结下来, 其实protocol buffer这个库, 就是解决了你序列化, 或者消息传递时, 需要去写实体类, 以及序列化API的工作, 并且由于消息是语言无关的, 所以又可以跨语言了(当然跨语言时数据类型对接, 还是要在这些API中得到解决的, 这也是该库工作的一部分).</p>
+<p>如果你还没有意识到这个库的重要性, 那么下面涉及到RPC, 序列化的部分, 看看吧:<br><img src="http://omotkhw3y.bkt.clouddn.com/pb_function.png" alt="pb"></p>
+<p>老实说, 初级部分没有太多讲的, 下面看看生成的代码(具体的工程实现细节就不展开了, 只看生成代码的结构, 下面的代码我已经添加了注释):</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//根据option optimize_for优化类型不同, 可能继承自Message或者MessageLite</span></span><br><span class="line"><span class="comment">//MessageLite是Message的父类, Message扩展了反射相关的内容</span></span><br><span class="line"><span class="comment">//当 option optimize_for = LITE_RUNTIME;时, 才继承MessageLite</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">helloworld</span> :</span> <span class="keyword">public</span> ::google::protobuf::Message &#123;</span><br><span class="line"> <span class="comment">/* @@protoc_insertion_point(class_definition:lm.helloworld) */</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  helloworld();</span><br><span class="line">  <span class="keyword">virtual</span> ~helloworld();</span><br><span class="line"></span><br><span class="line">  helloworld(<span class="keyword">const</span> helloworld&amp; from);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">inline</span> helloworld&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> helloworld&amp; from) &#123;</span><br><span class="line">    CopyFrom(from);</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">inline</span> <span class="keyword">const</span> ::google::protobuf::<span class="function">UnknownFieldSet&amp; <span class="title">unknown_fields</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _internal_metadata_.unknown_fields();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">inline</span> ::google::protobuf::<span class="function">UnknownFieldSet* <span class="title">mutable_unknown_fields</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _internal_metadata_.mutable_unknown_fields();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> ::google::protobuf::<span class="function">Descriptor* <span class="title">descriptor</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">const</span> helloworld&amp; <span class="title">default_instance</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">const</span> helloworld* <span class="title">internal_default_instance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">const</span> helloworld*&gt;(</span><br><span class="line">               &amp;_helloworld_default_instance_);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">static</span> PROTOBUF_CONSTEXPR <span class="keyword">int</span> <span class="keyword">const</span> kIndexInFileMessages =</span><br><span class="line">    <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Swap</span><span class="params">(helloworld* other)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// implements Message ----------------------------------------------</span></span><br><span class="line">  <span class="comment">//下面实现的是Message中的虚函数</span></span><br><span class="line">  <span class="comment">//New等同于clone, 创建一个该类的新对象</span></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> helloworld* <span class="title">New</span><span class="params">()</span> <span class="keyword">const</span> PROTOBUF_FINAL </span>&#123; <span class="keyword">return</span> New(<span class="literal">NULL</span>); &#125;</span><br><span class="line">  <span class="function">helloworld* <span class="title">New</span><span class="params">(::google::protobuf::Arena* arena)</span> <span class="keyword">const</span> PROTOBUF_FINAL</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//等同于赋值操作符重载（operator=）</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">CopyFrom</span><span class="params">(<span class="keyword">const</span> ::google::protobuf::Message&amp; from)</span> PROTOBUF_FINAL</span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">MergeFrom</span><span class="params">(<span class="keyword">const</span> ::google::protobuf::Message&amp; from)</span> PROTOBUF_FIeNAL</span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">CopyFrom</span><span class="params">(<span class="keyword">const</span> helloworld&amp; from)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">MergeFrom</span><span class="params">(<span class="keyword">const</span> helloworld&amp; from)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//清空当前对象中的所有数据, 即将所有成员变量置为未初始化状态</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Clear</span><span class="params">()</span> PROTOBUF_FINAL</span>;</span><br><span class="line">  <span class="comment">//判断当前状态是否已经初始化</span></span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">IsInitialized</span><span class="params">()</span> <span class="keyword">const</span> PROTOBUF_FINAL</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//在给当前对象的所有变量赋值之后, 获取该对象序列化后所需要的字节数</span></span><br><span class="line">  <span class="keyword">size_t</span> ByteSizeLong() <span class="keyword">const</span> PROTOBUF_FINAL;</span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">MergePartialFromCodedStream</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">      ::google::protobuf::io::CodedInputStream* input)</span> PROTOBUF_FINAL</span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">SerializeWithCachedSizes</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">      ::google::protobuf::io::CodedOutputStream* output)</span> <span class="keyword">const</span> PROTOBUF_FINAL</span>;</span><br><span class="line">  ::google::protobuf::<span class="function">uint8* <span class="title">InternalSerializeWithCachedSizesToArray</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">      <span class="keyword">bool</span> deterministic, ::google::protobuf::uint8* target)</span> <span class="keyword">const</span> PROTOBUF_FINAL</span>;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">GetCachedSize</span><span class="params">()</span> <span class="keyword">const</span> PROTOBUF_FINAL </span>&#123; <span class="keyword">return</span> _cached_size_; &#125;</span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">SharedCtor</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">SharedDtor</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">SetCachedSize</span><span class="params">(<span class="keyword">int</span> size)</span> <span class="keyword">const</span> PROTOBUF_FINAL</span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">InternalSwap</span><span class="params">(helloworld* other)</span></span>;</span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">inline</span> ::google::protobuf::<span class="function">Arena* <span class="title">GetArenaNoVirtual</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span>* <span class="title">MaybeArenaPtr</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">  ::google::protobuf::<span class="function">Metadata <span class="title">GetMetadata</span><span class="params">()</span> <span class="keyword">const</span> PROTOBUF_FINAL</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// nested types ----------------------------------------------------</span></span><br><span class="line">  <span class="comment">//没有嵌套, 所以这里为空</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// accessors -------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//下面的是根据字段生成的代码</span></span><br><span class="line">  <span class="comment">// required string str = 2;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//字段已经赋值, 返回true</span></span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">has_str</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">  <span class="comment">//清除该字段值</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">clear_str</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="comment">//这个静态成员表示字段 str 的编码值</span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kStrFieldNumber = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//拿到字段值</span></span><br><span class="line">  <span class="keyword">const</span> ::<span class="built_in">std</span>::<span class="function"><span class="built_in">string</span>&amp; <span class="title">str</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//设置字段值</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">set_str</span><span class="params">(<span class="keyword">const</span> ::<span class="built_in">std</span>::<span class="built_in">string</span>&amp; value)</span></span>;</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">if</span> LANG_CXX11</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">set_str</span><span class="params">(::<span class="built_in">std</span>::<span class="built_in">string</span>&amp;&amp; value)</span></span>;</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">set_str</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* value)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">set_str</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* value, <span class="keyword">size_t</span> size)</span></span>;</span><br><span class="line">  ::<span class="built_in">std</span>::<span class="function"><span class="built_in">string</span>* <span class="title">mutable_str</span><span class="params">()</span></span>;</span><br><span class="line">  ::<span class="built_in">std</span>::<span class="function"><span class="built_in">string</span>* <span class="title">release_str</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">set_allocated_str</span><span class="params">(::<span class="built_in">std</span>::<span class="built_in">string</span>* str)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// required int32 id = 1;</span></span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">has_id</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">clear_id</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kIdFieldNumber = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//getter和setter</span></span><br><span class="line">  ::google::protobuf::<span class="function">int32 <span class="title">id</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">set_id</span><span class="params">(::google::protobuf::int32 value)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// optional int32 opt = 3;</span></span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">has_opt</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">clear_opt</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kOptFieldNumber = <span class="number">3</span>;</span><br><span class="line">  ::google::protobuf::<span class="function">int32 <span class="title">opt</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">set_opt</span><span class="params">(::google::protobuf::int32 value)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// @@protoc_insertion_point(class_scope:lm.helloworld)</span></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">set_has_id</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">clear_has_id</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">set_has_str</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">clear_has_str</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">set_has_opt</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">clear_has_opt</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// helper for ByteSizeLong()</span></span><br><span class="line">  <span class="keyword">size_t</span> RequiredFieldsByteSizeFallback() <span class="keyword">const</span>;</span><br><span class="line"></span><br><span class="line">  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;</span><br><span class="line">  ::google::protobuf::internal::HasBits&lt;<span class="number">1</span>&gt; _has_bits_;</span><br><span class="line">  <span class="keyword">mutable</span> <span class="keyword">int</span> _cached_size_;</span><br><span class="line">  ::google::protobuf::internal::ArenaStringPtr str_;</span><br><span class="line">  ::google::protobuf::int32 id_;</span><br><span class="line">  ::google::protobuf::int32 opt_;</span><br><span class="line">  <span class="keyword">friend</span> <span class="class"><span class="keyword">struct</span> <span class="title">protobuf_lm_2ehelloworld_2eproto</span>:</span>:TableStruct;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// ===================================================================</span></span><br></pre></td></tr></table></figure>
+<p>上面的代码Message没有嵌套, 还是蛮简单的, 主要使用的是和字段相关的方法(其他序列化方法, 如 SerializeToArray 等, 不在此类中实现). 上目前的 <code>ByteSizeLong()</code> 主要用于序列化到buffer或者array时, 例如:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">helloworld message;</span><br><span class="line">message.set_str(<span class="string">"xxx"</span>);</span><br><span class="line">message.set_id(<span class="number">1</span>);</span><br><span class="line">message.set_opt(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">size_t</span> length = message.ByteSizeLong();</span><br><span class="line"><span class="keyword">char</span> *buf = <span class="keyword">new</span> <span class="keyword">char</span>[length];</span><br><span class="line">message.SerializeToArray(buf, length);</span><br><span class="line"><span class="comment">//读的时候 ParseFromArray</span></span><br><span class="line"><span class="keyword">delete</span> []buf;</span><br><span class="line">buf = <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h3 id="复杂案例"><a href="#复杂案例" class="headerlink" title="复杂案例"></a>复杂案例</h3><p>复杂的案例, 也就是带有嵌套message. 和简单message不同的是, 不能简单的使用set方法设置被嵌套在message内部的内容了, 而是用另外的方法. 下面举一个案例, 如下.<br>.proto文件如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">enum UserStatus &#123;</span><br><span class="line">  OFFLINE = 0;</span><br><span class="line">  ONLINE = 1;</span><br><span class="line">&#125;</span><br><span class="line">enum LoginResult &#123;</span><br><span class="line">  LOGON_RESULT_SUCCESS = 0;</span><br><span class="line">  LOGON_RESULT_NOTEXIST = 1;</span><br><span class="line">  LOGON_RESULT_ERROR_PASSWD = 2;</span><br><span class="line">  LOGON_RESULT_ALREADY_LOGON = 3;</span><br><span class="line">  LOGON_RESULT_SERVER_ERROR = 4;</span><br><span class="line">&#125;</span><br><span class="line">message UserInfo &#123;</span><br><span class="line">  required int64 acctID = 1;</span><br><span class="line">  required string name = 2;</span><br><span class="line">  required UserStatus status = 3;</span><br><span class="line">&#125;</span><br><span class="line">message LogonRespMessage &#123;</span><br><span class="line">  required LoginResult logonResult = 1; </span><br><span class="line">  required UserInfo userInfo = 2; //这里嵌套了UserInfo消息</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>生成的关键代码如下:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// required .UserInfo userInfo = 2;</span></span><br><span class="line"><span class="comment">//下面的成员函数都是因message中定义的UserInfo字段而生成。</span></span><br><span class="line"><span class="comment">//这里只是列出和非消息类型字段差异的部分。</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kUserInfoFieldNumber = <span class="number">2</span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">bool</span> <span class="title">has_userinfo</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">clear_userinfo</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">const</span> ::<span class="function">UserInfo&amp; <span class="title">userinfo</span><span class="params">()</span> <span class="keyword">const</span></span>; <span class="comment">//重要</span></span><br><span class="line"><span class="keyword">inline</span> ::<span class="function">UserInfo* <span class="title">mutable_userinfo</span><span class="params">()</span></span>; <span class="comment">//重要</span></span><br><span class="line"><span class="keyword">inline</span> ::<span class="function">UserInfo* <span class="title">release_userinfo</span><span class="params">()</span></span>; <span class="comment">//重要</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到该类并没有生成用于设置和修改userInfo字段set_userinfo函数，而是将该工作交给了下面的mutable_userinfo函数. 因此每当调用函数之后, Protocol Buffer都会认为该字段的值已经被设置了, 同时 has_userinfo 函数亦将返回true. 在实际编码中, 我们可以通过该函数返回 userInfo 字段的内部指针, 并基于该指针完成userInfo成员变量的初始化工作.<br>而对该字段的操作, 大致如下:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">LogonRespMessage logonResp;</span><br><span class="line">logonResp.set_logonresult(LOGON_RESULT_SUCCESS);<span class="comment">//设置枚举</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//通过mutable_userinfo方法拿到指针</span></span><br><span class="line">UserInfo* userInfo = logonResp.mutable_userinfo();</span><br><span class="line">userInfo-&gt;set_acctid(<span class="number">200</span>);</span><br><span class="line">userInfo-&gt;set_name(<span class="string">"Tester"</span>);</span><br><span class="line">userInfo-&gt;set_status(OFFLINE);</span><br><span class="line"></span><br><span class="line"><span class="comment">//序列化</span></span><br><span class="line"><span class="keyword">int</span> length = logonResp.ByteSize();</span><br><span class="line"><span class="keyword">char</span>* buf = <span class="keyword">new</span> <span class="keyword">char</span>[length];</span><br><span class="line">logonResp.SerializeToArray(buf,length);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//反序列化</span></span><br><span class="line">LogonRespMessage logonResp2;</span><br><span class="line">logonResp2.ParseFromArray(buf,length);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"LogonResult = %d, UserInfo-&gt;acctID = %I64d, </span></span><br><span class="line"><span class="string">        UserInfo-&gt;name = %s, UserInfo-&gt;status = %d\n"</span>,</span><br><span class="line">    logonResp2.logonresult(),</span><br><span class="line">    logonResp2.userinfo().acctid(),</span><br><span class="line">    logonResp2.userinfo().name().c_str(),</span><br><span class="line">    logonResp2.userinfo().status());</span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> [] buf;</span><br></pre></td></tr></table></figure></p>
+<p>如果嵌套中涉及到了 <code>repeated</code>, 例如下面这个案例:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">message BuddyInfo &#123;</span><br><span class="line">  required UserInfo userInfo = 1;</span><br><span class="line">  required int32 groupID = 2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message RetrieveBuddiesResp &#123;</span><br><span class="line">  required int32 buddiesCnt = 1;</span><br><span class="line">  repeated BuddyInfo buddiesInfo = 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么它生成代码中, 关于 <code>RetrieveBuddiesResp</code> 部分可能是这样的:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RetrieveBuddiesResp</span> :</span> <span class="keyword">public</span> ::google::protobuf::MessageLite &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  RetrieveBuddiesResp();</span><br><span class="line">  <span class="keyword">virtual</span> ~RetrieveBuddiesResp();</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// repeated .BuddyInfo buddiesInfo = 2;</span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kBuddiesInfoFieldNumber = <span class="number">2</span>;</span><br><span class="line">  <span class="comment">//返回数组中成员的数量</span></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">buddiesinfo_size</span><span class="params">()</span> <span class="keyword">const</span></span>; <span class="comment">//重要</span></span><br><span class="line">  <span class="comment">//清空数组中的所有已初始化成员, buddiesinfo_size()==0</span></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">clear_buddiesinfo</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//返回数组中指定下标所包含元素的引用</span></span><br><span class="line">  <span class="keyword">inline</span> <span class="keyword">const</span> ::<span class="function">BuddyInfo&amp; <span class="title">buddiesinfo</span><span class="params">(<span class="keyword">int</span> index)</span> <span class="keyword">const</span></span>; <span class="comment">//重要</span></span><br><span class="line">  <span class="comment">//返回数组中指定下标所包含元素的指针(可修改元素)</span></span><br><span class="line">  <span class="keyword">inline</span> ::<span class="function">BuddyInfo* <span class="title">mutable_buddiesinfo</span><span class="params">(<span class="keyword">int</span> index)</span></span>;<span class="comment">//重要</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//像数组中添加一个新元素(返回值即使新添加元素的指针)</span></span><br><span class="line">  <span class="keyword">inline</span> ::<span class="function">BuddyInfo* <span class="title">add_buddiesinfo</span><span class="params">()</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//获取buddiesInfo字段所表示的容器(该函数返回的容器仅用于遍历并读取)</span></span><br><span class="line">  <span class="keyword">inline</span> <span class="keyword">const</span> ::google::protobuf::RepeatedPtrField&lt; ::BuddyInfo &gt;&amp;</span><br><span class="line">  buddiesinfo() <span class="keyword">const</span>; <span class="comment">//重要</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">//获取buddiesInfo字段所表示的容器指针(该函数返回的容器指针可用于遍历和直接修改)</span></span><br><span class="line">  <span class="keyword">inline</span> ::google::protobuf::RepeatedPtrField&lt; ::BuddyInfo &gt;*</span><br><span class="line">  mutable_buddiesinfo(); <span class="comment">//重要</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>对齐操作, 大致上是这样的:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">RetrieveBuddiesResp retrieveResp;</span><br><span class="line">retrieveResp.set_buddiescnt(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//拿到新元素指针, 然后初始化</span></span><br><span class="line">BuddyInfo* buddyInfo = retrieveResp.add_buddiesinfo();</span><br><span class="line">buddyInfo-&gt;set_groupid(<span class="number">20</span>);</span><br><span class="line">UserInfo* userInfo = buddyInfo-&gt;mutable_userinfo();</span><br><span class="line">userInfo-&gt;set_acctid(<span class="number">200</span>);</span><br><span class="line">userInfo-&gt;set_name(<span class="string">"user1"</span>);</span><br><span class="line">userInfo-&gt;set_status(OFFLINE);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//下面重复利用了 UserInfo* userInfo  </span></span><br><span class="line">buddyInfo = retrieveResp.add_buddiesinfo();</span><br><span class="line">buddyInfo-&gt;set_groupid(<span class="number">21</span>);</span><br><span class="line">userInfo = buddyInfo-&gt;mutable_userinfo();</span><br><span class="line">userInfo-&gt;set_acctid(<span class="number">201</span>);</span><br><span class="line">userInfo-&gt;set_name(<span class="string">"user2"</span>);</span><br><span class="line">userInfo-&gt;set_status(ONLINE);</span><br><span class="line">  </span><br><span class="line"><span class="comment">//序列化</span></span><br><span class="line"><span class="keyword">int</span> length = retrieveResp.ByteSize();</span><br><span class="line"><span class="keyword">char</span>* buf = <span class="keyword">new</span> <span class="keyword">char</span>[length];</span><br><span class="line">retrieveResp.SerializeToArray(buf,length);</span><br><span class="line"></span><br><span class="line"><span class="comment">//反序列化</span></span><br><span class="line">RetrieveBuddiesResp retrieveResp2;</span><br><span class="line">retrieveResp2.ParseFromArray(buf,length);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"BuddiesCount = %d\n"</span>,retrieveResp2.buddiescnt());<span class="comment">//int32</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"Repeated Size = %d\n"</span>,retrieveResp2.buddiesinfo_size());</span><br><span class="line"></span><br><span class="line"><span class="comment">//通过容器迭代器的方式遍历数组元素的测试代码</span></span><br><span class="line"><span class="comment">//也可以通过( buddiesinfo_size和 buddiesinfo(index) 方式)</span></span><br><span class="line"><span class="comment">//RepeatedPtrField&lt; ::BuddyInfo &gt; &amp;buddiesinfo() const;</span></span><br><span class="line">RepeatedPtrField&lt;BuddyInfo&gt; *buddiesInfo = retrieveResp2.mutable_buddiesinfo();</span><br><span class="line">RepeatedPtrField&lt;BuddyInfo&gt;::iterator it = buddiesInfo-&gt;begin();</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ( ;it != buddiesInfo-&gt;end(); ++it) &#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"BuddyInfo-&gt;groupID = %d\n"</span>, it-&gt;groupid());</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"UserInfo-&gt;acctID = %I64d, UserInfo-&gt;name = %s, UserInfo-&gt;status = %d\n"</span>, </span><br><span class="line">           it-&gt;userinfo().acctid(), </span><br><span class="line">           it-&gt;userinfo().name().c_str(),</span><br><span class="line">           it-&gt;userinfo().status());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> [] buf;</span><br></pre></td></tr></table></figure></p>
+<p>Protocol Buffer仍然提供了很多其它非常有用的功能，特别是针对序列化的目的地，比如文件流和网络流等。与此同时，也提供了完整的官方文档和规范的命名规则，在很多情况下，可以直接通过函数的名字便可获悉函数所完成的工作。</p>
+<hr>
+<h2 id="语言规范"><a href="#语言规范" class="headerlink" title="语言规范"></a>语言规范</h2><h3 id="proto文件"><a href="#proto文件" class="headerlink" title=".proto文件"></a>.proto文件</h3><p> 要通信，必须有协议，否则双方无法理解对方的码流。在protobuf中，协议是由一系列的消息组成的。因此最重要的就是定义通信时使用到的消息格式。</p>
+<h3 id="消息格式"><a href="#消息格式" class="headerlink" title="消息格式"></a>消息格式</h3><p>字段格式<br>字段格式:</p>
+<pre><code>限定修饰符 | 数据类型 | 字段名称 | = | 字段编码值| [字段默认值]
+</code></pre><ul>
+<li>限定符<br>required\optional\repeated<br>特别说明: repeated表示的字段可以包含0个或多个数据(这一点有别于C++/Java中的数组, 因为后两者中的数组必须包含至少一个元素).<br><code>升级建议</code> : 项目投入运营以后涉及到版本升级时的新增消息字段全部使用optional或者repeated, 尽量不实用required. 如果使用了required，需要全网统一升级，如果使用optional或者repeated可以平滑升级. 不要修改已经存在字段的编码号.  在原有的消息中, 不能移除已经存在的required字段, optional和repeated类型的字段可以被移除, 但是他们之前使用的编码号必须被保留, 不能被新的字段重用.</li>
+<li><p>数据类型<br>protobuf定义了一套基本数据类型, 这些数据类型, 可以映射到C++\Java等语言的基础数据类型.<br>完整的映射表格如下:<br><img src="http://omotkhw3y.bkt.clouddn.com/pb_types.jpg" alt="types"><br>几乎所有的整型都是, 变长编码; 表示存储的字节数根据数据的大小或者长度而定.<br>例如int32，如果数值比较小，在0~127时，使用一个字节打包, 而并不总是4字节; 甚至大的数字可能占用5个字节.<br>当然message本身也是一种类型(消息可以嵌套消息), 在C++里就表示 object of class.<br>关于fixed32和int32的区别: fixed32的打包效率比int32的效率高, 但是使用的空间一般比int32多. 因此一个属于时间效率高, 一个属于空间效率高. 根据项目的实际情况, 一般选择fixed32, 如果遇到对传输数据量要求比较苛刻的环境, 可以选择int32.<br>枚举值必须大于等于0的整数, 并且使用分号(;)分隔枚举变量而不是C++语言中的逗号(,), 例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> voip_protocol</span><br><span class="line">&#123;</span><br><span class="line">    H323 = <span class="number">1</span>;</span><br><span class="line">    SIP  = <span class="number">2</span>;</span><br><span class="line">    MGCP = <span class="number">3</span>;</span><br><span class="line">    H248 = <span class="number">4</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>字段名称<br>protobuf建议字段的命名采用以下划线分割的驼峰式, 例如 first_name. (基本和C语言一样)</p>
+</li>
+<li><p>字段编码值<br>字段的编码值, 表示不同的字段在序列化后的二进制数据中的布局位置(数字越大越靠后); 根据字段的类型, 一般有对应关系:<br><img src="http://omotkhw3y.bkt.clouddn.com/pb_wiretype.jpg" alt="传输类型"><br>消息中的字段的编码值无需连续, 只要是合法的, 并且不能在同一个消息中有字段包含相同的编码值.<br>根据其内部实现来看, 一般使用在封包和解包时, 你可以把它简单理解成, 编码位置. 不同的编码值, 传输效率是不一样的. 例如编码值的取值范围为 1~2^32, 其中1~15的编码时间和空间效率都是最高的.编码值越大，其编码的时间和空间效率就越低(相对于1-15), protobuf 还建议把经常要传递的值把其字段编码设置为1-15之间的值. </p>
+</li>
+<li><p>默认值<br>默认值. 当在传递数据时，对于required数据类型，如果用户没有设置值，则使用默认值传递到对端。当接受数据时，对于optional字段，如果没有接收到optional字段，则设置为默认值。(一般是反序列化的时候用的, 默认值一般系统指定; 当然你也可以指定, 见上面的编码值对应表)</p>
+</li>
+</ul>
+<h3 id="关于import"><a href="#关于import" class="headerlink" title="关于import"></a>关于import</h3><p> protobuf 接口文件可以像C语言的h文件一个, 分离为多个, 在需要的时候通过 import导入需要对文件. 其行为和C语言的#include或者java的import的行为大致相同, 个人觉得更像Java.</p>
+<h3 id="关于package"><a href="#关于package" class="headerlink" title="关于package"></a>关于package</h3><p>避免名称冲突.可以给每个文件指定一个package名称. 对于java解析为java中的包, 对于C++则解析为名称空间. 例如:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> ourproject.lyphone;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Option选项"><a href="#Option选项" class="headerlink" title="Option选项"></a>Option选项</h3><p>在.proto文件中, 还有一些常用选项(示Protocol Buffer编译器帮助我们生成更为匹配的目标语言代码). Protocol Buffer内置的选项被分为以下三个级别:(作用范围不一样)</p>
+<ul>
+<li>文件级别: 这样的选项将影响当前文件中定义的所有消息和枚举</li>
+<li>消息级别: 这样的选项仅影响某个消息及其包含的所有字段</li>
+<li>字段级别: 这样的选项仅仅响应与其相关的字段</li>
+</ul>
+<p>常用的Protocol Buffer选项如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">1. option java_package = &quot;com.companyname.projectname&quot;;</span><br><span class="line">java_package是文件级别的选项，通过指定该选项可以让生成Java代码的包名为该选项值. </span><br><span class="line">如上例中的Java代码包名为com.companyname.projectname。与此同时，生成的Java文件也将会自动存放到指定输出目录下的com/companyname/projectname子目录中。</span><br><span class="line">如果没有指定该选项，Java的包名则为package关键字指定的名称。该选项对于生成C++代码毫无影响。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2. option java_outer_classname = &quot;LYPhoneMessage&quot;;</span><br><span class="line">java_outer_classname是文件级别的选项，主要功能是显示的指定生成Java代码的外部类名称。</span><br><span class="line">如果没有指定该选项，Java代码的外部类名称为当前文件的文件名部分，同时还要将文件名转换为驼峰格式，如：my_project.proto，那么该文件的默认外部类名称将为MyProject。</span><br><span class="line">该选项对于生成C++代码毫无影响。</span><br><span class="line"></span><br><span class="line">注：主要是因为Java中要求同一个.java文件中只能包含一个Java外部类或外部接口，而C++则不存在此限制。因此在.proto文件中定义的消息均为指定外部类的内部类，这样才能将这些消息生成到同一个Java文件中。在实际的使用中，为了避免总是输入该外部类限定符，可以将该外部类 &quot;静态引入&quot; 到当前Java文件中，如：import static com.company.project.LYPhoneMessage.*。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">3. option optimize_for = LITE_RUNTIME;</span><br><span class="line">optimize_for是文件级别的选项，Protocol Buffer定义三种优化级别SPEED/CODE_SIZE/LITE_RUNTIME。缺省情况下是SPEED。</span><br><span class="line">* SPEED: 表示生成的代码运行效率高，但是由此生成的代码编译后会占用更多的空间。</span><br><span class="line">* CODE_SIZE: 和SPEED恰恰相反，代码运行效率较低，但是由此生成的代码编译后会占用更少的空间，通常用于资源有限的平台，如Mobile。</span><br><span class="line">* LITE_RUNTIME: 生成的代码执行效率高，同时生成代码编译后的所占用的空间也是非常少。这是以牺牲Protocol Buffer提供的反射功能为代价的。因此我们在C++中链接Protocol Buffer库时仅</span><br><span class="line">需链接libprotobuf-lite，而非libprotobuf。在Java中仅需包含protobuf-java-2.4.1-lite.jar，而非protobuf-java-2.4.1.jar。</span><br><span class="line"></span><br><span class="line">注：对于LITE_RUNTIME选项而言，其生成的代码均将继承自MessageLite，而非Message。    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">4. [packed = true]: 因为历史原因，对于数值型的 repeated 字段，如int32、int64等，在编码时并没有得到很好的优化，然而在新近版本的Protocol Buffer中，可通过添加[pack=true]的字段选项，以通知Protocol Buffer在为该类型的消息对象编码时更加高效。如：</span><br><span class="line">`repeated int32 samples = 4 [packed=true]`。</span><br><span class="line"></span><br><span class="line">注：该选项仅适用于2.3.0以上的Protocol Buffer。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">5. [default = default_value]: optional类型的字段，如果在序列化时没有被设置，或者是老版本的消息中根本不存在该字段，那么在反序列化该类型的消息是，optional的字段将被赋予类型</span><br><span class="line">相关的缺省值，如bool被设置为false，int32被设置为0。Protocol Buffer也支持自定义的缺省值，如：optional int32 result_per_page = 3 [default = 10]。</span><br></pre></td></tr></table></figure>
+<h3 id="命令行编译工具"><a href="#命令行编译工具" class="headerlink" title="命令行编译工具"></a>命令行编译工具</h3><p>一般语法是:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protoc --proto_path=IMPORT_PATH --cpp_out=DST_DIR --java_out=DST_DIR --python_out=DST_DIR path/to/file.proto</span><br></pre></td></tr></table></figure></p>
+<p>简单解释一下:</p>
+<ul>
+<li>protoc为Protocol Buffer提供的命令行编译工具 <code>/usr/local/bin/protoc</code></li>
+<li>–proto_path等同于-I选项，主要用于指定待编译的.proto消息定义文件所在的目录, 或者包含目录该选项可以被同时指定多个</li>
+<li>–cpp_out选项表示生成C++代码,–java_out表示生成Java代码, –python_out则表示生成Python代码, 其后的目录为生成后的代码所存放的目录</li>
+<li>path/to/file.proto表示待编译的消息定义文件路径</li>
+</ul>
+<blockquote>
+<p>对于C++而言，通过Protocol Buffer编译工具，可以将每个.proto文件生成出一对.h和.cc的C++代码文件。生成后的文件可以直接加载到应用程序所在的工程项目中。如：MyMessage.proto生成的文件为MyMessage.pb.h和MyMessage.pb.cc。</p>
+</blockquote>
+<h2 id="动态编译"><a href="#动态编译" class="headerlink" title="动态编译"></a>动态编译</h2><p>运行时编译, 动态解析(该部分对应一些特殊的需求)<br>.proto文件如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">package lm;</span><br><span class="line"></span><br><span class="line">message helloworld</span><br><span class="line">&#123;</span><br><span class="line">    required int32 id = 1;</span><br><span class="line">    required string str = 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>利用compiler 内部的对象:</p>
+<ul>
+<li>MultiFileErrorCollector</li>
+<li>DiskSourceTree</li>
+<li>Importer</li>
+</ul>
+<p>即可完成运行时编译, 详细的代码:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">google::protobuf::compiler::MultiFileErrorCollector errorCollector；</span><br><span class="line">google::protobuf::compiler::DiskSourceTree sourceTree; </span><br><span class="line"></span><br><span class="line">google::protobuf::compiler::<span class="function">Importer <span class="title">importer</span><span class="params">(&amp;sourceTree, &amp;errorCollector)</span></span>; </span><br><span class="line">sourceTree.MapPath(<span class="string">""</span>, protosrc); </span><br><span class="line"></span><br><span class="line">importer.<span class="keyword">import</span>(“lm.helloworld.proto”);</span><br></pre></td></tr></table></figure></p>
+<p>首先构造一个 importer 对象.构造函数需要两个入口参数，一个是 source Tree 对象，该对象指定了存放 .proto 文件的源目录。第二个参数是一个 error collector 对象，该对象有一个 AddError 方法，用来处理解析 .proto 文件时遇到的语法错误. 之后，需要动态编译一个 .proto 文件时，只需调用 importer 对象的 import 方法。</p>
+<p>描述消息: (Package google::protobuf::compiler )</p>
+<ul>
+<li>类 FileDescriptor 表示一个编译后的 .proto 文件；</li>
+<li>类 Descriptor 对应该文件中的一个 Message；</li>
+<li>类 FieldDescriptor 描述一个 Message 中的一个具体 Field<br>三者的组合关系是: FileDescriptor &gt; Descriptor &gt; FieldDescriptor</li>
+</ul>
+<p>例如:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> protobuf::Descriptor *desc = </span><br><span class="line">   importer_.pool()-&gt;FindMessageTypeByName(“lm.helloworld”); </span><br><span class="line"><span class="keyword">const</span> protobuf::FieldDescriptor* field = </span><br><span class="line">   desc-&gt;pool()-&gt;FindFileByName (“id”);</span><br></pre></td></tr></table></figure></p>
+<h2 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a>内部实现</h2><p>该部分主要了解其两个特征:</p>
+<ul>
+<li>序列化后的信息内容紧凑(这得益于 Protobuf 采用的非常巧妙的 Encoding 方法)</li>
+<li>封包和解包的过程</li>
+</ul>
+<h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><p>关于编码(encode)这一块儿, 怎么样压缩字节存储才最省事儿, 也最容易区分字段field的key-value, 一直是可以改进的领域; 貌似属于科学家研究的问题了. 我这里不展开, 如果展开估计也有一大堆人, 看不懂, 例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> 31 30 31 3C 2F 69 64 3E 3C 6E 61 6D 65 3E 68 65 </span><br><span class="line"> 6C 6C 6F 3C 2F 6E 61 6D 65 3E 3C 2F 68 65 6C 6C </span><br><span class="line"> 6F 77 6F 72 6C 64 3E </span><br><span class="line"></span><br><span class="line">//一共 55 个字节，这些奇怪的数字需要稍微解释一下，其含义用 ASCII 表示如下：</span><br><span class="line"> &lt;helloworld&gt; </span><br><span class="line">    &lt;id&gt;101&lt;/id&gt; </span><br><span class="line">    &lt;name&gt;hello&lt;/name&gt; </span><br><span class="line"> &lt;/helloworld&gt;</span><br></pre></td></tr></table></figure>
+<p>其中还涉及到了big, little-endian<br>大端模式，是指数据的高字节保存在内存的低地址中，而数据的低字节保存在内存的高地址中，这样的存储模式有点儿类似于把数据当作字符串顺序处理：地址由小向大增加，而数据从高位往低位放；这和我们的阅读习惯一致。(从左到右, 地址从低到高)<br>小端模式，是指数据的高字节保存在内存的高地址中，而数据的低字节保存在内存的低地址中，这种存储模式将地址的高低和数据位权有效地结合起来，高地址部分权值高，低地址部分权值低。</p>
+<p>由于encode和decode涉及到了, 太多的工程细节, 对于实际开发帮助不大, 下面给出一个 <a href="http://shanshanpt.github.io/2016/09/10/protobuf-encode.html" target="_blank" rel="noopener">Go语言的分析参考</a>.</p>
+<p>但是我不得不说, 即使你看懂了, 看明白了, 真正让你去设计, 还是非常难的, 请量力而行(作为兴趣了解一下还是可以的, 但是作为解决方案参考意义不大).</p>
+<h3 id="封包和解包"><a href="#封包和解包" class="headerlink" title="封包和解包"></a>封包和解包</h3><p>对于XML和JSON的封包和解包.<br>首先一个是二进制存储, 其他的JSON, XML都是文本存储, 原理都不一样; 其次, 我们来了解一下 XML 的封解包过程:</p>
+<blockquote>
+<p>XML 需要从文件中读取出字符串，再转换为 XML 文档对象结构模型。之后，再从 XML 文档对象结构模型中读取指定节点的字符串，最后再将这个字符串转换成指定类型的变量。这个过程非常复杂，其中将 XML 文件转换为文档对象结构模型的过程通常需要完成词法文法分析等大量消耗 CPU 的复杂计算。</p>
+</blockquote>
+<p>好了, XML已经输了.</p>
+<p>protobuf呢?<br>简单的位运算, 速度非常快; 之后存储到c++或者其他语言对应的数据类型中即可. 它只需要简单地将一个二进制序列, 按照指定的格式读取到 C++ 对应的结构类型中就可以了.</p>
+<p>整个解析过程需要 Protobuf 本身的框架代码和由 Protobuf 编译器生成的代码共同完成:</p>
+<ul>
+<li>pb框架:CodedInputStream 类，WireFormatLite 类等提供了对二进制数据的 decode 功能</li>
+<li>pb编译器生成相关语言的类结构代码, 例如lm::Helloworld类的结构 (生成相关类, 一定是编译器在做这件事儿)<br>(之后两者配合, 把读取出来的数据, 赋值给Helloworld类的相应数据成员)</li>
+</ul>
+<h2 id="编写新的Proto编译器"><a href="#编写新的Proto编译器" class="headerlink" title="编写新的Proto编译器"></a>编写新的Proto编译器</h2><p>使用 Google Protocol Buffer 的 Compiler 包，您可以开发出支持其他语言的新的编译器(原生最开始支持 C++, Java, Python)<br>类 CommandLineInterface 封装了 protoc 编译器的前端，包括命令行参数的解析，proto 文件的编译等功能。您所需要做的是实现类 CodeGenerator 的派生类，实现诸如代码生成等后端工作.<br>(该部分属于个高级内容)</p>
+<h2 id="对比Thrift"><a href="#对比Thrift" class="headerlink" title="对比Thrift"></a>对比Thrift</h2><p>大名鼎鼎的 Thrift, 老早就在听外包公司的大佬在说这个<code>脸书</code>的框架, 它和pb对抗起来如何呢?</p>
+<p>protocol buffer 和 thrift对比, 简单来说, <code>没有可比性</code>.</p>
+<p>thrift是全套解决方案, 而protobuffer则仅仅是rpc或者序列化问题的消息解决方案, 两者不在一个级别上. 从框架的复杂性上来说, thrift相对来说比较复杂, 但是功能丰富(全套RPC解决方案,包括序列化机制、传输层、并发处理框架等). pb更加实用, 而thrift更加系统.</p>
+<p>我的另外一篇博文有详细的说 <a href="http://www.merlinblog.site/2017/08/22/thrift.html">thrift</a> .</p>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>懂了原理以及该库的作用之后, 复杂的案例最多不过帮助你熟悉相关的API; 实际上日常的开发中, 只有在定制化封包, 编码等高级需求中, 才会要求你去了解的实现原理. 好在文本也涉及到了.</p>
+<p>花了好大的力气, 不过总结告一段落了.进一步的学习, 只有源码解析部分了, 有时间了再说.<br>(关于pb2, pb3各自相近的语法, 本文没有说明, 请参考官方文档)</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><h2 id="官方文档"><a href="#官方文档" class="headerlink" title="官方文档"></a>官方文档</h2><p>pb2的语法:<br><a href="https://developers.google.com/protocol-buffers/docs/proto" target="_blank" rel="noopener">https://developers.google.com/protocol-buffers/docs/proto</a></p>
+<p>pb3的语法<br><a href="https://developers.google.com/protocol-buffers/docs/proto3" target="_blank" rel="noopener">https://developers.google.com/protocol-buffers/docs/proto3</a></p>
+<p>Protocol Buffer Basics(C++) :<br><a href="https://developers.google.com/protocol-buffers/docs/cpptutorial" target="_blank" rel="noopener">https://developers.google.com/protocol-buffers/docs/cpptutorial</a></p>
+<h2 id="其他参考"><a href="#其他参考" class="headerlink" title="其他参考"></a>其他参考</h2><ol>
+<li><a href="http://mikewang.blog.51cto.com/3826268/1432136" target="_blank" rel="noopener">http://mikewang.blog.51cto.com/3826268/1432136</a></li>
+<li><a href="http://blog.csdn.net/caisini_vc/article/details/5599468" target="_blank" rel="noopener">http://blog.csdn.net/caisini_vc/article/details/5599468</a></li>
+<li><a href="http://cxshun.iteye.com/blog/1974498" target="_blank" rel="noopener">http://cxshun.iteye.com/blog/1974498</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/l-cn-gpb/" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/linux/l-cn-gpb/</a></li>
+<li><a href="http://blog.csdn.net/sheismylife/article/category/1227779" target="_blank" rel="noopener">http://blog.csdn.net/sheismylife/article/category/1227779</a></li>
+<li><a href="http://blog.csdn.net/hailong0715/article/details/52057873" target="_blank" rel="noopener">http://blog.csdn.net/hailong0715/article/details/52057873</a></li>
+<li><a href="https://developers.google.com/protocol-buffers/docs/cpptutorial" target="_blank" rel="noopener">https://developers.google.com/protocol-buffers/docs/cpptutorial</a></li>
+<li><a href="http://blog.csdn.net/hguisu/article/details/20721109" target="_blank" rel="noopener">http://blog.csdn.net/hguisu/article/details/20721109</a></li>
+<li><a href="http://shanshanpt.github.io/2016/09/10/protobuf-encode.html" target="_blank" rel="noopener">http://shanshanpt.github.io/2016/09/10/protobuf-encode.html</a></li>
+<li><a href="http://www.cnblogs.com/stephen-liu74/category/442364.html" target="_blank" rel="noopener">http://www.cnblogs.com/stephen-liu74/category/442364.html</a></li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/7d13442/">技术: Protocol buffer</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2017-08-21, 13:50:41</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/7d13442/" title="技术: Protocol buffer">http://www.merlinblog.site/posts/7d13442/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/7d13442/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/17d1767e/">
+                    技术: Rapid Xml
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/140bfd50/">
+                    技术: Gtest测试框架
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#优缺点"><span class="toc-number">2.1.</span> <span class="toc-text">优缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#优点"><span class="toc-number">2.1.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缺点"><span class="toc-number">2.1.2.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.2.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux平台"><span class="toc-number">2.2.1.</span> <span class="toc-text">Linux平台</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windows平台"><span class="toc-number">2.2.2.</span> <span class="toc-text">windows平台</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用案例"><span class="toc-number">2.3.</span> <span class="toc-text">使用案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简单Demo"><span class="toc-number">2.3.1.</span> <span class="toc-text">简单Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复杂案例"><span class="toc-number">2.3.2.</span> <span class="toc-text">复杂案例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#语言规范"><span class="toc-number">2.4.</span> <span class="toc-text">语言规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#proto文件"><span class="toc-number">2.4.1.</span> <span class="toc-text">.proto文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息格式"><span class="toc-number">2.4.2.</span> <span class="toc-text">消息格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于import"><span class="toc-number">2.4.3.</span> <span class="toc-text">关于import</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于package"><span class="toc-number">2.4.4.</span> <span class="toc-text">关于package</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Option选项"><span class="toc-number">2.4.5.</span> <span class="toc-text">Option选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令行编译工具"><span class="toc-number">2.4.6.</span> <span class="toc-text">命令行编译工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态编译"><span class="toc-number">2.5.</span> <span class="toc-text">动态编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内部实现"><span class="toc-number">2.6.</span> <span class="toc-text">内部实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编码"><span class="toc-number">2.6.1.</span> <span class="toc-text">编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#封包和解包"><span class="toc-number">2.6.2.</span> <span class="toc-text">封包和解包</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编写新的Proto编译器"><span class="toc-number">2.7.</span> <span class="toc-text">编写新的Proto编译器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对比Thrift"><span class="toc-number">2.8.</span> <span class="toc-text">对比Thrift</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#官方文档"><span class="toc-number">4.1.</span> <span class="toc-text">官方文档</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他参考"><span class="toc-number">4.2.</span> <span class="toc-text">其他参考</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/17d1767e/" title="上一篇: 技术: Rapid Xml">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/140bfd50/" title="下一篇: 技术: Gtest测试框架">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

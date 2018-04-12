@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Merlin" />
+
+
+
+<meta name="description" content="C++除了面向对象部分, 其他还有:  模板(泛型编程) 类型转换和RTTI 异常机制 IO  本文就说这4个方面.">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术: C++非面向对象部分">
+<meta property="og:url" content="http://www.merlinblog.site/posts/f4144d45/index.html">
+<meta property="og:site_name" content="梅林日志">
+<meta property="og:description" content="C++除了面向对象部分, 其他还有:  模板(泛型编程) 类型转换和RTTI 异常机制 IO  本文就说这4个方面.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.cplusplus.com/img/iostream.gif">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/c_io.png">
+<meta property="og:image" content="http://omotkhw3y.bkt.clouddn.com/io_mode.png">
+<meta property="og:updated_time" content="2018-04-12T06:55:17.621Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="技术: C++非面向对象部分">
+<meta name="twitter:description" content="C++除了面向对象部分, 其他还有:  模板(泛型编程) 类型转换和RTTI 异常机制 IO  本文就说这4个方面.">
+<meta name="twitter:image" content="http://www.cplusplus.com/img/iostream.gif">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="梅林日志" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.gif">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>技术: C++非面向对象部分 | 梅林日志</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/mine.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Merlin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">云卷云舒，平常心态</p>
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">[归档]</a></li>
+                        
+                            <li><a href="/works/">小作品</a></li>
+                        
+                            <li><a href="/tags/">[标签]</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">极简.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Merlin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/mine.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Merlin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">云卷云舒，平常心态</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">[归档]</a></li>
+                
+                    <li><a href="/works/">小作品</a></li>
+                
+                    <li><a href="/tags/">[标签]</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/WizardMerlin" title="GitHub"></a>
+                            
+                                <a class="fa 豆瓣" target="_blank" href="https://www.douban.com/people/170414854/" title="豆瓣"></a>
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#119;&#105;&#122;&#97;&#114;&#100;&#109;&#101;&#114;&#108;&#105;&#110;&#57;&#52;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="tencent://message/?Menu=yes&uin=3076407405" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-c-plus-plus-more" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/posts/f4144d45/" class="article-date">
+      <time datetime="2016-06-21T14:52:47.000Z" itemprop="datePublished">2016-06-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      技术: C++非面向对象部分
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/">cpp</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>C++除了面向对象部分, 其他还有:</p>
+<ul>
+<li>模板(泛型编程)</li>
+<li>类型转换和RTTI</li>
+<li>异常机制</li>
+<li>IO</li>
+</ul>
+<p>本文就说这4个方面.</p>
+<a id="more"></a>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>模板, 类型参数化, 这个在STL中用的比较多, 也容易把它和重载联系在一起.</p>
+<p>异常机制, 本来是一种很优秀的设计(更好的服务于面向对象), 结果是大多数c++程序员不太爱用这个机制.</p>
+<p>IO, c++的标准IO, 文件IO, 串IO是在c的基础上进行封装, 扩展后的产物, 比原来的printf, scanf等更加安全(多了编译时检查), 支持更加强大的格式控制; 然而就是由于扩充了太多东西, 所以用起来稍微有点儿复杂了(好吧, 我承认引入了相当的复杂度).</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h2><p>总结性的一句话: 模板可以看成参数的静多态, 一般用于表达逻辑结构相同, 但具体数据元素类型不同的数据对象的通用行为.</p>
+<p>实现手段: 泛型<br>  <code>template</code> 关键字告诉 C++编译器 我要开始泛型了, 你不要随便报错(其实就是进行两次编译, 第二次进行的是特化编译)</p>
+<p>具体分类</p>
+<pre><code>* 函数模板(和重载有重合, 但是绝对不冲突)
+* 类模板
+</code></pre><h3 id="函数模板"><a href="#函数模板" class="headerlink" title="函数模板"></a>函数模板</h3><p>函数模板举例:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myswap</span><span class="params">(T &amp;a, T &amp;b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  T t;</span><br><span class="line">  t = a;</span><br><span class="line">  a = b;</span><br><span class="line">  b = t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>代替<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myswap</span><span class="params">(<span class="keyword">int</span> &amp;a, <span class="keyword">int</span> &amp;b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> t = a;</span><br><span class="line">  a = b;</span><br><span class="line">  b = t;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myswap</span><span class="params">(<span class="keyword">char</span> &amp;a, <span class="keyword">char</span> &amp;b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> t = a;</span><br><span class="line">  a = b;</span><br><span class="line">  b = t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>调用:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">myswap&lt;<span class="keyword">float</span>&gt;(a, b); <span class="comment">//显示类型调用</span></span><br><span class="line">myswap(a, b); <span class="comment">//自动数据类型推导(注意是严格匹配)</span></span><br></pre></td></tr></table></figure></p>
+<p>当然泛型参数也可以作为函数参数, 例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> T2&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">sortArray</span><span class="params">(T *a, T2 num)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  T tmp ;</span><br><span class="line">  <span class="keyword">int</span> i, j ;</span><br><span class="line">  <span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;num; i++)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">for</span> (j=i+<span class="number">1</span>; j&lt;num; j++)</span><br><span class="line">	&#123;</span><br><span class="line">	  <span class="keyword">if</span> (a[i] &lt; a[j])</span><br><span class="line">	    &#123;</span><br><span class="line">	      tmp = a[i];</span><br><span class="line">	      a[i] = a[j];</span><br><span class="line">	      a[j] = tmp;</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用模板函数和普通函数的区别:</p>
+<ul>
+<li>普通函数可以进行自动类型转换, 但是带有泛型参数的函数模板不行(必须严格匹配)</li>
+<li>函数模板可以像普通函数一样被重载(函数重载和模板有重合, 但是大部分作用不同)</li>
+<li>C++编译器优先考虑普通函数(先考虑最优匹配(完美类型匹配), 如果两者都匹配, 则先考虑普通函数)</li>
+<li>可以通过空模板实参列表的语法限定编译器只通过模板匹配, 即调用时加上<code>&lt;&gt;</code>, 例如’Max&lt;&gt;(a, b)’, 而不是<code>Max(a,b)</code></li>
+</ul>
+<p>完整案例:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"iostream"</span></span></span><br><span class="line">  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Max</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"int Max(int a, int b)"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="keyword">return</span> a &gt; b ? a : b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function">T <span class="title">Max</span><span class="params">(T a, T b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"T Max(T a, T b)"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="keyword">return</span> a &gt; b ? a : b;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function">T <span class="title">Max</span><span class="params">(T a, T b, T c)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"T Max(T a, T b, T c)"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="keyword">return</span> Max(Max(a, b), c);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> a = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span> b = <span class="number">2</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;Max(a, b)&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//当函数模板和普通函数都符合调用时,优先选择普通函数</span></span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;Max&lt;&gt;(a, b)&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//若显示使用函数模板,则使用&lt;&gt; 类型列表</span></span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;Max(<span class="number">3.0</span>, <span class="number">4.0</span>)&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//如果 函数模板产生更好的匹配 使用函数模板</span></span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;Max(<span class="number">5.0</span>, <span class="number">6.0</span>, <span class="number">7.0</span>)&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//重载</span></span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;Max(<span class="string">'a'</span>, <span class="number">100</span>)&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//调用普通函数 可以隐式类型转换</span></span><br><span class="line">  system(<span class="string">"pause"</span>);</span><br><span class="line">  <span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="编译器支持"><a href="#编译器支持" class="headerlink" title="编译器支持"></a>编译器支持</h3><p>泛型参数实现的模板机制, 需要C++编译器支持.</p>
+<p>编译机制探究:</p>
+<ul>
+<li>为什么函数模板可以和函数重载放在一块? (重载很简单, 就是编译时改名; 函数模板可以有多个重载, 它俩不冲突)</li>
+<li>C++编译器是如何提供函数模板机制的？(会针对存在的每种类型进行实参话编译么?)</li>
+</ul>
+<p>编译器并不是把函数模板处理成能够处理任意类的函数(代价太大), 而是对函数模板进行两次编译:</p>
+<ul>
+<li>在声明的地方对模板代码本身进行编译</li>
+<li>在调用的地方对参数替换后的代码进行编译(编译器从函数模板通过具体类型产生不同的函数)</li>
+</ul>
+<p>注明: 第二次就是特化编译, 产生具体的函数.</p>
+<h3 id="类模板"><a href="#类模板" class="headerlink" title="类模板"></a>类模板</h3><p>类模板一般用在容器类中比较多(类模板在表示如数组、 表、 图等数据结构显得特别重要, 这些数据结构的表示和算法不受所包含的元素类型的影响).</p>
+<p>举个简单的类模板的例子:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span> </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	A(T t)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;t = t;</span><br><span class="line">	&#125;</span><br><span class="line">			  </span><br><span class="line">	<span class="function">T&amp; <span class="title">getT</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> t;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	T t;</span><br><span class="line">		       </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//模板了中如果使用了构造函数,则遵守以前的类的构造函数的调用规则</span></span><br><span class="line">  A&lt;<span class="keyword">int</span>&gt; a(<span class="number">100</span>);</span><br><span class="line">  a.getT();</span><br><span class="line">  printAA(a);</span><br><span class="line">  <span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>类模板还涉及到一些其他的问题, 特别是它和继承, 友元等扯在一起的时候, 以及类模板定义的位置.</p>
+<ul>
+<li><p>继承问题<br>例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> &#123;</span>&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span>:</span> <span class="keyword">public</span> A&lt;<span class="keyword">int</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结论: </p>
+<ul>
+<li>子类从模板类继承的时候,需要让编译器知道,  父类的数据类型具体是什么. </li>
+<li>如果不初始化父类的参数类型, 那么实例化的时候就完全无法确定实例化时父类对象的大小, 本例中 <code>A&lt;int&gt;</code> (数据类型的本质:固定大小内存块的别名).</li>
+</ul>
+<p>一个具体的例子:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> :</span> <span class="keyword">public</span> A&lt;<span class="keyword">int</span>&gt;</span><br><span class="line">&#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	B(<span class="keyword">int</span> i) : A&lt;<span class="keyword">int</span>&gt;(i) &#123; &#125; </span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">printB</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">	   <span class="built_in">cout</span>&lt;&lt;<span class="string">"A:"</span>&lt;&lt;t&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">pintBB</span><span class="params">(B &amp;b)</span><span class="comment">/*作为函数参数的情况*/</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  b.printB();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printAA</span><span class="params">(A&lt;<span class="keyword">int</span>&gt; &amp;a)</span> <span class="comment">//类模板做函数参数</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  a.getT();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  A&lt;<span class="keyword">int</span>&gt; a(<span class="number">100</span>); </span><br><span class="line"></span><br><span class="line">  a.getT();</span><br><span class="line">  printAA(a);</span><br><span class="line">  <span class="function">B <span class="title">b</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line">  b.printB();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>总结就是: 模板可以有层次, 一个类模板可以作为基类, 派生出派生模板类.</p>
+</li>
+</ul>
+<ul>
+<li><p>模板函数的实现位置<br>大致上应该有三种情况:</p>
+<ul>
+<li>所有的类模板函数写在类的内部(.hpp文件)</li>
+<li>所有的类模板函数写在类的外部, 在一个 cpp 文件中</li>
+<li>所有的类模板函数写在类的外部, 在不同的.h 和.cpp中 (分开写的时候.h要包含.cpp)</li>
+</ul>
+<p>最好写在同一个文件中, 命名为.hpp, 具体参考 Boost库的写法就知道了.</p>
+</li>
+</ul>
+<ul>
+<li><p>模板和友元函数</p>
+<p>友元函数中带有类型参数怎么办?<br>案例: (用友元函数重载 <code>&lt;&lt;</code> <code>&gt;&gt;</code> )<br>// friend ostream&amp; operator&lt;&lt; <t> (ostream &amp;out, Complex<t> &amp;c3) ;</t></t></p>
+</li>
+</ul>
+<ul>
+<li><p>声明友元函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Complex</span>;</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">Complex&lt;T&gt; mySub(Complex&lt;T&gt; &amp;c1, Complex&lt;T&gt; &amp;c2);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>类的内部声明</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">friend</span> Complex&lt;T&gt; mySub&lt;T&gt;(Complex&lt;T&gt; &amp;c1, Complex&lt;T&gt; &amp;c2);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>外部友元函数实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//实现的地方, 函数名后面不要再加 &lt;T&gt; 泛型参数了</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">Complex&lt;T&gt; mySub(Complex&lt;T&gt; &amp;c1, Complex&lt;T&gt; &amp;c2)</span><br><span class="line">&#123;</span><br><span class="line">  Complex&lt;T&gt; tmp(c1.a - c2.a, c1.b-c2.b);</span><br><span class="line">  <span class="keyword">return</span> tmp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>友元函数调用</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Complex&lt;<span class="keyword">int</span>&gt; c4 = mySub&lt;<span class="keyword">int</span>&gt;(c1, c2);</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;c4;</span><br></pre></td></tr></table></figure>
+<p>强调一点: 如果在类模板外定义成员函数, 应写成类模板形式:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> 虚拟类型参数&gt;</span></span><br><span class="line"><span class="class">函数类型 类模板名&lt;虚拟类型参数&gt;:</span>:成员函数名(函数形参表列) </span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">//TODO </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>类模板和static<br>3句话就可以概括:</p>
+<ul>
+<li>类模板实例化出来的模板类, 该模板类的所有实例共享该模板类的static成员.</li>
+<li>所有模板类static成员只是类模板的一个副本(即下次从类模板的编译出具体的模板类, static成员值不会变)</li>
+<li>初始化也要带上泛型参数, 例如: <code>template&lt;typename T&gt; int Circle&lt;T&gt;::num = 0</code> .</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="关于类型转换"><a href="#关于类型转换" class="headerlink" title="关于类型转换"></a>关于类型转换</h2><h3 id="4种类型转换"><a href="#4种类型转换" class="headerlink" title="4种类型转换"></a>4种类型转换</h3><p>(当然Boost库也提供了自己的)<br>最主要的, 清楚要转的变量, 类型转换前是什么类型, 类型转换后是什么类型. 转换有什么后果.<br>一般情况下, 不建议进行类型转换; 避免进行类型转换.</p>
+<ul>
+<li><p>c 风格<br>强制类型转换(Type Cast)很简单, 不管什么类型的转换统统是:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TYPE b = (TYPE)a;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>c++风格<br>类型转换提供了 4 种类型转换操作符来应对不同场合的应用:</p>
+<ul>
+<li>static_cast 静态类型转换, 如 int 转换成 char (但不用于指针类型)</li>
+<li>reinterpreter_cast 重新解释类型(主要用于指针类型)</li>
+<li>dynamic_cast 命名上理解是动态类型转换,如子类和父类之间的多态类型转换</li>
+<li>const_cast 字面上理解就是去 const 属性(或者加上const)</li>
+</ul>
+<p>格式如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TYPE B = <span class="keyword">static_cast</span>&lt;TYPE&gt;(a);</span><br></pre></td></tr></table></figure>
+<p>好处可能是, 有编译时或者运行时检查; 运行时出错还会跑出 <code>bad_cast</code> 异常.</p>
+</li>
+</ul>
+<p> 总结:</p>
+<ul>
+<li><p>static_cast和reinterpret_cast&lt;&gt;</p>
+<ul>
+<li>static_cast&lt;&gt;() 静态类型转换, 编译时 c++编译器会做类型检查;基本类型能转换, 包括类型截断, 但是不能转换指针类型</li>
+<li><p>若不同类型的指针之间, 进行强制类型转换, 用 reinterpret_cast&lt;&gt;() 进行重新解释</p>
+</li>
+<li><p>一般性结论:</p>
+<ul>
+<li>c 语言中 能隐式类型转换的, 在 c++中可用 static_cast&lt;&gt;()进行类型转换. 因 C++编译器在编译检查一般都能通过;</li>
+<li>c 语言中不能隐式类型转换的, 在 c++中可以用 reinterpret_cast&lt;&gt;() 进行强行类型解释. (一般就是指不同类型的指针)</li>
+</ul>
+<p>总结: static_cast&lt;&gt;()和 reinterpret_cast&lt;&gt;() 基本上把 C 语言中的 强制类型转换给覆盖. 并且reinterpret_cast&lt;&gt;()很难保证移植性.</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>dynamic_cast 和const_cast<ul>
+<li>dynamic_cast&lt;&gt;()  动态类型转换, 安全的基类和子类之间转换(基类指针转换赋值给子类指针); 运行时类型检查</li>
+<li>const_cast&lt;&gt;()    去除变量的只读属性(小心引起异常; 如果原来的变量被const修饰, 去掉const就妄想改变其value, 一般会出错)</li>
+</ul>
+</li>
+</ul>
+<h3 id="RTTI"><a href="#RTTI" class="headerlink" title="RTTI"></a>RTTI</h3><p>RTTI获取父类指针真正指向哪个子类.</p>
+<p>Circle和Square皆是由Figure所衍生出来的子类别, 它们各有自己的draw()函数.<br>当C++ 提供了RTTI, 就可写个函数如下:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">drawing</span><span class="params">( Figure *p )</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">   <span class="keyword">if</span>( <span class="keyword">typeid</span>(*p).name() == <span class="string">"Circle"</span> ) &#123;</span><br><span class="line">         ((Circle*)p)-&gt;draw(); </span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">if</span>( <span class="keyword">typeid</span>(*p).name() == <span class="string">"Rectangle"</span> )&#123;</span><br><span class="line">     ((Rectangle*)p)-&gt;draw(); </span><br><span class="line">   &#125; </span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此时typeid可以是非 virtual 的函数, 子类隐藏(shadow)了父类的实现.</p>
+<p>如果C++ 并未提供RTTI, 则程序员毫无选择必须使用虚拟函数来支持 drawing() 函数的多态性.<br>将draw()宣告为虚拟函数, 调用写法如下:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">drawing</span><span class="params">(Figure *p)</span> </span></span><br><span class="line"><span class="function"></span>&#123;     </span><br><span class="line">      p-&gt;draw();				 </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>RTTI部分还有其他内容, 个人用的不是太多.</p>
+<hr>
+<h2 id="异常机制"><a href="#异常机制" class="headerlink" title="异常机制"></a>异常机制</h2><p>这一部分至少有2个点可以说:</p>
+<ul>
+<li>异常处理这种思想(语言层面的错误处理)</li>
+<li>c++异常的使用惯例<ul>
+<li>栈的解旋 </li>
+<li>抛出对象的生命周期管理</li>
+<li>自定义异常类的写法</li>
+<li>c++标准库的继承结构</li>
+</ul>
+</li>
+</ul>
+<h3 id="异常思想"><a href="#异常思想" class="headerlink" title="异常思想"></a>异常思想</h3><p>C语言中怎么处理异常呢?</p>
+<p>比如在写本地套接字的时候, 封装监听函数:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Create a server endpoint of a connection.</span></span><br><span class="line"><span class="comment"> * Returns fd if all OK, &lt;0 on error.</span></span><br><span class="line"><span class="comment"> * name : file_name</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">serv_listen</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> fd, len, err, rval;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_un</span> <span class="title">un</span>;</span></span><br><span class="line">  <span class="comment">/* create a UNIX domain stream socket */</span></span><br><span class="line">  <span class="keyword">if</span> ((fd = socket(AF_UNIX, SOCK_STREAM, <span class="number">0</span>)) &lt; <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span>(<span class="number">-1</span>);</span><br><span class="line">  <span class="comment">/* in case it already exists */</span></span><br><span class="line">  unlink(name);</span><br><span class="line">  <span class="comment">/* fill in socket address structure */</span></span><br><span class="line">  <span class="built_in">memset</span>(&amp;un, <span class="number">0</span>, <span class="keyword">sizeof</span>(un)); <span class="comment">//bzero ok</span></span><br><span class="line">  un.sun_family = AF_UNIX;</span><br><span class="line">  <span class="built_in">strcpy</span>(un.sun_path, name);</span><br><span class="line">  len = offsetof(struct sockaddr_un, sun_path) + <span class="built_in">strlen</span>(name);</span><br><span class="line">  <span class="comment">/* bind the name to the descriptor */</span></span><br><span class="line">  <span class="keyword">if</span> (bind(fd, (struct sockaddr *)&amp;un, len) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    rval = <span class="number">-2</span>;</span><br><span class="line">    <span class="keyword">goto</span> errout;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (listen(fd, QLEN) &lt; <span class="number">0</span>) &#123; <span class="comment">/* tell kernel we're a server */</span></span><br><span class="line">    rval = <span class="number">-3</span>;</span><br><span class="line">    <span class="keyword">goto</span> errout;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span>(fd);</span><br><span class="line"> errout:</span><br><span class="line">  err = errno; <span class="comment">/*tmp store in case of close error*/</span></span><br><span class="line">  close(fd);</span><br><span class="line">  errno = err;</span><br><span class="line">  <span class="keyword">return</span>(rval);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*调用逻辑如下*/</span></span><br><span class="line">  lfd = serv_listen(<span class="string">"foo.socket"</span>);</span><br><span class="line">  <span class="keyword">if</span> (lfd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">switch</span> (lfd) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">-3</span>:perror(<span class="string">"listen"</span>); <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">-2</span>:perror(<span class="string">"bind"</span>); <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">-1</span>:perror(<span class="string">"socket"</span>); <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>不同的状态, 对应不同的返回值, 并不是语言层面的支持</p>
+<p><code>erro code</code> 这种机制, 状态流和函数控制流是混合在一起的, 来回跳转需要额外的支持: </p>
+<ul>
+<li>从流程控制来看<br>以前的程序逻辑, 流程控制, 基本上是围绕函数调用展开; 也就是会所控制流程主要是依据函数调用(基于栈结构的)<br>面向对象编程却要求对象之间有方向, 有目的的控制传动, 从一开始, 异常就是冲着改变程序控制结构, 以适应面向对象程序更有效地工作.</li>
+<li>从错误处理来看<br>虽然errocode也是一种报告错误(一般只能层层上报给相关调用者), 可以进行错误处理的机制, 但是它的错误处理控制流程和程序(函数调用)主逻辑严重耦合.<br>异常是另一种控制结构, 它依附于栈结构, 却可以同时设置多个异常类型作为捕获条件, 从而以类型匹配在栈机制中跳跃回馈(一般是自动层层上报, 也可以跨级跨函数上报).<br>并且最重要的: 异常的引发和异常的处理不必在同一个函数中, 底层着重于处理具体的流程, 出了异常就上报给上层, 上层处理决策, 错误处理(回馈).<br>c++编译器通过 throw 来产生对象, c++编译器再执行对应的 catch 分支, 相当于一个函数调用, 把实参传递给形参(所以这里也存在着变量声明周期的问题).</li>
+<li>捕捉方式<br>errcode是依据上层协议好的code; 异常机制基于类型匹配(它假定你使用的是纯面向对象的思路, 通过对象实例进行相关操作, 然后捕捉出错的实体对象), 但也可以在 catch 的时候引入对象.</li>
+</ul>
+<p>总结性的一句:底层着重于处理具体的流程, 出了异常就上报给上层, 上层处理决策, 错误处理(回馈).</p>
+<h3 id="使用惯例"><a href="#使用惯例" class="headerlink" title="使用惯例"></a>使用惯例</h3><ul>
+<li><p>栈的解旋<br>最基本的调用方式就是 ‘try{} catch(类型 )’方式, catch的地方有点儿类似于 函数调用, 即涉及到函数实参往形参传递,  不过唯一不同的是, 这里是(严格)类型匹配, 而不是参数匹配, 换句话说, 不要指望有什么调用参数不满足的时候可以自动向上转换(异常捕捉严格按照类型匹配(和泛型编程类似, 不允许相容类型的隐式转换, 比如抛掷 char 类型用 int 型就捕捉不到))</p>
+<p>基本调用形式:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;  </span><br><span class="line">    <span class="comment">// do something  </span></span><br><span class="line">    <span class="keyword">throw</span> exception;  </span><br><span class="line">&#125; <span class="keyword">catch</span> (exception declaration) &#123;  </span><br><span class="line">    <span class="comment">//  excepetion handling code   </span></span><br><span class="line">    <span class="comment">// throw or no  </span></span><br><span class="line">&#125; <span class="keyword">catch</span> (exception declaration) &#123;  </span><br><span class="line">    <span class="comment">//  another excepetion handling code   </span></span><br><span class="line">    <span class="comment">// throw or no  </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>throw</code>语句一旦调用, 就相当于try块作用域结束(之后进入catch块, 就相当于一次函数调用), 那么在此期间定义的所有栈对象, 自动析构(顺序和定义的顺序相反).<br>如果异常流走下去, 不能再回头, 是否应该把对象析构掉? 异常抛出的代码块中, 对象会被析构, 称之为堆栈反解(栈解旋)</p>
+</li>
+</ul>
+<ul>
+<li><p>抛出对象的生命周期管理<br>上面已经明确说了, try里面出现异常, 或者主动抛出异常, 如果能够被catch捕获, 那么就相当于进行了一次函数调用. 此时catch子句如果有参数, 例如:(虽然通常是不许要参数, 直接按类型捕获的)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">catch</span>(ClassA &amp;a)&#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这里面有一些规则:</p>
+<ul>
+<li>捕获时按照值传递, 那么除了throw是产生临时对象外, 调用catch时也会进行拷贝构造. (临时对象还是会被析构)</li>
+<li>多个捕获之间, 值传递和引用兼容, 但是指针和值传递不兼容(编译器会报错 ).</li>
+<li>推荐使用引用, 这样catch中使用的就是throw时产生了对象. (不推荐使用值传递的方式, 因为会额外调用拷贝构造函数)</li>
+<li>使用指针时, 如果throw时没有使用new关键字, 那么产生的临时栈对象会在进入catch时析构, 那么catch的指针变量其实是野指针(而抛出时使用new关键字, 那么在catch子句中就要手动delete, 总之不推荐catch指针变量).</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>自定义异常类的写法<br>一般抛出的异常是一系列关联的, 有联系的异常, 此时需要自定义异常类型, 并且设计好继承机构, 方面多态捕获. 其实也是为了简化该系列类型异常的捕获逻辑, 简单的例子如下:</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125; <span class="keyword">catch</span>(Sub1 &amp;e) &#123;</span><br><span class="line">   e.deal();</span><br><span class="line">&#125; <span class="keyword">catch</span>(Sub2 &amp;e) &#123;</span><br><span class="line">   e.deal();</span><br><span class="line">&#125; <span class="keyword">catch</span>(Base &amp;e) &#123;</span><br><span class="line">   e.deal()</span><br><span class="line">&#125; <span class="keyword">catch</span>(...) &#123;</span><br><span class="line">   e.deal();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 但是如果你设计了很好的异常结构, 并且<code>deal</code>是虚函数, 那么上面三个调用完全可以是一个(运行时根据抛出的具体对象决定):</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> :</span> <span class="keyword">public</span> <span class="built_in">std</span>::exception </span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">   <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">deal</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">   <span class="function"><span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> *<span class="title">what</span><span class="params">()</span> <span class="keyword">const</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sub1</span> :</span> <span class="keyword">public</span> Base </span><br><span class="line">&#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function">virtaul <span class="keyword">void</span> <span class="title">deal</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//catch的时候使用父类引用</span></span><br><span class="line"><span class="keyword">catch</span>(Base &amp;e) &#123;</span><br><span class="line">   e.deal()</span><br><span class="line">&#125; <span class="keyword">catch</span>(...) &#123;</span><br><span class="line">   e.deal();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 一般what方法也要重写, 并且<code>std::exception</code>的直接基类最好提供一下有参构造.<br> <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">myexception</span> :</span> <span class="keyword">public</span> <span class="built_in">std</span>::exception </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">  myexception(<span class="built_in">std</span>::<span class="built_in">string</span> s) : exception(s.c_str()) </span><br><span class="line">  &#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> *<span class="title">what</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">return</span> exception::what();  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;;  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Func</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">  <span class="keyword">try</span>&#123;  </span><br><span class="line">    <span class="keyword">int</span> *p = <span class="literal">NULL</span>;  </span><br><span class="line">    <span class="keyword">if</span> (p == <span class="literal">NULL</span>) &#123;  </span><br><span class="line">      <span class="keyword">throw</span> myexception(<span class="string">"p is NULL"</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">  &#125; <span class="keyword">catch</span>(myexception e) &#123;  </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, e.what());  </span><br><span class="line">    <span class="keyword">throw</span>;    <span class="comment">//重新抛出异常，异常类型为myexception  </span></span><br><span class="line">  &#125; <span class="keyword">catch</span> (<span class="built_in">std</span>::exception e) &#123;  </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s"</span>, e.what());  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>c++标准库的继承结构<br>这部分只要记住, <code>std::exception</code> 是所有相关异常的父类, 然后根据具体的情况, 抛出的是其子类.</p>
+<p>头文件 stdexcept, C++标准库所有函数抛出异常的基类, exception的接口定义如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="built_in">std</span> &#123;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">exception</span> </span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">	    exception() <span class="keyword">throw</span>();   <span class="comment">//不抛出任何异常</span></span><br><span class="line">            exception(<span class="keyword">const</span> exception&amp; e) <span class="keyword">throw</span>();</span><br><span class="line">            exception&amp; <span class="keyword">operator</span>= (<span class="keyword">const</span> exception&amp; e) <span class="keyword">throw</span>();</span><br><span class="line">            <span class="keyword">virtual</span> ~exception() <span class="keyword">throw</span>)();</span><br><span class="line">            <span class="function"><span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">what</span><span class="params">()</span> <span class="keyword">const</span> <span class="title">throw</span><span class="params">()</span></span>; <span class="comment">//返回异常的描述信息</span></span><br><span class="line">     &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其他异常类的定义如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="built_in">std</span> &#123;</span><br><span class="line">	  <span class="class"><span class="keyword">class</span> <span class="title">logic_error</span>:</span> <span class="keyword">public</span> exception </span><br><span class="line">	  &#123;</span><br><span class="line">    	   <span class="keyword">public</span>:</span><br><span class="line">	     <span class="function"><span class="keyword">explicit</span> <span class="title">logic_error</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> &amp;what_arg)</span></span>;</span><br><span class="line">         </span><br><span class="line">	 &#125;;</span><br><span class="line">         </span><br><span class="line">	 <span class="class"><span class="keyword">class</span> <span class="title">invalid_argument</span>:</span> <span class="keyword">public</span> logic_error </span><br><span class="line">	 &#123;</span><br><span class="line">          <span class="keyword">public</span>:</span><br><span class="line">            <span class="function"><span class="keyword">explicit</span> <span class="title">invalid_argument</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> &amp;what_arg)</span></span>;</span><br><span class="line">	 &#125;;</span><br><span class="line"></span><br><span class="line">         <span class="class"><span class="keyword">class</span> <span class="title">out_of_range</span>:</span> <span class="keyword">public</span> logic_error </span><br><span class="line">	 &#123;</span><br><span class="line">          <span class="keyword">public</span>:</span><br><span class="line">            <span class="function"><span class="keyword">explicit</span> <span class="title">out_of_range</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> &amp;what_arg)</span></span>;</span><br><span class="line">         &#125;;</span><br><span class="line"></span><br><span class="line">	 <span class="class"><span class="keyword">class</span> <span class="title">length_error</span>:</span> <span class="keyword">public</span> logic_error </span><br><span class="line">	 &#123;</span><br><span class="line">          <span class="keyword">public</span>:</span><br><span class="line">            <span class="function"><span class="keyword">explicit</span> <span class="title">length_error</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> &amp;what_arg)</span></span>;</span><br><span class="line">	 &#125;;</span><br><span class="line"></span><br><span class="line">	 <span class="class"><span class="keyword">class</span> <span class="title">domain_error</span>:</span> <span class="keyword">public</span> logic_error </span><br><span class="line">	 &#123;</span><br><span class="line">          <span class="keyword">public</span>:</span><br><span class="line">                  <span class="function"><span class="keyword">explicit</span> <span class="title">domain_error</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> &amp;what_arg)</span></span>;</span><br><span class="line">	 &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>总结起来就是:</p>
+<ul>
+<li>exception类派生出了几个大子类: bad_cast, bad_alloc, bad_typeid, bad_exception, ios_base::failure(C++输入输出流中的错误), runtime_error, logic_error.</li>
+<li>bad_alloc: 在new头文件中定义了bad_alloc异常, 用于报告new操作符不能正确分配内存的情形.</li>
+<li>bad_cast: 当dynamic_cast失败时, 程序会抛出bad_cast异常类</li>
+</ul>
+</li>
+</ul>
+<p> 其中runtime_error和logic_error也还有很多子类:</p>
+<ul>
+<li>runtime_error: overflow_error, underflow_error, range_error.</li>
+<li><p>logic_error: domain_error, ivalid_argument, out_of_range, length_error.</p>
+<p>逻辑错误主要包括invalid_argument, out_of_range, length_error, domain_error. 当函数接收到无效的实参会抛出 <code>invaild_argument</code> 异常, 如果函数接收到超出期望范围的实参, 会抛出out_of_range异常等等.<br>使用c++标准库定义的异常类如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdexcept&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  <span class="keyword">throw</span> invalid_argument(<span class="string">"haha"</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span>(invalid_argument&amp; in) &#123;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"we catch invalid_argument"</span>&lt;&lt;in.what()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(...)&#123;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"we catch unexpected error,exit"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>声明注意</p>
+<ul>
+<li>为了加强程序的可读性, 可以在函数声明中列出可能抛出的所有异常类型,  例如: <code>void func() throw (A, B, C , D);</code> //这个函数 func() 能够且只能抛出类型 A B C D 及其子类型的异常</li>
+<li>如果在函数声明中没有包含异常接口声明, 则次函数可以抛掷任何类型的异常, 例如: <code>void func();</code> (最好不要声明)</li>
+<li>一个不抛掷任何类型异常的函数可以声明为: <code>void func() throw();</code></li>
+<li>如果匹配的处理器未找到, 则运行函数 terminate 将被自动调用, 其缺省功能是调用 abort 终止程序</li>
+<li>处理不了的异常, 可以在 catch 的最后一个分支, 使用 throw 语法, 向上扔(直至程序终止)<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>&#123;</span>&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(...) <span class="keyword">throw</span> A;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">g</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">try</span>&#123;</span><br><span class="line">      f();</span><br><span class="line">  &#125;<span class="keyword">catch</span>(B)&#123;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;“exception B\n”;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    g();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>throw A 将穿透函数 f, g 和 main, 抵达系统的最后一道防线——激发 terminate 函数. 该函数调用引起运行终止的 abort 函数. 其他补充: </p>
+<ul>
+<li><p>可以修改默认的终止行为(set_terminate 函数在头文件 exception 中声明, 参数为函数指针 <code>void(*)()</code> )</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;excepetion&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myTerminate</span><span class="params">()</span></span>&#123;<span class="built_in">cout</span>&lt;&lt;“HereIsMyTerminate\n”;&#125;</span><br><span class="line"><span class="comment">//</span></span><br><span class="line">set_terminate(myTerminate);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>构造函数没有返回类型, 无法通过返回值来报告运行状态, 所以只通过一种非函数机制的途径, 即异常机制来解决构造函数的出错问题(一般是不建议在构造函数中抛出异常的)</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="IO"><a href="#IO" class="headerlink" title="IO"></a>IO</h2><p> 个人不是太乐意去说, 因为太复杂了.(第二天我还是把这部分内容补全了, 进行了分类整理,  贴出了开发中比较实用的代码)</p>
+<p> 比c io函数强的地方时, 安全(编译时类型检查 type safe); 功能丰富, 但是使用复杂(细节多).<br> (如果你使用习惯了c io api, 转变到使用c++ io api就需要一些时间过渡)</p>
+<ul>
+<li>标准IO (标准输入输出) 头文件<iostream>, 包含抽象类 iostream ; 标准io类: istream, ostream, iostream.</iostream></li>
+<li>文件IO 头文件 <fstream>, 包含: ifstream, ofstream, fstream</fstream></li>
+<li>串IO  输入字符串流 <strstream>, 包含: istrstream, ostrstream, strstream. </strstream></li>
+</ul>
+<p> 主要内容就是:</p>
+<ul>
+<li>继承关系图</li>
+<li>流对象及iomanip, 缓存问题</li>
+<li>文件IO及错误处理</li>
+<li>二进制, 文本文件的读写</li>
+</ul>
+<ul>
+<li><p>继承关系图</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">                        ---&gt; basic_istream ---&gt; ifstream</span><br><span class="line">                       |                      |</span><br><span class="line">ios_base ---&gt; basic_ios                        ---&gt; iostream  ---&gt; fstream </span><br><span class="line">                       |                      |</span><br><span class="line">                        ---&gt; basic_ostream ---&gt; ofstream</span><br><span class="line"> /*上面的ifstream, ofstream, fstream的位置替换成 </span><br><span class="line">         istringstream, ostringstream, stringstream, </span><br><span class="line">  就变成了串IO的继承关系图 */</span><br></pre></td></tr></table></figure>
+<p>贴一幅图, 地址参考cplusplus.com<br><img src="http://www.cplusplus.com/img/iostream.gif" alt="iostream"></p>
+<p>涉及到的头文件:</p>
+<ul>
+<li>ios</li>
+<li>istream</li>
+<li>ostream</li>
+<li>streambuf</li>
+<li>iostream</li>
+<li>fstream</li>
+<li>sstream</li>
+</ul>
+</li>
+<li><p>流对象</p>
+<ul>
+<li><p>流对象不能复制, 例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fstream fs1,fs2;</span><br><span class="line">fs1 = fs2; <span class="comment">//error</span></span><br><span class="line"><span class="function">fstream <span class="title">fs3</span><span class="params">(fs2)</span></span>; <span class="comment">//error</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>流对象带缓冲(读写都要先经过缓冲区)</p>
+<ul>
+<li>刷新缓冲的行为: 程序正常结束, 缓冲区满, endl和flush函数的调用, <code>unitbuf</code> 的设置</li>
+</ul>
+</li>
+<li>除了使用流对象类定义的方法输入输出, 还可以使用 <code>&lt;&lt;</code> <code>&gt;&gt;</code> 进行输出和输入</li>
+<li><p>标准输入cin<br>常见的用法:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a, b;</span><br><span class="line"><span class="keyword">char</span> buf[<span class="number">1024</span>]; <span class="comment">//string buf;</span></span><br><span class="line"><span class="built_in">cin</span> &gt;&gt; a &gt;&gt; b &gt;&gt; buf; <span class="comment">//读入字符串时遇到空格则止 12 23.5 aa bb cc dd</span></span><br></pre></td></tr></table></figure>
+<p>也就是说, 用标准输入读取不了字符串中的空格, 所以出现了get函数作为弥补, 其重载如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//读入一个字符并返回(包括回车、tab、空格等空白字符)</span></span><br><span class="line"><span class="function"><span class="keyword">char</span> <span class="title">get</span><span class="params">()</span></span>; </span><br><span class="line"><span class="comment">//经典用法:</span></span><br><span class="line"><span class="keyword">char</span> ch;</span><br><span class="line"><span class="keyword">while</span>( (ch=<span class="built_in">cin</span>.get()) !=EOF) &#123;</span><br><span class="line">  <span class="built_in">cout</span>.put(ch);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*读入一个字符,如果读取成功则返回非 0 值(真),</span></span><br><span class="line"><span class="comment">如失败(遇到文件结束符),则函数返回 0 值(假) */</span></span><br><span class="line"><span class="function">istream&amp; <span class="title">get</span><span class="params">(<span class="keyword">char</span>&amp;)</span></span>;</span><br><span class="line"><span class="comment">//经典用法</span></span><br><span class="line"><span class="keyword">char</span> ch;</span><br><span class="line"><span class="keyword">while</span>(<span class="built_in">cin</span>.get(ch)) &#123;</span><br><span class="line">  <span class="built_in">cout</span>.put(ch);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>还有一个重要的重载, 该函数遇到delimiter并不会读入自定义buf中(而是放在流中), 所以下次读要从delimiter后一个位置开始, 否则函数直接返回.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">istream&amp; <span class="title">get</span><span class="params">(<span class="keyword">char</span> *, <span class="keyword">int</span> ,<span class="keyword">char</span> )</span></span></span><br><span class="line"><span class="function"><span class="comment">// istream&amp; get(字符数组，字符个数 n,终止字符) </span></span></span><br><span class="line"><span class="function"><span class="comment">//或 istream &amp; get(字符指针，字符个数 n,终止字符)</span></span></span><br></pre></td></tr></table></figure>
+<p>即不会越过中止符(最多读取n-1个), 读不满时, 会阻塞等待.</p>
+<p> 和该函数相似的就是 getline() :</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">istream&amp; <span class="title">getline</span><span class="params">(<span class="keyword">char</span> *, <span class="keyword">int</span> , <span class="keyword">char</span> dilimeter = <span class="string">'\n'</span>)</span></span></span><br></pre></td></tr></table></figure>
+<p>这个函数最多也是读取n-1个字符, 不同的是, 它默认以换行为结束符, 并且从输入流中摘取 中止符(但不放入buf), 下次再从流中读取时, 中止符就没有了. 并且读不满时也会阻塞等待.</p>
+<p>cin对象还有3个重要的方法: </p>
+<ul>
+<li><code>ignore(streamsize n =1, int delim = EOF)</code>默认忽略一个字符(中止符是EOF)</li>
+<li><code>int peek()</code> 流指针不移动, 但是只是取下一个位置的字符看看.(字符还在流中)</li>
+<li><code>istream&amp; putback(char c)</code> 从流中读出来的(忽略的也算), 再退回去到流中(给下一次读取)</li>
+</ul>
+</li>
+<li><p>cout<br>和cout一起的还有cerr(只能在屏幕上输出, 不能输出到文件, 无缓存, 实时刷新到屏幕), clog(有缓存, 其他和cerr类似)<br>输出的时候可以结合 <code>iomanip</code> 进行很多格式控制, 例如: <code>cout &lt;&lt; hex &lt;&lt; n &lt;&lt; endl;</code> 等</p>
+<ul>
+<li>hex, oct, dec</li>
+<li>setw(n); //设置输出域宽</li>
+<li>setfill(c); //域宽不足的, 用指定字符c补</li>
+<li>setiosflags(ios::left)(左对齐)</li>
+<li>setiosflags(ios::right)(右对齐)</li>
+<li>setiosflags(ios::showpoint);// 强制显示小数点和尾0</li>
+<li>setiosflags(ios::showpos); //强制显示符号</li>
+<li>setiosflags(ios::scientific)(科学记数法)</li>
+<li>setiosflags(ios::fixed)(定点数)</li>
+<li>setprecision(n); //设置有效位数自动四舍五入</li>
+<li>setiosflags(ios::uppercase);//设置大写</li>
+<li>resetiosflags(ios::uppercase);//重新设置成小写</li>
+</ul>
+<p>成员函数大概如下:</p>
+<ul>
+<li>ostream put(char)</li>
+<li>write() //一般用于二进制格式读写</li>
+</ul>
+</li>
+<li><p>流异常处理是在说文件IO是遇到的fail(), eof(), bad(), good().</p>
+</li>
+</ul>
+</li>
+<li><p>文件IO及异常处理<br>主要涉及文本文件(注意换行符10和回车换行13,10的转换)和二进制文件(内存映像文件), 一个是顺序存取, 一个是随机存取(按字节或者块儿). </p>
+<ul>
+<li>c语言中的IO问题:(必不可少的借助 <code>FILE *</code> 指针)<br><img src="http://omotkhw3y.bkt.clouddn.com/c_io.png" alt="c_io"></li>
+<li>c++中, 对文件的操作是由文件流类完成的, 即ifstream, ofstream 和 fstream 类的对象. 对文件的操作过程可按照一下四步进行: 即定义文件流类的对象, 打开文件, 对文件进<br>行读写操作, 关闭文件.</li>
+<li><p>打开文件</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">open</span><span class="params">(<span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> *filename, <span class="keyword">int</span> mode, </span></span></span><br><span class="line"><span class="function"><span class="params">     			 <span class="keyword">int</span> access=filebuf:openprot)</span></span></span><br></pre></td></tr></table></figure>
+<p>而一般使用的时候, 直接使用对象打开</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ifstream <span class="title">ifs</span><span class="params">(<span class="string">"xxx.txt"</span>,ios::in)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>文件的打开方式<br>见下图: <img src="http://omotkhw3y.bkt.clouddn.com/io_mode.png" alt=""></p>
+<p>ios::in|ios::out      表示以读/写方式打开文件<br>ios::in|ios:: binary  表示以二进制读方式打开文件<br>ios::out|ios:: binary 表示以二进制写方式打开文件<br>ios::in|ios::out|ios::binary 表示以二进制读/写方式打开文件<br>/<em>默认</em>/<br>对于 ifstream 流, mode 参数的默认值为 ios::in，<br>对于 ofstream 流, mode 的默 认值为 ios::out|ios::trunc,<br>对于 fstream 流, mode 的默认值为 ios::in|ios::out|ios::app</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*具体案例*/</span></span><br><span class="line"><span class="function">ifstream <span class="title">ifs</span><span class="params">(<span class="string">"xxx.txt"</span>,ios::in)</span></span>;</span><br><span class="line"><span class="keyword">if</span>(!ifs) &#123;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;<span class="string">"open error1"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">char</span> buf[<span class="number">100</span>];</span><br><span class="line"><span class="keyword">if</span>(ifs&gt;&gt;buf) &#123;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;buf&lt;&lt;<span class="built_in">endl</span>;      		   </span><br><span class="line">&#125;</span><br><span class="line"><span class="function">ofstream <span class="title">ofs</span><span class="params">(<span class="string">"yyy.txt"</span>,ios::out|ios::app)</span></span>;</span><br><span class="line"><span class="keyword">if</span>(!ofs) &#123;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;<span class="string">"open error2"</span>&lt;&lt;<span class="built_in">endl</span>;      	       </span><br><span class="line">&#125;</span><br><span class="line">ofs&lt;&lt;<span class="string">"abcefldkj"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
+<p>不指明打开方式 <code>ios::binary</code> 时, 默认按照文本方式读写.</p>
+</li>
+<li>文件关闭(调用流对象的close()方法)</li>
+<li><p>流对象的状态判断(ios_base), 一般用于检测cin.</p>
+<ul>
+<li>eof() 读到文件尾返回true</li>
+<li>bad() 读写过程中出错, 返回true.(空间不足或者不是写打开)</li>
+<li>fail() 包含eof()和bad(), 并且格式错误也返回true</li>
+<li>good() 读写正常返回true</li>
+<li>clear() 清除所有标志位(该函数可以有参数)<br>使用案例可以是这样的:<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">int</span> ival;</span><br><span class="line"> <span class="comment">// read cin and test only for EOF;</span></span><br><span class="line"> <span class="comment">//loop is executed even if there are other IO failures</span></span><br><span class="line"> <span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; ival, !<span class="built_in">cin</span>.eof()) &#123;</span><br><span class="line">       <span class="comment">// input stream is corrupted; bail out</span></span><br><span class="line"> 	    <span class="keyword">if</span> (<span class="built_in">cin</span>.bad()) &#123;</span><br><span class="line"> 	       <span class="keyword">throw</span> runtime_error(<span class="string">"IO stream corrupted"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> 	    <span class="keyword">if</span> (<span class="built_in">cin</span>.fail()) &#123; </span><br><span class="line">   <span class="built_in">cerr</span>&lt;&lt; <span class="string">"bad data, try again"</span>; </span><br><span class="line">   <span class="built_in">cin</span>.clear(istream::failbit); </span><br><span class="line"> 	       <span class="keyword">continue</span>; <span class="comment">// get next input</span></span><br><span class="line"> 	    &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">// do real work</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>关于 <code>operator void*() const</code> 或者 <code>operator bool() const</code> 或者 <code>bool operator!()const</code> 转换函数的重载.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//函数在 while(cin)或是 if(cin)时被调用, 将流对象转换成 void *类型</span></span><br><span class="line"><span class="keyword">operator</span> <span class="keyword">void</span> *() <span class="keyword">const</span>;</span><br><span class="line"><span class="comment">//函数在 while(!cin)或是 if(!cin)时被调用, 将流对象转换成 bool 类型</span></span><br><span class="line"><span class="keyword">bool</span> <span class="keyword">operator</span>!() <span class="keyword">const</span>;</span><br><span class="line"><span class="comment">/*从其函数上看, iostream*/</span></span><br><span class="line"><span class="keyword">while</span>(<span class="built_in">cin</span>) <span class="comment">// while(!cin.fail()) //while the stream is OK</span></span><br><span class="line"><span class="keyword">while</span>(!<span class="built_in">cin</span>) <span class="comment">// while(cin.fail()) //while the stream is NOT OK</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文本文件读写的总结</p>
+<ul>
+<li><p>写</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">operator</span>&lt;&lt;</span><br><span class="line"><span class="function">osream <span class="title">put</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>读</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">operator</span>&gt;&gt;()</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">istream&amp; <span class="title">get</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="function">istream &amp; <span class="title">get</span><span class="params">(<span class="keyword">char</span>*,<span class="keyword">int</span> n, <span class="keyword">char</span> deli)</span></span>;</span><br><span class="line"><span class="function">istream&amp; <span class="title">getline</span><span class="params">(<span class="keyword">char</span> *, <span class="keyword">int</span> n)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>案例</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="function">fstream <span class="title">ifs</span><span class="params">(<span class="string">"src.txt"</span>,ios::in)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(!ifs) &#123;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;<span class="string">"open error"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">      <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function">fstream <span class="title">ofs</span><span class="params">(<span class="string">"dest.txt"</span>,ios::out|ios::trunc)</span></span>;</span><br><span class="line">  <span class="keyword">if</span>(!ofs) &#123;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;<span class="string">"open error"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">      <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">char</span> buf[<span class="number">1024</span>];</span><br><span class="line">  <span class="keyword">while</span>(ifs.get(buf,<span class="number">1024</span>,<span class="string">'\n'</span>)) &#123;</span><br><span class="line">      <span class="keyword">while</span>(ifs.peek() == <span class="string">'\n'</span>) &#123;</span><br><span class="line">          ifs.ignore();</span><br><span class="line">      &#125;</span><br><span class="line">      ofs&lt;&lt;buf&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  ifs.close();</span><br><span class="line">  ofs.close();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>二进制文件读写</p>
+<ul>
+<li><p>流对象函数</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ostream &amp; <span class="title">write</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> * buffer,<span class="keyword">int</span> len)</span></span>;</span><br><span class="line"><span class="function">istream &amp; <span class="title">read</span><span class="params">(<span class="keyword">char</span> * buff, <span class="keyword">int</span> len)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>文件指针操作<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//对于输入输出文件, p和g可以任意使用</span></span><br><span class="line">tellg();	</span><br><span class="line">tellp();</span><br><span class="line">seekg(绝对位置);</span><br><span class="line">seekg(相对位置,参照位置);</span><br><span class="line">seekp(绝对位置);</span><br><span class="line">seekp(相对位置,参照位置);</span><br><span class="line"><span class="comment">//关于位置的定义(相对位置的负数表示从后往前)</span></span><br><span class="line">ios::beg = <span class="number">0</span> 相对于文件头</span><br><span class="line">ios::cur = <span class="number">1</span> 相对于当前位置</span><br><span class="line">ios::end = <span class="number">2</span> 相对于文件尾</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>案例</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">student</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> num;</span><br><span class="line">    <span class="keyword">char</span> name[<span class="number">20</span>];</span><br><span class="line">    <span class="keyword">float</span> score;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    student stud[<span class="number">5</span>]=&#123;</span><br><span class="line">          <span class="number">1001</span>,<span class="string">"xxx"</span>,<span class="number">85</span>,</span><br><span class="line">          <span class="number">1002</span>,<span class="string">"yyy"</span>,<span class="number">97.5</span>,</span><br><span class="line">          <span class="number">1004</span>,<span class="string">"zzz"</span>,<span class="number">54</span>,</span><br><span class="line">          <span class="number">1006</span>,<span class="string">"111"</span>,<span class="number">76.5</span>,</span><br><span class="line">          <span class="number">1010</span>,<span class="string">"2222"</span>,<span class="number">96</span> </span><br><span class="line">      &#125;;</span><br><span class="line">    <span class="function">fstream <span class="title">iofile</span><span class="params">(<span class="string">"stud.dat"</span>, </span></span></span><br><span class="line"><span class="function"><span class="params">              ios::in|ios::out|ios::binary)</span></span>;</span><br><span class="line">    <span class="keyword">if</span>(!iofile) &#123;</span><br><span class="line">        <span class="built_in">cerr</span>&lt;&lt;<span class="string">"open error!"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        <span class="built_in">abort</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++) &#123;</span><br><span class="line">        iofile.write((<span class="keyword">char</span> *)&amp;stud[i], <span class="keyword">sizeof</span>(stud[i]));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    student stud1[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i=i+<span class="number">2</span>) &#123;</span><br><span class="line">    iofile.seekg(i*<span class="keyword">sizeof</span>(stud[i]), ios::beg);</span><br><span class="line">    iofile.read((<span class="keyword">char</span> *)&amp;stud1[i/<span class="number">2</span>],<span class="keyword">sizeof</span>(stud1[i]));</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;stud1[i/<span class="number">2</span>].num&lt;&lt;<span class="string">" "</span></span><br><span class="line">      &lt;&lt;stud1[i/<span class="number">2</span>].name&lt;&lt;<span class="string">" "</span>&lt;&lt;stud1[i/<span class="number">2</span>].score&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//modify stud[2]</span></span><br><span class="line">    stud[<span class="number">2</span>].num=<span class="number">1012</span>;</span><br><span class="line">    <span class="built_in">strcpy</span>(stud[<span class="number">2</span>].name,<span class="string">"Wu"</span>);</span><br><span class="line">    stud[<span class="number">2</span>].score=<span class="number">60</span>;</span><br><span class="line">    iofile.seekp(<span class="number">2</span>*<span class="keyword">sizeof</span>(stud[<span class="number">0</span>]),ios::beg);</span><br><span class="line">    iofile.write((<span class="keyword">char</span> *)&amp;stud[<span class="number">2</span>],<span class="keyword">sizeof</span>(stud[<span class="number">2</span>]));</span><br><span class="line"></span><br><span class="line">    <span class="comment">//read again</span></span><br><span class="line">    iofile.seekg(<span class="number">0</span>,ios::beg);</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++) &#123;</span><br><span class="line">    iofile.read((<span class="keyword">char</span> *)&amp;stud[i],<span class="keyword">sizeof</span>(stud[i]));</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;stud[i].num&lt;&lt;<span class="string">" "</span></span><br><span class="line">      &lt;&lt;stud[i].name&lt;&lt;<span class="string">" "</span>&lt;&lt;stud[i].score&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    iofile.close();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>好了, IO部分也就差不多这样了.</p>
+</li>
+</ul>
+<hr>
+<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>几乎花了一个上午在写这部分内容(全部写完IO花了2天), 说起来不觉得多, 写起来还真有点儿多.</p>
+<p>人家说, “写一辈子程序, 看一辈子c++书”, c++确实有点儿复杂; 你不能老想着什么都要语言机制解决, 这样语言会越来越大, 越来越复杂.Java则是有选择的扩充, 该舍弃的舍弃; 只把好用的拿出来. 毕竟你不能假设所有人都是高手吧? (为了推广, 不能总是搞很小众的东西;大众能接收的是小众的东西)</p>
+<p>就这样吧, 其他内容请参考 《c++ primer 5e》, 《C++标准库自修手册》, 官方文档.</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/posts/f4144d45/">技术: C++非面向对象部分</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
+        <p><span>发布时间:</span>2016-06-21, 22:52:47</p>
+        <p><span>最后更新:</span>2018-04-12, 14:55:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/posts/f4144d45/" title="技术: C++非面向对象部分">http://www.merlinblog.site/posts/f4144d45/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/f4144d45/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/posts/e53c44b8/">
+                    技术: C++ 标准库 STL
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/posts/f8283c77/">
+                    技术: C++面向对象部分
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#模板"><span class="toc-number">2.1.</span> <span class="toc-text">模板</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#函数模板"><span class="toc-number">2.1.1.</span> <span class="toc-text">函数模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译器支持"><span class="toc-number">2.1.2.</span> <span class="toc-text">编译器支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类模板"><span class="toc-number">2.1.3.</span> <span class="toc-text">类模板</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于类型转换"><span class="toc-number">2.2.</span> <span class="toc-text">关于类型转换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4种类型转换"><span class="toc-number">2.2.1.</span> <span class="toc-text">4种类型转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RTTI"><span class="toc-number">2.2.2.</span> <span class="toc-text">RTTI</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常机制"><span class="toc-number">2.3.</span> <span class="toc-text">异常机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#异常思想"><span class="toc-number">2.3.1.</span> <span class="toc-text">异常思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用惯例"><span class="toc-number">2.3.2.</span> <span class="toc-text">使用惯例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IO"><span class="toc-number">2.4.</span> <span class="toc-text">IO</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾巴"><span class="toc-number">3.</span> <span class="toc-text">尾巴</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/posts/e53c44b8/" title="上一篇: 技术: C++ 标准库 STL">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/posts/f8283c77/" title="下一篇: 技术: C++面向对象部分">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/7ef0bd11/">技巧: iOS 工作流</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e2300e0/">Golang: 并发聊天室综合案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/74edbb6d/">Golang: TCP 文件传输案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8342f6/">Golang: TCP 简单并发服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa0a3cc6/">技巧: B站视频下载脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8180668e/">技巧: 多用户共享 Parralles 虚拟机</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/55b0329b/">Golang: 值类型&引用类型坑(12)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ac5ecee9/">Golang: 函数类型实现接口封装问题(11)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eecafb73/">Golang: struct打印输出问题(10)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8f54ef0c/">Golang: string和byte slie字节问题(9)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8a7f81db/">Golang: time计算问题(8)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d4333ec1/">Golang: chan定义问题(7)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aec4de55/">Golang: defer 时机问题(6)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9bf7e00/">Golang: make和new坑(5)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0c9893e/">Golang: import和package坑(4)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ff88030/">Golang: runtime.Gosched 问题(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/690caed4/">Golang: HTML Template案例(xml新闻解析+并发改进)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4620296/">Golang: JSON 小案例(读配置文件)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/777e9274/">Golang: JSON 综合案例(天气预报)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/21f718fc/">Golang: RESTful 小案例</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad1d8b3/">Golang: 泛型容器的安全问题 (2)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3fde375b/">Golang: 内嵌真的不是继承 (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ede42ab6/">Golang: 注意空接口运行时类型 (0)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bd0987da/">Android: 音频框架&驱动解析</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6c3c68b0/">Gcc: Gcc优化指南(5. 功成身退-总结)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/466242ae/">Gcc: Gcc优化指南(4. Gcc & G++ & 相关工具)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/425935e0/">Gcc: Gcc优化指南(3. Gcc Optimize-核心)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5cd24f32/">Gcc: Gcc优化指南(2. Gcc Options)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/11ea881a/">Gcc: Gcc优化指南(1. Common Problmes of Path & Libs)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1e58a5cc/">量化: 数学和量化研究(0. 总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6805cb0/">Gcc: Gcc优化指南(0. Basic Skills)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/78268fe4/">Golang: 标准库解决方案(8.总结-功成身退)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3c9a06b/">Golang: 标准库解决方案(7.Concurrency)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb600d10/">Golang: 标准库解决方案(6.REST & JSON API)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/2f5310cf/">Golang: 标准库解决方案(5.Web Server & Client)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/40bd3fcc/">Golang: 标准库解决方案(4.Math/Time/Archives/Images)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fedfbade/">Golang: 标准库解决方案(3.处理BuildTools,IO,Error)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/42e1a67a/">Golang: 标准库解决方案(2.处理Strings,Bytes,Runes)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/461f0c5f/">Golang: 标准库解决方案(1.听两位大师讲标准库)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/187d6c5a/">Golang: WebGoGoGo(0.概述Web编程)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/94df7563/">Golang: Here We Go(5.孰能生巧-Oreilly大师讲解&再练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/53a29a57/">Golang: RobPike谈 并发Vs并行</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b9dc4cb/">Golang: One Video Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d17f938/">Golang: 标准库解决方案(0.总起)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5c13927/">Golang: Think in Golang</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/514585e8/">Golang: Here We Go(4.功成身退-资料&面试题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4f07614d/">Golang: Here We Go(3.登堂入室-全部语法&大量练习)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/872df2cf/">Golang: Here We Go(2.常用命令&代码结构&语法大纲)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/51cffabe/">Golang: Here We Go(1.安装&&脚本)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d740c2ec/">Golang: Here We Go(0.Google工程师介绍)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/590c21ce/">V-skills 专栏指南</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df51d2c/">技巧: Hexo 置顶问题解决</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4111adcd/">技巧: WordPress 迁移&备份技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d61966e4/">略懂: Nginx 折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/12cc604a/">技巧: WordPress upload 最终解决方案</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/173f9602/">技术: 深耕 Docker 生态圈(十一){Docker 实践}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5ac3e07f/">技巧: Wordpress 网页(h5) mp4 兼容问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65a942dd/">技术: 深耕 Docker 生态圈(十一){Docker 三剑客}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a30c0f5f/">技术: 深耕 Docker 生态圈(十){私有仓库配置}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c73a742c/">技术: 深耕 Docker 生态圈(九){Docker 数据管理}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/19c3a85f/">技术: 深耕 Docker 生态圈(八){Docker 网络部分}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b3512db9/">技术: 深耕 Docker 生态圈(七){Docker 的底层实现}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cd70a238/">技术: 深耕 Docker 生态圈(六){Dockerfile 文法}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/36bc3b47/">技术: 深耕 Docker 生态圈(五){自己构建的镜像为何这么大}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cb3fb6f1/">技术: 深耕 Docker 生态圈(四){镜像存储在哪}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e0391b88/">技术: 深耕 Docker 生态圈(三){Docker 指令}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8abfca36/">技术: 深耕 Docker 生态圈(二){配置 Docker }</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70ca69ad/">技术: 深耕 Docker 生态圈(一){总起:安装环境}</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9724f8c0/">传送门(Gate)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/683530b4/">略懂: Docker 镜像与容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab11b0d1/">略懂: 软件架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b58964/">技术: Sqlite 主键自增(Python接口)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/121fc86a/">技巧: 迁移博客到 VPS (借助hook)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/337aa775/">略懂: 我所认识的 Nodejs</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8bb990d/">技巧: iOS 原生客户端配置 Gmail</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecd9f8c2/">略懂: 前端相关的缓存技术</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9b49ffe2/">Golang: 深入探究 Golang 并发</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5009ef69/">技巧: macOS 录屏保存为 gif 格式</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/85a160b/">技巧: Numbers(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d3fb236/">Golang: Golang 代码走廊</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/16ca5b11/">技巧: Git 多账户工作技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7fcc01c2/">技巧: macOs下Qt的Mysql驱动处理</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e1b7f878/">技术: Qt 汇总篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/15783ed7/">技巧：Makefile相关</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ad67147c/">技巧: HEXO优雅操作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aa213556/">技巧: macOS中替换rm命令</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ef21388e/">技术: 股票分析客户端分析与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/38fb8eb9/">技术: 网络编程部分汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a7d41a1/">技术: C++最终篇</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ba598705/">技术: Emacs环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3549e702/">技术: Deepin Linux环境配置</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1345f1a4/">技术: 网络吞吐量测试</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/65b929a8/">技术: 浅谈我经历的敏捷</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8804d39c/">技术: 网络开发常用工具</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6acc3344/">技术: Thrift</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8276c32/">技术: rapid-json</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/17d1767e/">技术: Rapid Xml</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7d13442/">技术: Protocol buffer</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/140bfd50/">技术: Gtest测试框架</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/247b42a4/">技术: 多线程调试问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d48acbe2/">技术: TDD 开发模式实践</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/47fb15b8/">技术: 一个HTTPd的简单实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c62cfa29/">技术: C++网络库(轮子)大杂烩</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9d5b3554/">技术: Asio 异步IO库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e5af6e18/">技术: Boost库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3cd43f14/">技术: Unix Domain Socket</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/87cd3741/">技术: 百万连接问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d57da8b/">技术: C++ 实现线程池模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/6b518c8a/">技术: 服务端网络模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e42d6398/">技术: UDP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/224e60da/">技术: TCP 模型网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/df7a2188/">技术: TCP流解析(粘包和拆包问题)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1334152b/">技术: Epoll 模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8967f437/">技术: Linux 基础套接字模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/81fba862/">技术: Linux网络学习参考</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a4602dea/">技术: Linux网络IO模型</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cf64f3cd/">技术: Shell代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/33327382/">技术: 开源协议</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be94ecde/">技术: Git 代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1a10be5a/">技术: Python代码规范</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/cc8315f3/">技术: 高质量Git工作</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/3a357315/">技术: Python语言</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/82524a2d/">技术: Qt 网络编程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a46fcd49/">技术: Qt 线程案例汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e3b79a82/">技巧: linux下查看二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5d0a2cfa/">技术: Qt 实践(汽车销量管理)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/77d8483b/">技巧: Qt 快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/75110831/">技术: JNI</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/fdc9b2b9/">技术: C++编程之time问题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6ff0a80/">技术: C++11 Lambda 再探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b84fe139/">技术: 对比 Linux 下并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/322ce852/">技术: C++11 特性补充</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/189d21c8/">技术: benchmark(lambda 和 bind)</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/97d0104d/">技术: C++11 可调用对象function总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d12695b6/">技术: C++11 std::ref 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b43344a7/">技术: C++ 智能指针实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4ead806a/">技术: C++11 Bind 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/9ef88011/">技术: C++ RAII 相关技术总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bb36bf0d/">技术: C++11 Lambda 探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4b19001a/">技术: Linux Bin Utils</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/31dce1ea/">技术: C++ 智能指针</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/88802625/">技术: Linux 静态&动态库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ab21303c/">技术: C++11 并发库</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/bc67b8cb/">技术: 探究一下STL常用算法</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/640d4b5f/">技术: Linux 编程三大件儿</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/24da8a94/">技术: C++ 迭代器失效问题</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e53c44b8/">技术: C++ 标准库 STL</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f4144d45/">技术: C++非面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f8283c77/">技术: C++面向对象部分</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/be09a73/">技术: 设计模式 C++ 实现</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/956ee661/">技术: mysql-connector-cpp</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b0dbc55e/">技术: 带有移动语义的 C++ 字符串类</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/f306f9f9/">技术: C++11 右值相关问题探讨</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e9705375/">技术: C++11 类型萃取</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/d93a00e8/">技术: C++11 异常争论</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b7fe58b8/">技术: C++11 模板别名探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/72ae9d55/">技术: C++11 默认函数问题探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a8af70c7/">技术: C++11 auto和decltype总结</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/c8bce253/">技术: Java中正则表达式支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/866a6247/">技术: Python中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/8ebc387/">技术: C++中正则表达式的支持</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/50c77f46/">技术: C语言中正则表达式的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/aea53521/">技术: C++11 tuple 容器</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/656a02b/">技术: C++11 hashtable 结构</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/4bb5bf03/">技术: C++11 一致性初始化探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/e6f297fb/">技术: C++11 RangeFor探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/70b6b9e7/">技术: C++11 explicit注意事项</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/919162f1/">技术: C++11 nullptr探究</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/b744aae/">技术: C++11变长参数模板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/5f4ce2b/">技术: 探究 Linux 线程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1312cbe7/">技术: 探究 Linux 进程</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/1d2bfb39/">技术: Posix标准一览</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/a00e5a90/">隐修者(里程碑)</a></li></ul>
+
+
+
+
+    <script>
+        
+            yiliaConfig.fancybox = false;
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 &nbsp Merlin
+            </div>
+            <div class="footer-right">
+                 blog&nbsp<b>version: </b> &nbsp<a href= "https://github.com/WizardMerlin/Gate#blog版本分支说明" >2.4</a>    <i class="fa fa-heart animated infinite pulse"></i>&nbsp高效流
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-110654443-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "Do One Thing......" + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "Do It Well......" + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
