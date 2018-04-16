@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.merlinblog.site/"/>
-  <updated>2018-04-16T03:51:37.810Z</updated>
+  <updated>2018-04-16T03:51:46.176Z</updated>
   <id>http://www.merlinblog.site/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://www.merlinblog.site/posts/1e9ef6fe/"/>
     <id>http://www.merlinblog.site/posts/1e9ef6fe/</id>
     <published>2018-04-16T03:43:38.000Z</published>
-    <updated>2018-04-16T03:51:37.810Z</updated>
+    <updated>2018-04-16T03:51:46.176Z</updated>
     
     <content type="html"><![CDATA[<p>Android中設計的細粒度的權限簽名機制，也是我負責比較多的；現在上傳，希望可以幫到你。<br><a id="more"></a></p><p>主要是 apk 中設計的細粒度權限管理，而不是傳統的 Linux rwx 等(不過底層也是這麼映射的)。</p><p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/IMG_0062.jpg" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/IMG_0063.jpg" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/IMG_0064.jpg" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/IMG_0065.jpg" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/IMG_0066.jpg" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/IMG_0067.jpg" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/IMG_0068.jpg" alt=" "></p><hr><p>Merlin 2018.4 高效工作流；只為更加專業.</p>]]></content>
     
