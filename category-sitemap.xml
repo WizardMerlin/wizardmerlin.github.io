@@ -56,13 +56,6 @@
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/categories/Android%E6%A1%86%E6%9E%B6%E5%92%8C%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/</loc>
-        <lastmod>2018-04-12T06:55:17.653Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.merlinblog.site/categories/Gcc%E4%BC%98%E5%8C%96%E6%8C%87%E5%8D%97/</loc>
         <lastmod>2018-04-12T06:55:17.655Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -100,6 +93,13 @@
     <url>
         <loc>http://www.merlinblog.site/categories/%E7%BD%AE%E9%A1%B6/</loc>
         <lastmod>2018-04-15T23:41:50.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.merlinblog.site/categories/Android%E6%A1%86%E6%9E%B6%E5%92%8C%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/</loc>
+        <lastmod>2018-04-16T03:27:31.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
