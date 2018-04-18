@@ -7,8 +7,8 @@
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/posts/dbbca7df/</loc>
-        <lastmod>2018-04-17T01:41:26.000Z</lastmod>
+        <loc>http://www.merlinblog.site/posts/a00e5a90/</loc>
+        <lastmod>2018-04-18T11:01:00.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -16,7 +16,15 @@
 
     <url>
         <loc>http://www.merlinblog.site/posts/9724f8c0/</loc>
-        <lastmod>2018-04-17T01:20:52.438Z</lastmod>
+        <lastmod>2018-04-18T05:26:18.663Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://www.merlinblog.site/posts/dbbca7df/</loc>
+        <lastmod>2018-04-17T08:06:01.751Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -1408,14 +1416,6 @@
 
     <url>
         <loc>http://www.merlinblog.site/posts/1d2bfb39/</loc>
-        <lastmod>2018-04-12T06:55:17.615Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://www.merlinblog.site/posts/a00e5a90/</loc>
         <lastmod>2018-04-12T06:55:17.615Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>

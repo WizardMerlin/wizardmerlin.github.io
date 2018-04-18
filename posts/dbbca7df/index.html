@@ -15,15 +15,14 @@
 
 
 
-<meta name="description" content="Beego 框架作者之一谢孟军《Go Web 编程》一书所涉及的方方面面。">
+<meta name="description" content="Beego 框架作者之一谢孟军《Go Web 编程》一书所涉及的方方面面。(該書作者是大牛)">
 <meta name="keywords" content="golang">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Golang: WebGoGoGo(0.Web编程的方方面面)">
 <meta property="og:url" content="http://www.merlinblog.site/posts/dbbca7df/index.html">
 <meta property="og:site_name" content="梅林日志">
-<meta property="og:description" content="Beego 框架作者之一谢孟军《Go Web 编程》一书所涉及的方方面面。">
+<meta property="og:description" content="Beego 框架作者之一谢孟军《Go Web 编程》一书所涉及的方方面面。(該書作者是大牛)">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/s26376659.jpg">
 <meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/gowebweb0.png">
 <meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/gowebweb1.jpg">
 <meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/gowebweb2.jpg">
@@ -32,12 +31,18 @@
 <meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/text-go-1.png">
 <meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/text-go-2.png">
 <meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/text-go-3.png">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/web-go-1.jpg">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/web-go-2.jpg">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/web-go-3.jpg">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/web-go-4.jpg">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/go-crypto-1.jpg">
+<meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/go-i18n-1.jpg">
 <meta property="og:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/cppgo.jpg">
-<meta property="og:updated_time" content="2018-04-17T01:41:26.000Z">
+<meta property="og:updated_time" content="2018-04-17T08:06:01.751Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Golang: WebGoGoGo(0.Web编程的方方面面)">
-<meta name="twitter:description" content="Beego 框架作者之一谢孟军《Go Web 编程》一书所涉及的方方面面。">
-<meta name="twitter:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/s26376659.jpg">
+<meta name="twitter:description" content="Beego 框架作者之一谢孟军《Go Web 编程》一书所涉及的方方面面。(該書作者是大牛)">
+<meta name="twitter:image" content="http://www.commoncommonheart.com/wp-content/uploads/2018/04/gowebweb0.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -277,13 +282,12 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>Beego 框架作者之一谢孟军《Go Web 编程》一书所涉及的方方面面。</p>
+        <p>Beego 框架作者之一谢孟军《Go Web 编程》一书所涉及的方方面面。(該書作者是大牛)</p>
 <a id="more"></a>
 <blockquote>
 <p>有人说这本书前面大量讲语法，后面涉及到了 web 内容又太简略。<br>我倒是觉得刚刚好，点到为止，具体的细节，请落实到具体的框架，再去看看。你说呢？</p>
 </blockquote>
-<p>图书地址: <a href="https://yuedu.baidu.com/ebook/15f8d8c4fad6195f312ba6e2.html" target="_blank" rel="noopener">链接</a>，后面再去探究一下 beego 框架。</p>
-<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/s26376659.jpg" alt=" "></p>
+<p>图书地址: <a href="https://yuedu.baidu.com/ebook/15f8d8c4fad6195f312ba6e2.html" target="_blank" rel="noopener">链接</a>。</p>
 <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>具体内容，可以绘制脑图如下： (不过还是建议去读读，毕竟是老手&amp;专家写的书)</p>
 <p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/gowebweb0.png" alt="脑图"></p>
 <h2 id="详细展开"><a href="#详细展开" class="headerlink" title="详细展开"></a>详细展开</h2><blockquote>
@@ -299,8 +303,12 @@
 <h3 id="文本處理"><a href="#文本處理" class="headerlink" title="文本處理"></a>文本處理</h3><p>主要有: XML, JSON, 正則，字符串，模板，文件操作等，都比較簡單。</p>
 <p>XML, JSON 用於數據交換，例如RPC，REST。<br>正則可以處理文本信息：搜索替換，截取等，但是如果能用字符串操作盡量用字符串，性能會好一些。<br>模板主要用於展示動態數據。</p>
 <p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/text-go-1.png" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/text-go-2.png" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/text-go-3.png" alt=" "></p>
+<h3 id="網絡處理"><a href="#網絡處理" class="headerlink" title="網絡處理"></a>網絡處理</h3><p>socket, websocket, 網絡服務(rest, rpc, soap)</p>
+<p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/web-go-1.jpg" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/web-go-2.jpg" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/web-go-3.jpg" alt=" "><br><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/web-go-4.jpg" alt=" "></p>
+<h3 id="加密安全"><a href="#加密安全" class="headerlink" title="加密安全"></a>加密安全</h3><p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/go-crypto-1.jpg" alt=" "></p>
+<h3 id="i18N國際化"><a href="#i18N國際化" class="headerlink" title="i18N國際化"></a>i18N國際化</h3><p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/go-i18n-1.jpg" alt=" "></p>
 <h2 id="云笔记"><a href="#云笔记" class="headerlink" title="云笔记"></a>云笔记</h2><blockquote>
-<p>详细笔记可以参考:  我的有道云笔记<a href="">《Go Web 方方面面》</a> 。—- 冗长，详细；耗时。</p>
+<p>详细笔记可以参考:  我的有道云笔记<a href="">《Go Web 方方面面》</a> 。—- 冗长，详细；耗时。(格式太亂，不分享了)</p>
 </blockquote>
 <p>最后，谢总的一个玩笑，哈哈哈，看看即可：</p>
 <p><img src="http://www.commoncommonheart.com/wp-content/uploads/2018/04/cppgo.jpg" alt="cpp-go"></p>
@@ -317,7 +325,7 @@
         <p><span>本文标题:</span><a href="/posts/dbbca7df/">Golang: WebGoGoGo(0.Web编程的方方面面)</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Merlin</a></p>
         <p><span>发布时间:</span>2018-03-12, 23:59:23</p>
-        <p><span>最后更新:</span>2018-04-17, 09:41:26</p>
+        <p><span>最后更新:</span>2018-04-17, 16:06:01</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/posts/dbbca7df/" title="Golang: WebGoGoGo(0.Web编程的方方面面)">http://www.merlinblog.site/posts/dbbca7df/</a>
             <span class="copy-path" data-clipboard-text="原文: http://www.merlinblog.site/posts/dbbca7df/　　作者: Merlin" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -353,7 +361,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#详细展开"><span class="toc-number">2.</span> <span class="toc-text">详细展开</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web基础"><span class="toc-number">2.1.</span> <span class="toc-text">Web基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#表单处理"><span class="toc-number">2.2.</span> <span class="toc-text">表单处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL部分"><span class="toc-number">2.3.</span> <span class="toc-text">SQL部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Session和Cookie"><span class="toc-number">2.4.</span> <span class="toc-text">Session和Cookie</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文本處理"><span class="toc-number">2.5.</span> <span class="toc-text">文本處理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#云笔记"><span class="toc-number">3.</span> <span class="toc-text">云笔记</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#详细展开"><span class="toc-number">2.</span> <span class="toc-text">详细展开</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web基础"><span class="toc-number">2.1.</span> <span class="toc-text">Web基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#表单处理"><span class="toc-number">2.2.</span> <span class="toc-text">表单处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL部分"><span class="toc-number">2.3.</span> <span class="toc-text">SQL部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Session和Cookie"><span class="toc-number">2.4.</span> <span class="toc-text">Session和Cookie</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文本處理"><span class="toc-number">2.5.</span> <span class="toc-text">文本處理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#網絡處理"><span class="toc-number">2.6.</span> <span class="toc-text">網絡處理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#加密安全"><span class="toc-number">2.7.</span> <span class="toc-text">加密安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#i18N國際化"><span class="toc-number">2.8.</span> <span class="toc-text">i18N國際化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#云笔记"><span class="toc-number">3.</span> <span class="toc-text">云笔记</span></a></li></ol>
         
     </div>
     <style>

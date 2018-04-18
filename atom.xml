@@ -34,9 +34,9 @@
       <category term="Android框架和驱动开发" scheme="http://www.merlinblog.site/categories/Android%E6%A1%86%E6%9E%B6%E5%92%8C%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/"/>
     
     
-      <category term="權限" scheme="http://www.merlinblog.site/tags/%E6%AC%8A%E9%99%90/"/>
-    
       <category term="簽名" scheme="http://www.merlinblog.site/tags/%E7%B0%BD%E5%90%8D/"/>
+    
+      <category term="權限" scheme="http://www.merlinblog.site/tags/%E6%AC%8A%E9%99%90/"/>
     
   </entry>
   
@@ -58,13 +58,13 @@
       <category term="Android框架和驱动开发" scheme="http://www.merlinblog.site/categories/Android%E6%A1%86%E6%9E%B6%E5%92%8C%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/"/>
     
     
-      <category term="簽名" scheme="http://www.merlinblog.site/tags/%E7%B0%BD%E5%90%8D/"/>
-    
       <category term="公鑰密碼術" scheme="http://www.merlinblog.site/tags/%E5%85%AC%E9%91%B0%E5%AF%86%E7%A2%BC%E8%A1%93/"/>
     
       <category term="對稱加密" scheme="http://www.merlinblog.site/tags/%E5%B0%8D%E7%A8%B1%E5%8A%A0%E5%AF%86/"/>
     
       <category term="證書" scheme="http://www.merlinblog.site/tags/%E8%AD%89%E6%9B%B8/"/>
+    
+      <category term="簽名" scheme="http://www.merlinblog.site/tags/%E7%B0%BD%E5%90%8D/"/>
     
       <category term="安全" scheme="http://www.merlinblog.site/tags/%E5%AE%89%E5%85%A8/"/>
     
