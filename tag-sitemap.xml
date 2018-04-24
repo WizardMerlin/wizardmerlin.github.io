@@ -16,6 +16,13 @@
     </url>
 
     <url>
+        <loc>http://www.merlinblog.site/tags/%E7%BA%BF%E7%A8%8B/</loc>
+        <lastmod>2018-04-12T06:55:17.616Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://www.merlinblog.site/tags/nullptr/</loc>
         <lastmod>2018-04-12T06:55:17.616Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -30,20 +37,6 @@
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/%E7%BA%BF%E7%A8%8B/</loc>
-        <lastmod>2018-04-12T06:55:17.616Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.merlinblog.site/tags/initializer-list/</loc>
-        <lastmod>2018-04-12T06:55:17.617Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.merlinblog.site/tags/foreach/</loc>
         <lastmod>2018-04-12T06:55:17.617Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -51,7 +44,7 @@
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/tuple/</loc>
+        <loc>http://www.merlinblog.site/tags/initializer-list/</loc>
         <lastmod>2018-04-12T06:55:17.617Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -73,6 +66,13 @@
 
     <url>
         <loc>http://www.merlinblog.site/tags/c/</loc>
+        <lastmod>2018-04-12T06:55:17.617Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.merlinblog.site/tags/tuple/</loc>
         <lastmod>2018-04-12T06:55:17.617Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -142,14 +142,14 @@
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/exception/</loc>
+        <loc>http://www.merlinblog.site/tags/type-traits/</loc>
         <lastmod>2018-04-12T06:55:17.619Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/type-traits/</loc>
+        <loc>http://www.merlinblog.site/tags/exception/</loc>
         <lastmod>2018-04-12T06:55:17.619Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -226,14 +226,14 @@
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/bind/</loc>
+        <loc>http://www.merlinblog.site/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/</loc>
         <lastmod>2018-04-12T06:55:17.624Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/</loc>
+        <loc>http://www.merlinblog.site/tags/bind/</loc>
         <lastmod>2018-04-12T06:55:17.624Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -289,14 +289,14 @@
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/jni/</loc>
+        <loc>http://www.merlinblog.site/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF/</loc>
         <lastmod>2018-04-12T06:55:17.626Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF/</loc>
+        <loc>http://www.merlinblog.site/tags/jni/</loc>
         <lastmod>2018-04-12T06:55:17.626Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -401,13 +401,6 @@
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/%E8%B0%83%E8%AF%95/</loc>
-        <lastmod>2018-04-12T06:55:17.633Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.merlinblog.site/tags/tdd/</loc>
         <lastmod>2018-04-12T06:55:17.633Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -416,6 +409,13 @@
 
     <url>
         <loc>http://www.merlinblog.site/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/</loc>
+        <lastmod>2018-04-12T06:55:17.633Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.merlinblog.site/tags/%E8%B0%83%E8%AF%95/</loc>
         <lastmod>2018-04-12T06:55:17.633Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -520,14 +520,14 @@
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/nagle/</loc>
+        <loc>http://www.merlinblog.site/tags/%E8%82%A1%E7%A5%A8/</loc>
         <lastmod>2018-04-12T06:55:17.638Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/%E8%82%A1%E7%A5%A8/</loc>
+        <loc>http://www.merlinblog.site/tags/nagle/</loc>
         <lastmod>2018-04-12T06:55:17.638Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -576,14 +576,14 @@
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/macOS/</loc>
+        <loc>http://www.merlinblog.site/tags/gui/</loc>
         <lastmod>2018-04-12T06:55:17.639Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/gui/</loc>
+        <loc>http://www.merlinblog.site/tags/macOS/</loc>
         <lastmod>2018-04-12T06:55:17.639Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -926,13 +926,6 @@
     </url>
 
     <url>
-        <loc>http://www.merlinblog.site/tags/%E7%B0%BD%E5%90%8D/</loc>
-        <lastmod>2018-04-21T20:09:53.192Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.merlinblog.site/tags/%E5%85%AC%E9%91%B0%E5%AF%86%E7%A2%BC%E8%A1%93/</loc>
         <lastmod>2018-04-21T20:09:53.192Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -948,6 +941,13 @@
 
     <url>
         <loc>http://www.merlinblog.site/tags/%E8%AD%89%E6%9B%B8/</loc>
+        <lastmod>2018-04-21T20:09:53.192Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.merlinblog.site/tags/%E7%B0%BD%E5%90%8D/</loc>
         <lastmod>2018-04-21T20:09:53.192Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
